@@ -1,7 +1,7 @@
 import { input, replaceAll } from 'fallout-utility';
 import { existsSync, readFileSync, writeFileSync } from 'fs';
 import { token as __token, configDir as __configDir } from '../flags';
-import { ClientOptions, MessageOptions } from 'discord.js';
+import { ClientOptions, MessageOptions, PermissionResolvable } from 'discord.js';
 import path from 'path';
 import yaml from 'yaml';
 
@@ -20,11 +20,18 @@ export interface Config {
         }
     }
     permissions: {
-        messageCommand: {
+        messageCommands: {
             enabled: boolean;
             commands: {
                 command: string;
-                permissions: string[];
+                permissions: PermissionResolvable[];
+            }[];
+        }
+        interactionCommands: {
+            enabled: boolean;
+            commands: {
+                command: string;
+                permissions: PermissionResolvable[];
             }[];
         }
     }

@@ -6,6 +6,7 @@ import { logger } from '../logger';
 import { loadModules, RecipleScript } from '../modules';
 import { Config } from './Config';
 import { version } from '../version';
+import { commandPermissions } from '../commandPermissions';
 
 export interface RecipleClientOptions extends ClientOptions {
     config: Config;
@@ -101,7 +102,9 @@ export class RecipleClient extends Client {
         if(!interaction || !interaction.isCommand()) return this;
 
         const command = this.commands.INTERACTION_COMMANDS[interaction.commandName];
-        if (command) {
+
+        if (!command.allowExecuteInDM && interaction.member === null) return this;
+        if (command && commandPermissions(command.name, interaction.memberPermissions, this.config?.permissions.interactionCommands)) {
             const options: RecipleInteractionCommandExecute = {
                 interaction: interaction,
                 command: command,
