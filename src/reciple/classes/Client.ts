@@ -51,10 +51,10 @@ export class RecipleClient extends Client {
         this.modules = modules.modules.map(m => m.script);
         for (const command of modules.commands) {
             if (!command.name) continue; 
-            if (command instanceof MessageCommandBuilder) {
-                this.commands.MESSAGE_COMMANDS[command.name] = command;
-            } else if (command instanceof InteractionCommandBuilder) {
-                this.commands.INTERACTION_COMMANDS[command.name] = command;
+            if (command.type === 'MESSAGE_COMMAND') {
+                this.commands.MESSAGE_COMMANDS[command.name] = command as MessageCommandBuilder;
+            } else if (command.type === 'INTERACTION_COMMAND') {
+                this.commands.INTERACTION_COMMANDS[command.name] = command as InteractionCommandBuilder;
             }
         }
 

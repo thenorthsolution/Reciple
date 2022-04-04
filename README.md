@@ -1,2 +1,1 @@
-# reciple
- A Discord.js bot
+<h1 align="center"><img src="https://i.imgur.com/8pYGOWW.png" width="50%"></h1>

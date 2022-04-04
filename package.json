@@ -1,6 +1,6 @@
 {
   "name": "reciple",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A Discord.js bot",
   "author": "FalloutStudios",
   "license": "GPL-3.0",
@@ -8,11 +8,19 @@
   "bin": {
     "reciple": "bin/bin.js"
   },
+  "files": [
+    "bin",
+    "resource",
+    "package.json",
+    "LICENSE",
+    "README.md"
+  ],
   "scripts": {
     "clean": "rimraf bin",
     "compile": "npm run clean && tsc",
     "build": "npm run compile && npm un reciple -g && npm i ./ -g",
-    "test:run": "cd test && reciple",
+    "build:publish": "npm run build && npm publish",
+    "test": "cd test && reciple",
     "test:compile": "npm run build && npm run test:run"
   },
   "dependencies": {
