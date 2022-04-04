@@ -16,7 +16,7 @@ export interface Config {
         interactionCommand: {
             enabled: boolean;
             registerCommands: boolean;
-            guilds: string[];
+            guilds: string[]|string;
         }
     }
     permissions: {

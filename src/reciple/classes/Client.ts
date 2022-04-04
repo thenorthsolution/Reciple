@@ -2,6 +2,7 @@ import { Client, ClientEvents, ClientOptions, Interaction, Message } from 'disco
 import { getCommand, Logger as LoggerConstructor } from 'fallout-utility';
 import { MessageCommandBuilder, RecipleMessageCommandExecute } from './builders/MessageCommandBuilder';
 import { InteractionCommandBuilder, RecipleInteractionCommandExecute } from './builders/InteractionCommandBuilder';
+import { registerInteractionCommands } from '../registerInteractionCommands';
 import { logger } from '../logger';
 import { loadModules, RecipleScript } from '../modules';
 import { Config } from './Config';
@@ -17,6 +18,7 @@ export interface RecipleClientCommands {
     INTERACTION_COMMANDS: { [key: string]: InteractionCommandBuilder };
 }
 
+// TODO: Add these events to the client
 export interface RecipleClientEvents extends ClientEvents {
     recipleMessageCommandCreate: [command: RecipleMessageCommandExecute];
     recipleInteractionCommandCreate: [command: RecipleInteractionCommandExecute];
@@ -66,6 +68,7 @@ export class RecipleClient extends Client {
         }
 
         this.logger.info(`${this.modules.length} modules loaded.`);
+        await registerInteractionCommands(this);
         return this;
     }
 
@@ -83,7 +86,7 @@ export class RecipleClient extends Client {
             const command = this.commands.MESSAGE_COMMANDS[parseCommand.command];
 
             if (!command.allowExecuteInDM && message.channel.type === 'DM') return this;
-            if (command) {
+            if (command && commandPermissions(command.name, message.member?.permissions || null, this.config?.permissions.messageCommands)) {
                 const options: RecipleMessageCommandExecute = {
                     message: message,
                     command: parseCommand,
