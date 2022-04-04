@@ -1,24 +1,29 @@
-import { Client, ClientOptions } from 'discord.js';
-import { Logger as LoggerConstructor } from 'fallout-utility';
-import { MessageCommandBuilder } from './builders/MessageCommandBuilder';
-import { InteractionCommandBuilder } from './builders/InteractionCommandBuilder';
+import { Client, ClientEvents, ClientOptions, Interaction, Message } from 'discord.js';
+import { getCommand, Logger as LoggerConstructor } from 'fallout-utility';
+import { MessageCommandBuilder, RecipleMessageCommandExecute } from './builders/MessageCommandBuilder';
+import { InteractionCommandBuilder, RecipleInteractionCommandExecute } from './builders/InteractionCommandBuilder';
 import { logger } from '../logger';
 import { loadModules, RecipleScript } from '../modules';
-import { Config, RecipleConfig } from './Config';
+import { Config } from './Config';
 import { version } from '../version';
 
 export interface RecipleClientOptions extends ClientOptions {
-    configPath: string;
+    config: Config;
 }
 
 export interface RecipleClientCommands {
-    MESSAGE_COMMAND: any;
-    INTERACTION_COMMANDS: any;
+    MESSAGE_COMMANDS: { [key: string]: MessageCommandBuilder };
+    INTERACTION_COMMANDS: { [key: string]: InteractionCommandBuilder };
+}
+
+export interface RecipleClientEvents extends ClientEvents {
+    recipleMessageCommandCreate: [command: RecipleMessageCommandExecute];
+    recipleInteractionCommandCreate: [command: RecipleInteractionCommandExecute];
 }
 
 export class RecipleClient extends Client {
     public config?: Config;
-    public commands: RecipleClientCommands = { MESSAGE_COMMAND: {}, INTERACTION_COMMANDS: {} };
+    public commands: RecipleClientCommands = { MESSAGE_COMMANDS: {}, INTERACTION_COMMANDS: {} };
     public modules: RecipleScript[] = [];
     public logger: LoggerConstructor = logger(false);
     public version: string = version;
@@ -26,11 +31,13 @@ export class RecipleClient extends Client {
     constructor(options: RecipleClientOptions) {
         super(options);
 
+        if (!options.config) throw new Error('Config is not defined.');
+        this.config = options.config;
+
         this.logger.info('Reciple Client is starting...');
-        this.config = new RecipleConfig(options.configPath).parseConfig().getConfig();
     }
 
-    public async loadModules(): Promise<RecipleClient> {
+    public async startModules(): Promise<RecipleClient> {
         this.logger.info('Loading modules...');
 
         const modules = await loadModules(this);
@@ -40,20 +47,70 @@ export class RecipleClient extends Client {
         for (const command of modules.commands) {
             if (!command.name) continue; 
             if (command instanceof MessageCommandBuilder) {
-                this.commands.MESSAGE_COMMAND[command.name] = command;
+                this.commands.MESSAGE_COMMANDS[command.name] = command;
             } else if (command instanceof InteractionCommandBuilder) {
                 this.commands.INTERACTION_COMMANDS[command.name] = command;
             }
         }
 
-        this.logger.info(`${this.commands.MESSAGE_COMMAND.length} message commands loaded.`);
+        this.logger.info(`${this.commands.MESSAGE_COMMANDS.length} message commands loaded.`);
         this.logger.info(`${this.commands.INTERACTION_COMMANDS.length} interaction commands loaded.`);
 
+        return this;
+    }
+
+    public async loadModules(): Promise<RecipleClient> {
         for (const module_ of this.modules) {
             if (typeof module_?.onLoad === 'function') await Promise.resolve(module_.onLoad(this));
         }
 
         this.logger.info(`${this.modules.length} modules loaded.`);
+        return this;
+    }
+
+    public addCommandListeners(): RecipleClient {
+        if (this.config?.commands.messageCommand.enabled) this.on('messageCreate', (message) => { this.messageCommandExecute(message) });
+        if (this.config?.commands.interactionCommand.enabled) this.on('interactionCreate', (interaction) => { this.interactionCommandExecute(interaction) });
+
+        return this;
+    }
+
+    public async messageCommandExecute(message: Message): Promise<RecipleClient> {
+        if (!message.content) return this;
+        const parseCommand = getCommand(message.content, this.config?.prefix || '!', this.config?.commands.messageCommand.commandArgumentSeparator || ' ');
+        if (parseCommand && parseCommand.command) {
+            const command = this.commands.MESSAGE_COMMANDS[parseCommand.command];
+
+            if (!command.allowExecuteInDM && message.channel.type === 'DM') return this;
+            if (command) {
+                const options: RecipleMessageCommandExecute = {
+                    message: message,
+                    command: parseCommand,
+                    builder: command,
+                    client: this
+                };
+                await Promise.resolve(command.execute(options));
+                this.emit('recipleMessageCommandCreate', options);
+            }
+        }
+
+        return this;
+    }
+
+    public async interactionCommandExecute(interaction: Interaction): Promise<RecipleClient> {
+        if(!interaction || !interaction.isCommand()) return this;
+
+        const command = this.commands.INTERACTION_COMMANDS[interaction.commandName];
+        if (command) {
+            const options: RecipleInteractionCommandExecute = {
+                interaction: interaction,
+                command: command,
+                builder: command,
+                client: this
+            };
+            await Promise.resolve(command.execute(options));
+            this.emit('recipleInteractionCommandCreate', options);
+        } 
 
         return this;
     }

@@ -1,11 +1,46 @@
 import { input, replaceAll } from 'fallout-utility';
 import { existsSync, readFileSync, writeFileSync } from 'fs';
+import { token as __token, configDir as __configDir } from '../flags';
+import { ClientOptions, MessageOptions } from 'discord.js';
 import path from 'path';
 import yaml from 'yaml';
 
 export interface Config {
     token: string;
-    prefix: string|string[];
+    prefix: string;
+    commands: {
+        messageCommand: {
+            enabled: boolean;
+            commandArgumentSeparator: string;
+        }
+        interactionCommand: {
+            enabled: boolean;
+            registerCommands: boolean;
+            guilds: string[];
+        }
+    }
+    permissions: {
+        messageCommand: {
+            enabled: boolean;
+            commands: {
+                command: string;
+                permissions: string[];
+            }[];
+        }
+    }
+    ignoredChannels: {
+        enabled: boolean;
+        convertToAllowList: boolean;
+        channels: string[];
+    }
+    fileLogging: {
+        enabled: boolean;
+        logFilePath: string;
+    }
+    client: ClientOptions;
+    messages: {
+        [key: string]: MessageOptions|string;
+    }
     modulesFolder: string;
 }
 
@@ -14,6 +49,7 @@ export class RecipleConfig {
     public configPath: string = './reciple.yml';
 
     constructor(configPath: string) {
+        if (__configDir) configPath = path.resolve(__configDir);
         if (!configPath) throw new Error('Config path is not defined');
         this.configPath = configPath;
     }
@@ -51,8 +87,9 @@ export class RecipleConfig {
     }
 
     public parseToken(askIfNull: boolean = true): string|null {
-        let token = null;
+        let token = __token || null;
 
+        if (token) return token;
         if (!this.config) return token;
         if (!this.config.token) return token;
         
@@ -67,6 +104,6 @@ export class RecipleConfig {
     }
 
     private askToken(): string|null {
-        return input({ 'text': 'Bot Token >>> ', echo: '*', repeatIfEmpty: true, exitStrings: ['exit', 'quit', ''], sigint: true }) || null;
+        return __token || input({ 'text': 'Bot Token >>> ', echo: '*', repeatIfEmpty: true, exitStrings: ['exit', 'quit', ''], sigint: true }) || null;
     }
 }

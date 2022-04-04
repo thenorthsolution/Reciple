@@ -1,3 +1,47 @@
 token: TOKEN
 prefix: '!'
+
+commands:
+  messageCommand:
+    enabled: true
+    commandArgumentSeparator: ' '
+  interactionCommand:
+    enabled: true
+    registerCommands: true
+    guilds: []
+
+permissions:
+  messageCommands:
+    enabled: true
+    commands:
+      - command: 'stop'
+        permissions: ['ADMINISTRATOR']
+  interactionCommands:
+    enabled: true
+    commands:
+      - command: 'stop'
+        permissions: ['ADMINISTRATOR']
+
+
+ignoredChannels:
+  enabled: false
+  convertToAllowList: false
+  channels: []
+
+fileLogging:
+  enabled: true
+  logFilePath: './logs/latest.log'
+
+client:
+  intents:
+    - 'GUILDS'
+    - 'GUILD_MEMBERS'
+    - 'GUILD_INVITES'
+    - 'GUILD_VOICE_STATES'
+    - 'GUILD_MESSAGES'
+    - 'GUILD_MESSAGE_REACTIONS'
+
+messages:
+  noPermission: 'You do not have permission to use this command.'
+
 modulesFolder: 'modules'
