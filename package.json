@@ -11,7 +11,8 @@
   "scripts": {
     "clean": "rimraf bin",
     "compile": "npm run clean && tsc",
-    "build": "npm run compile && npm un reciple -g && npm i ./ -g"
+    "build": "npm run compile && npm un reciple -g && npm i ./ -g",
+    "test": "npm run build && cd test && source .env; reciple"
   },
   "dependencies": {
     "commander": "^9.1.0",

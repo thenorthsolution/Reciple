@@ -89,6 +89,8 @@ export class RecipleConfig {
 
     public getConfig(): Config {
         if (!this.config) throw new Error('Config is not parsed.');
+
+        this.config.token = this.parseToken() || 'TOKEN';
         return this.config;
     }
 
@@ -97,7 +99,7 @@ export class RecipleConfig {
 
         if (token) return token;
         if (!this.config) return token;
-        if (!this.config.token) return token;
+        if (!this.config.token) return token || (askIfNull ? this.askToken() : null);
         
         const envToken = this.config.token.toString().split(':');
         if (envToken.length === 2 && envToken[0].toLocaleLowerCase() === 'env' && envToken[1]) {
