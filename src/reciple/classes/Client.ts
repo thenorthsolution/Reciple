@@ -37,6 +37,8 @@ export class RecipleClient extends Client {
         if (!options.config) throw new Error('Config is not defined.');
         this.config = options.config;
 
+        if (this.config.fileLogging.enabled) this.logger.logFile(this.config.fileLogging.logFilePath, false);
+
         this.logger.info('Reciple Client is starting...');
     }
 

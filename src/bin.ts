@@ -1,7 +1,13 @@
-#!/bin/bash
+#!/usr/bin/env node
 import { RecipleConfig } from './reciple/classes/Config';
 import { RecipleClient } from './reciple/classes/Client';
-import { MessageCommandBuilder } from './reciple/classes/builders/MessageCommandBuilder';
+import { readdirSync, existsSync } from 'fs';
+import { input } from 'fallout-utility';
+
+if (readdirSync('./').length > 0 && !existsSync('./reciple.yml')) {
+    const ask = input('This directory does not contain reciple.yml. Would you like to init axis here? [y/n] ');
+    if (ask !== 'y') process.exit(0);
+}
 
 const config = new RecipleConfig('./reciple.yml').parseConfig().getConfig();
 const client = new RecipleClient({ config: config, ...config.client });

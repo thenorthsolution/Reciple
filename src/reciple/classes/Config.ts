@@ -1,6 +1,6 @@
 import { input, replaceAll } from 'fallout-utility';
 import { existsSync, readFileSync, writeFileSync } from 'fs';
-import { token as __token, configDir as __configDir } from '../flags';
+import { token as __token } from '../flags';
 import { ClientOptions, MessageOptions, PermissionResolvable } from 'discord.js';
 import path from 'path';
 import yaml from 'yaml';
@@ -56,14 +56,13 @@ export class RecipleConfig {
     public configPath: string = './reciple.yml';
 
     constructor(configPath: string) {
-        if (__configDir) configPath = path.resolve(__configDir);
         if (!configPath) throw new Error('Config path is not defined');
         this.configPath = configPath;
     }
 
     public parseConfig(): RecipleConfig {
         if (!existsSync(this.configPath)) {
-            const defaultConfigPath = path.resolve(__dirname, '../../../resource/reciple.yml');
+            const defaultConfigPath = path.join(__dirname, '../../../resource/reciple.yml');
             if (!existsSync(defaultConfigPath)) throw new Error('Default Config file not found. Please reinstall Reciple.');
 
             const defaultConfig = readFileSync(defaultConfigPath, 'utf-8');
@@ -74,14 +73,14 @@ export class RecipleConfig {
             this.config = yaml.parse(defaultConfig);
             if (this.config && this.config.token === 'TOKEN') {
                 this.config.token = this.askToken() || this.config.token;
-                writeFileSync(this.configPath, replaceAll(yaml.stringify(this.config), 'TOKEN', this.config.token), 'utf-8');
+                writeFileSync(this.configPath, replaceAll(defaultConfig, 'TOKEN', this.config.token), 'utf-8');
             }
 
             return this;
         }
 
+        if (!existsSync(this.configPath)) throw new Error('Failed to read config file.');
         const config = readFileSync(this.configPath, 'utf-8');
-        if (!config) throw new Error('Failed to read config file.');
         
         this.config = yaml.parse(config);
 

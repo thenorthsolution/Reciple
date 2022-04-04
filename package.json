@@ -6,11 +6,12 @@
   "license": "GPL-3.0",
   "main": "bin/index.js",
   "bin": {
-    "reciple": "bin/bin.ts"
+    "reciple": "bin/bin.js"
   },
   "scripts": {
     "clean": "rimraf bin",
-    "compile": "npm run clean && tsc"
+    "compile": "npm run clean && tsc",
+    "build": "npm run compile && npm un reciple -g && npm i ./ -g"
   },
   "dependencies": {
     "commander": "^9.1.0",
