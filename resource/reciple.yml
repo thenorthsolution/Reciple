@@ -43,5 +43,6 @@ client:
 
 messages:
   noPermission: 'You do not have permission to use this command.'
+  notEnoughArguments: 'Not enough arguments.'
 
 modulesFolder: 'modules'

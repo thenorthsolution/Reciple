@@ -55,11 +55,12 @@ export class MessageOption {
 }
 
 export class MessageCommandBuilder {
-    public allowExecuteInDM: boolean = true;
     public name: string = '';
     public description: string = '';
     public options: MessageOption[] = [];
     public validateOptions: boolean = false;
+    public allowExecuteInDM: boolean = true;
+    public allowExecuteByBots: boolean = false;
     public execute: (options: RecipleMessageCommandExecute) => void = (options) => { /* Execute */ };
 
     public setName(name: string): MessageCommandBuilder {
@@ -71,6 +72,12 @@ export class MessageCommandBuilder {
     public setAllowExecuteInDM(allowExecuteInDM: boolean): MessageCommandBuilder {
         if (typeof allowExecuteInDM !== 'boolean') throw new Error('allowExecuteInDM must be a boolean.');
         this.allowExecuteInDM = allowExecuteInDM;
+        return this;
+    }
+
+    public setAllowExecuteByBots(allowExecuteByBots: boolean): MessageCommandBuilder {
+        if (typeof allowExecuteByBots !== 'boolean') throw new Error('allowExecuteByBots must be a boolean.');
+        this.allowExecuteByBots = allowExecuteByBots;
         return this;
     }
 
@@ -86,11 +93,15 @@ export class MessageCommandBuilder {
         return this;
     }
 
-    public addOption(option: MessageOption|(() => MessageOption)): MessageCommandBuilder {
+    public addOption(option: MessageOption|((constructor: MessageOption) => MessageOption)): MessageCommandBuilder {
         if (!option) throw new Error('option must be a MessageOption.');
-        if (this.options.find(o => o.name === (typeof option === 'function' ? option().name : option.name))) throw new Error('option with name "' + option.name + '" already exists.');
-        
-        this.options = [...this.options, typeof option === 'function' ? option() : option];
+
+        option = typeof option === 'function' ? option(new MessageOption()) : option;
+
+        if (this.options.find(o => o.name === option.name)) throw new Error('option with name "' + option.name + '" already exists.');
+        if (this.options.length > 0 && !this.options[this.options.length - 1 < 0 ? 0 : this.options.length - 1].required && option.required) throw new Error('All required options must be before optional options.');
+
+        this.options = [...this.options, option];
         return this;
     }
 
@@ -100,19 +111,19 @@ export class MessageCommandBuilder {
         return this;
     }
 
-    public validateCommandOptions(options: CommandMessage): boolean|MessageCommandValidatedOption[] {
+    public getCommandOptionValues(options: CommandMessage): undefined|MessageCommandValidatedOption[] {
         const args = options.args || [];
         const required = this.options.filter(o => o.required);
         const optional = this.options.filter(o => !o.required);
 
-        if (required.length > args.length) return false;
+        if (required.length > args.length) return;
         
         let i = 0;
         let result: MessageCommandValidatedOption[] = [];
         for (const option of [...required, ...optional]) {
             const arg = args[i];
-            if (!arg && option.required) return false;
-            if (!option.validate(arg)) return false;
+            if (!arg && option.required) return;
+            if (!option.validate(arg)) return;
 
             result = [...result, { name: option.name, value: arg, required: option.required }];
 

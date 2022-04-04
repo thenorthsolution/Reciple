@@ -39,7 +39,7 @@ export class RecipleClient extends Client {
 
         if (this.config.fileLogging.enabled) this.logger.logFile(this.config.fileLogging.logFilePath, false);
 
-        this.logger.info('Reciple Client is starting...');
+        this.logger.info('Reciple Client v'+ version +' is starting...');
     }
 
     public async startModules(): Promise<RecipleClient> {
@@ -58,8 +58,8 @@ export class RecipleClient extends Client {
             }
         }
 
-        this.logger.info(`${this.commands.MESSAGE_COMMANDS.length} message commands loaded.`);
-        this.logger.info(`${this.commands.INTERACTION_COMMANDS.length} interaction commands loaded.`);
+        this.logger.info(`${Object.keys(this.commands.MESSAGE_COMMANDS).length} message commands loaded.`);
+        this.logger.info(`${Object.keys(this.commands.INTERACTION_COMMANDS).length} interaction commands loaded.`);
 
         return this;
     }
@@ -70,7 +70,8 @@ export class RecipleClient extends Client {
         }
 
         this.logger.info(`${this.modules.length} modules loaded.`);
-        await registerInteractionCommands(this);
+        
+        if (this.config?.commands.interactionCommand.registerCommands) await registerInteractionCommands(this);
         return this;
     }
 
@@ -87,14 +88,21 @@ export class RecipleClient extends Client {
         if (parseCommand && parseCommand.command) {
             const command = this.commands.MESSAGE_COMMANDS[parseCommand.command];
 
-            if (!command.allowExecuteInDM && message.channel.type === 'DM') return this;
             if (command && commandPermissions(command.name, message.member?.permissions || null, this.config?.permissions.messageCommands)) {
+                if (!command.allowExecuteInDM && message.channel.type === 'DM') return this;
+                if (!command.allowExecuteByBots && (message.author.bot || message.author.system)) return this;
+                if (command.validateOptions && !command.getCommandOptionValues(parseCommand)) {
+                    await message.reply(this.config?.messages.notEnoughArguments || 'Not enough arguments.').catch((err) => this.logger.error(err));
+                    return this;
+                }
+                
                 const options: RecipleMessageCommandExecute = {
                     message: message,
                     command: parseCommand,
                     builder: command,
                     client: this
                 };
+
                 await Promise.resolve(command.execute(options));
                 this.emit('recipleMessageCommandCreate', options);
             }
@@ -108,8 +116,9 @@ export class RecipleClient extends Client {
 
         const command = this.commands.INTERACTION_COMMANDS[interaction.commandName];
 
-        if (!command.allowExecuteInDM && interaction.member === null) return this;
         if (command && commandPermissions(command.name, interaction.memberPermissions, this.config?.permissions.interactionCommands)) {
+            if (!command.allowExecuteInDM && interaction.member === null) return this;
+
             const options: RecipleInteractionCommandExecute = {
                 interaction: interaction,
                 command: command,

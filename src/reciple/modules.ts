@@ -23,10 +23,10 @@ export interface RecipleModule {
     }
 }
 
-export async function loadModules (Client: RecipleClient): Promise<loadedModules> {
+export async function loadModules (client: RecipleClient): Promise<loadedModules> {
     const response: loadedModules = { commands: [], modules: [] };
-    const modulesDir = Client.config?.modulesFolder || './modules';
-    const logger = Client.logger;
+    const modulesDir = client.config?.modulesFolder || './modules';
+    const logger = client.logger;
     
     if (!existsSync(modulesDir)) mkdirSync(modulesDir, { recursive: true });
 
@@ -40,8 +40,8 @@ export async function loadModules (Client: RecipleClient): Promise<loadedModules
         try {
             module_ = require(modulePath);
 
-            if (!module_.versions || !(typeof module_.versions === 'string' ? [module_.versions] : module_.versions).includes(Client.version)) throw new Error('Module versions is not defined.');
-            if (!module_.onStart(Client)) throw new Error(script + ' onStart is not defined or returned false.');
+            if (!module_.versions || !(typeof module_.versions === 'object' ? module_.versions : [module_.versions]).includes(client.version)) throw new Error('Module versions is not defined or unsupported.');
+            if (!module_.onStart(client)) throw new Error(script + ' onStart is not defined or returned false.');
             if (module_.commands) {
                 for (const command of module_.commands) {
                     if (!(command instanceof MessageCommandBuilder) && !(command instanceof InteractionCommandBuilder)) { continue; }
