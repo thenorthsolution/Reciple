@@ -54,7 +54,11 @@ export async function loadModules (client: RecipleClient): Promise<loadedModules
             continue;
         }
 
-        response.commands = response.commands.concat(commands);
+        response.commands = response.commands.concat(commands.filter((c) => {
+            if (!c.name) { logger.error(`A message command name is not defined in ${script}`); return false; }
+            if (c instanceof MessageCommandBuilder && c.options.some(o => !o.name)) { logger.error(`A message command option name is not defined in ${script}`); return false; }
+            return true;
+        }));
         response.modules.push({
             script: module_,
             info: {
