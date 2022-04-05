@@ -56,3 +56,6 @@ To run the bot, run the following command:
 ```bash
 reciple
 ```
+
+> ## Fun Fact
+> The name reciple is from a minecraft bug. The bug was a misspelling of the word `recipe`. [Mojang Reciple](https://bugs.mojang.com/browse/MC-225837)
