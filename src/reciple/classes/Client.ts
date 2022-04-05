@@ -84,13 +84,13 @@ export class RecipleClient extends Client {
 
     public async messageCommandExecute(message: Message): Promise<RecipleClient> {
         if (!message.content) return this;
+        
         const parseCommand = getCommand(message.content, this.config?.prefix || '!', this.config?.commands.messageCommand.commandArgumentSeparator || ' ');
         if (parseCommand && parseCommand.command) {
             const command = this.commands.MESSAGE_COMMANDS[parseCommand.command];
 
             if (command && commandPermissions(command.name, message.member?.permissions || null, this.config?.permissions.messageCommands)) {
-                if (!command.allowExecuteInDM && message.channel.type === 'DM') return this;
-                if (!command.allowExecuteByBots && (message.author.bot || message.author.system)) return this;
+                if (!command.allowExecuteInDM && message.channel.type === 'DM' || !command.allowExecuteByBots && (message.author.bot || message.author.system)) return this;
                 if (command.validateOptions && !command.getCommandOptionValues(parseCommand)) {
                     await message.reply(this.config?.messages.notEnoughArguments || 'Not enough arguments.').catch((err) => this.logger.error(err));
                     return this;
