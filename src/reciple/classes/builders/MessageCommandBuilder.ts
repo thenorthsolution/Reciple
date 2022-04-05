@@ -19,7 +19,7 @@ export interface RecipleMessageCommandExecute {
 
 export interface MessageCommandValidatedOption {
     name: string;
-    value: any;
+    value: string;
     required: boolean;
 }
 
@@ -27,7 +27,7 @@ export class MessageOption {
     public name: string = '';
     public description: string = '';
     public required: boolean = true;
-    public validate: (value: any) => boolean = () => true;
+    public validate: (value: string) => boolean = () => true;
 
     public setName(name: string): MessageOption {
         if (typeof name !== 'string' || !name.match(/^[\w-]{1,32}$/)) throw new Error('name must be a string and match the regex /^[\\w-]{1,32}$/.');
@@ -47,7 +47,7 @@ export class MessageOption {
         return this;
     }
 
-    public setValidator(validator: (value: any) => boolean): MessageOption {
+    public setValidator(validator: (value: string) => boolean): MessageOption {
         if (!validator || typeof validator !== 'function') throw new Error('validator must be a function.');
         this.validate = validator;
         return this;
