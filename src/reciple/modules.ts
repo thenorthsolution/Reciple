@@ -35,7 +35,7 @@ export async function loadModules (client: RecipleClient): Promise<loadedModules
     for (const script of scripts) {
         const modulePath = path.resolve(modulesDir, script);
         const commands: recipleCommands = [];
-        let module_: RecipleScript; 
+        let module_: RecipleScript;
         
         try {
             module_ = require(modulePath);
