@@ -46,3 +46,5 @@ messages:
   notEnoughArguments: 'Not enough arguments.'
 
 modulesFolder: 'modules'
+
+version: VERSION

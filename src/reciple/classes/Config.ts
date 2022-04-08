@@ -4,6 +4,7 @@ import { token as __token } from '../flags';
 import { ClientOptions, MessageOptions, PermissionResolvable } from 'discord.js';
 import path from 'path';
 import yaml from 'yaml';
+import { version } from '../version';
 
 export interface Config {
     token: string;
@@ -49,6 +50,7 @@ export interface Config {
         [key: string]: MessageOptions|string;
     }
     modulesFolder: string;
+    version?: string;
 }
 
 export class RecipleConfig {
@@ -67,7 +69,7 @@ export class RecipleConfig {
 
             const defaultConfig = readFileSync(defaultConfigPath, 'utf-8');
             
-            writeFileSync(this.configPath, defaultConfig, 'utf-8');
+            writeFileSync(this.configPath, replaceAll(defaultConfig, 'VERSION', version), 'utf-8');
             if (!existsSync(this.configPath)) throw new Error('Failed to create config file.');
             
             this.config = yaml.parse(defaultConfig);
@@ -83,6 +85,8 @@ export class RecipleConfig {
         const config = readFileSync(this.configPath, 'utf-8');
         
         this.config = yaml.parse(config);
+
+        if (!this.isSupportedConfig()) throw new Error('Unsupported config version. Your config version: '+ (this.config || 'No version specified.') + ', Reciple version: '+ version);
 
         return this;
     }
@@ -109,6 +113,10 @@ export class RecipleConfig {
         }
 
         return token || (askIfNull ? this.askToken() : null);
+    }
+
+    private isSupportedConfig(): boolean {
+        return (this.config?.version && this.config.version != version) ? false : true;
     }
 
     private askToken(): string|null {
