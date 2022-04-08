@@ -1,6 +1,6 @@
 import { program } from 'commander';
 
-const flags = program
+export const flags = program
         .option('-t, --token <token>', 'Replace used bot token')
         .parse().opts();
 
