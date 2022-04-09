@@ -1,7 +1,7 @@
 import { input, replaceAll } from 'fallout-utility';
 import { existsSync, readFileSync, writeFileSync } from 'fs';
 import { token as __token } from '../flags';
-import { ClientOptions, MessageOptions, PermissionResolvable } from 'discord.js';
+import { ClientOptions, InteractionReplyOptions, MessageOptions, PermissionResolvable } from 'discord.js';
 import path from 'path';
 import yaml from 'yaml';
 import { version } from '../version';
@@ -12,10 +12,12 @@ export interface Config {
     commands: {
         messageCommand: {
             enabled: boolean;
+            replyOnError: boolean;
             commandArgumentSeparator: string;
         }
         interactionCommand: {
             enabled: boolean;
+            replyOnError: boolean;
             registerCommands: boolean;
             guilds: string[]|string;
         }
@@ -47,7 +49,7 @@ export interface Config {
     }
     client: ClientOptions;
     messages: {
-        [key: string]: MessageOptions|string;
+        [key: string]: MessageOptions|InteractionReplyOptions|string;
     }
     modulesFolder: string;
     version?: string;
@@ -67,9 +69,9 @@ export class RecipleConfig {
             const defaultConfigPath = path.join(__dirname, '../../../resource/reciple.yml');
             if (!existsSync(defaultConfigPath)) throw new Error('Default Config file not found. Please reinstall Reciple.');
 
-            const defaultConfig = readFileSync(defaultConfigPath, 'utf-8');
+            const defaultConfig = replaceAll(readFileSync(defaultConfigPath, 'utf-8'), 'VERSION', version);
             
-            writeFileSync(this.configPath, replaceAll(defaultConfig, 'VERSION', version), 'utf-8');
+            writeFileSync(this.configPath, defaultConfig, 'utf-8');
             if (!existsSync(this.configPath)) throw new Error('Failed to create config file.');
             
             this.config = yaml.parse(defaultConfig);
@@ -86,7 +88,7 @@ export class RecipleConfig {
         
         this.config = yaml.parse(config);
 
-        if (!this.isSupportedConfig()) throw new Error('Unsupported config version. Your config version: '+ (this.config || 'No version specified.') + ', Reciple version: '+ version);
+        if (!this.isSupportedConfig()) throw new Error('Unsupported config version. Your config version: '+ (this.config?.version || 'No version specified.') + ', Reciple version: '+ version);
 
         return this;
     }

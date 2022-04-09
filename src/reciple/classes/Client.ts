@@ -8,6 +8,7 @@ import { loadModules, RecipleScript } from '../modules';
 import { Config } from './Config';
 import { version } from '../version';
 import { commandPermissions } from '../commandPermissions';
+import { isIgnoredChannel } from '../isIgnoredChannel';
 
 export interface RecipleClientOptions extends ClientOptions {
     config: Config;
@@ -83,14 +84,14 @@ export class RecipleClient extends Client {
     }
 
     public async messageCommandExecute(message: Message): Promise<RecipleClient> {
-        if (!message.content) return this;
+        if (!message.content || !this.config?.commands.messageCommand.enabled) return this;
         
         const parseCommand = getCommand(message.content, this.config?.prefix || '!', this.config?.commands.messageCommand.commandArgumentSeparator || ' ');
         if (parseCommand && parseCommand.command) {
             const command = this.commands.MESSAGE_COMMANDS[parseCommand.command];
 
             if (command && commandPermissions(command.name, message.member?.permissions || null, this.config?.permissions.messageCommands)) {
-                if (!command.allowExecuteInDM && message.channel.type === 'DM' || !command.allowExecuteByBots && (message.author.bot || message.author.system)) return this;
+                if (!command.allowExecuteInDM && message.channel.type === 'DM' || !command.allowExecuteByBots && (message.author.bot || message.author.system) || isIgnoredChannel(message.channelId, this.config?.ignoredChannels)) return this;
                 if (command.validateOptions && !command.getCommandOptionValues(parseCommand)) {
                     await message.reply(this.config?.messages.notEnoughArguments || 'Not enough arguments.').catch((err) => this.logger.error(err));
                     return this;
@@ -103,7 +104,7 @@ export class RecipleClient extends Client {
                     client: this
                 };
 
-                await Promise.resolve(command.execute(options));
+                await Promise.resolve(command.execute(options)).catch(err => this._commandExecuteError(err, options));
                 this.emit('recipleMessageCommandCreate', options);
             }
         }
@@ -112,12 +113,12 @@ export class RecipleClient extends Client {
     }
 
     public async interactionCommandExecute(interaction: Interaction): Promise<RecipleClient> {
-        if(!interaction || !interaction.isCommand()) return this;
+        if(!interaction || !interaction.isCommand() || !this.config?.commands.interactionCommand.enabled) return this;
 
         const command = this.commands.INTERACTION_COMMANDS[interaction.commandName];
 
         if (command && commandPermissions(command.name, interaction.memberPermissions, this.config?.permissions.interactionCommands)) {
-            if (!command.allowExecuteInDM && interaction.member === null) return this;
+            if (!command.allowExecuteInDM && interaction.member === null || isIgnoredChannel(interaction.channelId, this.config?.ignoredChannels)) return this;
 
             const options: RecipleInteractionCommandExecute = {
                 interaction: interaction,
@@ -125,10 +126,29 @@ export class RecipleClient extends Client {
                 builder: command,
                 client: this
             };
-            await Promise.resolve(command.execute(options));
+            await Promise.resolve(command.execute(options)).catch(err => this._commandExecuteError(err, options));
             this.emit('recipleInteractionCommandCreate', options);
         }
 
         return this;
+    }
+
+    private async _commandExecuteError(err: Error, command: RecipleInteractionCommandExecute|RecipleMessageCommandExecute): Promise<void> {
+        this.logger.error(`An error occured executing ${command.builder.type == 'MESSAGE_COMMAND' ? 'message' : 'interaction'} command "${command.builder.name}"`);
+        this.logger.error(err);
+
+        if (!err || !command) return;
+
+        if ((command as RecipleMessageCommandExecute)?.message) {
+            if (!this.config?.commands.messageCommand.replyOnError) return;
+            await (command as RecipleMessageCommandExecute).message.reply(this.config?.messages.error || 'An error occured.').catch((e) => this.logger.error(e));
+        } else if ((command as RecipleInteractionCommandExecute)?.interaction) {
+            if (!this.config?.commands.interactionCommand.replyOnError) return;
+            if (!(command as RecipleInteractionCommandExecute)?.interaction.deferred) {
+                await (command as RecipleInteractionCommandExecute).interaction.reply(this.config?.messages.error || 'An error occured.').catch((e) => this.logger.error(e));
+            } else {
+                await (command as RecipleInteractionCommandExecute).interaction.editReply(this.config?.messages.error || 'An error occured.').catch((e) => this.logger.error(e));
+            }
+        }
     }
 }
