@@ -41,7 +41,7 @@ export async function loadModules (client: RecipleClient): Promise<loadedModules
             module_ = require(modulePath);
 
             if (!module_.versions || !(typeof module_.versions === 'object' ? module_.versions : [module_.versions]).includes(client.version)) throw new Error('Module versions is not defined or unsupported.');
-            if (!module_.onStart(client)) throw new Error(script + ' onStart is not defined or returned false.');
+            if (!await Promise.resolve(module_.onStart(client))) throw new Error(script + ' onStart is not defined or returned false.');
             if (module_.commands) {
                 for (const command of module_.commands) {
                     if (command.type === 'MESSAGE_COMMAND' || command.type === 'INTERACTION_COMMAND') commands.push(command);
