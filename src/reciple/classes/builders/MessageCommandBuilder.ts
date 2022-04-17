@@ -1,8 +1,9 @@
 import { Message } from 'discord.js';
+import { Command } from 'fallout-utility';
 import { RecipleClient } from '../Client';
 
 
-export interface CommandMessage {
+export interface CommandMessage extends Command {
     command?: string;
     args?: string[];
     raw?: string;
