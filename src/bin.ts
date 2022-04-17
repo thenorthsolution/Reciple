@@ -3,6 +3,7 @@ import { RecipleConfig } from './reciple/classes/Config';
 import { RecipleClient } from './reciple/classes/Client';
 import { readdirSync, existsSync } from 'fs';
 import { input } from 'fallout-utility';
+import 'dotenv/config';
 
 const allowedFiles = ['node_modules', 'reciple.yml', 'package.json', 'package.lock.json'];
 
