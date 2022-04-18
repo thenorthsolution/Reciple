@@ -125,7 +125,7 @@ export class MessageCommandBuilder {
         for (const option of [...required, ...optional]) {
             const arg = args[i];
             if (!arg && option.required) return;
-            if (!option.validate(arg)) return;
+            if (typeof arg !== 'undefined' && !option.validate(arg)) return;
 
             result = [...result, { name: option.name, value: arg, required: option.required }];
 
