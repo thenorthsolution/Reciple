@@ -89,6 +89,7 @@ export class RecipleClient extends Client {
         const parseCommand = getCommand(message.content, this.config?.prefix || '!', this.config?.commands.messageCommand.commandArgumentSeparator || ' ');
         if (parseCommand && parseCommand.command) {
             const command = this.commands.MESSAGE_COMMANDS[parseCommand.command];
+            if (!command) return this;
 
             if (commandPermissions(command.name, message.member?.permissions || null, this.config?.permissions.messageCommands)) {
                 if (!command.allowExecuteInDM && message.channel.type === 'DM' || !command.allowExecuteByBots && (message.author.bot || message.author.system) || isIgnoredChannel(message.channelId, this.config?.ignoredChannels)) return this;
@@ -121,6 +122,7 @@ export class RecipleClient extends Client {
 
         if (commandPermissions(command.name, interaction.memberPermissions, this.config?.permissions.interactionCommands)) {
             if (!command.allowExecuteInDM && interaction.member === null || isIgnoredChannel(interaction.channelId, this.config?.ignoredChannels)) return this;
+            if (!command) return this;
 
             const options: RecipleInteractionCommandExecute = {
                 interaction: interaction,
