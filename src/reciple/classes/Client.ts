@@ -90,7 +90,7 @@ export class RecipleClient extends Client {
         if (parseCommand && parseCommand.command) {
             const command = this.commands.MESSAGE_COMMANDS[parseCommand.command];
 
-            if (command && commandPermissions(command.name, message.member?.permissions || null, this.config?.permissions.messageCommands)) {
+            if (commandPermissions(command.name, message.member?.permissions || null, this.config?.permissions.messageCommands)) {
                 if (!command.allowExecuteInDM && message.channel.type === 'DM' || !command.allowExecuteByBots && (message.author.bot || message.author.system) || isIgnoredChannel(message.channelId, this.config?.ignoredChannels)) return this;
                 if (command.validateOptions && !command.getCommandOptionValues(parseCommand)) {
                     await message.reply(this.config?.messages.notEnoughArguments || 'Not enough arguments.').catch((err) => this.logger.error(err));
@@ -106,6 +106,8 @@ export class RecipleClient extends Client {
 
                 await Promise.resolve(command.execute(options)).catch(err => this._commandExecuteError(err, options));
                 this.emit('recipleMessageCommandCreate', options);
+            } else {
+                await message.reply(this.config?.messages.noPermissions || 'You do not have permission to use this command.').catch((err) => this.logger.error(err));
             }
         }
 
@@ -117,7 +119,7 @@ export class RecipleClient extends Client {
 
         const command = this.commands.INTERACTION_COMMANDS[interaction.commandName];
 
-        if (command && commandPermissions(command.name, interaction.memberPermissions, this.config?.permissions.interactionCommands)) {
+        if (commandPermissions(command.name, interaction.memberPermissions, this.config?.permissions.interactionCommands)) {
             if (!command.allowExecuteInDM && interaction.member === null || isIgnoredChannel(interaction.channelId, this.config?.ignoredChannels)) return this;
 
             const options: RecipleInteractionCommandExecute = {
@@ -128,6 +130,8 @@ export class RecipleClient extends Client {
             };
             await Promise.resolve(command.execute(options)).catch(err => this._commandExecuteError(err, options));
             this.emit('recipleInteractionCommandCreate', options);
+        } else {
+            await interaction.reply(this.config?.messages.noPermissions || 'You do not have permission to use this command.').catch((err) => this.logger.error(err));
         }
 
         return this;

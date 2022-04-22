@@ -45,7 +45,7 @@ client:
 
 messages:
   notEnoughArguments: 'Not enough arguments.'
-  noPermission:
+  noPermissions:
     content: 'You do not have permission to use this command.'
     ephemeral: true
   error:
