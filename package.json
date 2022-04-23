@@ -17,11 +17,11 @@
   ],
   "scripts": {
     "clean": "rimraf bin",
-    "compile": "npm run clean && tsc",
-    "build": "npm run compile && npm un reciple -g && npm i ./ -g",
-    "build:publish": "npm run build && npm publish",
+    "compile": "yarn run clean && tsc",
+    "build": "yarn run compile && yarn un reciple -g && yarn i ./ -g",
+    "build:publish": "yarn run build && yarn publish",
     "test": "cd test && reciple",
-    "test:compile": "npm run build && npm run test:run"
+    "test:compile": "yarn run build && yarn run test:run"
   },
   "dependencies": {
     "commander": "^9.2.0",
