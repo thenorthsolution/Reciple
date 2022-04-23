@@ -32,6 +32,8 @@ ignoredChannels:
 
 fileLogging:
   enabled: true
+  debugmode: false
+  stringifyLoggedJSON: false
   logFilePath: './logs/latest.log'
 
 client:

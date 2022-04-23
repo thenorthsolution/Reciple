@@ -45,6 +45,8 @@ export interface Config {
     }
     fileLogging: {
         enabled: boolean;
+        debugmode: boolean;
+        stringifyLoggedJSON: boolean;
         logFilePath: string;
     }
     client: ClientOptions;

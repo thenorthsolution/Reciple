@@ -29,11 +29,13 @@ export class RecipleClient extends Client {
     public config?: Config;
     public commands: RecipleClientCommands = { MESSAGE_COMMANDS: {}, INTERACTION_COMMANDS: {} };
     public modules: RecipleScript[] = [];
-    public logger: LoggerConstructor = logger(false);
+    public logger: LoggerConstructor;
     public version: string = version;
 
     constructor(options: RecipleClientOptions) {
         super(options);
+
+        this.logger = logger(!!options.config.fileLogging.stringifyLoggedJSON, !!options.config.fileLogging.debugmode);
 
         if (!options.config) throw new Error('Config is not defined.');
         this.config = options.config;
