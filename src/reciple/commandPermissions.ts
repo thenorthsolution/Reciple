@@ -7,8 +7,6 @@ export function commandPermissions(commandName: string, memberPermissions?: Perm
     if (!configConmmandPermissions?.enabled) return true;
 
     const command = configConmmandPermissions.commands.find(c => c.command.toLowerCase() === commandName.toLowerCase()) ?? { permissions: builder?.requiredPermissions ?? [] };
-    
-    console.log(command);
     if (!command) return true;
     if (!command.permissions.length) return true;
     
