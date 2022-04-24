@@ -1,4 +1,4 @@
-import { Message } from 'discord.js';
+import { Message, PermissionFlags } from 'discord.js';
 import { Command } from 'fallout-utility';
 import { RecipleClient } from '../Client';
 
@@ -61,6 +61,7 @@ export class MessageCommandBuilder {
     public description: string = '';
     public options: MessageOption[] = [];
     public validateOptions: boolean = false;
+    public requiredPermissions: (keyof PermissionFlags)[] = [];
     public allowExecuteInDM: boolean = true;
     public allowExecuteByBots: boolean = false;
     public execute: (options: RecipleMessageCommandExecute) => void = (options) => { /* Execute */ };
@@ -68,6 +69,12 @@ export class MessageCommandBuilder {
     public setName(name: string): MessageCommandBuilder {
         if (!name || typeof name !== 'string' || !name.match(/^[\w-]{1,32}$/)) throw new Error('name must be a string and match the regex /^[\\w-]{1,32}$/');
         this.name = name;
+        return this;
+    }
+
+    public setRequiredPermissions(permissions: (keyof PermissionFlags)[]): MessageCommandBuilder {
+        if (!permissions || !Array.isArray(permissions)) throw new Error('permissions must be an array.');
+        this.requiredPermissions = permissions;
         return this;
     }
 

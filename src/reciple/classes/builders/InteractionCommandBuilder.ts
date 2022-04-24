@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
-import { CommandInteraction } from 'discord.js';
+import { CommandInteraction, PermissionFlags } from 'discord.js';
 import { RecipleClient } from '../Client';
 
 export interface RecipleInteractionCommandExecute {
@@ -11,8 +11,15 @@ export interface RecipleInteractionCommandExecute {
 
 export class InteractionCommandBuilder extends SlashCommandBuilder {
     public readonly type: string = 'INTERACTION_COMMAND';
+    public requiredPermissions: (keyof PermissionFlags)[] = [];
     public allowExecuteInDM: boolean = true;
     public execute: (options: RecipleInteractionCommandExecute) => void = (options) => { /* Execute */ };
+    
+    public setRequiredPermissions(requiredPermissions: (keyof PermissionFlags)[]): InteractionCommandBuilder {
+        if (!requiredPermissions || !Array.isArray(requiredPermissions)) throw new Error('requiredPermissions must be an array.');
+        this.requiredPermissions = requiredPermissions;
+        return this;
+    }
 
     public setAllowExecuteInDM(allowExecuteInDM: boolean): InteractionCommandBuilder {
         if (typeof allowExecuteInDM !== 'boolean') throw new Error('allowExecuteInDM must be a boolean.');
