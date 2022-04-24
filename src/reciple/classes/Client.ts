@@ -93,7 +93,7 @@ export class RecipleClient extends Client {
             const command = this.commands.MESSAGE_COMMANDS[parseCommand.command];
             if (!command) return this;
 
-            if (commandPermissions(command.name, message.member?.permissions || null, this.config?.permissions.messageCommands)) {
+            if (commandPermissions(command.name, message.member?.permissions, this.config?.permissions.messageCommands, command)) {
                 if (!command.allowExecuteInDM && message.channel.type === 'DM' || !command.allowExecuteByBots && (message.author.bot || message.author.system) || isIgnoredChannel(message.channelId, this.config?.ignoredChannels)) return this;
                 if (command.validateOptions && !command.getCommandOptionValues(parseCommand)) {
                     await message.reply(this.config?.messages.notEnoughArguments || 'Not enough arguments.').catch((err) => this.logger.error(err));
@@ -122,7 +122,7 @@ export class RecipleClient extends Client {
 
         const command = this.commands.INTERACTION_COMMANDS[interaction.commandName];
 
-        if (commandPermissions(command.name, interaction.memberPermissions, this.config?.permissions.interactionCommands)) {
+        if (commandPermissions(command.name, interaction.memberPermissions ?? undefined, this.config?.permissions.interactionCommands, command)) {
             if (!command.allowExecuteInDM && interaction.member === null || isIgnoredChannel(interaction.channelId, this.config?.ignoredChannels)) return this;
             if (!command) return this;
 
