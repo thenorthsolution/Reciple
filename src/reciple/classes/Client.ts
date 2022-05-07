@@ -54,9 +54,9 @@ export class RecipleClient extends Client {
         this.modules = modules.modules.map(m => m.script);
         for (const command of modules.commands) {
             if (!command.name) continue;
-            if (command.type === 'MESSAGE_COMMAND') {
+            if (command.builder === 'MESSAGE_COMMAND') {
                 this.commands.MESSAGE_COMMANDS[command.name] = command as MessageCommandBuilder;
-            } else if (command.type === 'INTERACTION_COMMAND') {
+            } else if (command.builder === 'INTERACTION_COMMAND') {
                 this.commands.INTERACTION_COMMANDS[command.name] = command as InteractionCommandBuilder;
             }
         }
@@ -142,7 +142,7 @@ export class RecipleClient extends Client {
     }
 
     private async _commandExecuteError(err: Error, command: RecipleInteractionCommandExecute|RecipleMessageCommandExecute): Promise<void> {
-        this.logger.error(`An error occured executing ${command.builder.type == 'MESSAGE_COMMAND' ? 'message' : 'interaction'} command "${command.builder.name}"`);
+        this.logger.error(`An error occured executing ${command.builder.builder == 'MESSAGE_COMMAND' ? 'message' : 'interaction'} command "${command.builder.name}"`);
         this.logger.error(err);
 
         if (!err || !command) return;

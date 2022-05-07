@@ -56,7 +56,7 @@ export class MessageOption {
 }
 
 export class MessageCommandBuilder {
-    public readonly type: string = 'MESSAGE_COMMAND';
+    public readonly builder: string = 'MESSAGE_COMMAND';
     public name: string = '';
     public description: string = '';
     public options: MessageOption[] = [];

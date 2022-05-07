@@ -44,7 +44,7 @@ export async function loadModules (client: RecipleClient): Promise<loadedModules
             if (!await Promise.resolve(module_.onStart(client))) throw new Error(script + ' onStart is not defined or returned false.');
             if (module_.commands) {
                 for (const command of module_.commands) {
-                    if (command.type === 'MESSAGE_COMMAND' || command.type === 'INTERACTION_COMMAND') commands.push(command);
+                    if (command.builder === 'MESSAGE_COMMAND' || command.builder === 'INTERACTION_COMMAND') commands.push(command);
                 }
             }
         } catch (error) {
@@ -55,7 +55,7 @@ export async function loadModules (client: RecipleClient): Promise<loadedModules
 
         response.commands = response.commands.concat(commands.filter((c) => {
             if (!c.name) { logger.error(`A message command name is not defined in ${script}`); return false; }
-            if ((c as MessageCommandBuilder).type === 'MESSAGE_COMMAND' && c.options.length && (c as MessageCommandBuilder).options.some(o => !o.name)) { logger.error(`A message command option name is not defined in ${script}`); return false; }
+            if ((c as MessageCommandBuilder).builder === 'MESSAGE_COMMAND' && c.options.length && (c as MessageCommandBuilder).options.some(o => !o.name)) { logger.error(`A message command option name is not defined in ${script}`); return false; }
             return true;
         }));
         response.modules.push({
