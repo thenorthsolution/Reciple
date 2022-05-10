@@ -1,8 +1,16 @@
-import { Client, ClientEvents, ClientOptions, Interaction, Message } from 'discord.js';
+import {
+    ContextMenuCommandBuilder,
+    SlashCommandBuilder,
+    SlashCommandSubcommandBuilder,
+    SlashCommandOptionsOnlyBuilder,
+    SlashCommandSubcommandGroupBuilder,
+    SlashCommandSubcommandsOnlyBuilder
+} from '@discordjs/builders';
+import { ApplicationCommandData, ApplicationCommandDataResolvable, Client, ClientEvents, ClientOptions, Interaction, Message } from 'discord.js';
 import { getCommand, Logger as LoggerConstructor } from 'fallout-utility';
 import { MessageCommandBuilder, RecipleMessageCommandExecute } from './builders/MessageCommandBuilder';
 import { InteractionCommandBuilder, RecipleInteractionCommandExecute } from './builders/InteractionCommandBuilder';
-import { registerInteractionCommands } from '../registerInteractionCommands';
+import { commandBuilders, registerInteractionCommands } from '../registerInteractionCommands';
 import { logger } from '../logger';
 import { loadModules, RecipleScript } from '../modules';
 import { Config } from './Config';
@@ -20,6 +28,7 @@ export interface RecipleClientCommands {
 }
 
 // TODO: Add these events to the client
+// TODO: Learn to add these bitch to the client
 export interface RecipleClientEvents extends ClientEvents {
     recipleMessageCommandCreate: [command: RecipleMessageCommandExecute];
     recipleInteractionCommandCreate: [command: RecipleInteractionCommandExecute];
@@ -28,6 +37,7 @@ export interface RecipleClientEvents extends ClientEvents {
 export class RecipleClient extends Client {
     public config?: Config;
     public commands: RecipleClientCommands = { MESSAGE_COMMANDS: {}, INTERACTION_COMMANDS: {} };
+    public otherApplicationCommandData: (commandBuilders|ApplicationCommandDataResolvable)[] = [];
     public modules: RecipleScript[] = [];
     public logger: LoggerConstructor;
     public version: string = version;
@@ -74,7 +84,7 @@ export class RecipleClient extends Client {
 
         this.logger.info(`${this.modules.length} modules loaded.`);
         
-        if (this.config?.commands.interactionCommand.registerCommands) await registerInteractionCommands(this);
+        if (this.config?.commands.interactionCommand.registerCommands) await registerInteractionCommands(this, [...Object.values(this.commands.INTERACTION_COMMANDS), ...this.otherApplicationCommandData]);
         return this;
     }
 

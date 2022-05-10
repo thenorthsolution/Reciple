@@ -1,15 +1,27 @@
 import { InteractionCommandBuilder } from './classes/builders/InteractionCommandBuilder';
-import { SlashCommandBuilder } from '@discordjs/builders';
 import { RecipleClient } from "./classes/Client";
-import { ApplicationCommandData } from 'discord.js';
+import { ApplicationCommandData, ApplicationCommandDataResolvable } from 'discord.js';
+import {
+    ContextMenuCommandBuilder,
+    SlashCommandBuilder,
+    SlashCommandSubcommandBuilder,
+    SlashCommandOptionsOnlyBuilder,
+    SlashCommandSubcommandGroupBuilder,
+    SlashCommandSubcommandsOnlyBuilder
+} from '@discordjs/builders';
 
-export async function registerInteractionCommands(client: RecipleClient, cmds?: (InteractionCommandBuilder|SlashCommandBuilder|ApplicationCommandData)[]): Promise<void> {
+export type commandBuilders = InteractionCommandBuilder|ContextMenuCommandBuilder|
+    SlashCommandBuilder|SlashCommandSubcommandBuilder|
+    SlashCommandOptionsOnlyBuilder|SlashCommandSubcommandGroupBuilder|
+    SlashCommandSubcommandsOnlyBuilder;
+
+export async function registerInteractionCommands(client: RecipleClient, cmds?: (commandBuilders|ApplicationCommandDataResolvable)[]): Promise<void> {
     const commands = Object.values(cmds ?? client.commands.INTERACTION_COMMANDS).map(c => {
         if (typeof (c as InteractionCommandBuilder).toJSON !== 'undefined') return (c as InteractionCommandBuilder).toJSON();
         return c as ApplicationCommandData;
     }) ?? [];
 
-    if (!commands.length) {
+    if (!commands || !commands.length) {
         client.logger.warn('No interaction commands found.');
         return;
     }
