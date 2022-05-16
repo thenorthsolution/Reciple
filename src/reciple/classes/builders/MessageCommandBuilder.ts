@@ -3,13 +3,7 @@ import { Command } from 'fallout-utility';
 import { RecipleClient } from '../Client';
 
 
-export interface CommandMessage extends Command {
-    command?: string;
-    args?: string[];
-    raw?: string;
-    prefix?: string;
-    separator?: string;
-}
+export type CommandMessage = Command;
 
 export interface RecipleMessageCommandExecute {
     message: Message;

@@ -1,7 +1,7 @@
 import { input, replaceAll } from 'fallout-utility';
 import { existsSync, readFileSync, writeFileSync } from 'fs';
 import { token as __token } from '../flags';
-import { ClientOptions, InteractionReplyOptions, MessageOptions, PermissionResolvable } from 'discord.js';
+import { ClientOptions, InteractionReplyOptions, MessageOptions, MessagePayload, PermissionResolvable } from 'discord.js';
 import path from 'path';
 import yaml from 'yaml';
 import { version } from '../version';
@@ -51,7 +51,7 @@ export interface Config {
     }
     client: ClientOptions;
     messages: {
-        [key: string]: MessageOptions|InteractionReplyOptions|string;
+        [key: string]: MessagePayload|string;
     }
     modulesFolder: string;
     version?: string;
