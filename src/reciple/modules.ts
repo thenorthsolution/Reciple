@@ -38,7 +38,8 @@ export async function loadModules (client: RecipleClient): Promise<loadedModules
         let module_: RecipleScript;
         
         try {
-            module_ = require(modulePath);
+            const reqMod = require(modulePath);
+            module_ = reqMod?.default ? reqMod.default : reqMod;
 
             if (!module_.versions || !(typeof module_.versions === 'object' ? module_.versions : [module_.versions]).includes(client.version)) throw new Error('Module versions is not defined or unsupported.');
             if (!await Promise.resolve(module_.onStart(client))) throw new Error(script + ' onStart is not defined or returned false.');
