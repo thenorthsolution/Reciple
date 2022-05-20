@@ -1,12 +1,11 @@
-import {
-    ContextMenuCommandBuilder,
-    SlashCommandBuilder,
-    SlashCommandSubcommandBuilder,
-    SlashCommandOptionsOnlyBuilder,
-    SlashCommandSubcommandGroupBuilder,
-    SlashCommandSubcommandsOnlyBuilder
-} from '@discordjs/builders';
-import { ApplicationCommandData, ApplicationCommandDataResolvable, Client, ClientEvents, ClientOptions, Interaction, Message } from 'discord.js';
+// Dear precious programmer,
+// If you're trying to understand this code, please, consider that
+// at the time of writing this code, It was written the way humans
+// can understand it but I transformed into a dog at Apr 12th 2022
+// and accidentally made it unreadable for humans. So, if you're
+// trying to understand this code, please, consider being a dog first.
+
+import { ApplicationCommandDataResolvable, Client, ClientEvents, ClientOptions, Interaction, Message } from 'discord.js';
 import { getCommand, Logger as LoggerConstructor } from 'fallout-utility';
 import { MessageCommandBuilder, RecipleMessageCommandExecute } from './builders/MessageCommandBuilder';
 import { InteractionCommandBuilder, RecipleInteractionCommandExecute } from './builders/InteractionCommandBuilder';
