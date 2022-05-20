@@ -51,7 +51,7 @@ export interface Config {
     }
     client: ClientOptions;
     messages: {
-        [key: string]: MessagePayload|string;
+        [key: string]: any;
     }
     modulesFolder: string;
     version?: string;
