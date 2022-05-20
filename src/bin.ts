@@ -5,7 +5,7 @@ import { readdirSync, existsSync } from 'fs';
 import { input } from 'fallout-utility';
 import 'dotenv/config';
 
-const allowedFiles = ['node_modules', 'reciple.yml', 'package.json', 'package.lock.json'];
+const allowedFiles = ['node_modules', 'reciple.yml', 'package.json', 'package.lock.json', 'modules.yml', '.rmmcache'];
 
 if (readdirSync('./').filter(f => !f.startsWith('.') && allowedFiles.indexOf(f)).length > 0 && !existsSync('./reciple.yml')) {
     const ask = input('This directory does not contain reciple.yml. Would you like to init axis here? [y/n] ');
