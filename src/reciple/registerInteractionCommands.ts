@@ -1,6 +1,6 @@
 import { InteractionCommandBuilder } from './classes/builders/InteractionCommandBuilder';
 import { RecipleClient } from "./classes/Client";
-import { ApplicationCommandData, ApplicationCommandDataResolvable } from 'discord.js';
+import { ApplicationCommandData, ApplicationCommandDataResolvable, GuildResolvable } from 'discord.js';
 import {
     ContextMenuCommandBuilder,
     SlashCommandBuilder,
@@ -15,7 +15,7 @@ export type commandBuilders = InteractionCommandBuilder|ContextMenuCommandBuilde
     SlashCommandOptionsOnlyBuilder|SlashCommandSubcommandGroupBuilder|
     SlashCommandSubcommandsOnlyBuilder;
 
-export async function registerInteractionCommands(client: RecipleClient, cmds?: (commandBuilders|ApplicationCommandDataResolvable)[]): Promise<void> {
+export async function registerInteractionCommands(client: RecipleClient, cmds?: (commandBuilders|ApplicationCommandDataResolvable)[], overwriteGuilds?: GuildResolvable|GuildResolvable[]): Promise<void> {
     const commands = Object.values(cmds ?? client.commands.INTERACTION_COMMANDS).map(c => {
         if (typeof (c as InteractionCommandBuilder).toJSON !== 'undefined') return (c as InteractionCommandBuilder).toJSON() as ApplicationCommandDataResolvable;
         return c as ApplicationCommandDataResolvable;
@@ -26,14 +26,17 @@ export async function registerInteractionCommands(client: RecipleClient, cmds?: 
         return;
     }
 
-    if (!client.config?.commands.interactionCommand.guilds.length) {
+    const configGuilds = overwriteGuilds ?? client.config?.commands.interactionCommand.guilds;
+    const guilds: (string|undefined)[] = typeof configGuilds === 'object' ? (configGuilds as string[]) : [configGuilds];
+
+    if (!guilds || !guilds?.length) {
         await client.application?.commands.set(commands)?.catch(e => client.logger.error(e));
         client.logger.warn('No guilds were specified for interaction commands. Registered commands for all guilds.');
-    } else {
-        const guilds = typeof client.config.commands.interactionCommand.guilds === 'string' ? [client.config.commands.interactionCommand.guilds] : client.config.commands.interactionCommand.guilds;
-        
+    } else {        
         client.logger.warn(`Registering ${commands.length} interaction commands for ${guilds.length} guild(s).`);
         for (const guild of guilds) {
+            if (!guild) continue;
+
             await client.application?.commands.set(commands, guild)?.catch(e => client.logger.error(e));
             client.logger.warn(`Registered ${commands.length} interaction commands for ${guild}.`);
         }
