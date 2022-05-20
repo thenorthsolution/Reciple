@@ -13,13 +13,14 @@
     "resource",
     "package.json",
     "LICENSE",
-    "README.md"
+    "README.md",
+    "CHANGELOG.md"
   ],
   "scripts": {
     "clean": "rimraf bin",
     "compile": "yarn clean && tsc",
     "build": "yarn compile && npm un reciple -g && npm i ./ -g",
-    "build:publish": "yarn run build && yarn publish",
+    "build:publish": "yarn run build && rm CHANGELOG.md && changelog generate -m -m -M && yarn publish",
     "test": "cd test && reciple",
     "test:compile": "yarn run build && yarn test:run"
   },
@@ -32,6 +33,7 @@
   },
   "devDependencies": {
     "@types/node": "^17.0.33",
+    "generate-changelog": "^1.8.0",
     "typescript": "^4.6.4"
   }
 }
