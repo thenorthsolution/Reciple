@@ -21,7 +21,7 @@
     "compile": "yarn clean && tsc",
     "build": "yarn compile && npm un reciple -g && npm i ./ -g",
     "build:publish": "yarn run build && yarn run changelog && yarn publish",
-    "changelog": "rm CHANGELOG.md && changelog generate -m -m -M",
+    "changelog": "rm -rf CHANGELOG.md && changelog generate -m -m -M",
     "test": "cd test && reciple",
     "test:compile": "yarn run build && yarn test:run"
   },
