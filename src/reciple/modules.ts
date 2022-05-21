@@ -40,10 +40,12 @@ export async function loadModules(client: RecipleClient): Promise<loadedModules>
 
         try {
             const reqMod = require(modulePath);
-            module_ = reqMod?.default ? reqMod.default : reqMod;
+            module_ = !!reqMod?.default ? reqMod.default : reqMod;
 
-            if (!module_.versions) throw new Error('Module does not have supported versions.');
-            if (!(typeof module_.versions === 'object' ? module_.versions : [module_.versions]).some(v => isSupportedVersion(v, version))) throw new Error('Module versions is not defined or unsupported.');
+            if (!module_.versions?.length) throw new Error('Module does not have supported versions.');
+            const versions = typeof module_.versions === 'object' ? module_.versions : [module_.versions];
+
+            if (!versions.some(v => isSupportedVersion(v, version))) throw new Error('Module versions is not defined or unsupported.');
             if (!await Promise.resolve(module_.onStart(client))) throw new Error(script + ' onStart is not defined or returned false.');
             if (module_.commands) {
                 for (const command of module_.commands) {
