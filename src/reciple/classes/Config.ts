@@ -4,7 +4,7 @@ import { token as __token } from '../flags';
 import { ClientOptions, InteractionReplyOptions, MessageOptions, MessagePayload, PermissionResolvable } from 'discord.js';
 import path from 'path';
 import yaml from 'yaml';
-import { version } from '../version';
+import { isSupportedVersion, version } from '../version';
 
 export interface Config {
     token: string;
@@ -54,7 +54,7 @@ export interface Config {
         [key: string]: any;
     }
     modulesFolder: string;
-    version?: string;
+    version: string;
 }
 
 export class RecipleConfig {
@@ -120,7 +120,7 @@ export class RecipleConfig {
     }
 
     private isSupportedConfig(): boolean {
-        return (this.config?.version && this.config.version != version) ? false : true;
+        return isSupportedVersion(this.config?.version || '0.0.0', version);
     }
 
     private askToken(): string|null {
