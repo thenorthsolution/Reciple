@@ -22,6 +22,8 @@ commands:
     replyOnError: false
     # register interaction commands on bot ready
     registerCommands: true
+    # set required permissions for interaction commands
+    setRequiredPermissions: true
     # register commands to specific guild(s) empty to make it global
     guilds: []
 

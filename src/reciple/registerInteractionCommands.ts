@@ -1,6 +1,6 @@
 import { InteractionCommandBuilder } from './classes/builders/InteractionCommandBuilder';
 import { RecipleClient } from "./classes/Client";
-import { ApplicationCommandData, ApplicationCommandDataResolvable, GuildResolvable } from 'discord.js';
+import { ApplicationCommandData, ApplicationCommandDataResolvable, GuildResolvable, PermissionString } from 'discord.js';
 import {
     ContextMenuCommandBuilder,
     SlashCommandBuilder,
@@ -16,8 +16,24 @@ export type commandBuilders = InteractionCommandBuilder|ContextMenuCommandBuilde
     SlashCommandSubcommandsOnlyBuilder;
 
 export async function registerInteractionCommands(client: RecipleClient, cmds?: (commandBuilders|ApplicationCommandDataResolvable)[], overwriteGuilds?: GuildResolvable|GuildResolvable[]): Promise<void> {
-    const commands = Object.values(cmds ?? client.commands.INTERACTION_COMMANDS).map(c => {
-        if (typeof (c as InteractionCommandBuilder).toJSON !== 'undefined') return (c as InteractionCommandBuilder).toJSON() as ApplicationCommandDataResolvable;
+    let commands = Object.values(cmds ?? client.commands.INTERACTION_COMMANDS).map(c => {
+        if (typeof (c as InteractionCommandBuilder).toJSON !== 'undefined') {
+            const cmd: InteractionCommandBuilder = c as InteractionCommandBuilder;
+
+            if (cmd?.builder === 'INTERACTION_COMMAND' && client.config?.commands.interactionCommand.setRequiredPermissions) {
+                const permissions = (client.config?.permissions?.interactionCommands.enabled ?
+                    client.config?.permissions?.interactionCommands.commands.find(c => c.command.toLowerCase() === cmd.name.toLowerCase())?.permissions :
+                    undefined) ?? cmd.requiredPermissions;
+
+                cmd.setRequiredPermissions(permissions as PermissionString[]);
+                client.commands.INTERACTION_COMMANDS[cmd.name] = cmd;
+
+                client.logger.debug(`Set required permissions for ${cmd.name} to ${permissions.join(', ')}`);
+                return cmd.toJSON() as ApplicationCommandDataResolvable;
+            }
+
+            return (c as InteractionCommandBuilder).toJSON() as ApplicationCommandDataResolvable;
+        }
         return c as ApplicationCommandDataResolvable;
     }) ?? [];
 

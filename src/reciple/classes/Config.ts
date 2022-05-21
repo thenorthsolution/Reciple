@@ -19,6 +19,7 @@ export interface Config {
             enabled: boolean;
             replyOnError: boolean;
             registerCommands: boolean;
+            setRequiredPermissions: boolean;
             guilds: string[]|string;
         }
     }
