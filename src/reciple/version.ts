@@ -27,12 +27,8 @@ export function isSupportedVersion(ver: string, supportedVersion?: string) {
     const { major: supportedMajor, minor: supportedMinor, patch: supportedPatch } = parseVersion(supportedVersion);
 
     if (major !== supportedMajor) return false;
-
-    if (minor > supportedMinor) return true;
-    if (minor < supportedMinor) return false;
-
-    if (patch > supportedPatch) return true;
-    if (patch < supportedPatch) return false;
+    if (minor !== supportedMinor) return false;
+    if (patch <= supportedPatch) return false;
 
     return true;
 }
