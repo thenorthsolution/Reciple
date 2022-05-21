@@ -1,4 +1,4 @@
-import { Permissions } from "discord.js";
+import { PermissionResolvable, Permissions } from "discord.js";
 import { InteractionCommandBuilder } from './classes/builders/InteractionCommandBuilder';
 import { MessageCommandBuilder } from './classes/builders/MessageCommandBuilder';
 import { Config } from "./classes/Config";
@@ -9,5 +9,5 @@ export function commandPermissions(commandName: string, memberPermissions?: Perm
     const command = configConmmandPermissions.commands.find(c => c.command.toLowerCase() === commandName.toLowerCase()) ?? { permissions: builder?.requiredPermissions ?? [] };
     if (!command.permissions.length) return true;
     
-    return memberPermissions ? memberPermissions.has(command.permissions) : false;
+    return memberPermissions ? memberPermissions.has(command.permissions as PermissionResolvable[]) : false;
 }

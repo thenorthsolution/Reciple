@@ -1,4 +1,4 @@
-import { Message, PermissionFlags } from 'discord.js';
+import { Message, PermissionFlags, PermissionString } from 'discord.js';
 import { Command } from 'fallout-utility';
 import { RecipleClient } from '../Client';
 
@@ -55,7 +55,7 @@ export class MessageCommandBuilder {
     public description: string = '';
     public options: MessageOption[] = [];
     public validateOptions: boolean = false;
-    public requiredPermissions: (keyof PermissionFlags)[] = [];
+    public requiredPermissions: (PermissionFlags|PermissionString)[] = [];
     public allowExecuteInDM: boolean = true;
     public allowExecuteByBots: boolean = false;
     public execute: (options: RecipleMessageCommandExecute) => void = (options) => { /* Execute */ };
@@ -66,7 +66,7 @@ export class MessageCommandBuilder {
         return this;
     }
 
-    public setRequiredPermissions(permissions: (keyof PermissionFlags)[]): MessageCommandBuilder {
+    public setRequiredPermissions(permissions: (PermissionFlags|PermissionString)[]): MessageCommandBuilder {
         if (!permissions || !Array.isArray(permissions)) throw new Error('permissions must be an array.');
         this.requiredPermissions = permissions;
         return this;
