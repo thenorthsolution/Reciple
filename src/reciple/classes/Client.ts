@@ -98,29 +98,29 @@ export class RecipleClient extends Client {
         if (!message.content || !this.config?.commands.messageCommand.enabled) return this;
 
         const parseCommand = getCommand(message.content, this.config?.prefix || '!', this.config?.commands.messageCommand.commandArgumentSeparator || ' ');
-        if (parseCommand && parseCommand.command) {
-            const command = this.commands.MESSAGE_COMMANDS[parseCommand.command];
-            if (!command) return this;
+        if (!parseCommand?.command || !parseCommand) return this; 
+        
+        const command = this.commands.MESSAGE_COMMANDS[parseCommand.command];
+        if (!command) return this;
 
-            if (commandPermissions(command.name, message.member?.permissions, this.config?.permissions.messageCommands, command)) {
-                if (!command.allowExecuteInDM && message.channel.type === 'DM' || !command.allowExecuteByBots && (message.author.bot || message.author.system) || isIgnoredChannel(message.channelId, this.config?.ignoredChannels)) return this;
-                if (command.validateOptions && !command.getCommandOptionValues(parseCommand)) {
-                    await message.reply(this.config?.messages.notEnoughArguments || 'Not enough arguments.').catch((err) => this.logger.error(err));
-                    return this;
-                }
-
-                const options: RecipleMessageCommandExecute = {
-                    message: message,
-                    command: parseCommand,
-                    builder: command,
-                    client: this
-                };
-
-                await Promise.resolve(command.execute(options)).catch(err => this._commandExecuteError(err, options));
-                this.emit('recipleMessageCommandCreate', options);
-            } else {
-                await message.reply(this.config?.messages.noPermissions || 'You do not have permission to use this command.').catch((err) => this.logger.error(err));
+        if (commandPermissions(command.name, message.member?.permissions, this.config?.permissions.messageCommands, command)) {
+            if (!command.allowExecuteInDM && message.channel.type === 'DM' || !command.allowExecuteByBots && (message.author.bot || message.author.system) || isIgnoredChannel(message.channelId, this.config?.ignoredChannels)) return this;
+            if (command.validateOptions && !command.getCommandOptionValues(parseCommand)) {
+                await message.reply(this.config?.messages.notEnoughArguments || 'Not enough arguments.').catch((err) => this.logger.error(err));
+                return this;
             }
+
+            const options: RecipleMessageCommandExecute = {
+                message: message,
+                command: parseCommand,
+                builder: command,
+                client: this
+            };
+
+            await Promise.resolve(command.execute(options)).catch(err => this._commandExecuteError(err, options));
+            this.emit('recipleMessageCommandCreate', options);
+        } else {
+            await message.reply(this.config?.messages.noPermissions || 'You do not have permission to use this command.').catch((err) => this.logger.error(err));
         }
 
         return this;
@@ -130,6 +130,7 @@ export class RecipleClient extends Client {
         if (!interaction || !interaction.isCommand() || !this.config?.commands.interactionCommand.enabled) return this;
 
         const command = this.commands.INTERACTION_COMMANDS[interaction.commandName];
+        if (!command) return this;
 
         if (commandPermissions(command.name, interaction.memberPermissions ?? undefined, this.config?.permissions.interactionCommands, command)) {
             if (!command.allowExecuteInDM && interaction.member === null || isIgnoredChannel(interaction.channelId, this.config?.ignoredChannels)) return this;
