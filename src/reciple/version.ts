@@ -28,7 +28,7 @@ export function isSupportedVersion(ver: string, supportedVersion?: string) {
 
     if (major !== supportedMajor) return false;
     if (minor !== supportedMinor) return false;
-    if (patch < supportedPatch) return false;
+    if (patch > supportedPatch) return false;
 
     return true;
 }
