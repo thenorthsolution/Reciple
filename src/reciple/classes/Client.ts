@@ -51,7 +51,7 @@ export class RecipleClient extends Client {
 
         if (this.config.fileLogging.enabled) this.logger.logFile(this.config.fileLogging.logFilePath, false);
 
-        this.logger.info('Reciple Client v'+ version +' is starting...');
+        this.logger.info('Reciple Client v' + version + ' is starting...');
     }
 
     public async startModules(): Promise<RecipleClient> {
@@ -82,7 +82,7 @@ export class RecipleClient extends Client {
         }
 
         this.logger.info(`${this.modules.length} modules loaded.`);
-        
+
         if (this.config?.commands.interactionCommand.registerCommands) await registerInteractionCommands(this, [...Object.values(this.commands.INTERACTION_COMMANDS), ...this.otherApplicationCommandData]);
         return this;
     }
@@ -96,7 +96,7 @@ export class RecipleClient extends Client {
 
     public async messageCommandExecute(message: Message): Promise<RecipleClient> {
         if (!message.content || !this.config?.commands.messageCommand.enabled) return this;
-        
+
         const parseCommand = getCommand(message.content, this.config?.prefix || '!', this.config?.commands.messageCommand.commandArgumentSeparator || ' ');
         if (parseCommand && parseCommand.command) {
             const command = this.commands.MESSAGE_COMMANDS[parseCommand.command];
@@ -108,7 +108,7 @@ export class RecipleClient extends Client {
                     await message.reply(this.config?.messages.notEnoughArguments || 'Not enough arguments.').catch((err) => this.logger.error(err));
                     return this;
                 }
-                
+
                 const options: RecipleMessageCommandExecute = {
                     message: message,
                     command: parseCommand,
@@ -127,7 +127,7 @@ export class RecipleClient extends Client {
     }
 
     public async interactionCommandExecute(interaction: Interaction): Promise<RecipleClient> {
-        if(!interaction || !interaction.isCommand() || !this.config?.commands.interactionCommand.enabled) return this;
+        if (!interaction || !interaction.isCommand() || !this.config?.commands.interactionCommand.enabled) return this;
 
         const command = this.commands.INTERACTION_COMMANDS[interaction.commandName];
 

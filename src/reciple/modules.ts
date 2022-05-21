@@ -1,17 +1,18 @@
 import { existsSync, mkdirSync, readdirSync } from 'fs';
 import { RecipleClient } from './classes/Client';
+import { version, isSupportedVersion } from './version';
 import { MessageCommandBuilder } from './classes/builders/MessageCommandBuilder';
 import { InteractionCommandBuilder } from './classes/builders/InteractionCommandBuilder';
 import path from 'path';
 
-export type recipleCommands = (MessageCommandBuilder|InteractionCommandBuilder)[];
+export type recipleCommands = (MessageCommandBuilder | InteractionCommandBuilder)[];
 export type loadedModules = { commands: recipleCommands, modules: RecipleModule[] };
 
 export interface RecipleScript {
-    versions: string|string[];
-    commands?: (MessageCommandBuilder|InteractionCommandBuilder)[];
-    onLoad?: (reciple: RecipleClient) => void|Promise<void>;
-    onStart: (reciple: RecipleClient) => boolean|Promise<boolean>;
+    versions: string | string[];
+    commands?: (MessageCommandBuilder | InteractionCommandBuilder)[];
+    onLoad?: (reciple: RecipleClient) => void | Promise<void>;
+    onStart: (reciple: RecipleClient) => boolean | Promise<boolean>;
 }
 
 export interface RecipleModule {
@@ -23,11 +24,11 @@ export interface RecipleModule {
     }
 }
 
-export async function loadModules (client: RecipleClient): Promise<loadedModules> {
+export async function loadModules(client: RecipleClient): Promise<loadedModules> {
     const response: loadedModules = { commands: [], modules: [] };
     const modulesDir = client.config?.modulesFolder || './modules';
     const logger = client.logger;
-    
+
     if (!existsSync(modulesDir)) mkdirSync(modulesDir, { recursive: true });
 
     const scripts = readdirSync(modulesDir).filter(file => file.endsWith('.js') && (!file.startsWith('_') && !file.startsWith('.')));
@@ -36,12 +37,13 @@ export async function loadModules (client: RecipleClient): Promise<loadedModules
         const modulePath = path.resolve(modulesDir, script);
         const commands: recipleCommands = [];
         let module_: RecipleScript;
-        
+
         try {
             const reqMod = require(modulePath);
             module_ = reqMod?.default ? reqMod.default : reqMod;
 
-            if (!module_.versions || !(typeof module_.versions === 'object' ? module_.versions : [module_.versions]).includes(client.version)) throw new Error('Module versions is not defined or unsupported.');
+            if (!module_.versions) throw new Error('Module does not have supported versions.');
+            if (!(typeof module_.versions === 'object' ? module_.versions : [module_.versions]).some(v => isSupportedVersion(v, version))) throw new Error('Module versions is not defined or unsupported.');
             if (!await Promise.resolve(module_.onStart(client))) throw new Error(script + ' onStart is not defined or returned false.');
             if (module_.commands) {
                 for (const command of module_.commands) {
