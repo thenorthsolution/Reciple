@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
-import { CommandInteraction, PermissionFlags } from 'discord.js';
+import { CommandInteraction, PermissionFlags, PermissionString } from 'discord.js';
 import { RecipleClient } from '../Client';
 
 export interface RecipleInteractionCommandExecute {
@@ -11,7 +11,7 @@ export interface RecipleInteractionCommandExecute {
 
 export class InteractionCommandBuilder extends SlashCommandBuilder {
     public readonly builder: string = 'INTERACTION_COMMAND';
-    public requiredPermissions: (keyof PermissionFlags)[] = [];
+    public requiredPermissions: (PermissionFlags|PermissionString)[] = [];
     public allowExecuteInDM: boolean = true;
     public execute: (options: RecipleInteractionCommandExecute) => void = (options) => { /* Execute */ };
     
