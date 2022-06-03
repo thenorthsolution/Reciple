@@ -13,8 +13,7 @@
     "resource",
     "package.json",
     "LICENSE",
-    "README.md",
-    "CHANGELOG.md"
+    "README.md"
   ],
   "scripts": {
     "clean": "rimraf bin",
