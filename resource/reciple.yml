@@ -85,6 +85,10 @@ messages:
     content: 'An error occurred.'
     ephemeral: true
 
+# Ignored Files
+ignoredFiles:
+  - 'test.js'
+
 
 ###################################################
 #                                                 #

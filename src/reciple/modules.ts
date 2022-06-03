@@ -10,9 +10,9 @@ export type loadedModules = { commands: recipleCommands, modules: RecipleModule[
 
 export interface RecipleScript {
     versions: string | string[];
-    commands?: (MessageCommandBuilder | InteractionCommandBuilder)[];
-    onLoad?: (reciple: RecipleClient) => void | Promise<void>;
-    onStart: (reciple: RecipleClient) => boolean | Promise<boolean>;
+    commands?: (MessageCommandBuilder|InteractionCommandBuilder)[];
+    onLoad?: (reciple: RecipleClient) => (void|Promise<void>);
+    onStart: (reciple: RecipleClient) => (boolean|Promise<boolean>);
 }
 
 export interface RecipleModule {
@@ -31,7 +31,10 @@ export async function loadModules(client: RecipleClient): Promise<loadedModules>
 
     if (!existsSync(modulesDir)) mkdirSync(modulesDir, { recursive: true });
 
-    const scripts = readdirSync(modulesDir).filter(file => file.endsWith('.js') && (!file.startsWith('_') && !file.startsWith('.')));
+    const ignoredFiles = (client.config?.ignoredFiles || []).map(file => file.endsWith('.js') ? file : `${file}.js`);
+    const scripts = readdirSync(modulesDir).filter(file => {
+        return file.endsWith('.js') && (!file.startsWith('_') && !file.startsWith('.')) && !ignoredFiles.includes(file);
+    });
 
     for (const script of scripts) {
         const modulePath = path.resolve(modulesDir, script);
