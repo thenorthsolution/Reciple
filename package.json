@@ -1,6 +1,6 @@
 {
   "name": "reciple",
-  "version": "1.2.0",
+  "version": "2.0.0",
   "description": "A Discord.js bot",
   "author": "FalloutStudios",
   "license": "GPL-3.0",
@@ -22,7 +22,7 @@
     "build": "yarn compile && npm un reciple -g && npm i ./ -g",
     "build:publish": "yarn run build && yarn run changelog && yarn publish",
     "test": "cd test && reciple",
-    "test:compile": "yarn run build && yarn test:run"
+    "test:build": "yarn run build && yarn test:run"
   },
   "dependencies": {
     "commander": "^9.2.0",
