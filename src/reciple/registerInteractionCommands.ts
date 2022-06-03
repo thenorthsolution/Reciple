@@ -1,6 +1,6 @@
 import { InteractionCommandBuilder } from './classes/builders/InteractionCommandBuilder';
 import { RecipleClient } from "./classes/Client";
-import { ApplicationCommandData, ApplicationCommandDataResolvable, GuildResolvable, PermissionString } from 'discord.js';
+import { ApplicationCommandDataResolvable, GuildResolvable, PermissionString } from 'discord.js';
 import {
     ContextMenuCommandBuilder,
     SlashCommandBuilder,
@@ -22,7 +22,7 @@ export async function registerInteractionCommands(client: RecipleClient, cmds?: 
 
             if (cmd?.builder === 'INTERACTION_COMMAND' && client.config?.commands.interactionCommand.setRequiredPermissions) {
                 const permissions = (client.config?.permissions?.interactionCommands.enabled ?
-                    client.config?.permissions?.interactionCommands.commands.find(c => c.command.toLowerCase() === cmd.name.toLowerCase())?.permissions :
+                    client.config?.permissions?.interactionCommands.commands.find(cmd_ => cmd_.command.toLowerCase() === cmd.name.toLowerCase())?.permissions :
                     undefined) ?? cmd.requiredPermissions;
 
                 cmd.setRequiredPermissions(permissions as PermissionString[]);

@@ -1,7 +1,7 @@
 import { input, replaceAll } from 'fallout-utility';
 import { existsSync, readFileSync, writeFileSync } from 'fs';
 import { token as __token } from '../flags';
-import { ClientOptions, InteractionReplyOptions, MessageOptions, MessagePayload, PermissionFlags, PermissionResolvable, PermissionString } from 'discord.js';
+import { ClientOptions, PermissionFlags, PermissionString } from 'discord.js';
 import path from 'path';
 import yaml from 'yaml';
 import { isSupportedVersion, version } from '../version';
@@ -54,6 +54,7 @@ export interface Config {
     messages: {
         [key: string]: any;
     }
+    ignoredFiles: string[];
     modulesFolder: string;
     version: string;
 }
