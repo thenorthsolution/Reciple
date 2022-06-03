@@ -13,7 +13,7 @@ export class InteractionCommandBuilder extends SlashCommandBuilder {
     public readonly builder: string = 'INTERACTION_COMMAND';
     public requiredPermissions: (PermissionFlags|PermissionString)[] = [];
     public allowExecuteInDM: boolean = true;
-    public execute: (options: RecipleInteractionCommandExecute) => void = (options) => { /* Execute */ };
+    public execute: (options: RecipleInteractionCommandExecute) => void = () => { /* Execute */ };
     
     public setRequiredPermissions(requiredPermissions: (keyof PermissionFlags)[]): InteractionCommandBuilder {
         if (!requiredPermissions || !Array.isArray(requiredPermissions)) throw new Error('requiredPermissions must be an array.');

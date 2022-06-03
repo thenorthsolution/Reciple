@@ -58,7 +58,7 @@ export class MessageCommandBuilder {
     public requiredPermissions: (PermissionFlags|PermissionString)[] = [];
     public allowExecuteInDM: boolean = true;
     public allowExecuteByBots: boolean = false;
-    public execute: (options: RecipleMessageCommandExecute) => void = (options) => { /* Execute */ };
+    public execute: (options: RecipleMessageCommandExecute) => void = () => { /* Execute */ };
 
     public setName(name: string): MessageCommandBuilder {
         if (!name || typeof name !== 'string' || !name.match(/^[\w-]{1,32}$/)) throw new Error('name must be a string and match the regex /^[\\w-]{1,32}$/');
