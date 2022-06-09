@@ -162,11 +162,7 @@ export class RecipleClient extends Client {
             await (command as RecipleMessageCommandExecute).message.reply(this.config?.messages.error || 'An error occured.').catch((e) => this.logger.error(e));
         } else if ((command as RecipleInteractionCommandExecute)?.interaction) {
             if (!this.config?.commands.interactionCommand.replyOnError) return;
-            if (!(command as RecipleInteractionCommandExecute)?.interaction.deferred && !(command as RecipleInteractionCommandExecute)?.interaction.replied) {
-                await (command as RecipleInteractionCommandExecute).interaction.reply(this.config?.messages.error || 'An error occured.').catch((e) => this.logger.error(e));
-            } else {
-                await (command as RecipleInteractionCommandExecute).interaction.followUp(this.config?.messages.error || 'An error occured.').catch((e) => this.logger.error(e));
-            }
+            await (command as RecipleInteractionCommandExecute).interaction.followUp(this.config?.messages.error || 'An error occured.').catch((e) => this.logger.error(e));
         }
     }
 }
