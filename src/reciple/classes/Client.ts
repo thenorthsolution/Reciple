@@ -22,8 +22,8 @@ export interface RecipleClientOptions extends ClientOptions {
 }
 
 export interface RecipleClientCommands {
-    MESSAGE_COMMANDS: { [key: string]: MessageCommandBuilder };
-    INTERACTION_COMMANDS: { [key: string]: InteractionCommandBuilder };
+    MESSAGE_COMMANDS: { [commandName: string]: MessageCommandBuilder };
+    INTERACTION_COMMANDS: { [commandName: string]: InteractionCommandBuilder };
 }
 
 // TODO: Add these events to the client
@@ -100,7 +100,7 @@ export class RecipleClient extends Client {
         const parseCommand = getCommand(message.content, this.config?.prefix || '!', this.config?.commands.messageCommand.commandArgumentSeparator || ' ');
         if (!parseCommand?.command || !parseCommand) return this; 
         
-        const command = this.commands.MESSAGE_COMMANDS[parseCommand.command];
+        const command = this.commands.MESSAGE_COMMANDS[parseCommand.command.toLowerCase()];
         if (!command) return this;
 
         if (commandPermissions(command.name, message.member?.permissions, this.config?.permissions.messageCommands, command)) {
