@@ -2,6 +2,7 @@ export * from './reciple/classes/Client';
 export * from './reciple/classes/Config';
 export * from './reciple/classes/builders/InteractionCommandBuilder';
 export * from './reciple/classes/builders/MessageCommandBuilder';
+export * from './reciple/classes/builders/MessageCommandOptionBuilder';
 export * from './reciple/commandPermissions';
 export * from './reciple/flags';
 export * from './reciple/isIgnoredChannel';
