@@ -107,15 +107,15 @@ export class RecipleConfig {
     public parseToken(askIfNull: boolean = true): string|null {
         let token = __token || null;
 
-        if (token) return token;
-        if (!this.config) return token;
-        if (!this.config.token) return token || (askIfNull ? this.askToken() : null);
+        if (!this.config && !token) return token;
+        if (this.config && !this.config?.token && !token) return token || (askIfNull ? this.askToken() : null);
         
-        const envToken = this.config.token.toString().split(':');
+        token = token || this.config?.token || null;
+        if (!token) return token;
+
+        const envToken = token.toString().split(':');
         if (envToken.length === 2 && envToken[0].toLocaleLowerCase() === 'env' && envToken[1]) {
             token = process.env[envToken[1]] || null;
-        } else {
-            token = this.config.token;
         }
 
         return token || (askIfNull ? this.askToken() : null);
