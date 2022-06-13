@@ -1,39 +1,39 @@
 {
-  "name": "reciple",
-  "version": "1.3.3",
-  "description": "A Discord.js bot",
-  "author": "FalloutStudios",
-  "license": "GPL-3.0",
-  "main": "bin/index.js",
-  "bin": {
-    "reciple": "bin/bin.js"
-  },
-  "files": [
-    "bin",
-    "resource",
-    "package.json",
-    "LICENSE",
-    "README.md"
-  ],
-  "scripts": {
-    "clean": "rimraf bin",
-    "compile": "yarn clean && tsc",
-    "build": "yarn compile && npm un reciple -g && npm i ./ -g",
-    "build:publish": "yarn run build && yarn run changelog && yarn publish",
-    "test": "cd test && reciple",
-    "test:build": "yarn run build && yarn test:run"
-  },
-  "dependencies": {
-    "commander": "^9.3.0",
-    "discord.js": "^13.8.0",
-    "dotenv": "^16.0.1",
-    "fallout-utility": "^1.3.14",
-    "semver": "^7.3.7",
-    "yaml": "^2.1.1"
-  },
-  "devDependencies": {
-    "@types/node": "^17.0.41",
-    "@types/semver": "^7.3.9",
-    "typescript": "^4.7.3"
-  }
+    "name": "reciple",
+    "version": "1.3.3",
+    "description": "A Discord.js bot",
+    "author": "FalloutStudios",
+    "license": "GPL-3.0",
+    "main": "bin/index.js",
+    "bin": {
+        "reciple": "bin/bin.js"
+    },
+    "files": [
+        "bin",
+        "resource",
+        "package.json",
+        "LICENSE",
+        "README.md"
+    ],
+    "scripts": {
+        "clean": "rimraf bin",
+        "compile": "yarn clean && tsc",
+        "build": "yarn compile && npm un reciple -g && npm i ./ -g",
+        "build:publish": "yarn run build && yarn run changelog && yarn publish",
+        "test": "cd test && reciple",
+        "test:build": "yarn run build && yarn test:run"
+    },
+    "dependencies": {
+        "commander": "^9.3.0",
+        "discord.js": "^13.8.0",
+        "dotenv": "^16.0.1",
+        "fallout-utility": "^1.3.14",
+        "semver": "^7.3.7",
+        "yaml": "^2.1.1"
+    },
+    "devDependencies": {
+        "@types/node": "^17.0.41",
+        "@types/semver": "^7.3.9",
+        "typescript": "^4.7.3"
+    }
 }
