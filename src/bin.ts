@@ -4,6 +4,13 @@ import { RecipleClient } from './reciple/classes/Client';
 import { readdirSync, existsSync } from 'fs';
 import { input } from 'fallout-utility';
 import 'dotenv/config';
+import { flags } from './reciple/flags';
+import { version } from './reciple/version';
+
+if (flags.version) {
+    console.log(`v${version}`);
+    process.exit(0);
+}
 
 const allowedFiles = ['node_modules', 'reciple.yml', 'package.json', 'package.lock.json', 'modules.yml', '.rmmcache'];
 
