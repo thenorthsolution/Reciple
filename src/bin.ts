@@ -19,7 +19,7 @@ if (readdirSync('./').filter(f => !f.startsWith('.') && allowedFiles.indexOf(f))
     if (ask !== 'y') process.exit(0);
 }
 
-const config = new RecipleConfig('./reciple.yml').parseConfig().getConfig();
+const config = new RecipleConfig(flags.config ?? './reciple.yml').parseConfig().getConfig();
 const client = new RecipleClient({ config: config, ...config.client });
 
 (async () => {
