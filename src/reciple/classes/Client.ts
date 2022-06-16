@@ -63,11 +63,7 @@ export class RecipleClient extends Client {
         this.modules = modules.modules.map(m => m.script);
         for (const command of modules.commands) {
             if (!command.name) continue;
-            if (command.builder === 'MESSAGE_COMMAND') {
-                this.commands.MESSAGE_COMMANDS[command.name] = command as MessageCommandBuilder;
-            } else if (command.builder === 'INTERACTION_COMMAND') {
-                this.commands.INTERACTION_COMMANDS[command.name] = command as InteractionCommandBuilder;
-            }
+            this.addCommand(command);
         }
 
         this.logger.info(`${Object.keys(this.commands.MESSAGE_COMMANDS).length} message commands loaded.`);
@@ -83,7 +79,35 @@ export class RecipleClient extends Client {
 
         this.logger.info(`${this.modules.length} modules loaded.`);
 
-        if (this.config?.commands.interactionCommand.registerCommands) await registerInteractionCommands(this, [...Object.values(this.commands.INTERACTION_COMMANDS), ...this.otherApplicationCommandData]);
+        if (!this.config?.commands.interactionCommand.registerCommands) return this;
+        
+        await registerInteractionCommands(this, [...Object.values(this.commands.INTERACTION_COMMANDS), ...this.otherApplicationCommandData]);
+        return this;
+    }
+
+    public async addModule(script: RecipleScript, registerCommands: boolean = true): Promise<void> {
+        this.modules.push(script);
+        if (typeof script?.onLoad === 'function') await Promise.resolve(script.onLoad(this));
+
+        this.logger.info(`${this.modules.length} modules loaded.`);
+        for (const command of script.commands ?? []) {
+            if (!command.name) continue;
+            this.addCommand(command);
+        }
+
+        if (!registerCommands || !this.config?.commands.interactionCommand.registerCommands) return;
+        await registerInteractionCommands(this, [...Object.values(this.commands.INTERACTION_COMMANDS), ...this.otherApplicationCommandData]);
+    }
+
+    public addCommand(command: recipleCommandBuilders): RecipleClient {
+        if (command.builder === 'MESSAGE_COMMAND') {
+            this.commands.MESSAGE_COMMANDS[command.name] = command as MessageCommandBuilder;
+        } else if (command.builder === 'INTERACTION_COMMAND') {
+            this.commands.INTERACTION_COMMANDS[command.name] = command as InteractionCommandBuilder;
+        } else {
+            this.logger.error(`Command "${command.name ?? 'unknown'}" has an invalid builder.`);
+        }
+
         return this;
     }
 
