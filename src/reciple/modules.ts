@@ -25,7 +25,7 @@ export interface RecipleModule {
     }
 }
 
-export default async function (client: RecipleClient): Promise<loadedModules> {
+export async function loadModules(client: RecipleClient): Promise<loadedModules> {
     const response: loadedModules = { commands: [], modules: [] };
     const modulesDir = client.config?.modulesFolder || './modules';
     const logger = client.logger;

@@ -7,15 +7,15 @@
 
 import { ApplicationCommandDataResolvable, Client, ClientEvents, ClientOptions, Interaction, Message } from 'discord.js';
 import { InteractionCommandBuilder, RecipleInteractionCommandExecute } from './builders/InteractionCommandBuilder';
-import loadModules, { recipleCommandBuilders, recipleCommandBuildersExecute, RecipleScript } from '../modules';
+import { loadModules, recipleCommandBuilders, recipleCommandBuildersExecute, RecipleScript } from '../modules';
 import { interactionCommandBuilders, registerInteractionCommands } from '../registerInteractionCommands';
 import { MessageCommandBuilder, RecipleMessageCommandExecute } from './builders/MessageCommandBuilder';
 import { getCommand, Logger as LoggerConstructor } from 'fallout-utility';
-import commandPermissions from '../commandPermissions';
-import isIgnoredChannel from '../isIgnoredChannel';
+import { commandPermissions } from '../commandPermissions';
+import { isIgnoredChannel } from '../isIgnoredChannel';
 import { version } from '../version';
 import { Config } from './Config';
-import logger from '../logger';
+import { logger } from '../logger';
 
 export interface RecipleClientOptions extends ClientOptions {
     config: Config;
