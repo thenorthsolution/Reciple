@@ -86,8 +86,7 @@ messages:
     ephemeral: true
 
 # Ignored Files
-ignoredFiles:
-  - 'test.js'
+ignoredFiles: []
 
 
 ###################################################
