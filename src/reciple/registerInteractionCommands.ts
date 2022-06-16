@@ -10,12 +10,12 @@ import {
     SlashCommandSubcommandsOnlyBuilder
 } from '@discordjs/builders';
 
-export type commandBuilders = InteractionCommandBuilder|ContextMenuCommandBuilder|
+export type interactionCommandBuilders = InteractionCommandBuilder|ContextMenuCommandBuilder|
     SlashCommandBuilder|SlashCommandSubcommandBuilder|
     SlashCommandOptionsOnlyBuilder|SlashCommandSubcommandGroupBuilder|
     SlashCommandSubcommandsOnlyBuilder;
 
-export async function registerInteractionCommands(client: RecipleClient, cmds?: (commandBuilders|ApplicationCommandDataResolvable)[], overwriteGuilds?: GuildResolvable|GuildResolvable[]): Promise<void> {
+export async function registerInteractionCommands(client: RecipleClient, cmds?: (interactionCommandBuilders|ApplicationCommandDataResolvable)[], overwriteGuilds?: string|string[]): Promise<void> {
     let commands = Object.values(cmds ?? client.commands.INTERACTION_COMMANDS).map(c => {
         if (typeof (c as InteractionCommandBuilder).toJSON == 'undefined') return c as ApplicationCommandDataResolvable;
         
@@ -44,7 +44,7 @@ export async function registerInteractionCommands(client: RecipleClient, cmds?: 
     }
 
     const configGuilds = overwriteGuilds ?? client.config?.commands.interactionCommand.guilds;
-    const guilds: (string|undefined)[] = typeof configGuilds === 'object' ? (configGuilds as string[]) : [configGuilds];
+    const guilds: (string|undefined)[] = typeof configGuilds === 'object' ? configGuilds : [configGuilds];
 
     if (!guilds || !guilds?.length) {
         client.application?.commands.set(commands).then(() => {

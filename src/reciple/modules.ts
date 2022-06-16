@@ -1,16 +1,17 @@
 import { existsSync, mkdirSync, readdirSync } from 'fs';
 import { RecipleClient } from './classes/Client';
 import { version, isSupportedVersion } from './version';
-import { MessageCommandBuilder } from './classes/builders/MessageCommandBuilder';
-import { InteractionCommandBuilder } from './classes/builders/InteractionCommandBuilder';
+import { MessageCommandBuilder, RecipleMessageCommandExecute } from './classes/builders/MessageCommandBuilder';
+import { InteractionCommandBuilder, RecipleInteractionCommandExecute } from './classes/builders/InteractionCommandBuilder';
 import path from 'path';
 
-export type recipleCommands = (MessageCommandBuilder | InteractionCommandBuilder)[];
-export type loadedModules = { commands: recipleCommands, modules: RecipleModule[] };
+export type recipleCommandBuilders = MessageCommandBuilder|InteractionCommandBuilder;
+export type recipleCommandBuildersExecute = RecipleInteractionCommandExecute|RecipleMessageCommandExecute;
+export type loadedModules = { commands: recipleCommandBuilders[], modules: RecipleModule[] };
 
-export interface RecipleScript {
+export declare class RecipleScript {
     versions: string | string[];
-    commands?: (MessageCommandBuilder|InteractionCommandBuilder)[];
+    commands?: recipleCommandBuilders[];
     onLoad?(reciple: RecipleClient): void|Promise<void>;
     onStart(reciple: RecipleClient): boolean|Promise<boolean>;
 }
@@ -24,7 +25,7 @@ export interface RecipleModule {
     }
 }
 
-export async function loadModules(client: RecipleClient): Promise<loadedModules> {
+export default async function (client: RecipleClient): Promise<loadedModules> {
     const response: loadedModules = { commands: [], modules: [] };
     const modulesDir = client.config?.modulesFolder || './modules';
     const logger = client.logger;
@@ -38,7 +39,7 @@ export async function loadModules(client: RecipleClient): Promise<loadedModules>
 
     for (const script of scripts) {
         const modulePath = path.resolve(modulesDir, script);
-        const commands: recipleCommands = [];
+        const commands: recipleCommandBuilders[] = [];
         let module_: RecipleScript;
 
         try {

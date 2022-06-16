@@ -6,16 +6,16 @@
 // trying to understand this code, please, consider being a dog first.
 
 import { ApplicationCommandDataResolvable, Client, ClientEvents, ClientOptions, Interaction, Message } from 'discord.js';
-import { getCommand, Logger as LoggerConstructor } from 'fallout-utility';
-import { MessageCommandBuilder, RecipleMessageCommandExecute } from './builders/MessageCommandBuilder';
 import { InteractionCommandBuilder, RecipleInteractionCommandExecute } from './builders/InteractionCommandBuilder';
-import { commandBuilders, registerInteractionCommands } from '../registerInteractionCommands';
-import { logger } from '../logger';
-import { loadModules, RecipleScript } from '../modules';
-import { Config } from './Config';
+import loadModules, { recipleCommandBuilders, recipleCommandBuildersExecute, RecipleScript } from '../modules';
+import { interactionCommandBuilders, registerInteractionCommands } from '../registerInteractionCommands';
+import { MessageCommandBuilder, RecipleMessageCommandExecute } from './builders/MessageCommandBuilder';
+import { getCommand, Logger as LoggerConstructor } from 'fallout-utility';
+import commandPermissions from '../commandPermissions';
+import isIgnoredChannel from '../isIgnoredChannel';
 import { version } from '../version';
-import { commandPermissions } from '../commandPermissions';
-import { isIgnoredChannel } from '../isIgnoredChannel';
+import { Config } from './Config';
+import logger from '../logger';
 
 export interface RecipleClientOptions extends ClientOptions {
     config: Config;
@@ -36,7 +36,7 @@ export interface RecipleClientEvents extends ClientEvents {
 export class RecipleClient extends Client {
     public config?: Config;
     public commands: RecipleClientCommands = { MESSAGE_COMMANDS: {}, INTERACTION_COMMANDS: {} };
-    public otherApplicationCommandData: (commandBuilders|ApplicationCommandDataResolvable)[] = [];
+    public otherApplicationCommandData: (interactionCommandBuilders|ApplicationCommandDataResolvable)[] = [];
     public modules: RecipleScript[] = [];
     public logger: LoggerConstructor;
     public version: string = version;
@@ -151,7 +151,7 @@ export class RecipleClient extends Client {
         return this;
     }
 
-    private async _commandExecuteError(err: Error, command: RecipleInteractionCommandExecute|RecipleMessageCommandExecute): Promise<void> {
+    private async _commandExecuteError(err: Error, command: recipleCommandBuildersExecute): Promise<void> {
         this.logger.error(`An error occured executing ${command.builder.builder == 'MESSAGE_COMMAND' ? 'message' : 'interaction'} command "${command.builder.name}"`);
         this.logger.error(err);
 
