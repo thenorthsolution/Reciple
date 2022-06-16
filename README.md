@@ -61,4 +61,4 @@ reciple
 > The name reciple is from a minecraft bug. The bug was a misspelling of the word `recipe`. [Mojang Reciple](https://bugs.mojang.com/browse/MC-225837)
 
 # Save the Earth
-[![](https://i.imgur.com/GbB1ZuH.png)](https://rebellion.global/)
+[#letTheEarthBreathe](https://rebellion.global/)
