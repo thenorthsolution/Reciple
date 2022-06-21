@@ -3,6 +3,7 @@ import { RecipleClient } from './classes/Client';
 import { version, isSupportedVersion } from './version';
 import { MessageCommandBuilder, RecipleMessageCommandExecute } from './classes/builders/MessageCommandBuilder';
 import { InteractionCommandBuilder, RecipleInteractionCommandExecute } from './classes/builders/InteractionCommandBuilder';
+import wildcard from 'wildcard-match';
 import path from 'path';
 
 export type recipleCommandBuilders = MessageCommandBuilder|InteractionCommandBuilder;
@@ -34,7 +35,7 @@ export async function loadModules(client: RecipleClient): Promise<loadedModules>
 
     const ignoredFiles = (client.config?.ignoredFiles || []).map(file => file.endsWith('.js') ? file : `${file}.js`);
     const scripts = readdirSync(modulesDir).filter(file => {
-        return file.endsWith('.js') && (!file.startsWith('_') && !file.startsWith('.')) && !ignoredFiles.includes(file);
+        return file.endsWith('.js') && (!file.startsWith('_') && !file.startsWith('.')) && !ignoredFiles.some(f => wildcard(f)(file));
     });
 
     for (const script of scripts) {
