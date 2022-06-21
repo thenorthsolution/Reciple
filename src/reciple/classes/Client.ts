@@ -5,7 +5,7 @@
 // and accidentally made it unreadable for humans. So, if you're
 // trying to understand this code, please, consider being a dog first.
 
-import { ApplicationCommandDataResolvable, Client, ClientEvents, ClientOptions, Interaction, Message } from 'discord.js';
+import { ApplicationCommandDataResolvable, Awaitable, Client, ClientEvents, ClientOptions, Interaction, Message } from 'discord.js';
 import { InteractionCommandBuilder, RecipleInteractionCommandExecute } from './builders/InteractionCommandBuilder';
 import { loadModules, recipleCommandBuilders, recipleCommandBuildersExecute, RecipleScript } from '../modules';
 import { interactionCommandBuilders, registerInteractionCommands } from '../registerInteractionCommands';
@@ -26,11 +26,26 @@ export interface RecipleClientCommands {
     INTERACTION_COMMANDS: { [commandName: string]: InteractionCommandBuilder };
 }
 
-// TODO: Add these events to the client
-// TODO: Learn to add these bitch to the client
 export interface RecipleClientEvents extends ClientEvents {
     recipleMessageCommandCreate: [command: RecipleMessageCommandExecute];
     recipleInteractionCommandCreate: [command: RecipleInteractionCommandExecute];
+}
+
+export interface RecipleClient extends Client {
+    on<E extends keyof RecipleClientEvents>(event: E, listener: (...args: RecipleClientEvents[E]) => Awaitable<void>): this;
+    on<E extends string|symbol>(event: Exclude<E, keyof RecipleClientEvents>, listener: (...args: any) => Awaitable<void>): this;
+    
+    once<E extends keyof RecipleClientEvents>(event: E, listener: (...args: RecipleClientEvents[E]) => Awaitable<void>): this;
+    once<E extends keyof string|symbol>(event: Exclude<E, keyof RecipleClientEvents>, listener: (...args: any) => Awaitable<void>): this;
+
+    emit<E extends keyof RecipleClientEvents>(event: E, ...args: RecipleClientEvents[E]): boolean;
+    emit<E extends string|symbol>(event: Exclude<E, keyof RecipleClientEvents>, ...args: any): boolean;
+
+    off<E extends keyof RecipleClientEvents>(event: E, listener: (...args: RecipleClientEvents[E]) => Awaitable<void>): this;
+    off<E extends string|symbol>(event: Exclude<E, keyof RecipleClientEvents>, listener: (...args: any) => Awaitable<void>): this;
+
+    removeAllListeners<E extends keyof RecipleClientEvents>(event?: E): this;
+    removeAllListeners(event?: string|symbol): this;
 }
 
 export class RecipleClient extends Client {
