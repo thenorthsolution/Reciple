@@ -1,5 +1,5 @@
-import { SlashCommandBuilder } from '@discordjs/builders';
 import { CommandInteraction, PermissionFlags, PermissionString } from 'discord.js';
+import { SlashCommandBuilder } from '@discordjs/builders';
 import { RecipleClient } from '../Client';
 
 export interface RecipleInteractionCommandExecute {

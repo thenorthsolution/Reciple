@@ -1,10 +1,10 @@
-import { input, replaceAll } from 'fallout-utility';
-import { existsSync, readFileSync, writeFileSync } from 'fs';
-import { token as __token } from '../flags';
 import { ClientOptions, PermissionFlags, PermissionString } from 'discord.js';
+import { existsSync, readFileSync, writeFileSync } from 'fs';
+import { isSupportedVersion, version } from '../version';
+import { input, replaceAll } from 'fallout-utility';
+import { token as __token } from '../flags';
 import path from 'path';
 import yaml from 'yaml';
-import { isSupportedVersion, version } from '../version';
 
 export interface Config {
     token: string;
