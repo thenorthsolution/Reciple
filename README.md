@@ -19,12 +19,12 @@ npm i reciple
 You can initialize the bot to the current directory with the following command:
 
 ```bash
-reciple
+npx reciple
 ```
 
-It will ask you to continue if the directory is not empty type `y` to continue after the bot has been initialized it will ask you for your `TOKEN`.
+It will ask you to continue if the directory is not empty type `y` to continue after the bot has been initialized it will ask you for your bot token.
 
-> You can always change the token on `reciple.yml`
+> You can always change the token later
 
 ## Config
 
@@ -47,18 +47,18 @@ token: "env:TOKEN_VARIABLE"
 You can override the token on the command line like so:
 
 ```bash
-reciple --token "YOUR_TOKEN_HERE"
+npx reciple --token "YOUR_TOKEN_HERE"
 ```
 
 ## Running the bot
 To run the bot, run the following command:
 
 ```bash
-reciple
+npx reciple
 ```
 
 > ## Fun Fact
-> The name reciple is from a minecraft bug. The bug was a misspelling of the word `recipe`. [Mojang Reciple](https://bugs.mojang.com/browse/MC-225837)
+> The name reciple is from a minecraft bug. The bug was a misspelling of the word `recipe`. [View Mojang Bug Report](https://bugs.mojang.com/browse/MC-225837)
 
 # Save the Earth
 [#letTheEarthBreathe](https://rebellion.global/)
