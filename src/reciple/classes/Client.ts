@@ -8,7 +8,7 @@
 import { InteractionCommandBuilder, RecipleInteractionCommandExecute } from './builders/InteractionCommandBuilder';
 import { interactionCommandBuilders, registerInteractionCommands } from '../registerInteractionCommands';
 import { MessageCommandBuilder, RecipleMessageCommandExecute } from './builders/MessageCommandBuilder';
-import { getCommand, Logger as LoggerConstructor } from 'fallout-utility';
+import { getCommand, Logger as ILogger } from 'fallout-utility';
 import { hasPermissions } from '../hasPermissions';
 import { isIgnoredChannel } from '../isIgnoredChannel';
 import { version } from '../version';
@@ -69,7 +69,7 @@ export class RecipleClient extends Client {
     public commands: RecipleClientCommands = { MESSAGE_COMMANDS: {}, INTERACTION_COMMANDS: {} };
     public otherApplicationCommandData: (interactionCommandBuilders|ApplicationCommandDataResolvable)[] = [];
     public modules: RecipleScript[] = [];
-    public logger: LoggerConstructor;
+    public logger: ILogger;
     public version: string = version;
 
     constructor(options: RecipleClientOptions) {
