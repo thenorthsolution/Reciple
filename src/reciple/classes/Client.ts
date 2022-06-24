@@ -9,8 +9,8 @@ import { InteractionCommandBuilder, RecipleInteractionCommandExecute } from './b
 import { interactionCommandBuilders, registerInteractionCommands } from '../registerInteractionCommands';
 import { MessageCommandBuilder, RecipleMessageCommandExecute } from './builders/MessageCommandBuilder';
 import { getCommand, Logger as ILogger } from 'fallout-utility';
-import { hasPermissions } from '../hasPermissions';
 import { isIgnoredChannel } from '../isIgnoredChannel';
+import { hasPermissions } from '../hasPermissions';
 import { version } from '../version';
 import { logger } from '../logger';
 import { Config } from './Config';
