@@ -15,8 +15,8 @@ if (flags.version) {
 const allowedFiles = ['node_modules', 'reciple.yml', 'package.json', 'package.lock.json', 'modules.yml', '.rmmcache'];
 
 if (readdirSync('./').filter(f => !f.startsWith('.') && allowedFiles.indexOf(f)).length > 0 && !existsSync('./reciple.yml')) {
-    const ask = input('This directory does not contain reciple.yml. Would you like to init axis here? [y/n] ');
-    if (ask !== 'y') process.exit(0);
+    const ask = input('This directory does not contain reciple.yml. Would you like to init axis here? [y/n] ') ?? '';
+    if (ask.toString().toLowerCase() !== 'y') process.exit(0);
 }
 
 const config = new RecipleConfig(flags.config ?? './reciple.yml').parseConfig().getConfig();
