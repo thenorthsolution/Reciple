@@ -8,6 +8,7 @@ export type CommandMessage = Command;
 
 export interface RecipleMessageCommandExecute {
     message: Message;
+    args: MessageCommandValidatedOption[];
     command: CommandMessage;
     builder: MessageCommandBuilder;
     client: RecipleClient;
@@ -15,8 +16,14 @@ export interface RecipleMessageCommandExecute {
 
 export interface MessageCommandValidatedOption {
     name: string;
-    value: string;
+    value: string|undefined;
     required: boolean;
+}
+
+export interface MessageCommandValidatedOptions {
+    options: MessageCommandValidatedOption[];
+    invalid: MessageCommandValidatedOption[];
+    missing: MessageCommandValidatedOption[];
 }
 
 export class MessageCommandBuilder {
@@ -84,22 +91,42 @@ export class MessageCommandBuilder {
         return this;
     }
 
-    public getCommandOptionValues(options: CommandMessage): undefined|MessageCommandValidatedOption[] {
+    public getCommandOptionValues(options: CommandMessage): MessageCommandValidatedOptions {
         const args = options.args || [];
         const required = this.options.filter(o => o.required);
         const optional = this.options.filter(o => !o.required);
+        const allOptions = [...required, ...optional];
 
-        if (required.length > args.length) return;
-        
+        let result: MessageCommandValidatedOptions = {
+            options: [],
+            invalid: [],
+            missing: []
+        };
+
         let i = 0;
-        let result: MessageCommandValidatedOption[] = [];
-        for (const option of [...required, ...optional]) {
+        for (const option of allOptions) {
             const arg = args[i];
-            if (!arg && option.required) return;
-            if (typeof arg !== 'undefined' && !option.validate(arg)) return;
+            const value: MessageCommandValidatedOption = {
+                name: option.name,
+                value: arg ?? undefined,
+                required: option.required
+            };
 
-            result = [...result, { name: option.name, value: arg, required: option.required }];
+            if (arg == undefined && option.required) {
+                result.missing.push(value);
+                result.options.push(value);
+                continue;
+            }
 
+            if (arg == undefined && !option.required) {
+                result.options.push(value);
+                continue;
+            }
+
+            const validate = option.validator ? option.validator(arg) : true;
+            if (!validate) result.invalid.push(value);
+
+            result.options.push(value);
             i++;
         }
 
