@@ -3,6 +3,7 @@ import { Message, PermissionFlags, PermissionString } from 'discord.js';
 import { Command } from 'fallout-utility';
 import { RecipleClient } from '../Client';
 
+
 export type CommandMessage = Command;
 
 export interface RecipleMessageCommandExecute {

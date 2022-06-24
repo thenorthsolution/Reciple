@@ -6,6 +6,7 @@ import { token as __token } from '../flags';
 import path from 'path';
 import yaml from 'yaml';
 
+
 export interface ConfigCommandPermissions {
     command: string;
     permissions: (PermissionFlags|PermissionString)[];

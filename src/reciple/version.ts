@@ -1,5 +1,6 @@
 import semver from 'semver';
 
+
 export const version = require('../../package.json').version as string;
 
 export function isValidVersion(ver: string) {

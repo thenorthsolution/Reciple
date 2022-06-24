@@ -6,6 +6,7 @@ import { RecipleClient } from './classes/Client';
 import wildcard from 'wildcard-match';
 import path from 'path';
 
+
 export type recipleCommandBuilders = MessageCommandBuilder|InteractionCommandBuilder;
 export type recipleCommandBuildersExecute = RecipleInteractionCommandExecute|RecipleMessageCommandExecute;
 export type loadedModules = { commands: recipleCommandBuilders[], modules: RecipleModule[] };

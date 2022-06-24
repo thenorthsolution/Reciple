@@ -10,6 +10,7 @@ import {
     SlashCommandSubcommandsOnlyBuilder
 } from '@discordjs/builders';
 
+
 export type interactionCommandBuilders = InteractionCommandBuilder|ContextMenuCommandBuilder|
     SlashCommandBuilder|SlashCommandSubcommandBuilder|
     SlashCommandOptionsOnlyBuilder|SlashCommandSubcommandGroupBuilder|

@@ -2,6 +2,7 @@ import { PermissionResolvable, Permissions } from 'discord.js';
 import { recipleCommandBuilders } from './modules';
 import { Config } from './classes/Config';
 
+
 export function hasPermissions(commandName: string, memberPermissions?: Permissions, configConmmandPermissions?: Config['permissions']['messageCommands']|Config['permissions']['interactionCommands'], builder?: recipleCommandBuilders): boolean {
     if (!configConmmandPermissions?.enabled) return true;
 

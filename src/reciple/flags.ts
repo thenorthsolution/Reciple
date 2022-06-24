@@ -1,5 +1,6 @@
 import { program } from 'commander';
 
+
 export const flags = program
         .option('-t, --token <token>', 'Replace used bot token')
         .option('-c, --config <config>', 'Change path to config file')
