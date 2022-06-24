@@ -16,15 +16,15 @@ export type interactionCommandBuilders = InteractionCommandBuilder|ContextMenuCo
     SlashCommandSubcommandsOnlyBuilder;
 
 export async function registerInteractionCommands(client: RecipleClient, cmds?: (interactionCommandBuilders|ApplicationCommandDataResolvable)[], overwriteGuilds?: string|string[]): Promise<void> {
-    let commands = Object.values(cmds ?? client.commands.INTERACTION_COMMANDS).map(c => {
+    const commands = Object.values(cmds ?? client.commands.INTERACTION_COMMANDS).map(c => {
         if (typeof (c as InteractionCommandBuilder).toJSON == 'undefined') return c as ApplicationCommandDataResolvable;
         
         const cmd: InteractionCommandBuilder = c as InteractionCommandBuilder;
 
-        if (cmd?.builder === 'INTERACTION_COMMAND' && client.config?.commands.interactionCommand.setRequiredPermissions) {
+        if (cmd?.builder === 'INTERACTION_COMMAND' && client.config.commands.interactionCommand.setRequiredPermissions) {
             const permissions = (
-                    client.config?.permissions?.interactionCommands.enabled ?
-                    client.config?.permissions?.interactionCommands.commands.find(cmd_ => cmd_.command.toLowerCase() === cmd.name.toLowerCase())?.permissions :
+                    client.config.permissions?.interactionCommands.enabled ?
+                    client.config.permissions?.interactionCommands.commands.find(cmd_ => cmd_.command.toLowerCase() === cmd.name.toLowerCase())?.permissions :
                     undefined
                 ) ?? cmd.requiredPermissions;
 
@@ -38,13 +38,8 @@ export async function registerInteractionCommands(client: RecipleClient, cmds?: 
         return (c as InteractionCommandBuilder).toJSON() as ApplicationCommandDataResolvable;
     }) ?? [];
 
-    if (!commands || !commands.length) {
-        client.logger.warn('No interaction commands found.');
-        return;
-    }
-
-    const configGuilds = overwriteGuilds ?? client.config?.commands.interactionCommand.guilds;
-    const guilds: (string|undefined)[] = typeof configGuilds === 'object' ? configGuilds : [configGuilds];
+    const configGuilds = overwriteGuilds ?? client.config.commands.interactionCommand.guilds;
+    const guilds = typeof configGuilds === 'object' ? configGuilds : [configGuilds];
 
     if (!guilds || !guilds?.length) {
         client.application?.commands.set(commands).then(() => {

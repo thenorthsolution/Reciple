@@ -28,12 +28,12 @@ export interface RecipleModule {
 
 export async function loadModules(client: RecipleClient): Promise<loadedModules> {
     const response: loadedModules = { commands: [], modules: [] };
-    const modulesDir = client.config?.modulesFolder || './modules';
+    const modulesDir = client.config.modulesFolder || './modules';
     const logger = client.logger;
 
     if (!existsSync(modulesDir)) mkdirSync(modulesDir, { recursive: true });
 
-    const ignoredFiles = (client.config?.ignoredFiles || []).map(file => file.endsWith('.js') ? file : `${file}.js`);
+    const ignoredFiles = (client.config.ignoredFiles || []).map(file => file.endsWith('.js') ? file : `${file}.js`);
     const scripts = readdirSync(modulesDir).filter(file => {
         return file.endsWith('.js') && (!file.startsWith('_') && !file.startsWith('.')) && !ignoredFiles.some(f => wildcard(f)(file));
     });
