@@ -6,6 +6,11 @@ import { token as __token } from '../flags';
 import path from 'path';
 import yaml from 'yaml';
 
+export interface ConfigCommandPermissions {
+    command: string;
+    permissions: (PermissionFlags|PermissionString)[];
+}
+
 export interface Config {
     token: string;
     prefix: string;
@@ -26,17 +31,11 @@ export interface Config {
     permissions: {
         messageCommands: {
             enabled: boolean;
-            commands: {
-                command: string;
-                permissions: (PermissionFlags|PermissionString)[];
-            }[];
+            commands: ConfigCommandPermissions[];
         }
         interactionCommands: {
             enabled: boolean;
-            commands: {
-                command: string;
-                permissions: (PermissionFlags|PermissionString)[];
-            }[];
+            commands: ConfigCommandPermissions[];
         }
     }
     ignoredChannels: {
@@ -52,7 +51,7 @@ export interface Config {
     }
     client: ClientOptions;
     messages: {
-        [key: string]: any;
+        [messageKey: string]: any;
     }
     ignoredFiles: string[];
     modulesFolder: string;
