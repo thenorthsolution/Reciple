@@ -22,8 +22,7 @@ import {
     ClientEvents,
     ClientOptions,
     Interaction,
-    Message,
-    ReplyOptions
+    Message
 } from 'discord.js';
 
 import {
