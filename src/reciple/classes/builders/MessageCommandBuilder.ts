@@ -8,7 +8,7 @@ export type CommandMessage = Command;
 
 export interface RecipleMessageCommandExecute {
     message: Message;
-    args: MessageCommandValidatedOption[];
+    options: MessageCommandValidatedOption[];
     command: CommandMessage;
     builder: MessageCommandBuilder;
     client: RecipleClient;
@@ -18,12 +18,8 @@ export interface MessageCommandValidatedOption {
     name: string;
     value: string|undefined;
     required: boolean;
-}
-
-export interface MessageCommandValidatedOptions {
-    options: MessageCommandValidatedOption[];
-    invalid: MessageCommandValidatedOption[];
-    missing: MessageCommandValidatedOption[];
+    invalid: boolean;
+    missing: boolean;
 }
 
 export class MessageCommandBuilder {
@@ -91,17 +87,13 @@ export class MessageCommandBuilder {
         return this;
     }
 
-    public getCommandOptionValues(options: CommandMessage): MessageCommandValidatedOptions {
+    public getCommandOptionValues(options: CommandMessage): MessageCommandValidatedOption[] {
         const args = options.args || [];
         const required = this.options.filter(o => o.required);
         const optional = this.options.filter(o => !o.required);
         const allOptions = [...required, ...optional];
 
-        let result: MessageCommandValidatedOptions = {
-            options: [],
-            invalid: [],
-            missing: []
-        };
+        let result: MessageCommandValidatedOption[] = [];
 
         let i = 0;
         for (const option of allOptions) {
@@ -109,24 +101,26 @@ export class MessageCommandBuilder {
             const value: MessageCommandValidatedOption = {
                 name: option.name,
                 value: arg ?? undefined,
-                required: option.required
+                required: option.required,
+                invalid: false,
+                missing: false
             };
 
             if (arg == undefined && option.required) {
-                result.missing.push(value);
-                result.options.push(value);
+                value.missing = true;
+                result.push(value);
                 continue;
             }
 
             if (arg == undefined && !option.required) {
-                result.options.push(value);
+                result.push(value);
                 continue;
             }
 
             const validate = option.validator ? option.validator(arg) : true;
-            if (!validate) result.invalid.push(value);
+            if (!validate) value.invalid = true;
 
-            result.options.push(value);
+            result.push(value);
             i++;
         }
 

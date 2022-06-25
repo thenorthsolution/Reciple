@@ -167,22 +167,20 @@ export class RecipleClient extends Client {
                 || isIgnoredChannel(message.channelId, this.config.ignoredChannels)
             ) return;
 
-            const commandOptionsValidate = command.getCommandOptionValues(parseCommand);
-            if (command.validateOptions) {
-                if (commandOptionsValidate.invalid.length) {
-                    await message.reply(this.getMessage('invalidArguments', 'Invalid argument(s) given.'));
-                    return;
-                }
+            const commandOptions = command.getCommandOptionValues(parseCommand);
+            if (commandOptions.some(o => o.invalid)) {
+                await message.reply(this.getMessage('invalidArguments', 'Invalid argument(s) given.'));
+                return;
+            }
 
-                if (commandOptionsValidate.missing.length) {
-                    await message.reply(this.getMessage('notEnoughArguments', 'Not enough arguments.'));
-                    return;
-                }
+            if (commandOptions.some(o => o.missing)) {
+                await message.reply(this.getMessage('notEnoughArguments', 'Not enough arguments.'));
+                return;
             }
 
             const options: RecipleMessageCommandExecute = {
                 message: message,
-                args: commandOptionsValidate.options,
+                options: commandOptions,
                 command: parseCommand,
                 builder: command,
                 client: this
