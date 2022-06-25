@@ -167,14 +167,17 @@ export class RecipleClient extends Client {
             ) return;
 
             const commandOptions = command.getCommandOptionValues(parseCommand);
-            if (commandOptions.some(o => o.invalid)) {
-                await message.reply(this.getMessage('invalidArguments', 'Invalid argument(s) given.'));
-                return;
-            }
 
-            if (commandOptions.some(o => o.missing)) {
-                await message.reply(this.getMessage('notEnoughArguments', 'Not enough arguments.'));
-                return;
+            if (command.validateOptions) {
+                if (commandOptions.some(o => o.invalid)) {
+                    await message.reply(this.getMessage('invalidArguments', 'Invalid argument(s) given.'));
+                    return;
+                }
+
+                if (commandOptions.some(o => o.missing)) {
+                    await message.reply(this.getMessage('notEnoughArguments', 'Not enough arguments.'));
+                    return;
+                }
             }
 
             const options: RecipleMessageCommandExecute = {
