@@ -1,7 +1,7 @@
 export class MessageCommandOptionBuilder {
     public name: string = '';
     public description: string = '';
-    public required: boolean = true;
+    public required: boolean = false;
     public validator: (value: string) => boolean = () => true;
 
     public setName(name: string): MessageCommandOptionBuilder {
