@@ -20,7 +20,7 @@ export async function registerInteractionCommands(client: RecipleClient, cmds?: 
     const commands = Object.values(cmds ?? client.commands.INTERACTION_COMMANDS).map(c => {
         if (typeof (c as InteractionCommandBuilder).toJSON == 'undefined') return c as ApplicationCommandDataResolvable;
         
-        const cmd: InteractionCommandBuilder = c as InteractionCommandBuilder;
+        const cmd = c as InteractionCommandBuilder;
 
         if (cmd?.builder === 'INTERACTION_COMMAND' && client.config.commands.interactionCommand.setRequiredPermissions) {
             const permissions = (
@@ -47,13 +47,13 @@ export async function registerInteractionCommands(client: RecipleClient, cmds?: 
             client.logger.warn('No guilds were specified for interaction commands. Registered commands for all guilds.');
         }).catch(e => client.logger.error(e));
     } else {        
-        client.logger.warn(`Registering ${commands.length} interaction commands for ${guilds.length} guild(s).`);
+        client.logger.warn(`Registering ${commands.length} interaction commands to ${guilds.length} guild(s).`);
         
         for (const guild of guilds) {
             if (!guild) continue;
 
             client.application?.commands.set(commands, guild).then(() => {
-                client.logger.warn(`Registered ${commands.length} interaction commands for ${guild}.`);
+                client.logger.warn(`Registered ${commands.length} interaction command(s) for ${guild}.`);
             }).catch(e => client.logger.error(e));
         }
     }
