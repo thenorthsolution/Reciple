@@ -132,11 +132,11 @@ export class RecipleClient extends Client {
 
     public addCommand(command: recipleCommandBuilders): RecipleClient {
         if (command.builder === 'MESSAGE_COMMAND') {
-            this.commands.MESSAGE_COMMANDS[command.name] = command as MessageCommandBuilder;
+            this.commands.MESSAGE_COMMANDS[command.name] = command;
         } else if (command.builder === 'INTERACTION_COMMAND') {
-            this.commands.INTERACTION_COMMANDS[command.name] = command as InteractionCommandBuilder;
+            this.commands.INTERACTION_COMMANDS[command.name] = command;
         } else {
-            this.logger.error(`Command "${command.name ?? 'unknown'}" has an invalid builder.`);
+            this.logger.error(`Unknow command "${typeof command ?? 'unknown'}".`);
         }
 
         return this;

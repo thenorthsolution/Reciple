@@ -11,7 +11,7 @@ export interface RecipleInteractionCommandExecute {
 }
 
 export class InteractionCommandBuilder extends SlashCommandBuilder {
-    public readonly builder: string = 'INTERACTION_COMMAND';
+    public readonly builder = 'INTERACTION_COMMAND';
     public requiredPermissions: (PermissionFlags|PermissionString)[] = [];
     public allowExecuteInDM: boolean = true;
     public execute: (options: RecipleInteractionCommandExecute) => void = () => { /* Execute */ };

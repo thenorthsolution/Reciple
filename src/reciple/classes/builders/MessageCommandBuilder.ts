@@ -23,7 +23,7 @@ export interface MessageCommandValidatedOption {
 }
 
 export class MessageCommandBuilder {
-    public readonly builder: string = 'MESSAGE_COMMAND';
+    public readonly builder = 'MESSAGE_COMMAND';
     public name: string = '';
     public description: string = '';
     public options: MessageCommandOptionBuilder[] = [];
