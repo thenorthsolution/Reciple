@@ -170,12 +170,12 @@ export class RecipleClient extends Client {
 
             if (command.validateOptions) {
                 if (commandOptions.some(o => o.invalid)) {
-                    await message.reply(this.getMessage('invalidArguments', 'Invalid argument(s) given.'));
+                    await message.reply(this.getMessage('invalidArguments', 'Invalid argument(s) given.')).catch(() => {});
                     return;
                 }
 
                 if (commandOptions.some(o => o.missing)) {
-                    await message.reply(this.getMessage('notEnoughArguments', 'Not enough arguments.'));
+                    await message.reply(this.getMessage('notEnoughArguments', 'Not enough arguments.')).catch(() => {});
                     return;
                 }
             }
