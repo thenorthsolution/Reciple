@@ -32,7 +32,7 @@ export async function registerInteractionCommands(client: RecipleClient, cmds?: 
             cmd.setRequiredPermissions(permissions as PermissionString[]);
             client.commands.INTERACTION_COMMANDS[cmd.name] = cmd;
 
-            client.logger.debug(`Set required permissions for ${cmd.name} to ${permissions.join(', ')}`);
+            client.logger.debug(`Set required permissions for ${cmd.name}`);
             return cmd.toJSON() as ApplicationCommandDataResolvable;
         }
 
