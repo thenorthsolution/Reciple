@@ -92,8 +92,7 @@ export class MessageCommandBuilder {
         const required = this.options.filter(o => o.required);
         const optional = this.options.filter(o => !o.required);
         const allOptions = [...required, ...optional];
-
-        let result: MessageCommandValidatedOption[] = [];
+        const result: MessageCommandValidatedOption[] = [];
 
         let i = 0;
         for (const option of allOptions) {
