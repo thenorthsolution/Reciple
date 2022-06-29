@@ -2,13 +2,14 @@ import { MessageCommandOptionBuilder } from './MessageCommandOptionBuilder';
 import { Message, PermissionFlags, PermissionString } from 'discord.js';
 import { Command } from 'fallout-utility';
 import { RecipleClient } from '../Client';
+import { MessageCommandOptions } from './MessageCommandOptions';
 
 
 export type CommandMessage = Command;
 
 export interface RecipleMessageCommandExecute {
     message: Message;
-    options: MessageCommandValidatedOption[];
+    options: MessageCommandOptions;
     command: CommandMessage;
     builder: MessageCommandBuilder;
     client: RecipleClient;

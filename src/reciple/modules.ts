@@ -12,10 +12,10 @@ export type recipleCommandBuildersExecute = RecipleInteractionCommandExecute|Rec
 export type loadedModules = { commands: recipleCommandBuilders[], modules: RecipleModule[] };
 
 export declare class RecipleScript {
-    versions: string | string[];
-    commands?: recipleCommandBuilders[];
-    onLoad?(reciple: RecipleClient): void|Promise<void>;
-    onStart(reciple: RecipleClient): boolean|Promise<boolean>;
+    public versions: string | string[];
+    public commands?: recipleCommandBuilders[];
+    public onLoad?(reciple: RecipleClient): void|Promise<void>;
+    public onStart(reciple: RecipleClient): boolean|Promise<boolean>;
 }
 
 export interface RecipleModule {
@@ -40,7 +40,7 @@ export async function loadModules(client: RecipleClient): Promise<loadedModules>
     });
 
     for (const script of scripts) {
-        const modulePath = path.resolve(modulesDir, script);
+        const modulePath = path.join(process.cwd(), modulesDir, script);
         const commands: recipleCommandBuilders[] = [];
         let module_: RecipleScript;
 
@@ -51,7 +51,7 @@ export async function loadModules(client: RecipleClient): Promise<loadedModules>
             if (!module_.versions?.length) throw new Error('Module does not have supported versions.');
             const versions = typeof module_.versions === 'object' ? module_.versions : [module_.versions];
 
-            if (!versions.some(v => isSupportedVersion(v, version))) throw new Error('Module versions is not defined or unsupported.');
+            if (!versions.some(v => isSupportedVersion(v, version))) throw new Error('Module versions is not defined or unsupported; supported versions: ' + module_.versions ?? 'none' + '; current version: '+ version);
             if (!await Promise.resolve(module_.onStart(client))) throw new Error(script + ' onStart is not defined or returned false.');
             if (module_.commands) {
                 for (const command of module_.commands) {
@@ -64,11 +64,22 @@ export async function loadModules(client: RecipleClient): Promise<loadedModules>
             continue;
         }
 
-        response.commands = response.commands.concat(commands.filter((c) => {
-            if (!c.name) { logger.error(`A message command name is not defined in ${script}`); return false; }
-            if ((c as MessageCommandBuilder).builder === 'MESSAGE_COMMAND' && c.options.length && (c as MessageCommandBuilder).options.some(o => !o.name)) { logger.error(`A message command option name is not defined in ${script}`); return false; }
-            return true;
-        }));
+        response.commands.push(
+            ...commands.filter((c) => {
+                if (!c.name) {
+                    logger.error(`A ${c.builder} command name is not defined in ${script}`);
+                    return false;
+                }
+
+                if (c.builder === 'MESSAGE_COMMAND' && c.options.length && c.options.some(o => !o.name)) {
+                    logger.error(`A ${c.builder} option name is not defined in ${script}`);
+                    return false;
+                }
+
+                return true;
+            })
+        );
+
         response.modules.push({
             script: module_,
             info: {

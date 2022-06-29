@@ -21,6 +21,7 @@ import {
     Client,
     ClientEvents,
     ClientOptions,
+    Collection,
     Interaction,
     Message
 } from 'discord.js';
@@ -31,6 +32,7 @@ import {
     recipleCommandBuildersExecute,
     RecipleScript
 } from '../modules';
+import { MessageCommandOptions } from './builders/MessageCommandOptions';
 
 
 export interface RecipleClientOptions extends ClientOptions {
@@ -182,7 +184,7 @@ export class RecipleClient extends Client {
 
             const options: RecipleMessageCommandExecute = {
                 message: message,
-                options: commandOptions,
+                options: new MessageCommandOptions(commandOptions),
                 command: parseCommand,
                 builder: command,
                 client: this
