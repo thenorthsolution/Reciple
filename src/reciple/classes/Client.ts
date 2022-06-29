@@ -149,10 +149,10 @@ export class RecipleClient extends Client {
         return this;
     }
 
-    public async messageCommandExecute(message: Message): Promise<void> {
-        if (!message.content || !this.config.commands.messageCommand.enabled) return;
+    public async messageCommandExecute(message: Message, prefix?: string): Promise<void|RecipleMessageCommandExecute> {
+        if (!message.content) return;
 
-        const parseCommand = getCommand(message.content, this.config.prefix || '!', this.config.commands.messageCommand.commandArgumentSeparator || ' ');
+        const parseCommand = getCommand(message.content, prefix || this.config.prefix || '!', this.config.commands.messageCommand.commandArgumentSeparator || ' ');
         if (!parseCommand?.command || !parseCommand) return; 
         
         const command = this.commands.MESSAGE_COMMANDS[parseCommand.command.toLowerCase()];
@@ -170,12 +170,12 @@ export class RecipleClient extends Client {
 
             if (command.validateOptions) {
                 if (commandOptions.some(o => o.invalid)) {
-                    await message.reply(this.getMessage('invalidArguments', 'Invalid argument(s) given.')).catch(() => {});
+                    await message.reply(this.getMessage('invalidArguments', 'Invalid argument(s) given.')).catch(err => this.logger.debug(err));
                     return;
                 }
 
                 if (commandOptions.some(o => o.missing)) {
-                    await message.reply(this.getMessage('notEnoughArguments', 'Not enough arguments.')).catch(() => {});
+                    await message.reply(this.getMessage('notEnoughArguments', 'Not enough arguments.')).catch(err => this.logger.debug(err));
                     return;
                 }
             }
@@ -190,13 +190,14 @@ export class RecipleClient extends Client {
 
             await Promise.resolve(command.execute(options)).catch(err => this._commandExecuteError(err, options));
             this.emit('recipleMessageCommandCreate', options);
+            return options;
         } else {
-            await message.reply(this.getMessage('noPermissions', 'You do not have permission to use this command.')).catch((err) => this.logger.error(err));
+            await message.reply(this.getMessage('noPermissions', 'You do not have permission to use this command.')).catch(err => this.logger.debug(err));
         }
     }
 
-    public async interactionCommandExecute(interaction: Interaction): Promise<void> {
-        if (!interaction || !interaction.isCommand() || !this.config.commands.interactionCommand.enabled) return;
+    public async interactionCommandExecute(interaction: Interaction): Promise<void|RecipleInteractionCommandExecute> {
+        if (!interaction || !interaction.isCommand()) return;
 
         const command = this.commands.INTERACTION_COMMANDS[interaction.commandName];
         if (!command) return;
@@ -211,10 +212,12 @@ export class RecipleClient extends Client {
                 builder: command,
                 client: this
             };
+
             await Promise.resolve(command.execute(options)).catch(err => this._commandExecuteError(err, options));
             this.emit('recipleInteractionCommandCreate', options);
+            return options;
         } else {
-            await interaction.reply(this.getMessage('noPermissions', 'You do not have permission to use this command.')).catch((err) => this.logger.error(err));
+            await interaction.reply(this.getMessage('noPermissions', 'You do not have permission to use this command.')).catch(err => this.logger.debug(err));
         }
     }
 
@@ -230,10 +233,10 @@ export class RecipleClient extends Client {
 
         if ((command as RecipleMessageCommandExecute)?.message) {
             if (!this.config.commands.messageCommand.replyOnError) return;
-            await (command as RecipleMessageCommandExecute).message.reply(this.getMessage('error', 'An error occurred.')).catch((e) => this.logger.error(e));
+            await (command as RecipleMessageCommandExecute).message.reply(this.getMessage('error', 'An error occurred.')).catch(err => this.logger.debug(err));
         } else if ((command as RecipleInteractionCommandExecute)?.interaction) {
             if (!this.config.commands.interactionCommand.replyOnError) return;
-            await (command as RecipleInteractionCommandExecute).interaction.followUp(this.getMessage('error', 'An error occurred.')).catch((e) => this.logger.error(e));
+            await (command as RecipleInteractionCommandExecute).interaction.followUp(this.getMessage('error', 'An error occurred.')).catch(err => this.logger.debug(err));
         }
     }
 }
