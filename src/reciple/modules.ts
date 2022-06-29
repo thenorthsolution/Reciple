@@ -46,7 +46,7 @@ export async function loadModules(client: RecipleClient): Promise<loadedModules>
 
         try {
             const reqMod = require(modulePath);
-            module_ = !!reqMod?.default ? reqMod.default : reqMod;
+            module_ = typeof reqMod?.default != 'undefined' ? reqMod.default : reqMod;
 
             if (!module_.versions?.length) throw new Error('Module does not have supported versions.');
             const versions = typeof module_.versions === 'object' ? module_.versions : [module_.versions];
