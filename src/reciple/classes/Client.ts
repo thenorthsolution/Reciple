@@ -221,7 +221,7 @@ export class RecipleClient extends Client {
         }
     }
 
-    public getMessage<T = any>(messageKey: string, defaultMessage?: T): T {
+    public getMessage<T = unknown>(messageKey: string, defaultMessage?: T): T {
         return this.config.messages[messageKey] ?? defaultMessage ?? messageKey;
     }
 
