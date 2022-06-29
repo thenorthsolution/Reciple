@@ -14,4 +14,10 @@ export class MessageCommandOptions extends Array<MessageCommandValidatedOption> 
 
         return option ?? null;
     }
+
+    public getValue(name: string, requied: true): string;
+    public getValue(name: string, requied?: boolean): string|null;
+    public getValue(name: string, requied?: boolean) {
+        return this.get(name, requied)?.value ?? null;
+    }
 }
