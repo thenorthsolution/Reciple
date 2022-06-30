@@ -12,7 +12,7 @@ export interface RecipleMessageCommandExecute {
     options: MessageCommandOptions;
     command: CommandMessage;
     builder: MessageCommandBuilder;
-    client: RecipleClient;
+    client: RecipleClient<true>;
 }
 
 export interface MessageCommandValidatedOption {

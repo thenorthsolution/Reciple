@@ -7,7 +7,7 @@ export interface RecipleInteractionCommandExecute {
     interaction: CommandInteraction;
     command: InteractionCommandBuilder;
     builder: InteractionCommandBuilder;
-    client: RecipleClient;
+    client: RecipleClient<true>;
 }
 
 export class InteractionCommandBuilder extends SlashCommandBuilder {

@@ -50,7 +50,7 @@ export interface RecipleClientEvents extends ClientEvents {
     recipleInteractionCommandCreate: [command: RecipleInteractionCommandExecute];
 }
 
-export interface RecipleClient extends Client {
+export interface RecipleClient<Ready extends boolean = boolean> extends Client<Ready> {
     on<E extends keyof RecipleClientEvents>(event: E, listener: (...args: RecipleClientEvents[E]) => Awaitable<void>): this;
     on<E extends string|symbol>(event: Exclude<E, keyof RecipleClientEvents>, listener: (...args: any) => Awaitable<void>): this;
     
@@ -65,9 +65,11 @@ export interface RecipleClient extends Client {
 
     removeAllListeners<E extends keyof RecipleClientEvents>(event?: E): this;
     removeAllListeners(event?: string|symbol): this;
+
+    isReady(): this is RecipleClient<true>;
 }
 
-export class RecipleClient extends Client {
+export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready> {
     public config: Config;
     public commands: RecipleClientCommands = { MESSAGE_COMMANDS: {}, INTERACTION_COMMANDS: {} };
     public otherApplicationCommandData: (interactionCommandBuilders|ApplicationCommandDataResolvable)[] = [];
@@ -88,7 +90,7 @@ export class RecipleClient extends Client {
         this.logger.info('Reciple Client v' + version + ' is starting...');
     }
 
-    public async startModules(): Promise<RecipleClient> {
+    public async startModules(): Promise<RecipleClient<Ready>> {
         this.logger.info('Loading modules...');
 
         const modules = await loadModules(this);
@@ -98,7 +100,7 @@ export class RecipleClient extends Client {
         return this;
     }
 
-    public async loadModules(): Promise<RecipleClient> {
+    public async loadModules(): Promise<RecipleClient<Ready>> {
         for (const module_ of this.modules.map(m => m.script)) {
             if (typeof module_?.onLoad === 'function') await Promise.resolve(module_.onLoad(this));
         }
@@ -137,7 +139,7 @@ export class RecipleClient extends Client {
         await registerInteractionCommands(this, [...Object.values(this.commands.INTERACTION_COMMANDS), ...this.otherApplicationCommandData]);
     }
 
-    public addCommand(command: recipleCommandBuilders): RecipleClient {
+    public addCommand(command: recipleCommandBuilders): RecipleClient<Ready> {
         if (command.builder === 'MESSAGE_COMMAND') {
             this.commands.MESSAGE_COMMANDS[command.name] = command;
         } else if (command.builder === 'INTERACTION_COMMAND') {
@@ -149,7 +151,7 @@ export class RecipleClient extends Client {
         return this;
     }
 
-    public addCommandListeners(): RecipleClient {
+    public addCommandListeners(): RecipleClient<Ready> {
         if (this.config.commands.messageCommand.enabled) this.on('messageCreate', (message) => { this.messageCommandExecute(message) });
         if (this.config.commands.interactionCommand.enabled) this.on('interactionCreate', (interaction) => { this.interactionCommandExecute(interaction) });
 
@@ -157,7 +159,7 @@ export class RecipleClient extends Client {
     }
 
     public async messageCommandExecute(message: Message, prefix?: string): Promise<void|RecipleMessageCommandExecute> {
-        if (!message.content) return;
+        if (!message.content || !this.isReady()) return;
 
         const parseCommand = getCommand(message.content, prefix || this.config.prefix || '!', this.config.commands.messageCommand.commandArgumentSeparator || ' ');
         if (!parseCommand?.command || !parseCommand) return; 
@@ -204,7 +206,7 @@ export class RecipleClient extends Client {
     }
 
     public async interactionCommandExecute(interaction: Interaction): Promise<void|RecipleInteractionCommandExecute> {
-        if (!interaction || !interaction.isCommand()) return;
+        if (!interaction || !interaction.isCommand() || !this.isReady()) return;
 
         const command = this.commands.INTERACTION_COMMANDS[interaction.commandName];
         if (!command) return;
