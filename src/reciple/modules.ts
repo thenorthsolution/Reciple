@@ -21,9 +21,9 @@ export declare class RecipleScript {
 export interface RecipleModule {
     script: RecipleScript;
     info: {
-        filename: string;
+        filename?: string;
         versions: string[];
-        path: string;
+        path?: string;
     }
 }
 
