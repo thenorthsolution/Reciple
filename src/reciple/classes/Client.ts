@@ -30,6 +30,7 @@ import {
     loadModules,
     recipleCommandBuilders,
     recipleCommandBuildersExecute,
+    RecipleModule,
     RecipleScript
 } from '../modules';
 import { MessageCommandOptions } from './builders/MessageCommandOptions';
@@ -70,7 +71,7 @@ export class RecipleClient extends Client {
     public config: Config;
     public commands: RecipleClientCommands = { MESSAGE_COMMANDS: {}, INTERACTION_COMMANDS: {} };
     public otherApplicationCommandData: (interactionCommandBuilders|ApplicationCommandDataResolvable)[] = [];
-    public modules: RecipleScript[] = [];
+    public modules: RecipleModule[] = [];
     public logger: ILogger;
     public version: string = version;
 
@@ -93,33 +94,37 @@ export class RecipleClient extends Client {
         const modules = await loadModules(this);
         if (!modules) throw new Error('Failed to load modules.');
 
-        this.modules = modules.modules.map(m => m.script);
-        for (const command of modules.commands) {
-            if (!command.name) continue;
+        this.modules = modules.modules;
+        return this;
+    }
+
+    public async loadModules(): Promise<RecipleClient> {
+        for (const module_ of this.modules.map(m => m.script)) {
+            if (typeof module_?.onLoad === 'function') await Promise.resolve(module_.onLoad(this));
+        }
+
+        this.logger.info(`${this.modules.length} modules loaded.`);
+        for (const command of this.modules.map(m => m.script.commands ?? [])[0]) {
             this.addCommand(command);
         }
 
         this.logger.info(`${Object.keys(this.commands.MESSAGE_COMMANDS).length} message commands loaded.`);
         this.logger.info(`${Object.keys(this.commands.INTERACTION_COMMANDS).length} interaction commands loaded.`);
 
-        return this;
-    }
-
-    public async loadModules(): Promise<RecipleClient> {
-        for (const module_ of this.modules) {
-            if (typeof module_?.onLoad === 'function') await Promise.resolve(module_.onLoad(this));
-        }
-
-        this.logger.info(`${this.modules.length} modules loaded.`);
-
         if (!this.config.commands.interactionCommand.registerCommands) return this;
-        
         await registerInteractionCommands(this, [...Object.values(this.commands.INTERACTION_COMMANDS), ...this.otherApplicationCommandData]);
         return this;
     }
 
     public async addModule(script: RecipleScript, registerCommands: boolean = true): Promise<void> {
-        this.modules.push(script);
+        this.modules.push({
+            script,
+            info: {
+                filename: undefined,
+                versions: typeof script.versions == 'string' ? [script.versions] : script.versions,
+                path: undefined
+            }
+        });
         if (typeof script?.onLoad === 'function') await Promise.resolve(script.onLoad(this));
 
         this.logger.info(`${this.modules.length} modules loaded.`);
