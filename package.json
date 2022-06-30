@@ -8,6 +8,9 @@
   "bin": {
     "reciple": "bin/bin.js"
   },
+  "engines": {
+    "node": ">=16.9.0"
+  },
   "files": [
     "bin",
     "resource",
