@@ -212,6 +212,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
         if (!command) return;
 
         if (hasPermissions(command.name, interaction.memberPermissions ?? undefined, this.config.permissions.interactionCommands, command)) {
+            // TODO: Deprecated allowEcuteInDM
             if (!command.allowExecuteInDM && !interaction.inCachedGuild() || isIgnoredChannel(interaction.channelId, this.config.ignoredChannels)) return;
             if (!command) return;
 

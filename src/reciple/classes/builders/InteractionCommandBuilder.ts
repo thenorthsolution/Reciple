@@ -22,6 +22,10 @@ export class InteractionCommandBuilder extends SlashCommandBuilder {
         return this;
     }
 
+    /**
+     * TODO: Deprecated this
+     * @deprecated use `InteractionCommandBuilder.setDMPermission()` instead
+     */
     public setAllowExecuteInDM(allowExecuteInDM: boolean): InteractionCommandBuilder {
         if (typeof allowExecuteInDM !== 'boolean') throw new Error('allowExecuteInDM must be a boolean.');
         this.allowExecuteInDM = allowExecuteInDM;
