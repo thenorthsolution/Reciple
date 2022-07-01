@@ -2,7 +2,7 @@ import { InteractionCommandBuilder, RecipleInteractionCommandExecute } from './c
 import { MessageCommandBuilder, RecipleMessageCommandExecute } from './classes/builders/MessageCommandBuilder';
 import { existsSync, mkdirSync, readdirSync } from 'fs';
 import { version, isSupportedVersion } from './version';
-import { RecipleClient } from './classes/Client';
+import { RecipleClient } from './classes/RecipleClient';
 import wildcard from 'wildcard-match';
 import path from 'path';
 

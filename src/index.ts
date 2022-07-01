@@ -1,7 +1,7 @@
 import discord from 'discord.js';
 
 export const discordjs = discord;
-export * from './reciple/classes/Client';
+export * from './reciple/classes/RecipleClient';
 export * from './reciple/classes/Config';
 export * from './reciple/classes/builders/InteractionCommandBuilder';
 export * from './reciple/classes/builders/MessageCommandBuilder';

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { RecipleConfig } from './reciple/classes/Config';
-import { RecipleClient } from './reciple/classes/Client';
+import { RecipleClient } from './reciple/classes/RecipleClient';
 import { readdirSync, existsSync } from 'fs';
 import { version } from './reciple/version';
 import { flags } from './reciple/flags';

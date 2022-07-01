@@ -1,6 +1,6 @@
 import { InteractionCommandBuilder } from './classes/builders/InteractionCommandBuilder';
 import { ApplicationCommandDataResolvable, PermissionString } from 'discord.js';
-import { RecipleClient } from './classes/Client';
+import { RecipleClient } from './classes/RecipleClient';
 import {
     ContextMenuCommandBuilder,
     SlashCommandBuilder,
