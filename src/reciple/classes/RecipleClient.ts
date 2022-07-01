@@ -243,10 +243,10 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
 
         if ((command as RecipleMessageCommandExecute)?.message) {
             if (!this.config.commands.messageCommand.replyOnError) return;
-            await (command as RecipleMessageCommandExecute).message.reply(this.getMessage('error', 'An error occurred.')).catch(err => this.logger.debug(err));
+            await (command as RecipleMessageCommandExecute).message.reply(this.getMessage('error', 'An error occurred.')).catch(e => this.logger.debug(e));
         } else if ((command as RecipleInteractionCommandExecute)?.interaction) {
             if (!this.config.commands.interactionCommand.replyOnError) return;
-            await (command as RecipleInteractionCommandExecute).interaction.followUp(this.getMessage('error', 'An error occurred.')).catch(err => this.logger.debug(err));
+            await (command as RecipleInteractionCommandExecute).interaction.followUp(this.getMessage('error', 'An error occurred.')).catch(e => this.logger.debug(e));
         }
     }
 }
