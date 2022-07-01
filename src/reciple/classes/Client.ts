@@ -21,7 +21,7 @@ import {
     Client,
     ClientEvents,
     ClientOptions,
-    Collection,
+    CommandInteraction,
     Interaction,
     Message
 } from 'discord.js';
@@ -205,7 +205,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
         }
     }
 
-    public async interactionCommandExecute(interaction: Interaction): Promise<void|RecipleInteractionCommandExecute> {
+    public async interactionCommandExecute(interaction: Interaction|CommandInteraction): Promise<void|RecipleInteractionCommandExecute> {
         if (!interaction || !interaction.isCommand() || !this.isReady()) return;
 
         const command = this.commands.INTERACTION_COMMANDS[interaction.commandName];
