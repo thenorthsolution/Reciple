@@ -27,6 +27,7 @@ export class MessageCommandBuilder {
     public readonly builder = 'MESSAGE_COMMAND';
     public name: string = '';
     public description: string = '';
+    public aliases: string[] = [];
     public options: MessageCommandOptionBuilder[] = [];
     public validateOptions: boolean = false;
     public requiredPermissions: (PermissionFlags|PermissionString)[] = [];
@@ -34,42 +35,63 @@ export class MessageCommandBuilder {
     public allowExecuteByBots: boolean = false;
     public execute: (options: RecipleMessageCommandExecute) => void = () => { /* Execute */ };
 
+    /**
+     * Sets the command name
+     */
     public setName(name: string): MessageCommandBuilder {
         if (!name || typeof name !== 'string' || !name.match(/^[\w-]{1,32}$/)) throw new TypeError('name must be a string and match the regex /^[\\w-]{1,32}$/');
         this.name = name;
         return this;
     }
-
-    public setRequiredPermissions(permissions: (PermissionFlags|PermissionString)[]): MessageCommandBuilder {
-        if (!permissions || !Array.isArray(permissions)) throw new TypeError('permissions must be an array.');
-        this.requiredPermissions = permissions;
-        return this;
-    }
-
-    public setAllowExecuteInDM(allowExecuteInDM: boolean): MessageCommandBuilder {
-        if (typeof allowExecuteInDM !== 'boolean') throw new TypeError('allowExecuteInDM must be a boolean.');
-        this.allowExecuteInDM = allowExecuteInDM;
-        return this;
-    }
-
-    public setAllowExecuteByBots(allowExecuteByBots: boolean): MessageCommandBuilder {
-        if (typeof allowExecuteByBots !== 'boolean') throw new TypeError('allowExecuteByBots must be a boolean.');
-        this.allowExecuteByBots = allowExecuteByBots;
-        return this;
-    }
-
+    
+    /**
+     * Sets the command description
+     */
     public setDescription(description: string): MessageCommandBuilder {
         if (!description || typeof description !== 'string') throw new TypeError('description must be a string.');
         this.description = description;
         return this;
     }
 
+    /**
+     * Sets the default required permissions to execute this command 
+     */
+    public setRequiredPermissions(permissions: (PermissionFlags|PermissionString)[]): MessageCommandBuilder {
+        if (!permissions || !Array.isArray(permissions)) throw new TypeError('permissions must be an array.');
+        this.requiredPermissions = permissions;
+        return this;
+    }
+
+    /**
+     * Set if command can be executed in dms
+     */
+    public setAllowExecuteInDM(allowExecuteInDM: boolean): MessageCommandBuilder {
+        if (typeof allowExecuteInDM !== 'boolean') throw new TypeError('allowExecuteInDM must be a boolean.');
+        this.allowExecuteInDM = allowExecuteInDM;
+        return this;
+    }
+
+    /**
+     * Allow command to be executed by bots
+     */
+    public setAllowExecuteByBots(allowExecuteByBots: boolean): MessageCommandBuilder {
+        if (typeof allowExecuteByBots !== 'boolean') throw new TypeError('allowExecuteByBots must be a boolean.');
+        this.allowExecuteByBots = allowExecuteByBots;
+        return this;
+    }
+
+    /**
+     * Function when the command is executed
+     */
     public setExecute(execute: (options: RecipleMessageCommandExecute) => void): MessageCommandBuilder {
         if (!execute || typeof execute !== 'function') throw new TypeError('execute must be a function.');
         this.execute = execute;
         return this;
     }
 
+    /**
+     * Add option to the command
+     */
     public addOption(option: MessageCommandOptionBuilder|((constructor: MessageCommandOptionBuilder) => MessageCommandOptionBuilder)): MessageCommandBuilder {
         if (!option) throw new TypeError('option must be a MessageOption.');
 
@@ -82,12 +104,18 @@ export class MessageCommandBuilder {
         return this;
     }
 
+    /**
+     * Validate options before executing 
+     */
     public setValidateOptions(validateOptions: boolean): MessageCommandBuilder {
         if (typeof validateOptions !== 'boolean') throw new TypeError('validateOptions must be a boolean.');
         this.validateOptions = validateOptions;
         return this;
     }
 
+    /**
+     * validate given command options 
+     */
     public getCommandOptionValues(options: CommandMessage): MessageCommandValidatedOption[] {
         const args = options.args || [];
         const required = this.options.filter(o => o.required);

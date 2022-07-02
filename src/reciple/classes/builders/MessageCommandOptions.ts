@@ -6,6 +6,9 @@ export class MessageCommandOptions extends Array<MessageCommandValidatedOption> 
         this.push(...options);
     }
 
+    /**
+     * Get the option info 
+     */
     public get(name: string, requied: true): MessageCommandValidatedOption;
     public get(name: string, requied?: boolean): MessageCommandValidatedOption|null;
     public get(name: string, required?: boolean) {
@@ -15,6 +18,9 @@ export class MessageCommandOptions extends Array<MessageCommandValidatedOption> 
         return option ?? null;
     }
 
+    /**
+     * Get the option value 
+     */
     public getValue(name: string, requied: true): string;
     public getValue(name: string, requied?: boolean): string|null;
     public getValue(name: string, requied?: boolean) {
