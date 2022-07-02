@@ -172,9 +172,13 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
         if (!message.content || !this.isReady()) return;
 
         const parseCommand = getCommand(message.content, prefix || this.config.prefix || '!', this.config.commands.messageCommand.commandArgumentSeparator || ' ');
-        if (!parseCommand?.command || !parseCommand) return; 
-        
-        const command = this.commands.MESSAGE_COMMANDS[parseCommand.command.toLowerCase()];
+        if (!parseCommand || !parseCommand?.command) return; 
+
+        const command = this.commands.MESSAGE_COMMANDS[parseCommand.command.toLowerCase()]
+            ?? (this.config.commands.messageCommand.allowCommandAlias
+                ? Object.values(this.commands.MESSAGE_COMMANDS).find(c => c.aliases.some(a => a == parseCommand.command?.toLowerCase()))
+                : undefined
+                );
         if (!command) return;
 
         if (hasPermissions(command.name, message.member?.permissions, this.config.permissions.messageCommands, command)) {

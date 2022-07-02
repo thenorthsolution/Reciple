@@ -13,6 +13,8 @@ commands:
     enabled: true
     # reply when an error occured
     replyOnError: false
+    # Allow executing commands via aliases
+    allowCommandAlias: false
     # command argument separator
     commandArgumentSeparator: ' '
   interactionCommand:

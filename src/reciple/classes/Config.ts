@@ -19,6 +19,7 @@ export interface Config {
         messageCommand: {
             enabled: boolean;
             replyOnError: boolean;
+            allowCommandAlias: boolean;
             commandArgumentSeparator: string;
         }
         interactionCommand: {

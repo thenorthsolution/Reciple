@@ -54,6 +54,18 @@ export class MessageCommandBuilder {
     }
 
     /**
+     * Add aliases to the command
+     */
+    public addAliases(...aliases: string[]): MessageCommandBuilder {
+        if (!aliases.length) throw new TypeError('Provide atleast one alias');
+        if (aliases.some(a => !a || typeof a !== 'string' || !a.match(/^[\w-]{1,32}$/))) throw new TypeError('aliases must be strings and match the regex /^[\\w-]{1,32}$/');
+        if (this.name && aliases.some(a => a == this.name)) throw new TypeError('alias cannot have same name to its real command name');
+        
+        this.aliases = [...new Set(aliases)];
+        return this;
+    }
+
+    /**
      * Sets the default required permissions to execute this command 
      */
     public setRequiredPermissions(permissions: (PermissionFlags|PermissionString)[]): MessageCommandBuilder {
