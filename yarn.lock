@@ -278,6 +278,11 @@ tslib@^2.4.0:
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.4.0.tgz#7cecaa7f073ce680a05847aa77be941098f36dc3"
   integrity sha512-d6xOpEDfsi2CZVlPQzGeux8XMwLT9hssAsaPYExaQMuYskwb+x1x7J371tWlbBdWHroy99KnVB6qIkUbs5X3UQ==
 
+typedoc-plugin-djs-links@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/typedoc-plugin-djs-links/-/typedoc-plugin-djs-links-1.2.0.tgz#b274741de96130c88dfd4d910afe80b5bb0b1a5b"
+  integrity sha512-M8W01Qpx382mpiFQbQDxGwZ41sgHpjYJ+fdvf/VAe1XZQx77/JH813w5f6zvE6wCA/jz72nqECOz1X9vZyYmDA==
+
 typedoc-plugin-mdn-links@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/typedoc-plugin-mdn-links/-/typedoc-plugin-mdn-links-2.0.0.tgz#b43893bc7bdbb94927091f66d465f31e8440ad6c"

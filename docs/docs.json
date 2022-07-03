@@ -54,7 +54,7 @@
 							"fileName": "src/reciple/classes/builders/InteractionCommandBuilder.ts",
 							"line": 16,
 							"character": 11,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/builders/InteractionCommandBuilder.ts#L16"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/builders/InteractionCommandBuilder.ts#L16"
 						}
 					],
 					"type": {
@@ -77,7 +77,7 @@
 							"fileName": "src/reciple/classes/builders/InteractionCommandBuilder.ts",
 							"line": 14,
 							"character": 20,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/builders/InteractionCommandBuilder.ts#L14"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/builders/InteractionCommandBuilder.ts#L14"
 						}
 					],
 					"type": {
@@ -473,7 +473,7 @@
 							"fileName": "src/reciple/classes/builders/InteractionCommandBuilder.ts",
 							"line": 17,
 							"character": 11,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/builders/InteractionCommandBuilder.ts#L17"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/builders/InteractionCommandBuilder.ts#L17"
 						}
 					],
 					"type": {
@@ -489,7 +489,7 @@
 									"fileName": "src/reciple/classes/builders/InteractionCommandBuilder.ts",
 									"line": 17,
 									"character": 20,
-									"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/builders/InteractionCommandBuilder.ts#L17"
+									"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/builders/InteractionCommandBuilder.ts#L17"
 								}
 							],
 							"signatures": [
@@ -791,7 +791,7 @@
 							"fileName": "src/reciple/classes/builders/InteractionCommandBuilder.ts",
 							"line": 15,
 							"character": 11,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/builders/InteractionCommandBuilder.ts#L15"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/builders/InteractionCommandBuilder.ts#L15"
 						}
 					],
 					"type": {
@@ -2692,7 +2692,7 @@
 							"fileName": "src/reciple/classes/builders/InteractionCommandBuilder.ts",
 							"line": 32,
 							"character": 11,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/builders/InteractionCommandBuilder.ts#L32"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/builders/InteractionCommandBuilder.ts#L32"
 						}
 					],
 					"signatures": [
@@ -3615,7 +3615,7 @@
 							"fileName": "src/reciple/classes/builders/InteractionCommandBuilder.ts",
 							"line": 43,
 							"character": 11,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/builders/InteractionCommandBuilder.ts#L43"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/builders/InteractionCommandBuilder.ts#L43"
 						}
 					],
 					"signatures": [
@@ -3653,7 +3653,7 @@
 													"fileName": "src/reciple/classes/builders/InteractionCommandBuilder.ts",
 													"line": 43,
 													"character": 31,
-													"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/builders/InteractionCommandBuilder.ts#L43"
+													"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/builders/InteractionCommandBuilder.ts#L43"
 												}
 											],
 											"signatures": [
@@ -4231,7 +4231,7 @@
 							"fileName": "src/reciple/classes/builders/InteractionCommandBuilder.ts",
 							"line": 22,
 							"character": 11,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/builders/InteractionCommandBuilder.ts#L22"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/builders/InteractionCommandBuilder.ts#L22"
 						}
 					],
 					"signatures": [
@@ -4384,7 +4384,7 @@
 					"fileName": "src/reciple/classes/builders/InteractionCommandBuilder.ts",
 					"line": 13,
 					"character": 13,
-					"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/builders/InteractionCommandBuilder.ts#L13"
+					"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/builders/InteractionCommandBuilder.ts#L13"
 				}
 			],
 			"extendedTypes": [
@@ -4437,7 +4437,7 @@
 							"fileName": "src/reciple/classes/builders/MessageCommandBuilder.ts",
 							"line": 28,
 							"character": 11,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/builders/MessageCommandBuilder.ts#L28"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/builders/MessageCommandBuilder.ts#L28"
 						}
 					],
 					"type": {
@@ -4462,7 +4462,7 @@
 							"fileName": "src/reciple/classes/builders/MessageCommandBuilder.ts",
 							"line": 33,
 							"character": 11,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/builders/MessageCommandBuilder.ts#L33"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/builders/MessageCommandBuilder.ts#L33"
 						}
 					],
 					"type": {
@@ -4484,7 +4484,7 @@
 							"fileName": "src/reciple/classes/builders/MessageCommandBuilder.ts",
 							"line": 32,
 							"character": 11,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/builders/MessageCommandBuilder.ts#L32"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/builders/MessageCommandBuilder.ts#L32"
 						}
 					],
 					"type": {
@@ -4507,7 +4507,7 @@
 							"fileName": "src/reciple/classes/builders/MessageCommandBuilder.ts",
 							"line": 25,
 							"character": 20,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/builders/MessageCommandBuilder.ts#L25"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/builders/MessageCommandBuilder.ts#L25"
 						}
 					],
 					"type": {
@@ -4529,7 +4529,7 @@
 							"fileName": "src/reciple/classes/builders/MessageCommandBuilder.ts",
 							"line": 27,
 							"character": 11,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/builders/MessageCommandBuilder.ts#L27"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/builders/MessageCommandBuilder.ts#L27"
 						}
 					],
 					"type": {
@@ -4551,7 +4551,7 @@
 							"fileName": "src/reciple/classes/builders/MessageCommandBuilder.ts",
 							"line": 34,
 							"character": 11,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/builders/MessageCommandBuilder.ts#L34"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/builders/MessageCommandBuilder.ts#L34"
 						}
 					],
 					"type": {
@@ -4567,7 +4567,7 @@
 									"fileName": "src/reciple/classes/builders/MessageCommandBuilder.ts",
 									"line": 34,
 									"character": 20,
-									"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/builders/MessageCommandBuilder.ts#L34"
+									"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/builders/MessageCommandBuilder.ts#L34"
 								}
 							],
 							"signatures": [
@@ -4614,7 +4614,7 @@
 							"fileName": "src/reciple/classes/builders/MessageCommandBuilder.ts",
 							"line": 26,
 							"character": 11,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/builders/MessageCommandBuilder.ts#L26"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/builders/MessageCommandBuilder.ts#L26"
 						}
 					],
 					"type": {
@@ -4636,7 +4636,7 @@
 							"fileName": "src/reciple/classes/builders/MessageCommandBuilder.ts",
 							"line": 29,
 							"character": 11,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/builders/MessageCommandBuilder.ts#L29"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/builders/MessageCommandBuilder.ts#L29"
 						}
 					],
 					"type": {
@@ -4662,7 +4662,7 @@
 							"fileName": "src/reciple/classes/builders/MessageCommandBuilder.ts",
 							"line": 31,
 							"character": 11,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/builders/MessageCommandBuilder.ts#L31"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/builders/MessageCommandBuilder.ts#L31"
 						}
 					],
 					"type": {
@@ -4700,7 +4700,7 @@
 							"fileName": "src/reciple/classes/builders/MessageCommandBuilder.ts",
 							"line": 30,
 							"character": 11,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/builders/MessageCommandBuilder.ts#L30"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/builders/MessageCommandBuilder.ts#L30"
 						}
 					],
 					"type": {
@@ -4722,7 +4722,7 @@
 							"fileName": "src/reciple/classes/builders/MessageCommandBuilder.ts",
 							"line": 57,
 							"character": 11,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/builders/MessageCommandBuilder.ts#L57"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/builders/MessageCommandBuilder.ts#L57"
 						}
 					],
 					"signatures": [
@@ -4779,7 +4779,7 @@
 							"fileName": "src/reciple/classes/builders/MessageCommandBuilder.ts",
 							"line": 105,
 							"character": 11,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/builders/MessageCommandBuilder.ts#L105"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/builders/MessageCommandBuilder.ts#L105"
 						}
 					],
 					"signatures": [
@@ -4825,7 +4825,7 @@
 															"fileName": "src/reciple/classes/builders/MessageCommandBuilder.ts",
 															"line": 105,
 															"character": 58,
-															"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/builders/MessageCommandBuilder.ts#L105"
+															"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/builders/MessageCommandBuilder.ts#L105"
 														}
 													],
 													"signatures": [
@@ -4883,7 +4883,7 @@
 							"fileName": "src/reciple/classes/builders/MessageCommandBuilder.ts",
 							"line": 129,
 							"character": 11,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/builders/MessageCommandBuilder.ts#L129"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/builders/MessageCommandBuilder.ts#L129"
 						}
 					],
 					"signatures": [
@@ -4940,7 +4940,7 @@
 							"fileName": "src/reciple/classes/builders/MessageCommandBuilder.ts",
 							"line": 87,
 							"character": 11,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/builders/MessageCommandBuilder.ts#L87"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/builders/MessageCommandBuilder.ts#L87"
 						}
 					],
 					"signatures": [
@@ -4992,7 +4992,7 @@
 							"fileName": "src/reciple/classes/builders/MessageCommandBuilder.ts",
 							"line": 78,
 							"character": 11,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/builders/MessageCommandBuilder.ts#L78"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/builders/MessageCommandBuilder.ts#L78"
 						}
 					],
 					"signatures": [
@@ -5044,7 +5044,7 @@
 							"fileName": "src/reciple/classes/builders/MessageCommandBuilder.ts",
 							"line": 48,
 							"character": 11,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/builders/MessageCommandBuilder.ts#L48"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/builders/MessageCommandBuilder.ts#L48"
 						}
 					],
 					"signatures": [
@@ -5096,7 +5096,7 @@
 							"fileName": "src/reciple/classes/builders/MessageCommandBuilder.ts",
 							"line": 96,
 							"character": 11,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/builders/MessageCommandBuilder.ts#L96"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/builders/MessageCommandBuilder.ts#L96"
 						}
 					],
 					"signatures": [
@@ -5134,7 +5134,7 @@
 													"fileName": "src/reciple/classes/builders/MessageCommandBuilder.ts",
 													"line": 96,
 													"character": 31,
-													"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/builders/MessageCommandBuilder.ts#L96"
+													"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/builders/MessageCommandBuilder.ts#L96"
 												}
 											],
 											"signatures": [
@@ -5189,7 +5189,7 @@
 							"fileName": "src/reciple/classes/builders/MessageCommandBuilder.ts",
 							"line": 39,
 							"character": 11,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/builders/MessageCommandBuilder.ts#L39"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/builders/MessageCommandBuilder.ts#L39"
 						}
 					],
 					"signatures": [
@@ -5241,7 +5241,7 @@
 							"fileName": "src/reciple/classes/builders/MessageCommandBuilder.ts",
 							"line": 69,
 							"character": 11,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/builders/MessageCommandBuilder.ts#L69"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/builders/MessageCommandBuilder.ts#L69"
 						}
 					],
 					"signatures": [
@@ -5309,7 +5309,7 @@
 							"fileName": "src/reciple/classes/builders/MessageCommandBuilder.ts",
 							"line": 120,
 							"character": 11,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/builders/MessageCommandBuilder.ts#L120"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/builders/MessageCommandBuilder.ts#L120"
 						}
 					],
 					"signatures": [
@@ -5392,7 +5392,7 @@
 					"fileName": "src/reciple/classes/builders/MessageCommandBuilder.ts",
 					"line": 24,
 					"character": 13,
-					"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/builders/MessageCommandBuilder.ts#L24"
+					"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/builders/MessageCommandBuilder.ts#L24"
 				}
 			]
 		},
@@ -5437,7 +5437,7 @@
 							"fileName": "src/reciple/classes/builders/MessageCommandOptionBuilder.ts",
 							"line": 3,
 							"character": 11,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/builders/MessageCommandOptionBuilder.ts#L3"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/builders/MessageCommandOptionBuilder.ts#L3"
 						}
 					],
 					"type": {
@@ -5459,7 +5459,7 @@
 							"fileName": "src/reciple/classes/builders/MessageCommandOptionBuilder.ts",
 							"line": 2,
 							"character": 11,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/builders/MessageCommandOptionBuilder.ts#L2"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/builders/MessageCommandOptionBuilder.ts#L2"
 						}
 					],
 					"type": {
@@ -5481,7 +5481,7 @@
 							"fileName": "src/reciple/classes/builders/MessageCommandOptionBuilder.ts",
 							"line": 4,
 							"character": 11,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/builders/MessageCommandOptionBuilder.ts#L4"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/builders/MessageCommandOptionBuilder.ts#L4"
 						}
 					],
 					"type": {
@@ -5503,7 +5503,7 @@
 							"fileName": "src/reciple/classes/builders/MessageCommandOptionBuilder.ts",
 							"line": 5,
 							"character": 11,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/builders/MessageCommandOptionBuilder.ts#L5"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/builders/MessageCommandOptionBuilder.ts#L5"
 						}
 					],
 					"type": {
@@ -5519,7 +5519,7 @@
 									"fileName": "src/reciple/classes/builders/MessageCommandOptionBuilder.ts",
 									"line": 5,
 									"character": 22,
-									"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/builders/MessageCommandOptionBuilder.ts#L5"
+									"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/builders/MessageCommandOptionBuilder.ts#L5"
 								}
 							],
 							"signatures": [
@@ -5565,7 +5565,7 @@
 							"fileName": "src/reciple/classes/builders/MessageCommandOptionBuilder.ts",
 							"line": 19,
 							"character": 11,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/builders/MessageCommandOptionBuilder.ts#L19"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/builders/MessageCommandOptionBuilder.ts#L19"
 						}
 					],
 					"signatures": [
@@ -5617,7 +5617,7 @@
 							"fileName": "src/reciple/classes/builders/MessageCommandOptionBuilder.ts",
 							"line": 10,
 							"character": 11,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/builders/MessageCommandOptionBuilder.ts#L10"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/builders/MessageCommandOptionBuilder.ts#L10"
 						}
 					],
 					"signatures": [
@@ -5669,7 +5669,7 @@
 							"fileName": "src/reciple/classes/builders/MessageCommandOptionBuilder.ts",
 							"line": 28,
 							"character": 11,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/builders/MessageCommandOptionBuilder.ts#L28"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/builders/MessageCommandOptionBuilder.ts#L28"
 						}
 					],
 					"signatures": [
@@ -5721,7 +5721,7 @@
 							"fileName": "src/reciple/classes/builders/MessageCommandOptionBuilder.ts",
 							"line": 37,
 							"character": 11,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/builders/MessageCommandOptionBuilder.ts#L37"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/builders/MessageCommandOptionBuilder.ts#L37"
 						}
 					],
 					"signatures": [
@@ -5759,7 +5759,7 @@
 													"fileName": "src/reciple/classes/builders/MessageCommandOptionBuilder.ts",
 													"line": 37,
 													"character": 35,
-													"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/builders/MessageCommandOptionBuilder.ts#L37"
+													"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/builders/MessageCommandOptionBuilder.ts#L37"
 												}
 											],
 											"signatures": [
@@ -5832,7 +5832,7 @@
 					"fileName": "src/reciple/classes/builders/MessageCommandOptionBuilder.ts",
 					"line": 1,
 					"character": 13,
-					"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/builders/MessageCommandOptionBuilder.ts#L1"
+					"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/builders/MessageCommandOptionBuilder.ts#L1"
 				}
 			]
 		},
@@ -5854,7 +5854,7 @@
 							"fileName": "src/reciple/classes/builders/MessageCommandOptions.ts",
 							"line": 4,
 							"character": 4,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/builders/MessageCommandOptions.ts#L4"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/builders/MessageCommandOptions.ts#L4"
 						}
 					],
 					"signatures": [
@@ -8577,19 +8577,19 @@
 							"fileName": "src/reciple/classes/builders/MessageCommandOptions.ts",
 							"line": 12,
 							"character": 11,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/builders/MessageCommandOptions.ts#L12"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/builders/MessageCommandOptions.ts#L12"
 						},
 						{
 							"fileName": "src/reciple/classes/builders/MessageCommandOptions.ts",
 							"line": 13,
 							"character": 11,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/builders/MessageCommandOptions.ts#L13"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/builders/MessageCommandOptions.ts#L13"
 						},
 						{
 							"fileName": "src/reciple/classes/builders/MessageCommandOptions.ts",
 							"line": 14,
 							"character": 11,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/builders/MessageCommandOptions.ts#L14"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/builders/MessageCommandOptions.ts#L14"
 						}
 					],
 					"signatures": [
@@ -8699,19 +8699,19 @@
 							"fileName": "src/reciple/classes/builders/MessageCommandOptions.ts",
 							"line": 24,
 							"character": 11,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/builders/MessageCommandOptions.ts#L24"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/builders/MessageCommandOptions.ts#L24"
 						},
 						{
 							"fileName": "src/reciple/classes/builders/MessageCommandOptions.ts",
 							"line": 25,
 							"character": 11,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/builders/MessageCommandOptions.ts#L25"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/builders/MessageCommandOptions.ts#L25"
 						},
 						{
 							"fileName": "src/reciple/classes/builders/MessageCommandOptions.ts",
 							"line": 26,
 							"character": 11,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/builders/MessageCommandOptions.ts#L26"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/builders/MessageCommandOptions.ts#L26"
 						}
 					],
 					"signatures": [
@@ -12306,7 +12306,7 @@
 					"fileName": "src/reciple/classes/builders/MessageCommandOptions.ts",
 					"line": 3,
 					"character": 13,
-					"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/builders/MessageCommandOptions.ts#L3"
+					"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/builders/MessageCommandOptions.ts#L3"
 				}
 			],
 			"extendedTypes": [
@@ -12343,7 +12343,7 @@
 							"fileName": "src/reciple/classes/RecipleClient.ts",
 							"line": 80,
 							"character": 4,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/RecipleClient.ts#L80"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/RecipleClient.ts#L80"
 						}
 					],
 					"signatures": [
@@ -12491,7 +12491,7 @@
 							"fileName": "src/reciple/classes/RecipleClient.ts",
 							"line": 74,
 							"character": 11,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/RecipleClient.ts#L74"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/RecipleClient.ts#L74"
 						}
 					],
 					"type": {
@@ -12514,7 +12514,7 @@
 							"fileName": "src/reciple/classes/RecipleClient.ts",
 							"line": 73,
 							"character": 11,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/RecipleClient.ts#L73"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/RecipleClient.ts#L73"
 						}
 					],
 					"type": {
@@ -12591,7 +12591,7 @@
 							"fileName": "src/reciple/classes/RecipleClient.ts",
 							"line": 77,
 							"character": 11,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/RecipleClient.ts#L77"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/RecipleClient.ts#L77"
 						}
 					],
 					"type": {
@@ -12614,7 +12614,7 @@
 							"fileName": "src/reciple/classes/RecipleClient.ts",
 							"line": 76,
 							"character": 11,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/RecipleClient.ts#L76"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/RecipleClient.ts#L76"
 						}
 					],
 					"type": {
@@ -12667,7 +12667,7 @@
 							"fileName": "src/reciple/classes/RecipleClient.ts",
 							"line": 75,
 							"character": 11,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/RecipleClient.ts#L75"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/RecipleClient.ts#L75"
 						}
 					],
 					"type": {
@@ -13018,7 +13018,7 @@
 							"fileName": "src/reciple/classes/RecipleClient.ts",
 							"line": 78,
 							"character": 11,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/RecipleClient.ts#L78"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/RecipleClient.ts#L78"
 						}
 					],
 					"type": {
@@ -13240,7 +13240,7 @@
 							"fileName": "src/reciple/classes/RecipleClient.ts",
 							"line": 252,
 							"character": 18,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/RecipleClient.ts#L252"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/RecipleClient.ts#L252"
 						}
 					],
 					"signatures": [
@@ -13305,7 +13305,7 @@
 							"fileName": "src/reciple/classes/RecipleClient.ts",
 							"line": 152,
 							"character": 11,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/RecipleClient.ts#L152"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/RecipleClient.ts#L152"
 						}
 					],
 					"signatures": [
@@ -13357,7 +13357,7 @@
 							"fileName": "src/reciple/classes/RecipleClient.ts",
 							"line": 164,
 							"character": 11,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/RecipleClient.ts#L164"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/RecipleClient.ts#L164"
 						}
 					],
 					"signatures": [
@@ -13555,7 +13555,7 @@
 							"fileName": "src/reciple/classes/RecipleClient.ts",
 							"line": 131,
 							"character": 17,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/RecipleClient.ts#L131"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/RecipleClient.ts#L131"
 						}
 					],
 					"signatures": [
@@ -13657,13 +13657,13 @@
 							"fileName": "src/reciple/classes/RecipleClient.ts",
 							"line": 60,
 							"character": 4,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/RecipleClient.ts#L60"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/RecipleClient.ts#L60"
 						},
 						{
 							"fileName": "src/reciple/classes/RecipleClient.ts",
 							"line": 61,
 							"character": 4,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/RecipleClient.ts#L61"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/RecipleClient.ts#L61"
 						}
 					],
 					"signatures": [
@@ -14608,7 +14608,7 @@
 							"fileName": "src/reciple/classes/RecipleClient.ts",
 							"line": 248,
 							"character": 11,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/RecipleClient.ts#L248"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/RecipleClient.ts#L248"
 						}
 					],
 					"signatures": [
@@ -14679,7 +14679,7 @@
 							"fileName": "src/reciple/classes/RecipleClient.ts",
 							"line": 222,
 							"character": 17,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/RecipleClient.ts#L222"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/RecipleClient.ts#L222"
 						}
 					],
 					"signatures": [
@@ -14767,7 +14767,7 @@
 							"fileName": "src/reciple/classes/RecipleClient.ts",
 							"line": 69,
 							"character": 4,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/RecipleClient.ts#L69"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/RecipleClient.ts#L69"
 						}
 					],
 					"signatures": [
@@ -15014,7 +15014,7 @@
 							"fileName": "src/reciple/classes/RecipleClient.ts",
 							"line": 103,
 							"character": 17,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/RecipleClient.ts#L103"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/RecipleClient.ts#L103"
 						}
 					],
 					"signatures": [
@@ -15124,7 +15124,7 @@
 							"fileName": "src/reciple/classes/RecipleClient.ts",
 							"line": 171,
 							"character": 17,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/RecipleClient.ts#L171"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/RecipleClient.ts#L171"
 						}
 					],
 					"signatures": [
@@ -15204,13 +15204,13 @@
 							"fileName": "src/reciple/classes/RecipleClient.ts",
 							"line": 63,
 							"character": 4,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/RecipleClient.ts#L63"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/RecipleClient.ts#L63"
 						},
 						{
 							"fileName": "src/reciple/classes/RecipleClient.ts",
 							"line": 64,
 							"character": 4,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/RecipleClient.ts#L64"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/RecipleClient.ts#L64"
 						}
 					],
 					"signatures": [
@@ -15270,7 +15270,7 @@
 													"fileName": "src/reciple/classes/RecipleClient.ts",
 													"line": 63,
 													"character": 65,
-													"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/RecipleClient.ts#L63"
+													"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/RecipleClient.ts#L63"
 												}
 											],
 											"signatures": [
@@ -15416,7 +15416,7 @@
 													"fileName": "src/reciple/classes/RecipleClient.ts",
 													"line": 64,
 													"character": 89,
-													"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/RecipleClient.ts#L64"
+													"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/RecipleClient.ts#L64"
 												}
 											],
 											"signatures": [
@@ -15493,13 +15493,13 @@
 							"fileName": "src/reciple/classes/RecipleClient.ts",
 							"line": 54,
 							"character": 4,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/RecipleClient.ts#L54"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/RecipleClient.ts#L54"
 						},
 						{
 							"fileName": "src/reciple/classes/RecipleClient.ts",
 							"line": 55,
 							"character": 4,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/RecipleClient.ts#L55"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/RecipleClient.ts#L55"
 						}
 					],
 					"signatures": [
@@ -15559,7 +15559,7 @@
 													"fileName": "src/reciple/classes/RecipleClient.ts",
 													"line": 54,
 													"character": 64,
-													"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/RecipleClient.ts#L54"
+													"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/RecipleClient.ts#L54"
 												}
 											],
 											"signatures": [
@@ -15705,7 +15705,7 @@
 													"fileName": "src/reciple/classes/RecipleClient.ts",
 													"line": 55,
 													"character": 88,
-													"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/RecipleClient.ts#L55"
+													"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/RecipleClient.ts#L55"
 												}
 											],
 											"signatures": [
@@ -15782,13 +15782,13 @@
 							"fileName": "src/reciple/classes/RecipleClient.ts",
 							"line": 57,
 							"character": 4,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/RecipleClient.ts#L57"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/RecipleClient.ts#L57"
 						},
 						{
 							"fileName": "src/reciple/classes/RecipleClient.ts",
 							"line": 58,
 							"character": 4,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/RecipleClient.ts#L58"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/RecipleClient.ts#L58"
 						}
 					],
 					"signatures": [
@@ -15848,7 +15848,7 @@
 													"fileName": "src/reciple/classes/RecipleClient.ts",
 													"line": 57,
 													"character": 66,
-													"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/RecipleClient.ts#L57"
+													"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/RecipleClient.ts#L57"
 												}
 											],
 											"signatures": [
@@ -16186,7 +16186,7 @@
 													"fileName": "src/reciple/classes/RecipleClient.ts",
 													"line": 58,
 													"character": 96,
-													"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/RecipleClient.ts#L58"
+													"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/RecipleClient.ts#L58"
 												}
 											],
 											"signatures": [
@@ -16810,13 +16810,13 @@
 							"fileName": "src/reciple/classes/RecipleClient.ts",
 							"line": 66,
 							"character": 4,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/RecipleClient.ts#L66"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/RecipleClient.ts#L66"
 						},
 						{
 							"fileName": "src/reciple/classes/RecipleClient.ts",
 							"line": 67,
 							"character": 4,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/RecipleClient.ts#L67"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/RecipleClient.ts#L67"
 						}
 					],
 					"signatures": [
@@ -17352,7 +17352,7 @@
 							"fileName": "src/reciple/classes/RecipleClient.ts",
 							"line": 93,
 							"character": 17,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/RecipleClient.ts#L93"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/RecipleClient.ts#L93"
 						}
 					],
 					"signatures": [
@@ -18528,13 +18528,13 @@
 					"fileName": "src/reciple/classes/RecipleClient.ts",
 					"line": 53,
 					"character": 17,
-					"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/RecipleClient.ts#L53"
+					"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/RecipleClient.ts#L53"
 				},
 				{
 					"fileName": "src/reciple/classes/RecipleClient.ts",
 					"line": 72,
 					"character": 13,
-					"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/RecipleClient.ts#L72"
+					"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/RecipleClient.ts#L72"
 				}
 			],
 			"typeParameters": [
@@ -18588,7 +18588,7 @@
 							"fileName": "src/reciple/classes/Config.ts",
 							"line": 67,
 							"character": 4,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/Config.ts#L67"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/Config.ts#L67"
 						}
 					],
 					"signatures": [
@@ -18633,7 +18633,7 @@
 							"fileName": "src/reciple/classes/Config.ts",
 							"line": 64,
 							"character": 11,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/Config.ts#L64"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/Config.ts#L64"
 						}
 					],
 					"type": {
@@ -18655,7 +18655,7 @@
 							"fileName": "src/reciple/classes/Config.ts",
 							"line": 65,
 							"character": 11,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/Config.ts#L65"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/Config.ts#L65"
 						}
 					],
 					"type": {
@@ -18677,7 +18677,7 @@
 							"fileName": "src/reciple/classes/Config.ts",
 							"line": 129,
 							"character": 12,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/Config.ts#L129"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/Config.ts#L129"
 						}
 					],
 					"signatures": [
@@ -18716,7 +18716,7 @@
 							"fileName": "src/reciple/classes/Config.ts",
 							"line": 101,
 							"character": 11,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/Config.ts#L101"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/Config.ts#L101"
 						}
 					],
 					"signatures": [
@@ -18747,7 +18747,7 @@
 							"fileName": "src/reciple/classes/Config.ts",
 							"line": 125,
 							"character": 12,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/Config.ts#L125"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/Config.ts#L125"
 						}
 					],
 					"signatures": [
@@ -18777,7 +18777,7 @@
 							"fileName": "src/reciple/classes/Config.ts",
 							"line": 72,
 							"character": 11,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/Config.ts#L72"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/Config.ts#L72"
 						}
 					],
 					"signatures": [
@@ -18808,7 +18808,7 @@
 							"fileName": "src/reciple/classes/Config.ts",
 							"line": 108,
 							"character": 11,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/Config.ts#L108"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/Config.ts#L108"
 						}
 					],
 					"signatures": [
@@ -18879,7 +18879,7 @@
 					"fileName": "src/reciple/classes/Config.ts",
 					"line": 63,
 					"character": 13,
-					"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/Config.ts#L63"
+					"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/Config.ts#L63"
 				}
 			]
 		},
@@ -18925,7 +18925,7 @@
 							"fileName": "src/reciple/modules.ts",
 							"line": 16,
 							"character": 11,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/modules.ts#L16"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/modules.ts#L16"
 						}
 					],
 					"type": {
@@ -18950,7 +18950,7 @@
 							"fileName": "src/reciple/modules.ts",
 							"line": 15,
 							"character": 11,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/modules.ts#L15"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/modules.ts#L15"
 						}
 					],
 					"type": {
@@ -18984,7 +18984,7 @@
 							"fileName": "src/reciple/modules.ts",
 							"line": 17,
 							"character": 11,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/modules.ts#L17"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/modules.ts#L17"
 						}
 					],
 					"signatures": [
@@ -19051,7 +19051,7 @@
 							"fileName": "src/reciple/modules.ts",
 							"line": 18,
 							"character": 11,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/modules.ts#L18"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/modules.ts#L18"
 						}
 					],
 					"signatures": [
@@ -19133,7 +19133,7 @@
 					"fileName": "src/reciple/modules.ts",
 					"line": 14,
 					"character": 21,
-					"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/modules.ts#L14"
+					"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/modules.ts#L14"
 				}
 			]
 		},
@@ -19155,7 +19155,7 @@
 							"fileName": "src/reciple/classes/Config.ts",
 							"line": 54,
 							"character": 4,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/Config.ts#L54"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/Config.ts#L54"
 						}
 					],
 					"type": {
@@ -19176,7 +19176,7 @@
 							"fileName": "src/reciple/classes/Config.ts",
 							"line": 18,
 							"character": 4,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/Config.ts#L18"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/Config.ts#L18"
 						}
 					],
 					"type": {
@@ -19199,7 +19199,7 @@
 											"fileName": "src/reciple/classes/Config.ts",
 											"line": 25,
 											"character": 8,
-											"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/Config.ts#L25"
+											"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/Config.ts#L25"
 										}
 									],
 									"type": {
@@ -19222,7 +19222,7 @@
 															"fileName": "src/reciple/classes/Config.ts",
 															"line": 26,
 															"character": 12,
-															"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/Config.ts#L26"
+															"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/Config.ts#L26"
 														}
 													],
 													"type": {
@@ -19241,7 +19241,7 @@
 															"fileName": "src/reciple/classes/Config.ts",
 															"line": 30,
 															"character": 12,
-															"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/Config.ts#L30"
+															"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/Config.ts#L30"
 														}
 													],
 													"type": {
@@ -19272,7 +19272,7 @@
 															"fileName": "src/reciple/classes/Config.ts",
 															"line": 28,
 															"character": 12,
-															"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/Config.ts#L28"
+															"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/Config.ts#L28"
 														}
 													],
 													"type": {
@@ -19291,7 +19291,7 @@
 															"fileName": "src/reciple/classes/Config.ts",
 															"line": 27,
 															"character": 12,
-															"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/Config.ts#L27"
+															"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/Config.ts#L27"
 														}
 													],
 													"type": {
@@ -19310,7 +19310,7 @@
 															"fileName": "src/reciple/classes/Config.ts",
 															"line": 29,
 															"character": 12,
-															"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/Config.ts#L29"
+															"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/Config.ts#L29"
 														}
 													],
 													"type": {
@@ -19336,7 +19336,7 @@
 													"fileName": "src/reciple/classes/Config.ts",
 													"line": 25,
 													"character": 28,
-													"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/Config.ts#L25"
+													"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/Config.ts#L25"
 												}
 											]
 										}
@@ -19353,7 +19353,7 @@
 											"fileName": "src/reciple/classes/Config.ts",
 											"line": 19,
 											"character": 8,
-											"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/Config.ts#L19"
+											"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/Config.ts#L19"
 										}
 									],
 									"type": {
@@ -19376,7 +19376,7 @@
 															"fileName": "src/reciple/classes/Config.ts",
 															"line": 22,
 															"character": 12,
-															"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/Config.ts#L22"
+															"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/Config.ts#L22"
 														}
 													],
 													"type": {
@@ -19395,7 +19395,7 @@
 															"fileName": "src/reciple/classes/Config.ts",
 															"line": 23,
 															"character": 12,
-															"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/Config.ts#L23"
+															"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/Config.ts#L23"
 														}
 													],
 													"type": {
@@ -19414,7 +19414,7 @@
 															"fileName": "src/reciple/classes/Config.ts",
 															"line": 20,
 															"character": 12,
-															"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/Config.ts#L20"
+															"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/Config.ts#L20"
 														}
 													],
 													"type": {
@@ -19433,7 +19433,7 @@
 															"fileName": "src/reciple/classes/Config.ts",
 															"line": 21,
 															"character": 12,
-															"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/Config.ts#L21"
+															"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/Config.ts#L21"
 														}
 													],
 													"type": {
@@ -19458,7 +19458,7 @@
 													"fileName": "src/reciple/classes/Config.ts",
 													"line": 19,
 													"character": 24,
-													"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/Config.ts#L19"
+													"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/Config.ts#L19"
 												}
 											]
 										}
@@ -19479,7 +19479,7 @@
 									"fileName": "src/reciple/classes/Config.ts",
 									"line": 18,
 									"character": 14,
-									"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/Config.ts#L18"
+									"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/Config.ts#L18"
 								}
 							]
 						}
@@ -19496,7 +19496,7 @@
 							"fileName": "src/reciple/classes/Config.ts",
 							"line": 48,
 							"character": 4,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/Config.ts#L48"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/Config.ts#L48"
 						}
 					],
 					"type": {
@@ -19519,7 +19519,7 @@
 											"fileName": "src/reciple/classes/Config.ts",
 											"line": 50,
 											"character": 8,
-											"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/Config.ts#L50"
+											"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/Config.ts#L50"
 										}
 									],
 									"type": {
@@ -19538,7 +19538,7 @@
 											"fileName": "src/reciple/classes/Config.ts",
 											"line": 49,
 											"character": 8,
-											"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/Config.ts#L49"
+											"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/Config.ts#L49"
 										}
 									],
 									"type": {
@@ -19557,7 +19557,7 @@
 											"fileName": "src/reciple/classes/Config.ts",
 											"line": 52,
 											"character": 8,
-											"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/Config.ts#L52"
+											"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/Config.ts#L52"
 										}
 									],
 									"type": {
@@ -19576,7 +19576,7 @@
 											"fileName": "src/reciple/classes/Config.ts",
 											"line": 51,
 											"character": 8,
-											"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/Config.ts#L51"
+											"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/Config.ts#L51"
 										}
 									],
 									"type": {
@@ -19601,7 +19601,7 @@
 									"fileName": "src/reciple/classes/Config.ts",
 									"line": 48,
 									"character": 17,
-									"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/Config.ts#L48"
+									"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/Config.ts#L48"
 								}
 							]
 						}
@@ -19618,7 +19618,7 @@
 							"fileName": "src/reciple/classes/Config.ts",
 							"line": 43,
 							"character": 4,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/Config.ts#L43"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/Config.ts#L43"
 						}
 					],
 					"type": {
@@ -19641,7 +19641,7 @@
 											"fileName": "src/reciple/classes/Config.ts",
 											"line": 46,
 											"character": 8,
-											"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/Config.ts#L46"
+											"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/Config.ts#L46"
 										}
 									],
 									"type": {
@@ -19663,7 +19663,7 @@
 											"fileName": "src/reciple/classes/Config.ts",
 											"line": 45,
 											"character": 8,
-											"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/Config.ts#L45"
+											"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/Config.ts#L45"
 										}
 									],
 									"type": {
@@ -19682,7 +19682,7 @@
 											"fileName": "src/reciple/classes/Config.ts",
 											"line": 44,
 											"character": 8,
-											"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/Config.ts#L44"
+											"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/Config.ts#L44"
 										}
 									],
 									"type": {
@@ -19706,7 +19706,7 @@
 									"fileName": "src/reciple/classes/Config.ts",
 									"line": 43,
 									"character": 21,
-									"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/Config.ts#L43"
+									"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/Config.ts#L43"
 								}
 							]
 						}
@@ -19723,7 +19723,7 @@
 							"fileName": "src/reciple/classes/Config.ts",
 							"line": 58,
 							"character": 4,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/Config.ts#L58"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/Config.ts#L58"
 						}
 					],
 					"type": {
@@ -19745,7 +19745,7 @@
 							"fileName": "src/reciple/classes/Config.ts",
 							"line": 55,
 							"character": 4,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/Config.ts#L55"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/Config.ts#L55"
 						}
 					],
 					"type": {
@@ -19761,7 +19761,7 @@
 									"fileName": "src/reciple/classes/Config.ts",
 									"line": 55,
 									"character": 14,
-									"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/Config.ts#L55"
+									"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/Config.ts#L55"
 								}
 							],
 							"indexSignature": {
@@ -19801,7 +19801,7 @@
 							"fileName": "src/reciple/classes/Config.ts",
 							"line": 59,
 							"character": 4,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/Config.ts#L59"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/Config.ts#L59"
 						}
 					],
 					"type": {
@@ -19820,7 +19820,7 @@
 							"fileName": "src/reciple/classes/Config.ts",
 							"line": 33,
 							"character": 4,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/Config.ts#L33"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/Config.ts#L33"
 						}
 					],
 					"type": {
@@ -19843,7 +19843,7 @@
 											"fileName": "src/reciple/classes/Config.ts",
 											"line": 38,
 											"character": 8,
-											"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/Config.ts#L38"
+											"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/Config.ts#L38"
 										}
 									],
 									"type": {
@@ -19866,7 +19866,7 @@
 															"fileName": "src/reciple/classes/Config.ts",
 															"line": 40,
 															"character": 12,
-															"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/Config.ts#L40"
+															"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/Config.ts#L40"
 														}
 													],
 													"type": {
@@ -19889,7 +19889,7 @@
 															"fileName": "src/reciple/classes/Config.ts",
 															"line": 39,
 															"character": 12,
-															"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/Config.ts#L39"
+															"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/Config.ts#L39"
 														}
 													],
 													"type": {
@@ -19912,7 +19912,7 @@
 													"fileName": "src/reciple/classes/Config.ts",
 													"line": 38,
 													"character": 29,
-													"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/Config.ts#L38"
+													"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/Config.ts#L38"
 												}
 											]
 										}
@@ -19929,7 +19929,7 @@
 											"fileName": "src/reciple/classes/Config.ts",
 											"line": 34,
 											"character": 8,
-											"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/Config.ts#L34"
+											"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/Config.ts#L34"
 										}
 									],
 									"type": {
@@ -19952,7 +19952,7 @@
 															"fileName": "src/reciple/classes/Config.ts",
 															"line": 36,
 															"character": 12,
-															"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/Config.ts#L36"
+															"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/Config.ts#L36"
 														}
 													],
 													"type": {
@@ -19975,7 +19975,7 @@
 															"fileName": "src/reciple/classes/Config.ts",
 															"line": 35,
 															"character": 12,
-															"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/Config.ts#L35"
+															"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/Config.ts#L35"
 														}
 													],
 													"type": {
@@ -19998,7 +19998,7 @@
 													"fileName": "src/reciple/classes/Config.ts",
 													"line": 34,
 													"character": 25,
-													"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/Config.ts#L34"
+													"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/Config.ts#L34"
 												}
 											]
 										}
@@ -20019,7 +20019,7 @@
 									"fileName": "src/reciple/classes/Config.ts",
 									"line": 33,
 									"character": 17,
-									"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/Config.ts#L33"
+									"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/Config.ts#L33"
 								}
 							]
 						}
@@ -20036,7 +20036,7 @@
 							"fileName": "src/reciple/classes/Config.ts",
 							"line": 17,
 							"character": 4,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/Config.ts#L17"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/Config.ts#L17"
 						}
 					],
 					"type": {
@@ -20055,7 +20055,7 @@
 							"fileName": "src/reciple/classes/Config.ts",
 							"line": 16,
 							"character": 4,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/Config.ts#L16"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/Config.ts#L16"
 						}
 					],
 					"type": {
@@ -20074,7 +20074,7 @@
 							"fileName": "src/reciple/classes/Config.ts",
 							"line": 60,
 							"character": 4,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/Config.ts#L60"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/Config.ts#L60"
 						}
 					],
 					"type": {
@@ -20106,7 +20106,7 @@
 					"fileName": "src/reciple/classes/Config.ts",
 					"line": 15,
 					"character": 17,
-					"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/Config.ts#L15"
+					"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/Config.ts#L15"
 				}
 			]
 		},
@@ -20128,7 +20128,7 @@
 							"fileName": "src/reciple/classes/Config.ts",
 							"line": 11,
 							"character": 4,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/Config.ts#L11"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/Config.ts#L11"
 						}
 					],
 					"type": {
@@ -20147,7 +20147,7 @@
 							"fileName": "src/reciple/classes/Config.ts",
 							"line": 12,
 							"character": 4,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/Config.ts#L12"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/Config.ts#L12"
 						}
 					],
 					"type": {
@@ -20186,7 +20186,7 @@
 					"fileName": "src/reciple/classes/Config.ts",
 					"line": 10,
 					"character": 17,
-					"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/Config.ts#L10"
+					"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/Config.ts#L10"
 				}
 			]
 		},
@@ -20208,7 +20208,7 @@
 							"fileName": "src/reciple/classes/builders/MessageCommandBuilder.ts",
 							"line": 20,
 							"character": 4,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/builders/MessageCommandBuilder.ts#L20"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/builders/MessageCommandBuilder.ts#L20"
 						}
 					],
 					"type": {
@@ -20227,7 +20227,7 @@
 							"fileName": "src/reciple/classes/builders/MessageCommandBuilder.ts",
 							"line": 21,
 							"character": 4,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/builders/MessageCommandBuilder.ts#L21"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/builders/MessageCommandBuilder.ts#L21"
 						}
 					],
 					"type": {
@@ -20246,7 +20246,7 @@
 							"fileName": "src/reciple/classes/builders/MessageCommandBuilder.ts",
 							"line": 17,
 							"character": 4,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/builders/MessageCommandBuilder.ts#L17"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/builders/MessageCommandBuilder.ts#L17"
 						}
 					],
 					"type": {
@@ -20265,7 +20265,7 @@
 							"fileName": "src/reciple/classes/builders/MessageCommandBuilder.ts",
 							"line": 19,
 							"character": 4,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/builders/MessageCommandBuilder.ts#L19"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/builders/MessageCommandBuilder.ts#L19"
 						}
 					],
 					"type": {
@@ -20284,7 +20284,7 @@
 							"fileName": "src/reciple/classes/builders/MessageCommandBuilder.ts",
 							"line": 18,
 							"character": 4,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/builders/MessageCommandBuilder.ts#L18"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/builders/MessageCommandBuilder.ts#L18"
 						}
 					],
 					"type": {
@@ -20319,7 +20319,7 @@
 					"fileName": "src/reciple/classes/builders/MessageCommandBuilder.ts",
 					"line": 16,
 					"character": 17,
-					"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/builders/MessageCommandBuilder.ts#L16"
+					"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/builders/MessageCommandBuilder.ts#L16"
 				}
 			]
 		},
@@ -20341,7 +20341,7 @@
 							"fileName": "src/reciple/classes/RecipleClient.ts",
 							"line": 45,
 							"character": 4,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/RecipleClient.ts#L45"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/RecipleClient.ts#L45"
 						}
 					],
 					"type": {
@@ -20357,7 +20357,7 @@
 									"fileName": "src/reciple/classes/RecipleClient.ts",
 									"line": 45,
 									"character": 26,
-									"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/RecipleClient.ts#L45"
+									"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/RecipleClient.ts#L45"
 								}
 							],
 							"indexSignature": {
@@ -20398,7 +20398,7 @@
 							"fileName": "src/reciple/classes/RecipleClient.ts",
 							"line": 44,
 							"character": 4,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/RecipleClient.ts#L44"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/RecipleClient.ts#L44"
 						}
 					],
 					"type": {
@@ -20414,7 +20414,7 @@
 									"fileName": "src/reciple/classes/RecipleClient.ts",
 									"line": 44,
 									"character": 22,
-									"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/RecipleClient.ts#L44"
+									"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/RecipleClient.ts#L44"
 								}
 							],
 							"indexSignature": {
@@ -20459,7 +20459,7 @@
 					"fileName": "src/reciple/classes/RecipleClient.ts",
 					"line": 43,
 					"character": 17,
-					"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/RecipleClient.ts#L43"
+					"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/RecipleClient.ts#L43"
 				}
 			]
 		},
@@ -23093,7 +23093,7 @@
 							"fileName": "src/reciple/classes/RecipleClient.ts",
 							"line": 50,
 							"character": 4,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/RecipleClient.ts#L50"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/RecipleClient.ts#L50"
 						}
 					],
 					"type": {
@@ -23123,7 +23123,7 @@
 							"fileName": "src/reciple/classes/RecipleClient.ts",
 							"line": 49,
 							"character": 4,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/RecipleClient.ts#L49"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/RecipleClient.ts#L49"
 						}
 					],
 					"type": {
@@ -24338,7 +24338,7 @@
 					"fileName": "src/reciple/classes/RecipleClient.ts",
 					"line": 48,
 					"character": 17,
-					"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/RecipleClient.ts#L48"
+					"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/RecipleClient.ts#L48"
 				}
 			],
 			"extendedTypes": [
@@ -24420,7 +24420,7 @@
 							"fileName": "src/reciple/classes/RecipleClient.ts",
 							"line": 40,
 							"character": 4,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/RecipleClient.ts#L40"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/RecipleClient.ts#L40"
 						}
 					],
 					"type": {
@@ -25194,7 +25194,7 @@
 					"fileName": "src/reciple/classes/RecipleClient.ts",
 					"line": 39,
 					"character": 17,
-					"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/RecipleClient.ts#L39"
+					"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/RecipleClient.ts#L39"
 				}
 			],
 			"extendedTypes": [
@@ -25224,7 +25224,7 @@
 							"fileName": "src/reciple/classes/builders/InteractionCommandBuilder.ts",
 							"line": 9,
 							"character": 4,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/builders/InteractionCommandBuilder.ts#L9"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/builders/InteractionCommandBuilder.ts#L9"
 						}
 					],
 					"type": {
@@ -25244,7 +25244,7 @@
 							"fileName": "src/reciple/classes/builders/InteractionCommandBuilder.ts",
 							"line": 10,
 							"character": 4,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/builders/InteractionCommandBuilder.ts#L10"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/builders/InteractionCommandBuilder.ts#L10"
 						}
 					],
 					"type": {
@@ -25270,7 +25270,7 @@
 							"fileName": "src/reciple/classes/builders/InteractionCommandBuilder.ts",
 							"line": 8,
 							"character": 4,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/builders/InteractionCommandBuilder.ts#L8"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/builders/InteractionCommandBuilder.ts#L8"
 						}
 					],
 					"type": {
@@ -25290,7 +25290,7 @@
 							"fileName": "src/reciple/classes/builders/InteractionCommandBuilder.ts",
 							"line": 7,
 							"character": 4,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/builders/InteractionCommandBuilder.ts#L7"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/builders/InteractionCommandBuilder.ts#L7"
 						}
 					],
 					"type": {
@@ -25325,7 +25325,7 @@
 					"fileName": "src/reciple/classes/builders/InteractionCommandBuilder.ts",
 					"line": 6,
 					"character": 17,
-					"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/builders/InteractionCommandBuilder.ts#L6"
+					"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/builders/InteractionCommandBuilder.ts#L6"
 				}
 			]
 		},
@@ -25347,7 +25347,7 @@
 							"fileName": "src/reciple/classes/builders/MessageCommandBuilder.ts",
 							"line": 12,
 							"character": 4,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/builders/MessageCommandBuilder.ts#L12"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/builders/MessageCommandBuilder.ts#L12"
 						}
 					],
 					"type": {
@@ -25367,7 +25367,7 @@
 							"fileName": "src/reciple/classes/builders/MessageCommandBuilder.ts",
 							"line": 13,
 							"character": 4,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/builders/MessageCommandBuilder.ts#L13"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/builders/MessageCommandBuilder.ts#L13"
 						}
 					],
 					"type": {
@@ -25393,7 +25393,7 @@
 							"fileName": "src/reciple/classes/builders/MessageCommandBuilder.ts",
 							"line": 11,
 							"character": 4,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/builders/MessageCommandBuilder.ts#L11"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/builders/MessageCommandBuilder.ts#L11"
 						}
 					],
 					"type": {
@@ -25414,7 +25414,7 @@
 							"fileName": "src/reciple/classes/builders/MessageCommandBuilder.ts",
 							"line": 9,
 							"character": 4,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/builders/MessageCommandBuilder.ts#L9"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/builders/MessageCommandBuilder.ts#L9"
 						}
 					],
 					"type": {
@@ -25441,7 +25441,7 @@
 							"fileName": "src/reciple/classes/builders/MessageCommandBuilder.ts",
 							"line": 10,
 							"character": 4,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/builders/MessageCommandBuilder.ts#L10"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/builders/MessageCommandBuilder.ts#L10"
 						}
 					],
 					"type": {
@@ -25468,7 +25468,7 @@
 					"fileName": "src/reciple/classes/builders/MessageCommandBuilder.ts",
 					"line": 8,
 					"character": 17,
-					"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/builders/MessageCommandBuilder.ts#L8"
+					"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/builders/MessageCommandBuilder.ts#L8"
 				}
 			]
 		},
@@ -25490,7 +25490,7 @@
 							"fileName": "src/reciple/modules.ts",
 							"line": 23,
 							"character": 4,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/modules.ts#L23"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/modules.ts#L23"
 						}
 					],
 					"type": {
@@ -25515,7 +25515,7 @@
 											"fileName": "src/reciple/modules.ts",
 											"line": 24,
 											"character": 8,
-											"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/modules.ts#L24"
+											"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/modules.ts#L24"
 										}
 									],
 									"type": {
@@ -25536,7 +25536,7 @@
 											"fileName": "src/reciple/modules.ts",
 											"line": 26,
 											"character": 8,
-											"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/modules.ts#L26"
+											"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/modules.ts#L26"
 										}
 									],
 									"type": {
@@ -25555,7 +25555,7 @@
 											"fileName": "src/reciple/modules.ts",
 											"line": 25,
 											"character": 8,
-											"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/modules.ts#L25"
+											"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/modules.ts#L25"
 										}
 									],
 									"type": {
@@ -25582,7 +25582,7 @@
 									"fileName": "src/reciple/modules.ts",
 									"line": 23,
 									"character": 10,
-									"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/modules.ts#L23"
+									"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/modules.ts#L23"
 								}
 							]
 						}
@@ -25599,7 +25599,7 @@
 							"fileName": "src/reciple/modules.ts",
 							"line": 22,
 							"character": 4,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/modules.ts#L22"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/modules.ts#L22"
 						}
 					],
 					"type": {
@@ -25623,7 +25623,7 @@
 					"fileName": "src/reciple/modules.ts",
 					"line": 21,
 					"character": 17,
-					"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/modules.ts#L21"
+					"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/modules.ts#L21"
 				}
 			]
 		},
@@ -25638,7 +25638,7 @@
 					"fileName": "src/reciple/registerInteractionCommands.ts",
 					"line": 14,
 					"character": 12,
-					"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/registerInteractionCommands.ts#L14"
+					"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/registerInteractionCommands.ts#L14"
 				}
 			],
 			"type": {
@@ -25699,7 +25699,7 @@
 					"fileName": "src/reciple/modules.ts",
 					"line": 12,
 					"character": 12,
-					"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/modules.ts#L12"
+					"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/modules.ts#L12"
 				}
 			],
 			"type": {
@@ -25722,7 +25722,7 @@
 									"fileName": "src/reciple/modules.ts",
 									"line": 12,
 									"character": 30,
-									"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/modules.ts#L12"
+									"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/modules.ts#L12"
 								}
 							],
 							"type": {
@@ -25745,7 +25745,7 @@
 									"fileName": "src/reciple/modules.ts",
 									"line": 12,
 									"character": 66,
-									"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/modules.ts#L12"
+									"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/modules.ts#L12"
 								}
 							],
 							"type": {
@@ -25772,7 +25772,7 @@
 							"fileName": "src/reciple/modules.ts",
 							"line": 12,
 							"character": 28,
-							"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/modules.ts#L12"
+							"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/modules.ts#L12"
 						}
 					]
 				}
@@ -25789,7 +25789,7 @@
 					"fileName": "src/reciple/modules.ts",
 					"line": 10,
 					"character": 12,
-					"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/modules.ts#L10"
+					"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/modules.ts#L10"
 				}
 			],
 			"type": {
@@ -25819,7 +25819,7 @@
 					"fileName": "src/reciple/modules.ts",
 					"line": 11,
 					"character": 12,
-					"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/modules.ts#L11"
+					"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/modules.ts#L11"
 				}
 			],
 			"type": {
@@ -25851,7 +25851,7 @@
 					"fileName": "src/index.ts",
 					"line": 3,
 					"character": 13,
-					"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/index.ts#L3"
+					"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/index.ts#L3"
 				}
 			],
 			"type": {
@@ -25875,7 +25875,7 @@
 					"fileName": "src/reciple/flags.ts",
 					"line": 4,
 					"character": 13,
-					"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/flags.ts#L4"
+					"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/flags.ts#L4"
 				}
 			],
 			"type": {
@@ -25899,7 +25899,7 @@
 					"fileName": "src/reciple/flags.ts",
 					"line": 11,
 					"character": 13,
-					"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/flags.ts#L11"
+					"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/flags.ts#L11"
 				}
 			],
 			"type": {
@@ -25921,7 +25921,7 @@
 					"fileName": "src/reciple/version.ts",
 					"line": 4,
 					"character": 13,
-					"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/version.ts#L4"
+					"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/version.ts#L4"
 				}
 			],
 			"type": {
@@ -25941,7 +25941,7 @@
 					"fileName": "src/reciple/hasPermissions.ts",
 					"line": 6,
 					"character": 16,
-					"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/hasPermissions.ts#L6"
+					"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/hasPermissions.ts#L6"
 				}
 			],
 			"signatures": [
@@ -26009,7 +26009,7 @@
 															"fileName": "src/reciple/classes/Config.ts",
 															"line": 36,
 															"character": 12,
-															"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/Config.ts#L36"
+															"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/Config.ts#L36"
 														}
 													],
 													"type": {
@@ -26032,7 +26032,7 @@
 															"fileName": "src/reciple/classes/Config.ts",
 															"line": 35,
 															"character": 12,
-															"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/Config.ts#L35"
+															"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/Config.ts#L35"
 														}
 													],
 													"type": {
@@ -26055,7 +26055,7 @@
 													"fileName": "src/reciple/classes/Config.ts",
 													"line": 34,
 													"character": 25,
-													"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/Config.ts#L34"
+													"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/Config.ts#L34"
 												}
 											]
 										}
@@ -26080,7 +26080,7 @@
 															"fileName": "src/reciple/classes/Config.ts",
 															"line": 40,
 															"character": 12,
-															"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/Config.ts#L40"
+															"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/Config.ts#L40"
 														}
 													],
 													"type": {
@@ -26103,7 +26103,7 @@
 															"fileName": "src/reciple/classes/Config.ts",
 															"line": 39,
 															"character": 12,
-															"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/Config.ts#L39"
+															"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/Config.ts#L39"
 														}
 													],
 													"type": {
@@ -26126,7 +26126,7 @@
 													"fileName": "src/reciple/classes/Config.ts",
 													"line": 38,
 													"character": 29,
-													"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/Config.ts#L38"
+													"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/Config.ts#L38"
 												}
 											]
 										}
@@ -26167,7 +26167,7 @@
 					"fileName": "src/reciple/isIgnoredChannel.ts",
 					"line": 4,
 					"character": 16,
-					"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/isIgnoredChannel.ts#L4"
+					"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/isIgnoredChannel.ts#L4"
 				}
 			],
 			"signatures": [
@@ -26217,7 +26217,7 @@
 													"fileName": "src/reciple/classes/Config.ts",
 													"line": 46,
 													"character": 8,
-													"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/Config.ts#L46"
+													"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/Config.ts#L46"
 												}
 											],
 											"type": {
@@ -26239,7 +26239,7 @@
 													"fileName": "src/reciple/classes/Config.ts",
 													"line": 45,
 													"character": 8,
-													"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/Config.ts#L45"
+													"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/Config.ts#L45"
 												}
 											],
 											"type": {
@@ -26258,7 +26258,7 @@
 													"fileName": "src/reciple/classes/Config.ts",
 													"line": 44,
 													"character": 8,
-													"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/Config.ts#L44"
+													"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/Config.ts#L44"
 												}
 											],
 											"type": {
@@ -26282,7 +26282,7 @@
 											"fileName": "src/reciple/classes/Config.ts",
 											"line": 43,
 											"character": 21,
-											"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/classes/Config.ts#L43"
+											"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/classes/Config.ts#L43"
 										}
 									]
 								}
@@ -26307,7 +26307,7 @@
 					"fileName": "src/reciple/version.ts",
 					"line": 17,
 					"character": 16,
-					"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/version.ts#L17"
+					"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/version.ts#L17"
 				}
 			],
 			"signatures": [
@@ -26361,7 +26361,7 @@
 					"fileName": "src/reciple/version.ts",
 					"line": 6,
 					"character": 16,
-					"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/version.ts#L6"
+					"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/version.ts#L6"
 				}
 			],
 			"signatures": [
@@ -26402,7 +26402,7 @@
 					"fileName": "src/reciple/modules.ts",
 					"line": 30,
 					"character": 22,
-					"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/modules.ts#L30"
+					"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/modules.ts#L30"
 				}
 			],
 			"signatures": [
@@ -26459,7 +26459,7 @@
 					"fileName": "src/reciple/logger.ts",
 					"line": 5,
 					"character": 16,
-					"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/logger.ts#L5"
+					"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/logger.ts#L5"
 				}
 			],
 			"signatures": [
@@ -26514,7 +26514,7 @@
 					"fileName": "src/reciple/version.ts",
 					"line": 10,
 					"character": 16,
-					"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/version.ts#L10"
+					"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/version.ts#L10"
 				}
 			],
 			"signatures": [
@@ -26557,7 +26557,7 @@
 											"fileName": "src/reciple/version.ts",
 											"line": 14,
 											"character": 13,
-											"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/version.ts#L14"
+											"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/version.ts#L14"
 										}
 									],
 									"type": {
@@ -26577,7 +26577,7 @@
 											"fileName": "src/reciple/version.ts",
 											"line": 14,
 											"character": 37,
-											"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/version.ts#L14"
+											"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/version.ts#L14"
 										}
 									],
 									"type": {
@@ -26597,7 +26597,7 @@
 											"fileName": "src/reciple/version.ts",
 											"line": 14,
 											"character": 61,
-											"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/version.ts#L14"
+											"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/version.ts#L14"
 										}
 									],
 									"type": {
@@ -26622,7 +26622,7 @@
 									"fileName": "src/reciple/version.ts",
 									"line": 14,
 									"character": 11,
-									"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/version.ts#L14"
+									"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/version.ts#L14"
 								}
 							]
 						}
@@ -26641,7 +26641,7 @@
 					"fileName": "src/reciple/registerInteractionCommands.ts",
 					"line": 19,
 					"character": 22,
-					"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/reciple/registerInteractionCommands.ts#L19"
+					"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/reciple/registerInteractionCommands.ts#L19"
 				}
 			],
 			"signatures": [
@@ -26804,7 +26804,7 @@
 			"fileName": "src/index.ts",
 			"line": 1,
 			"character": 0,
-			"url": "https://github.com/FalloutStudios/Reciple/blob/5e246e0/src/index.ts#L1"
+			"url": "https://github.com/FalloutStudios/Reciple/blob/a33ce7c/src/index.ts#L1"
 		}
 	]
 }

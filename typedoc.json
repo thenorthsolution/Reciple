@@ -6,7 +6,8 @@
   "entryPointStrategy": "Expand",
   "out": "docs",
   "plugin": [
-    "typedoc-plugin-mdn-links"
+    "typedoc-plugin-mdn-links",
+    "typedoc-plugin-djs-links"
   ],
   "theme": "default",
   "tsconfig": "tsconfig.json",
