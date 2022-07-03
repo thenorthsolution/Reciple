@@ -13,6 +13,8 @@
   "tsconfig": "tsconfig.json",
   "name": "Reciple",
   "json": "docs/docs.json",
+  "includeVersion": true,
+  "excludeExternals": true,
   "hideGenerator": true,
   "githubPages": true
 }
