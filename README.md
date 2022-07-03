@@ -8,6 +8,8 @@
 
 A simple modular Discord bot made with Discord.js written in TypeScript.
 
+# Join Discord
+[![Discord Invite](https://i.imgur.com/GffJByO.png)](https://discord.gg/2CattJYNpw)
 
 ## Installation
 To install the bot, run the following command:
