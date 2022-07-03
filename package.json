@@ -20,10 +20,11 @@
   ],
   "scripts": {
     "clean": "rm -rf bin",
-    "build": "yarn clean && npx tsc && npm un reciple -g && npm i ./ -g",
+    "build": "yarn clean && npx tsc && npm un reciple -g && npm i ./ -g && yarn typedoc",
     "build:publish": "yarn run build && yarn publish",
     "test": "yarn run build && yarn test:start",
-    "test:start": "cd test && npx reciple"
+    "test:start": "cd test && npx reciple",
+    "typedoc": "npx typedoc"
   },
   "dependencies": {
     "commander": "^9.3.0",
@@ -37,6 +38,8 @@
   "devDependencies": {
     "@types/node": "^18.0.0",
     "@types/semver": "^7.3.10",
+    "typedoc": "^0.23.5",
+    "typedoc-plugin-mdn-links": "^2.0.0",
     "typescript": "^4.7.4"
   }
 }

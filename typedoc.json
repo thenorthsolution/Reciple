@@ -1,0 +1,15 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "entryPoints": [
+    "src/index.ts"
+  ],
+  "entryPointStrategy": "Expand",
+  "out": "docs",
+  "plugin": [
+    "typedoc-plugin-mdn-links"
+  ],
+  "theme": "default",
+  "tsconfig": "tsconfig.json",
+  "name": "Reciple",
+  "githubPages": true
+}
