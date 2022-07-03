@@ -11,5 +11,5 @@
   "theme": "default",
   "tsconfig": "tsconfig.json",
   "name": "Reciple",
-  "githubPages": false
+  "githubPages": true
 }
