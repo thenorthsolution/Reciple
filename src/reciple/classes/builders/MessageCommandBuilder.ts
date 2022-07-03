@@ -1,11 +1,9 @@
 import { MessageCommandOptionBuilder } from './MessageCommandOptionBuilder';
 import { Message, PermissionFlags, PermissionString } from 'discord.js';
-import { Command } from 'fallout-utility';
+import { Command as CommandMessage } from 'fallout-utility';
 import { RecipleClient } from '../RecipleClient';
 import { MessageCommandOptions } from './MessageCommandOptions';
 
-
-export type CommandMessage = Command;
 
 export interface RecipleMessageCommandExecute {
     message: Message;
