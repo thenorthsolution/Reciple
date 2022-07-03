@@ -6,11 +6,9 @@
   "entryPointStrategy": "Expand",
   "out": "docs",
   "plugin": [
-    "typedoc-plugin-mdn-links",
-    "typedoc-plugin-markdown",
-    "typedoc-just-the-docs-theme"
+    "typedoc-plugin-mdn-links"
   ],
-  "theme": "just-the-docs",
+  "theme": "default",
   "tsconfig": "tsconfig.json",
   "name": "Reciple",
   "githubPages": false
