@@ -7,10 +7,11 @@
   "out": "docs",
   "plugin": [
     "typedoc-plugin-mdn-links",
-    "typedoc-plugin-markdown"
+    "typedoc-plugin-markdown",
+    "typedoc-just-the-docs-theme"
   ],
-  "theme": "default",
+  "theme": "just-the-docs",
   "tsconfig": "tsconfig.json",
   "name": "Reciple",
-  "githubPages": true
+  "githubPages": false
 }

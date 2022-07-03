@@ -305,6 +305,11 @@ tslib@^2.4.0:
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.4.0.tgz#7cecaa7f073ce680a05847aa77be941098f36dc3"
   integrity sha512-d6xOpEDfsi2CZVlPQzGeux8XMwLT9hssAsaPYExaQMuYskwb+x1x7J371tWlbBdWHroy99KnVB6qIkUbs5X3UQ==
 
+typedoc-just-the-docs-theme@^0.0.1:
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/typedoc-just-the-docs-theme/-/typedoc-just-the-docs-theme-0.0.1.tgz#2e33c31eddfcb40cf00aace4b0f038661dec8586"
+  integrity sha512-EetAAT5XwVifc26eldY1SLv9Ey7wQQa1GV9wkNeVlZMPjPuGQIoIy4z7bT6u4ZOZANDeF5J0fdjxKQeJN1ejOg==
+
 typedoc-plugin-markdown@^3.13.2:
   version "3.13.2"
   resolved "https://registry.yarnpkg.com/typedoc-plugin-markdown/-/typedoc-plugin-markdown-3.13.2.tgz#988846ab68365ef215fbae35a75745fa7641a8af"

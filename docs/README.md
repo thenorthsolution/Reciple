@@ -1,3 +1,11 @@
+---
+layout: default
+title: "Reciple"
+has_children: true
+has_toc: false
+nav_order: 1
+---
+
 Reciple / [Exports](modules.md)
 
 <h1 align="center">
