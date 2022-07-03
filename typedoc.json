@@ -11,5 +11,7 @@
   "theme": "default",
   "tsconfig": "tsconfig.json",
   "name": "Reciple",
+  "json": "docs.json",
+  "hideGenerator": true,
   "githubPages": true
 }
