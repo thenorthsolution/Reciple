@@ -27,7 +27,7 @@
     "test:start": "cd test && npx reciple",
     "postpublish": "yarn build:docs && yarn update:docs",
     "build:docs": "cd docs && yarn build",
-    "update:docs": "cd docs && git commit -a -m \"Update docs\" && git push"
+    "update:docs": "cd docs && yarn update"
   },
   "dependencies": {
     "commander": "^9.3.0",
