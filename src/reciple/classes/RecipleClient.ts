@@ -90,6 +90,9 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
         this.logger.info('Reciple Client v' + version + ' is starting...');
     }
 
+    /**
+     * Load modules
+     */
     public async startModules(): Promise<RecipleClient<Ready>> {
         this.logger.info('Loading modules...');
 
@@ -100,6 +103,9 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
         return this;
     }
 
+    /**
+     * Execute `onLoad()` from client modules and register interaction commands if enabled
+     */
     public async loadModules(): Promise<RecipleClient<Ready>> {
         for (let m in this.modules) {
             const module_ = this.modules[m];
@@ -128,13 +134,17 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
         return this;
     }
 
-    public async addModule(script: RecipleScript, registerCommands: boolean = true): Promise<void> {
+    /**
+     * Add module
+     */
+    public async addModule(script: RecipleScript, registerCommands: boolean = true, info?: RecipleModule['info']): Promise<void> {
         this.modules.push({
             script,
             info: {
                 filename: undefined,
                 versions: typeof script.versions == 'string' ? [script.versions] : script.versions,
-                path: undefined
+                path: undefined,
+                ...info
             }
         });
         if (typeof script?.onLoad === 'function') await Promise.resolve(script.onLoad(this));
@@ -149,6 +159,9 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
         await registerInteractionCommands(this, [...Object.values(this.commands.INTERACTION_COMMANDS), ...this.otherApplicationCommandData]);
     }
 
+    /**
+     * Add interaction or message command to client 
+     */
     public addCommand(command: recipleCommandBuilders): RecipleClient<Ready> {
         if (command.builder === 'MESSAGE_COMMAND') {
             this.commands.MESSAGE_COMMANDS[command.name] = command;
@@ -161,6 +174,9 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
         return this;
     }
 
+    /**
+     * Listed to command executions
+     */
     public addCommandListeners(): RecipleClient<Ready> {
         if (this.config.commands.messageCommand.enabled) this.on('messageCreate', (message) => { this.messageCommandExecute(message) });
         if (this.config.commands.interactionCommand.enabled) this.on('interactionCreate', (interaction) => { this.interactionCommandExecute(interaction) });
@@ -168,6 +184,9 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
         return this;
     }
 
+    /**
+     * Execute a Message command
+     */
     public async messageCommandExecute(message: Message, prefix?: string): Promise<void|RecipleMessageCommandExecute> {
         if (!message.content || !this.isReady()) return;
 
@@ -219,6 +238,9 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
         }
     }
 
+    /**
+     * Execute an Interaction command 
+     */
     public async interactionCommandExecute(interaction: Interaction|CommandInteraction): Promise<void|RecipleInteractionCommandExecute> {
         if (!interaction || !interaction.isCommand() || !this.isReady()) return;
 
@@ -245,10 +267,16 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
         }
     }
 
+    /**
+     * Get a message from config 
+     */
     public getMessage<T = unknown>(messageKey: string, defaultMessage?: T): T {
         return this.config.messages[messageKey] ?? defaultMessage ?? messageKey;
     }
 
+    /**
+     * Error message when a command fails to execute
+     */
     private async _commandExecuteError(err: Error, command: recipleCommandBuildersExecute): Promise<void> {
         this.logger.error(`An error occured executing ${command.builder.builder == 'MESSAGE_COMMAND' ? 'message' : 'interaction'} command "${command.builder.name}"`);
         this.logger.error(err);

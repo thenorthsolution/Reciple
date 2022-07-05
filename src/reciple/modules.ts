@@ -27,9 +27,12 @@ export interface RecipleModule {
     }
 }
 
-export async function loadModules(client: RecipleClient): Promise<loadedModules> {
+/**
+ * Load modules from folder 
+ */
+export async function loadModules(client: RecipleClient, folder?: string): Promise<loadedModules> {
     const response: loadedModules = { commands: [], modules: [] };
-    const modulesDir = client.config.modulesFolder || './modules';
+    const modulesDir = client.config.modulesFolder || folder || './modules';
     const logger = client.logger;
 
     if (!existsSync(modulesDir)) mkdirSync(modulesDir, { recursive: true });

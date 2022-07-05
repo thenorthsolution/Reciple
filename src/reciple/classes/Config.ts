@@ -69,6 +69,9 @@ export class RecipleConfig {
         this.configPath = configPath;
     }
 
+    /**
+     * Parse the config file
+     */
     public parseConfig(): RecipleConfig {
         if (!existsSync(this.configPath)) {
             const defaultConfigPath = path.join(__dirname, '../../../resource/reciple.yml');
@@ -98,6 +101,9 @@ export class RecipleConfig {
         return this;
     }
 
+    /**
+     * Returns the parsed config file
+     */
     public getConfig(): Config {
         if (!this.config) throw new Error('Config is not parsed.');
 
@@ -105,6 +111,9 @@ export class RecipleConfig {
         return this.config;
     }
 
+    /**
+     * Parse token from config 
+     */
     public parseToken(askIfNull: boolean = true): string|null {
         let token = __token || null;
 
@@ -122,10 +131,16 @@ export class RecipleConfig {
         return token || (askIfNull ? this.askToken() : null);
     }
 
+    /**
+     * Check if the config version is supported
+     */
     private isSupportedConfig(): boolean {
         return isSupportedVersion(this.config?.version || '0.0.0', version);
     }
 
+    /**
+     * Ask for a token
+     */
     private askToken(): string|null {
         return __token || input({ 'text': 'Bot Token >>> ', echo: '*', repeatIfEmpty: true, exitStrings: ['exit', 'quit', ''], sigint: true }) || null;
     }

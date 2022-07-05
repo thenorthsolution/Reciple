@@ -16,6 +16,9 @@ export type interactionCommandBuilders = InteractionCommandBuilder|ContextMenuCo
     SlashCommandOptionsOnlyBuilder|SlashCommandSubcommandGroupBuilder|
     SlashCommandSubcommandsOnlyBuilder;
 
+/**
+ * Register interaction commands 
+ */
 export async function registerInteractionCommands(client: RecipleClient, cmds?: (interactionCommandBuilders|ApplicationCommandDataResolvable)[], overwriteGuilds?: string|string[]): Promise<void> {
     const commands = Object.values(cmds ?? client.commands.INTERACTION_COMMANDS).map(c => {
         if (typeof (c as InteractionCommandBuilder).toJSON == 'undefined') return c as ApplicationCommandDataResolvable;

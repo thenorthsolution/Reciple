@@ -1,12 +1,20 @@
 import semver from 'semver';
 
-
+/**
+ * Current reciple version
+ */
 export const version = require('../../package.json').version as string;
 
+/**
+ * Check if the version is valid
+ */
 export function isValidVersion(ver: string) {
     return semver.valid(semver.coerce(ver)) !== null;
 }
 
+/**
+ * Parse the version string
+ */
 export function parseVersion(ver: string) {
     if (!isValidVersion(ver)) throw new TypeError(`Invalid version: ${ver}`);
 
@@ -14,6 +22,9 @@ export function parseVersion(ver: string) {
     return { major: parseInt(major), minor: parseInt(minor), patch: parseInt(patch) };
 }
 
+/**
+ * Check if the given version is supported by the given version range
+ */
 export function isSupportedVersion(versionRange: string, supportedVersion?: string) {
     supportedVersion = supportedVersion || version;
 

@@ -1,6 +1,8 @@
 import { program } from 'commander';
 
-
+/**
+ * Used flags
+ */
 export const flags = program
         .option('-t, --token <token>', 'Replace used bot token')
         .option('-c, --config <config>', 'Change path to config file')
@@ -8,4 +10,7 @@ export const flags = program
         .option('-v, --version', 'Display version')
         .parse().opts();
 
-export const token = flags.token;
+/**
+ * Temporary token flag
+ */
+export const token: string|undefined = flags.token;
