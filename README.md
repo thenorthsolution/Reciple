@@ -6,7 +6,7 @@
     <a href="https://www.codefactor.io/repository/github/falloutstudios/reciple/overview/main"><img src="https://www.codefactor.io/repository/github/falloutstudios/reciple/badge/main" alt="CodeFactor"></a>
 </h1>
 
-A simple modular Discord bot made with Discord.js written in TypeScript.
+A simple Dicord.js command handler that just works.
 
 # Join Discord
 [![Discord Invite](https://i.imgur.com/GffJByO.png)](https://discord.gg/2CattJYNpw)
