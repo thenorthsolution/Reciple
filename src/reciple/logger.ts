@@ -1,13 +1,20 @@
-import { Logger } from 'fallout-utility';
+import { Logger, LogLevels } from 'fallout-utility';
 import { flags } from './flags';
+import chalk from 'chalk';
 
 /**
  * Create new logger
  */
 export function logger (stringifyJSON: boolean, debugmode: boolean = false) {
-    return new Logger("Main", {
-        addPrefixToEveryJsonNewLines: stringifyJSON,
+    return new Logger({
         stringifyJSON: stringifyJSON,
-        setDebugging: flags.debugmode as boolean|undefined || debugmode
+        enableDebugMode: flags.debugmode as boolean|undefined ?? debugmode,
+        loggerName: 'Main',
+        prefixes: {
+            [LogLevels.INFO]: (name?: string) => `[${chalk.bold("INFO" + (name ? chalk.dim(" - ") + name : ''))}]`,
+            [LogLevels.WARN]: (name?: string) => `[${chalk.bold.yellow("WARN" + (name ? chalk.dim(" - ") + name : ''))}]`,
+            [LogLevels.ERROR]: (name?: string) => `[${chalk.bold.red("ERROR" + (name ? chalk.dim(" - ") + name : ''))}]`,
+            [LogLevels.DEBUG]: (name?: string) => `[${chalk.bold.blue("DEBUG" + (name ? chalk.dim(" - ") + name : ''))}]`
+        }
     });
 }
