@@ -143,10 +143,10 @@ dotenv@^16.0.1:
   resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-16.0.1.tgz#8f8f9d94876c35dac989876a5d3a82a267fdce1d"
   integrity sha512-1K6hR6wtk2FviQ4kEiSjFiH5rpzEVi8WW0x96aztHVMhEspNpc4DVOUTEHtEva5VThQ8IaBX1Pe4gSzpVVUsKQ==
 
-fallout-utility@^1.3.14:
-  version "1.3.14"
-  resolved "https://registry.yarnpkg.com/fallout-utility/-/fallout-utility-1.3.14.tgz#c4a4b9e98fd4a6ef02796f4416668f9e0d5e3ca2"
-  integrity sha512-7V/1+6a8YWbosQQCTf+LrClaZm5HC7dpwRm0do20Qslbl6WBYDpE7naTQl8X//IlS7NkfXYn8+brWfsrrlE8PA==
+fallout-utility@^1.4.0:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/fallout-utility/-/fallout-utility-1.4.0.tgz#7634a2b1954238aaceb7a04b8b94775cf5b8be14"
+  integrity sha512-fZ1c2+gRPZyaCZ5VUA2IXWlYfTsT70/+qK98kDRwliJhDLYWvl/qie8Z3xUL38dt5pwTo8NCTfQ0Hjuewzi78w==
   dependencies:
     "@types/prompt-sync" "^4.1.1"
     chalk "^4.1.2"
