@@ -1,6 +1,6 @@
 import { PermissionResolvable, Permissions } from 'discord.js';
 import { recipleCommandBuilders } from './modules';
-import { Config } from './classes/Config';
+import { Config } from './classes/RecipleConfig';
 
 /**
  * Check if the user has permissions to execute the given command name

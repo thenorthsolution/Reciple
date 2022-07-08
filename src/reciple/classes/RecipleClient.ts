@@ -81,7 +81,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
     constructor(options: RecipleClientOptions) {
         super(options);
 
-        this.logger = logger(!!options.config.fileLogging.stringifyLoggedJSON, !!options.config.fileLogging.debugmode);
+        this.logger = logger(!!options.config?.fileLogging.stringifyLoggedJSON, !!options.config?.fileLogging.debugmode);
 
         if (!options.config) throw new Error('Config is not defined.');
         this.config = {...this.config, ...(options.config ?? {})};

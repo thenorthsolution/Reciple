@@ -1,4 +1,4 @@
-import { Config } from './classes/Config';
+import { Config } from './classes/RecipleConfig';
 
 /**
  * Check if the channel id is ignored in config file 
