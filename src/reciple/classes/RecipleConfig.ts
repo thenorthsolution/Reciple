@@ -151,7 +151,7 @@ export class RecipleConfig {
      * Get default config
      */
     public static getDefaultConfig(): Config {
-        if (existsSync(this.defaultConfigPath)) throw new Error("Default config file does not exists.");
+        if (!existsSync(this.defaultConfigPath)) throw new Error("Default config file does not exists.");
 
         return yaml.parse(readFileSync(this.defaultConfigPath, 'utf-8'));
     }
