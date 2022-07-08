@@ -18,9 +18,9 @@ export function logger (stringifyJSON: boolean, debugmode: boolean = false, colo
         },
         colorMessages: {
             [LogLevels.INFO]: (message: string) => message,
-            [LogLevels.WARN]: (message: string) => chalk.yellow(message),
-            [LogLevels.ERROR]: (message: string) => chalk.red(message),
-            [LogLevels.DEBUG]: (message: string) => chalk.blue(message)
+            [LogLevels.WARN]: (message: string) => !colorizeMessage ? message : chalk.yellow(message),
+            [LogLevels.ERROR]: (message: string) => !colorizeMessage ? message : chalk.red(message),
+            [LogLevels.DEBUG]: (message: string) => !colorizeMessage ? message : chalk.blue(message)
         }
     });
 }
