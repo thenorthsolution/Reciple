@@ -26,18 +26,6 @@ export class InteractionCommandBuilder extends SlashCommandBuilder {
     }
 
     /**
-     * Set if command can be executed in dms
-     * @deprecated use `InteractionCommandBuilder.setDMPermission()` instead
-     */
-    public setAllowExecuteInDM(allowExecuteInDM: boolean): InteractionCommandBuilder {
-        // TODO: Deprecated this
-        if (typeof allowExecuteInDM !== 'boolean') throw new Error('allowExecuteInDM must be a boolean.');
-        this.allowExecuteInDM = allowExecuteInDM;
-        process.emitWarning('InteractionCommandBuilder#setAllowExecuteInDM() method is deprecated in favor of setting SlashCommandBuilder#setDMPermission()', 'Deprecation Warning');
-        return this;
-    }
-
-    /**
      * Function when the command is executed 
      */
     public setExecute(execute: (options: RecipleInteractionCommandExecute) => void): InteractionCommandBuilder {

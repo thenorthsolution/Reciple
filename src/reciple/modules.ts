@@ -33,8 +33,6 @@ export interface RecipleModule {
 export async function loadModules(client: RecipleClient, folder?: string): Promise<loadedModules> {
     const response: loadedModules = { commands: [], modules: [] };
     const modulesDir = client.config.modulesFolder || folder || './modules';
-    const logger = client.logger;
-
     if (!existsSync(modulesDir)) mkdirSync(modulesDir, { recursive: true });
 
     const ignoredFiles = (client.config.ignoredFiles || []).map(file => file.endsWith('.js') ? file : `${file}.js`);
@@ -62,20 +60,22 @@ export async function loadModules(client: RecipleClient, folder?: string): Promi
                 }
             }
         } catch (error) {
-            logger.error(`Failed to load module ${script}`);
-            logger.error(error);
+            if (client.isClientLogsEnabled()) {
+                client.logger.error(`Failed to load module ${script}`);
+                client.logger.error(error);
+            }
             continue;
         }
 
         response.commands.push(
             ...commands.filter((c) => {
                 if (!c.name) {
-                    logger.error(`A ${c.builder} command name is not defined in ${script}`);
+                    if (client.isClientLogsEnabled()) client.logger.error(`A ${c.builder} command name is not defined in ${script}`);
                     return false;
                 }
 
                 if (c.builder === 'MESSAGE_COMMAND' && c.options.length && c.options.some(o => !o.name)) {
-                    logger.error(`A ${c.builder} option name is not defined in ${script}`);
+                    if (client.isClientLogsEnabled()) client.logger.error(`A ${c.builder} option name is not defined in ${script}`);
                     return false;
                 }
 
@@ -92,7 +92,7 @@ export async function loadModules(client: RecipleClient, folder?: string): Promi
             }
         });
 
-        logger.info(`Loaded module ${script}`);
+        if (client.isClientLogsEnabled()) client.logger.info(`Loaded module ${script}`);
     }
 
     return response;

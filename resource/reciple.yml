@@ -62,6 +62,8 @@ fileLogging:
   enabled: true
   # enable debug mode
   debugmode: false
+  # enable if reciple will use the logger
+  clientLogs: true
   # stringify logged JSONs
   stringifyLoggedJSON: false
   # log file path

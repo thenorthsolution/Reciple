@@ -1,6 +1,6 @@
 {
   "name": "reciple",
-  "version": "1.6.2",
+  "version": "1.7.0",
   "description": "A Discord.js bot",
   "author": "FalloutStudios",
   "homepage": "https://falloutstudios.github.io/Reciple",
@@ -31,7 +31,6 @@
   },
   "dependencies": {
     "commander": "^9.3.0",
-    "discord.js": "^13.8.1",
     "dotenv": "^16.0.1",
     "fallout-utility": "^1.3.14",
     "semver": "^7.3.7",
@@ -41,6 +40,10 @@
   "devDependencies": {
     "@types/node": "^18.0.0",
     "@types/semver": "^7.3.10",
+    "discord.js": "^13.8.1",
     "typescript": "^4.7.4"
+  },
+  "peerDependencies": {
+    "discord.js": "13.8.x"
   }
 }

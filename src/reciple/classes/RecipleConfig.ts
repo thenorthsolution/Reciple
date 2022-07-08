@@ -48,6 +48,7 @@ export interface Config {
     fileLogging: {
         enabled: boolean;
         debugmode: boolean;
+        clientLogs: boolean;
         stringifyLoggedJSON: boolean;
         logFilePath: string;
     }
@@ -63,6 +64,7 @@ export interface Config {
 export class RecipleConfig {
     public config?: Config;
     public configPath: string = './reciple.yml';
+    public static defaultConfigPath = path.join(__dirname, '../../../resource/reciple.yml');
 
     constructor(configPath: string) {
         if (!configPath) throw new Error('Config path is not defined');
@@ -74,7 +76,7 @@ export class RecipleConfig {
      */
     public parseConfig(): RecipleConfig {
         if (!existsSync(this.configPath)) {
-            const defaultConfigPath = path.join(__dirname, '../../../resource/reciple.yml');
+            const defaultConfigPath = RecipleConfig.defaultConfigPath;
             if (!existsSync(defaultConfigPath)) throw new Error('Default Config file not found. Please reinstall Reciple.');
 
             const defaultConfig = replaceAll(readFileSync(defaultConfigPath, 'utf-8'), 'VERSION', version);
@@ -143,5 +145,14 @@ export class RecipleConfig {
      */
     private askToken(): string|null {
         return __token || input({ 'text': 'Bot Token >>> ', echo: '*', repeatIfEmpty: true, exitStrings: ['exit', 'quit', ''], sigint: true }) || null;
+    }
+
+    /**
+     * Get default config
+     */
+    public static getDefaultConfig(): Config {
+        if (existsSync(this.defaultConfigPath)) throw new Error("Default config file does not exists.");
+
+        return yaml.parse(readFileSync(this.defaultConfigPath, 'utf-8'));
     }
 }

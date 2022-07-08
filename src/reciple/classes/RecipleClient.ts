@@ -13,7 +13,7 @@ import { isIgnoredChannel } from '../isIgnoredChannel';
 import { hasPermissions } from '../hasPermissions';
 import { version } from '../version';
 import { logger } from '../logger';
-import { Config } from './Config';
+import { Config, RecipleConfig } from './RecipleConfig';
 
 import {
     ApplicationCommandDataResolvable,
@@ -37,7 +37,7 @@ import { MessageCommandOptions } from './builders/MessageCommandOptions';
 
 
 export interface RecipleClientOptions extends ClientOptions {
-    config: Config;
+    config?: Config;
 }
 
 export interface RecipleClientCommands {
@@ -48,6 +48,7 @@ export interface RecipleClientCommands {
 export interface RecipleClientEvents extends ClientEvents {
     recipleMessageCommandCreate: [command: RecipleMessageCommandExecute];
     recipleInteractionCommandCreate: [command: RecipleInteractionCommandExecute];
+    recipleReplyError: [error: any];
 }
 
 export interface RecipleClient<Ready extends boolean = boolean> extends Client<Ready> {
@@ -70,7 +71,7 @@ export interface RecipleClient<Ready extends boolean = boolean> extends Client<R
 }
 
 export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready> {
-    public config: Config;
+    public config: Config = RecipleConfig.getDefaultConfig();
     public commands: RecipleClientCommands = { MESSAGE_COMMANDS: {}, INTERACTION_COMMANDS: {} };
     public otherApplicationCommandData: (interactionCommandBuilders|ApplicationCommandDataResolvable)[] = [];
     public modules: RecipleModule[] = [];
@@ -83,20 +84,18 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
         this.logger = logger(!!options.config.fileLogging.stringifyLoggedJSON, !!options.config.fileLogging.debugmode);
 
         if (!options.config) throw new Error('Config is not defined.');
-        this.config = options.config;
+        this.config = {...this.config, ...(options.config ?? {})};
 
         if (this.config.fileLogging.enabled) this.logger.logFile(this.config.fileLogging.logFilePath, false);
-
-        this.logger.info('Reciple Client v' + version + ' is starting...');
     }
 
     /**
      * Load modules
      */
-    public async startModules(): Promise<RecipleClient<Ready>> {
-        this.logger.info('Loading modules...');
+    public async startModules(folder?: string): Promise<RecipleClient<Ready>> {
+        if (this.isClientLogsEnabled()) this.logger.info(`Loading Modules from ${folder ?? this.config.modulesFolder}`);
 
-        const modules = await loadModules(this);
+        const modules = await loadModules(this, folder);
         if (!modules) throw new Error('Failed to load modules.');
 
         this.modules = modules.modules;
@@ -111,8 +110,11 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
             const module_ = this.modules[m];
             if (typeof module_.script?.onLoad === 'function') {
                 await Promise.resolve(module_.script.onLoad(this)).catch(err => {
-                    this.logger.error(`Error loading ${module_.info.filename ?? 'unknown module'}:`);
-                    this.logger.error(err);
+                    if (this.isClientLogsEnabled()) {
+                        this.logger.error(`Error loading ${module_.info.filename ?? 'unknown module'}:`);
+                        this.logger.error(err);
+                    }
+
                     this.modules = this.modules.filter((r, i) => i.toString() !== m.toString());
                 });
             }
@@ -124,10 +126,11 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
             }
         }
 
-        this.logger.info(`${this.modules.length} modules loaded.`);
-
-        this.logger.info(`${Object.keys(this.commands.MESSAGE_COMMANDS).length} message commands loaded.`);
-        this.logger.info(`${Object.keys(this.commands.INTERACTION_COMMANDS).length} interaction commands loaded.`);
+        if (this.isClientLogsEnabled()) {
+            this.logger.info(`${this.modules.length} modules loaded.`);
+            this.logger.info(`${Object.keys(this.commands.MESSAGE_COMMANDS).length} message commands loaded.`);
+            this.logger.info(`${Object.keys(this.commands.INTERACTION_COMMANDS).length} interaction commands loaded.`);
+        }
 
         if (!this.config.commands.interactionCommand.registerCommands) return this;
         await registerInteractionCommands(this, [...Object.values(this.commands.INTERACTION_COMMANDS), ...this.otherApplicationCommandData]);
@@ -149,7 +152,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
         });
         if (typeof script?.onLoad === 'function') await Promise.resolve(script.onLoad(this));
 
-        this.logger.info(`${this.modules.length} modules loaded.`);
+        if (this.isClientLogsEnabled()) this.logger.info(`${this.modules.length} modules loaded.`);
         for (const command of script.commands ?? []) {
             if (!command.name) continue;
             this.addCommand(command);
@@ -167,7 +170,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
             this.commands.MESSAGE_COMMANDS[command.name] = command;
         } else if (command.builder === 'INTERACTION_COMMAND') {
             this.commands.INTERACTION_COMMANDS[command.name] = command;
-        } else {
+        } else if (this.isClientLogsEnabled()) {
             this.logger.error(`Unknow command "${typeof command ?? 'unknown'}".`);
         }
 
@@ -212,12 +215,12 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
 
             if (command.validateOptions) {
                 if (commandOptions.some(o => o.invalid)) {
-                    await message.reply(this.getMessage('invalidArguments', 'Invalid argument(s) given.')).catch(err => this.logger.debug(err));
+                    await message.reply(this.getMessage('invalidArguments', 'Invalid argument(s) given.')).catch(er => this.replpyError(er));
                     return;
                 }
 
                 if (commandOptions.some(o => o.missing)) {
-                    await message.reply(this.getMessage('notEnoughArguments', 'Not enough arguments.')).catch(err => this.logger.debug(err));
+                    await message.reply(this.getMessage('notEnoughArguments', 'Not enough arguments.')).catch(er => this.replpyError(er));
                     return;
                 }
             }
@@ -234,7 +237,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
             this.emit('recipleMessageCommandCreate', options);
             return options;
         } else {
-            await message.reply(this.getMessage('noPermissions', 'You do not have permission to use this command.')).catch(err => this.logger.debug(err));
+            await message.reply(this.getMessage('noPermissions', 'You do not have permission to use this command.')).catch(er => this.replpyError(er));
         }
     }
 
@@ -248,9 +251,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
         if (!command) return;
 
         if (hasPermissions(command.name, interaction.memberPermissions ?? undefined, this.config.permissions.interactionCommands, command)) {
-            // TODO: Deprecated allowEcuteInDM
-            if (!command.allowExecuteInDM && !interaction.inCachedGuild() || isIgnoredChannel(interaction.channelId, this.config.ignoredChannels)) return;
-            if (!command) return;
+            if (!command || isIgnoredChannel(interaction.channelId, this.config.ignoredChannels)) return;
 
             const options: RecipleInteractionCommandExecute = {
                 interaction: interaction,
@@ -263,7 +264,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
             this.emit('recipleInteractionCommandCreate', options);
             return options;
         } else {
-            await interaction.reply(this.getMessage('noPermissions', 'You do not have permission to use this command.')).catch(err => this.logger.debug(err));
+            await interaction.reply(this.getMessage('noPermissions', 'You do not have permission to use this command.')).catch(er => this.replpyError(er));
         }
     }
 
@@ -275,20 +276,33 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
     }
 
     /**
+     * Returns true if client logs is enabled
+     */
+    public isClientLogsEnabled(): boolean {
+        return !!this.config.fileLogging.clientLogs;
+    }
+
+    private replpyError(error: any) {
+        this.emit('recipleReplyError', error);
+    }
+
+    /**
      * Error message when a command fails to execute
      */
     private async _commandExecuteError(err: Error, command: recipleCommandBuildersExecute): Promise<void> {
-        this.logger.error(`An error occured executing ${command.builder.builder == 'MESSAGE_COMMAND' ? 'message' : 'interaction'} command "${command.builder.name}"`);
-        this.logger.error(err);
+        if (this.isClientLogsEnabled()) {
+            this.logger.error(`An error occured executing ${command.builder.builder == 'MESSAGE_COMMAND' ? 'message' : 'interaction'} command "${command.builder.name}"`);
+            this.logger.error(err);
+        }
 
         if (!err || !command) return;
 
         if ((command as RecipleMessageCommandExecute)?.message) {
             if (!this.config.commands.messageCommand.replyOnError) return;
-            await (command as RecipleMessageCommandExecute).message.reply(this.getMessage('error', 'An error occurred.')).catch(e => this.logger.debug(e));
+            await (command as RecipleMessageCommandExecute).message.reply(this.getMessage('error', 'An error occurred.')).catch(er => this.replpyError(er));
         } else if ((command as RecipleInteractionCommandExecute)?.interaction) {
             if (!this.config.commands.interactionCommand.replyOnError) return;
-            await (command as RecipleInteractionCommandExecute).interaction.followUp(this.getMessage('error', 'An error occurred.')).catch(e => this.logger.debug(e));
+            await (command as RecipleInteractionCommandExecute).interaction.followUp(this.getMessage('error', 'An error occurred.')).catch(er => this.replpyError(er));
         }
     }
 }

@@ -35,7 +35,7 @@ export async function registerInteractionCommands(client: RecipleClient, cmds?: 
             cmd.setRequiredPermissions(permissions as PermissionString[]);
             client.commands.INTERACTION_COMMANDS[cmd.name] = cmd;
 
-            client.logger.debug(`Set required permissions for ${cmd.name}`);
+            if (client.isClientLogsEnabled()) client.logger.debug(`Set required permissions for ${cmd.name}`);
             return cmd.toJSON() as ApplicationCommandDataResolvable;
         }
 
@@ -47,17 +47,17 @@ export async function registerInteractionCommands(client: RecipleClient, cmds?: 
 
     if (!guilds || !guilds?.length) {
         client.application?.commands.set(commands).then(() => {
-            client.logger.warn('No guilds were specified for interaction commands. Registered commands for all guilds.');
-        }).catch(e => client.logger.error(e));
+            if (client.isClientLogsEnabled()) client.logger.warn('No guilds were specified for interaction commands. Registered interaction commands globally.');
+        });
     } else {        
-        client.logger.warn(`Registering ${commands.length} interaction commands to ${guilds.length} guild(s).`);
+        if (client.isClientLogsEnabled()) client.logger.warn(`Registering ${commands.length} interaction commands to ${guilds.length} guild(s).`);
         
         for (const guild of guilds) {
             if (!guild) continue;
 
             client.application?.commands.set(commands, guild).then(() => {
-                client.logger.warn(`Registered ${commands.length} interaction command(s) for ${guild}.`);
-            }).catch(e => client.logger.error(e));
+                if (client.isClientLogsEnabled()) client.logger.warn(`Registered ${commands.length} interaction command(s) for ${guild}.`);
+            });
         }
     }
 }

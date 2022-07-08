@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { RecipleConfig } from './reciple/classes/Config';
+import { RecipleConfig } from './reciple/classes/RecipleConfig';
 import { RecipleClient } from './reciple/classes/RecipleClient';
 import { readdirSync, existsSync } from 'fs';
 import { version } from './reciple/version';
@@ -22,11 +22,13 @@ if (readdirSync('./').filter(f => !f.startsWith('.') && allowedFiles.indexOf(f))
 const config = new RecipleConfig(flags.config ?? './reciple.yml').parseConfig().getConfig();
 const client = new RecipleClient({ config: config, ...config.client });
 
+if (config.fileLogging.clientLogs) client.logger.info('Reciple Client v' + version + ' is starting...');
+
 (async () => {
     await client.startModules();
 
     client.on('ready', async () => {
-        client.logger.warn(`Logged in as ${client.user?.tag || 'Unknown'}!`);
+        if (client.isClientLogsEnabled()) client.logger.warn(`Logged in as ${client.user?.tag || 'Unknown'}!`);
 
         await client.loadModules();
         client.addCommandListeners();
