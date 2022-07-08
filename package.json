@@ -33,7 +33,7 @@
     "chalk": "4.1.2",
     "commander": "^9.3.0",
     "dotenv": "^16.0.1",
-    "fallout-utility": "^1.4.1",
+    "fallout-utility": "^1.4.2",
     "semver": "^7.3.7",
     "wildcard-match": "^5.1.2",
     "yaml": "^2.1.1"

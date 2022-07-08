@@ -5,7 +5,7 @@ import chalk from 'chalk';
 /**
  * Create new logger
  */
-export function logger (stringifyJSON: boolean, debugmode: boolean = false) {
+export function logger (stringifyJSON: boolean, debugmode: boolean = false, colorizeMessage: boolean = true) {
     return new Logger({
         stringifyJSON: stringifyJSON,
         enableDebugMode: flags.debugmode as boolean|undefined ?? debugmode,
@@ -15,6 +15,12 @@ export function logger (stringifyJSON: boolean, debugmode: boolean = false) {
             [LogLevels.WARN]: (name?: string) => `[${chalk.bold.yellow("WARN" + (name ? chalk.dim(" - ") + name : ''))}]`,
             [LogLevels.ERROR]: (name?: string) => `[${chalk.bold.red("ERROR" + (name ? chalk.dim(" - ") + name : ''))}]`,
             [LogLevels.DEBUG]: (name?: string) => `[${chalk.bold.blue("DEBUG" + (name ? chalk.dim(" - ") + name : ''))}]`
+        },
+        colorMessages: {
+            [LogLevels.INFO]: (message: string) => message,
+            [LogLevels.WARN]: (message: string) => chalk.yellow(message),
+            [LogLevels.ERROR]: (message: string) => chalk.red(message),
+            [LogLevels.DEBUG]: (message: string) => chalk.blue(message)
         }
     });
 }
