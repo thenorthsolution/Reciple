@@ -3,10 +3,10 @@ import { recipleCommandBuilders } from '../modules';
 
 export interface CooledDownUser {
     user: User;
-    channel: TextBasedChannel;
     command: string;
     type: recipleCommandBuilders["builder"];
     guild?: Guild|null;
+    channel?: TextBasedChannel;
     expireTime: number;
 }
 
@@ -14,38 +14,54 @@ export class CommandCooldowns extends Array<CooledDownUser> {
     /**
      * Alias for `CommandCooldowns#push()`
      */
-    add(...options: CooledDownUser[]) { 
+    public add(...options: CooledDownUser[]) { 
         return this.push(...options);
     }
 
-    remove(user: User|string, command?: string, type?: recipleCommandBuilders["builder"]) {
-        if (typeof user !== 'string') user = user?.id;
+    public remove(options: Partial<CooledDownUser>, limit: number = 0) {
+        if (!Object.keys(options).length) throw new TypeError('Provide atleast one option to remove cooldown data.');
+
+        let i = 0;
 
         for(const key in this) {
-            if (this[key].user.id !== user) continue;
-            if (command && this[key].command !== command) continue;
-            if (type && this[key].type !== type) continue;
+            if (!CommandCooldowns.checkOptions(options, this[key])) continue;
+            if (options.expireTime && this[key].expireTime < Date.now()) continue;
+            if (limit && i >= limit) continue;
 
-            this.splice(Number(key), 1);
+            this.splice(Number(key));
+            i++;
         }
     }
 
-    isCooledDown(user: User|string): boolean {
-        if (typeof user !== 'string') user = user?.id;
-        if (!user) throw new TypeError(`User is not valid`);
-
-        const data = this.find(c => c.user.id == user);
+    public isCooledDown(options: Partial<Omit<CooledDownUser, 'expireTime'>>): boolean {
+        const data = this.get(options);
         if (!data) return false;
-        if (Date.now() < data.expireTime) return false;
+        if (data.expireTime < Date.now()) return false;
         
-        this.remove(user, data.command, data.type);
+        this.remove({ ...data, channel: undefined, guild: undefined });
         return true;
     }
 
-    clean(): void {
+    public clean(options?: Partial<Omit<CooledDownUser, 'expireTime'>>): void {
         for (const key in this) {
             const data = this[key];
-            if (Date.now() >= data.expireTime) this.remove(data.user, data.command, data.type);
+
+            if (options && !CommandCooldowns.checkOptions(options, data)) continue;
+            if (data.expireTime > Date.now()) this.slice(Number(key));
         }
+    }
+
+    public get(options: Partial<Omit<CooledDownUser, 'expireTime'>>): CooledDownUser|undefined {
+        return this.find(data => CommandCooldowns.checkOptions(options, data));
+    }
+
+    public static checkOptions(options: Partial<Omit<CooledDownUser, 'expireTime'>>, data: CooledDownUser): boolean {
+        if (options?.user && options.user.id !== data.user.id) return false;
+        if (options?.guild && options.guild.id !== data.guild?.id) return false;
+        if (options?.channel && options.channel.id !== data.channel?.id) return false;
+        if (options?.command && options.command !== data.command) return false;
+        if (options?.type && options.type !== data.type) return false;
+
+        return true;
     }
 }

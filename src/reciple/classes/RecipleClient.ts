@@ -265,12 +265,18 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
                 return;
             }
 
-            if (command.cooldown && !this.commandCooldowns.isCooledDown(message.author)) {
+            if (command.cooldown && !this.commandCooldowns.isCooledDown({
+                user: message.author,
+                command: command.name,
+                channel: message.channel,
+                guild: message.guild,
+                type: 'MESSAGE_COMMAND'
+            })) {
                 this.commandCooldowns.add({
                     user: message.author,
                     channel: message.channel,
                     command: command.name,
-                    type: 'INTERACTION_COMMAND',
+                    type: 'MESSAGE_COMMAND',
                     guild: message.guild,
                     expireTime: Date.now() + command.cooldown
                 });
@@ -284,9 +290,17 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
                 return;
             }
 
-            await Promise.resolve(command.execute(options)).catch(err => command.halt ? command.halt(options, 'ERROR', err) : this._commandExecuteError(err, options));
-            this.emit('recipleMessageCommandCreate', options);
-            return options;
+            try {
+                await Promise.resolve(command.execute(options)).catch(err => command.halt ? command.halt(options, 'ERROR', err) : this._commandExecuteError(err, options));
+                this.emit('recipleMessageCommandCreate', options);
+                return options;
+            } catch (err) {
+                if (!command.halt) {
+                    this._commandExecuteError(err as Error, options);
+                } else {
+                    command.halt(options, 'ERROR', err);
+                }
+            }
         } else {
             if (!command.halt) {
                 message.reply(this.getMessage('noPermissions', 'You do not have permission to use this command.')).catch(er => this.replyError(er));
@@ -326,10 +340,16 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
                 return;
             }
 
-            if (command.cooldown && !this.commandCooldowns.isCooledDown(interaction.user)) {
+            if (command.cooldown && !this.commandCooldowns.isCooledDown({
+                user: interaction.user,
+                command: command.name,
+                channel: interaction.channel ?? undefined,
+                guild: interaction.guild,
+                type: 'INTERACTION_COMMAND'
+            })) {
                 this.commandCooldowns.add({
                     user: interaction.user,
-                    channel: interaction.channel!,
+                    channel: interaction.channel ?? undefined,
                     command: interaction.commandName,
                     type: 'INTERACTION_COMMAND',
                     guild: interaction.guild,
@@ -345,9 +365,17 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
                 return;
             }
 
-            await Promise.resolve(command.execute(options)).catch(err => command.halt ? command.halt(options, 'ERROR', err) : this._commandExecuteError(err, options));
-            this.emit('recipleInteractionCommandCreate', options);
-            return options;
+            try {
+                await Promise.resolve(command.execute(options)).catch(err => command.halt ? command.halt(options, 'ERROR', err) : this._commandExecuteError(err, options));
+                this.emit('recipleInteractionCommandCreate', options);
+                return options;
+            } catch (err) {
+                if (!command.halt) {
+                    this._commandExecuteError(err as Error, options);
+                } else {
+                    command.halt(options, 'ERROR', err);
+                }
+            }
         } else {
             if (!command.halt) {
                 await interaction.reply(this.getMessage('noPermissions', 'You do not have permission to use this command.')).catch(er => this.replyError(er));
