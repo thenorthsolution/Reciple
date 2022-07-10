@@ -132,8 +132,10 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
             this.logger.info(`${Object.keys(this.commands.INTERACTION_COMMANDS).length} interaction commands loaded.`);
         }
 
-        if (!this.config.commands.interactionCommand.registerCommands) return this;
-        await registerInteractionCommands(this, [...Object.values(this.commands.INTERACTION_COMMANDS), ...this.otherApplicationCommandData]);
+        if (this.config.commands.interactionCommand.registerCommands) {
+            await registerInteractionCommands(this, [...Object.values(this.commands.INTERACTION_COMMANDS), ...this.otherApplicationCommandData]);
+        }
+
         return this;
     }
 
