@@ -19,6 +19,15 @@ export class InteractionCommandBuilder extends SlashCommandBuilder {
     public execute: (options: RecipleInteractionCommandExecute) => void = () => { /* Execute */ };
 
     /**
+     * Sets the execute cooldown for this command.
+     * - `0` means no cooldown
+     */
+    public setCooldown(cooldown: number): InteractionCommandBuilder {
+        this.cooldown = cooldown;
+        return this;
+    }
+
+    /**
      * Set required permissions to execute the command
      */
     public setRequiredMemberPermissions(...permissions: PermissionResolvable[]): InteractionCommandBuilder {

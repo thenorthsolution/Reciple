@@ -262,6 +262,26 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
                     command.halt(options, 'MISSING_BOT_PERMISSIONS');
                     this.emit('recipleMessageCommandHalt', options, 'MISSING_BOT_PERMISSIONS');
                 }
+                return;
+            }
+
+            if (command.cooldown && !this.commandCooldowns.isCooledDown(message.author)) {
+                this.commandCooldowns.add({
+                    user: message.author,
+                    channel: message.channel,
+                    command: command.name,
+                    type: 'INTERACTION_COMMAND',
+                    guild: message.guild,
+                    expireTime: Date.now() + command.cooldown
+                });
+            } else if (command.cooldown) {
+                if (!command.halt) {
+                    await message.reply(this.getMessage('cooldown', 'You cannot execute this command right now due to the cooldown.')).catch(er => this.replyError(er));
+                } else {
+                    command.halt(options, 'COOLDOWN');
+                    this.emit('recipleMessageCommandHalt', options, 'COOLDOWN');
+                }
+                return;
             }
 
             await Promise.resolve(command.execute(options)).catch(err => command.halt ? command.halt(options, 'ERROR', err) : this._commandExecuteError(err, options));
@@ -303,6 +323,26 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
                     command.halt(options, 'MISSING_BOT_PERMISSIONS');
                     this.emit('recipleInteractionCommandHalt', options, 'MISSING_BOT_PERMISSIONS');
                 }
+                return;
+            }
+
+            if (command.cooldown && !this.commandCooldowns.isCooledDown(interaction.user)) {
+                this.commandCooldowns.add({
+                    user: interaction.user,
+                    channel: interaction.channel!,
+                    command: interaction.commandName,
+                    type: 'INTERACTION_COMMAND',
+                    guild: interaction.guild,
+                    expireTime: Date.now() + command.cooldown
+                });
+            } else if (command.cooldown) {
+                if (!command.halt) {
+                    await interaction.reply(this.getMessage('cooldown', 'You cannot execute this command right now due to the cooldown.')).catch(er => this.replyError(er));
+                } else {
+                    command.halt(options, 'COOLDOWN');
+                    this.emit('recipleInteractionCommandHalt', options, 'COOLDOWN');
+                }
+                return;
             }
 
             await Promise.resolve(command.execute(options)).catch(err => command.halt ? command.halt(options, 'ERROR', err) : this._commandExecuteError(err, options));

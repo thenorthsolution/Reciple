@@ -3,7 +3,7 @@ import semver from 'semver';
 /**
  * Current reciple version
  */
-export const version = require('../../package.json').version as string;
+export const version = `${semver.coerce(require('../../package.json').version)}`;
 
 /**
  * Check if the version is valid
