@@ -1,7 +1,7 @@
 import { MessageCommandOptionBuilder } from './MessageCommandOptionBuilder';
-import { Message, PermissionFlags, PermissionResolvable, PermissionString } from 'discord.js';
+import { Message, PermissionFlags, PermissionString } from 'discord.js';
 import { Command as CommandMessage } from 'fallout-utility';
-import { CommandHaltEvents, CommandHaltFunction, RecipleClient } from '../RecipleClient';
+import { RecipleClient } from '../RecipleClient';
 import { MessageCommandOptions } from './MessageCommandOptions';
 
 
@@ -24,16 +24,13 @@ export interface MessageCommandValidatedOption {
 export class MessageCommandBuilder {
     public readonly builder = 'MESSAGE_COMMAND';
     public name: string = '';
-    public cooldown: number = 0;
     public description: string = '';
     public aliases: string[] = [];
     public options: MessageCommandOptionBuilder[] = [];
     public validateOptions: boolean = false;
-    public requiredBotPermissions: PermissionResolvable[] = [];
-    public RequiredUserPermissions: PermissionResolvable[] = [];
+    public requiredPermissions: (PermissionFlags|PermissionString)[] = [];
     public allowExecuteInDM: boolean = true;
     public allowExecuteByBots: boolean = false;
-    public halt?: CommandHaltFunction;
     public execute: (options: RecipleMessageCommandExecute) => void = () => { /* Execute */ };
 
     /**
@@ -55,15 +52,6 @@ export class MessageCommandBuilder {
     }
 
     /**
-     * Sets the execute cooldown for this command.
-     * - `0` means no cooldown
-     */
-    public setCooldown(cooldown: number): MessageCommandBuilder {
-        this.cooldown = cooldown;
-        return this;
-    }
-
-    /**
      * Add aliases to the command
      */
     public addAliases(...aliases: string[]): MessageCommandBuilder {
@@ -76,29 +64,11 @@ export class MessageCommandBuilder {
     }
 
     /**
-     * Set required per
+     * Sets the default required permissions to execute this command 
      */
-    public setRequiredBotPermissions(...permissions: PermissionResolvable[]): MessageCommandBuilder {
-        this.requiredBotPermissions = permissions;
-        return this;
-    }
-
-    /**
-     * Set required user permissions to execute the command
-     * @deprecated Use method `setRequiredMemberPermissions` instead
-     * TODO: Remove this method soon.
-     */
-    public setRequiredPermissions(permissions: PermissionResolvable[]): MessageCommandBuilder {
-        if (!permissions || !Array.isArray(permissions)) throw new TypeError('Invalid permissions parameter value.');
-        this.RequiredUserPermissions = permissions;
-        return this;
-    }
-
-    /**
-     * Set required user permissions to execute the command
-     */
-    public setRequiredMemberPermissions(...permissions: PermissionResolvable[]): MessageCommandBuilder {
-        this.RequiredUserPermissions = permissions;
+    public setRequiredPermissions(permissions: (PermissionFlags|PermissionString)[]): MessageCommandBuilder {
+        if (!permissions || !Array.isArray(permissions)) throw new TypeError('permissions must be an array.');
+        this.requiredPermissions = permissions;
         return this;
     }
 
@@ -117,14 +87,6 @@ export class MessageCommandBuilder {
     public setAllowExecuteByBots(allowExecuteByBots: boolean): MessageCommandBuilder {
         if (typeof allowExecuteByBots !== 'boolean') throw new TypeError('allowExecuteByBots must be a boolean.');
         this.allowExecuteByBots = allowExecuteByBots;
-        return this;
-    }
-
-    /**
-     * Function when the command is interupted before execution 
-     */
-    public setHalt(halt?: CommandHaltFunction): MessageCommandBuilder {
-        this.halt = halt ? halt : undefined;
         return this;
     }
 
