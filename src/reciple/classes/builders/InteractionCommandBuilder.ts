@@ -1,5 +1,5 @@
 import { CommandInteraction, PermissionResolvable } from 'discord.js';
-import { CommandHaltEvents, CommandHaltFunction, RecipleClient } from '../RecipleClient';
+import { CommandHaltFunction, RecipleClient } from '../RecipleClient';
 import { SlashCommandBuilder } from '@discordjs/builders';
 
 export interface RecipleInteractionCommandExecute {
@@ -15,7 +15,7 @@ export class InteractionCommandBuilder extends SlashCommandBuilder {
     public requiredBotPermissions: PermissionResolvable[] = [];
     public RequiredUserPermissions: PermissionResolvable[] = [];
     public allowExecuteInDM: boolean = true;
-    public halt?: CommandHaltFunction;
+    public halt?: CommandHaltFunction<RecipleInteractionCommandExecute>;
     public execute: (options: RecipleInteractionCommandExecute) => void = () => { /* Execute */ };
 
     /**
@@ -39,7 +39,7 @@ export class InteractionCommandBuilder extends SlashCommandBuilder {
     /**
      * Function when the command is interupted before execution 
      */
-    public setHalt(halt?: CommandHaltFunction): InteractionCommandBuilder {
+    public setHalt(halt?: CommandHaltFunction<RecipleInteractionCommandExecute>): InteractionCommandBuilder {
         this.halt = halt ? halt : undefined;
         return this;
     }

@@ -8,13 +8,14 @@
 import { InteractionCommandBuilder, RecipleInteractionCommandExecute } from './builders/InteractionCommandBuilder';
 import { interactionCommandBuilders, registerInteractionCommands } from '../registerInteractionCommands';
 import { MessageCommandBuilder, RecipleMessageCommandExecute } from './builders/MessageCommandBuilder';
-import { MessageCommandOptions } from './builders/MessageCommandOptions';
+import { MessageCommandOptions } from './MessageCommandOptions';
 import { getCommand, Logger as ILogger } from 'fallout-utility';
+import { Config, RecipleConfig } from './RecipleConfig';
 import { isIgnoredChannel } from '../isIgnoredChannel';
+import { CommandCooldowns } from './CommandCooldowns';
 import { hasPermissions } from '../hasPermissions';
 import { version } from '../version';
 import { logger } from '../logger';
-import { Config, RecipleConfig } from './RecipleConfig';
 
 import {
     ApplicationCommandDataResolvable,
@@ -24,9 +25,7 @@ import {
     ClientOptions,
     CommandInteraction,
     Interaction,
-    Message,
-    PermissionFlags,
-    PermissionString
+    Message
 } from 'discord.js';
 
 import {
@@ -37,15 +36,16 @@ import {
     RecipleScript
 } from '../modules';
 
-export type CommandHaltReason = 'ERROR'|'COOLDOWN'|'NO_PERMISSIONS'|'MISSING_ARGUMENTS'|'MISSING_MEMBER_PERMISSIONS'|'MISSING_BOT_PERMISSIONS';
-export type CommandHaltFunction = <E extends keyof CommandHaltEvents>(options: RecipleMessageCommandExecute, reason: E, ...args: CommandHaltEvents[E]) => void;
+export type CommandHaltReason = 'ERROR'|'COOLDOWN'|'INVALID_ARGUMENTS'|'MISSING_ARGUMENTS'|'MISSING_MEMBER_PERMISSIONS'|'MISSING_BOT_PERMISSIONS';
+export type CommandHaltFunction<ExecuteOption extends recipleCommandBuildersExecute> = (options: ExecuteOption, reason: ExecuteOption extends RecipleInteractionCommandExecute ? Omit<CommandHaltReason, 'INVALID_ARGUMENTS'|'MISSING_ARGUMENTS'> : CommandHaltReason, ...args: CommandHaltFunctionParams[CommandHaltReason]) => void;
 
-export interface CommandHaltEvents {
+export interface CommandHaltFunctionParams {
     'ERROR': [err: any];
     'COOLDOWN': [duration: number, cooldown: number];
-    'MISSING_ARGUMENTS': [arguments: MessageCommandOptions],
-    'MISSING_MEMBER_PERMISSIONS': [],
-    'MISSING_BOT_PERMISSIONS': [],
+    'INVALID_ARGUMENTS': [arguments: MessageCommandOptions];
+    'MISSING_ARGUMENTS': [arguments: MessageCommandOptions];
+    'MISSING_MEMBER_PERMISSIONS': [];
+    'MISSING_BOT_PERMISSIONS': [];
 }
 
 export interface RecipleClientOptions extends ClientOptions {
@@ -60,6 +60,8 @@ export interface RecipleClientCommands {
 export interface RecipleClientEvents extends ClientEvents {
     recipleMessageCommandCreate: [command: RecipleMessageCommandExecute];
     recipleInteractionCommandCreate: [command: RecipleInteractionCommandExecute];
+    recipleMessageCommandHalt: [command: RecipleMessageCommandExecute, reason: CommandHaltReason];
+    recipleInteractionCommandHalt: [command: RecipleInteractionCommandExecute, reason: Omit<CommandHaltReason, 'INVALID_ARGUMENTS'|'MISSING_ARGUMENTS'>];
     recipleReplyError: [error: unknown];
 }
 
@@ -86,6 +88,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
     public config: Config = RecipleConfig.getDefaultConfig();
     public commands: RecipleClientCommands = { MESSAGE_COMMANDS: {}, INTERACTION_COMMANDS: {} };
     public otherApplicationCommandData: (interactionCommandBuilders|ApplicationCommandDataResolvable)[] = [];
+    public commandCooldowns: CommandCooldowns = new CommandCooldowns();
     public modules: RecipleModule[] = [];
     public logger: ILogger;
     public version: string = version;
@@ -127,7 +130,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
                         this.logger.error(err);
                     }
 
-                    this.modules = this.modules.filter((r, i) => i.toString() !== m.toString());
+                    this.modules = this.modules.filter((_r, i) => i.toString() !== m.toString());
                 });
             }
 
@@ -212,6 +215,15 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
 
         const command = this.findCommand(parseCommand.command, 'MESSAGE_COMMAND');
         if (!command) return;
+        
+        const commandOptions = command.getCommandOptionValues(parseCommand);
+        const options: RecipleMessageCommandExecute = {
+            message: message,
+            options: new MessageCommandOptions(commandOptions),
+            command: parseCommand,
+            builder: command,
+            client: this
+        };
 
         if (hasPermissions(command.name, message.member?.permissions, this.config.permissions.messageCommands, command)) {
             if (
@@ -221,33 +233,38 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
                 || isIgnoredChannel(message.channelId, this.config.ignoredChannels)
             ) return;
 
-            const commandOptions = command.getCommandOptionValues(parseCommand);
-
             if (command.validateOptions) {
                 if (commandOptions.some(o => o.invalid)) {
-                    await message.reply(this.getMessage('invalidArguments', 'Invalid argument(s) given.')).catch(er => this.replyError(er));
+                    if (!command.halt) {
+                        message.reply(this.getMessage('invalidArguments', 'Invalid argument(s) given.')).catch(er => this.replyError(er));
+                    } else {
+                        command.halt(options, 'INVALID_ARGUMENTS', options.options);
+                        this.emit('recipleMessageCommandHalt', options, 'INVALID_ARGUMENTS');
+                    }
                     return;
                 }
 
                 if (commandOptions.some(o => o.missing)) {
-                    await message.reply(this.getMessage('notEnoughArguments', 'Not enough arguments.')).catch(er => this.replyError(er));
+                    if (!command.halt) {
+                        message.reply(this.getMessage('notEnoughArguments', 'Not enough arguments.')).catch(er => this.replyError(er));
+                    } else {
+                        command.halt(options, 'MISSING_ARGUMENTS', options.options);
+                        this.emit('recipleMessageCommandHalt', options, 'MISSING_ARGUMENTS');
+                    }
                     return;
                 }
             }
-
-            const options: RecipleMessageCommandExecute = {
-                message: message,
-                options: new MessageCommandOptions(commandOptions),
-                command: parseCommand,
-                builder: command,
-                client: this
-            };
 
             await Promise.resolve(command.execute(options)).catch(err => this._commandExecuteError(err, options));
             this.emit('recipleMessageCommandCreate', options);
             return options;
         } else {
-            await message.reply(this.getMessage('noPermissions', 'You do not have permission to use this command.')).catch(er => this.replyError(er));
+            if (!command.halt) {
+                message.reply(this.getMessage('noPermissions', 'You do not have permission to use this command.')).catch(er => this.replyError(er));
+            } else {
+                command.halt(options, 'MISSING_MEMBER_PERMISSIONS');
+                this.emit('recipleMessageCommandHalt', options, 'MISSING_MEMBER_PERMISSIONS');
+            }
         }
     }
 
@@ -260,21 +277,26 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
         const command = this.findCommand(interaction.commandName, 'INTERACTION_COMMAND');
         if (!command) return;
 
+        const options: RecipleInteractionCommandExecute = {
+            interaction: interaction,
+            command: command,
+            builder: command,
+            client: this
+        };
+
         if (hasPermissions(command.name, interaction.memberPermissions ?? undefined, this.config.permissions.interactionCommands, command)) {
             if (!command || isIgnoredChannel(interaction.channelId, this.config.ignoredChannels)) return;
 
-            const options: RecipleInteractionCommandExecute = {
-                interaction: interaction,
-                command: command,
-                builder: command,
-                client: this
-            };
-
-            await Promise.resolve(command.execute(options)).catch(err => this._commandExecuteError(err, options));
+            await Promise.resolve(command.execute(options)).catch(err => command.halt ? command.halt(options, 'ERROR', err) : void 0);
             this.emit('recipleInteractionCommandCreate', options);
             return options;
         } else {
-            await interaction.reply(this.getMessage('noPermissions', 'You do not have permission to use this command.')).catch(er => this.replyError(er));
+            if (!command.halt) {
+                await interaction.reply(this.getMessage('noPermissions', 'You do not have permission to use this command.')).catch(er => this.replyError(er));
+            } else {
+                command.halt(options, 'MISSING_MEMBER_PERMISSIONS');
+                this.emit('recipleInteractionCommandHalt', options, 'MISSING_MEMBER_PERMISSIONS');
+            }
         }
     }
 

@@ -1,4 +1,4 @@
-import { ClientOptions, PermissionFlags, PermissionString } from 'discord.js';
+import { ClientOptions, PermissionResolvable } from 'discord.js';
 import { existsSync, readFileSync, writeFileSync } from 'fs';
 import { isSupportedVersion, version } from '../version';
 import { input, replaceAll } from 'fallout-utility';
@@ -9,7 +9,7 @@ import yaml from 'yaml';
 
 export interface ConfigCommandPermissions {
     command: string;
-    permissions: (PermissionFlags|PermissionString)[];
+    permissions: PermissionResolvable[];
 }
 
 export interface Config {
@@ -20,12 +20,14 @@ export interface Config {
             enabled: boolean;
             replyOnError: boolean;
             allowCommandAlias: boolean;
+            enableCooldown: boolean;
             commandArgumentSeparator: string;
         }
         interactionCommand: {
             enabled: boolean;
             replyOnError: boolean;
             registerCommands: boolean;
+            enableCooldown: boolean;
             setRequiredPermissions: boolean;
             guilds: string[]|string;
         }
