@@ -1,5 +1,5 @@
 <h1 align="center">
-    <img src="https://i.imgur.com/8pYGOWW.png" width="50%">
+    <img src="https://i.imgur.com/DWM0tJL.png" width="50%">
     <br>
     <img alt="Lines of code" src="https://img.shields.io/tokei/lines/github/FalloutStudios/Reciple">
     <img alt="GitHub" src="https://img.shields.io/github/license/FalloutStudios/Reciple">

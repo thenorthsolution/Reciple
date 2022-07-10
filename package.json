@@ -1,6 +1,6 @@
 {
   "name": "reciple",
-  "version": "1.7.0",
+  "version": "1.7.1",
   "description": "A Discord.js bot",
   "author": "FalloutStudios",
   "homepage": "https://falloutstudios.github.io/Reciple",
@@ -21,7 +21,7 @@
   ],
   "scripts": {
     "clean": "rm -rf bin",
-    "build": "yarn clean && npx tsc && npm un reciple -g && npm i ./ -g",
+    "build": "yarn clean && npx tsc && npm un reciple -g && npm i ./ -g && yarn build:docs",
     "build:publish": "yarn run build && yarn publish",
     "test": "yarn run build && yarn test:start",
     "test:start": "cd test && npx reciple",
