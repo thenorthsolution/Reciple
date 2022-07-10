@@ -264,7 +264,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
                 }
             }
 
-            await Promise.resolve(command.execute(options)).catch(err => command.halt ? command.halt(options, 'ERROR', err) : void 0);
+            await Promise.resolve(command.execute(options)).catch(err => command.halt ? command.halt(options, 'ERROR', err) : this._commandExecuteError(err, options));
             this.emit('recipleMessageCommandCreate', options);
             return options;
         } else {
@@ -305,7 +305,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
                 }
             }
 
-            await Promise.resolve(command.execute(options)).catch(err => command.halt ? command.halt(options, 'ERROR', err) : void 0);
+            await Promise.resolve(command.execute(options)).catch(err => command.halt ? command.halt(options, 'ERROR', err) : this._commandExecuteError(err, options));
             this.emit('recipleInteractionCommandCreate', options);
             return options;
         } else {
