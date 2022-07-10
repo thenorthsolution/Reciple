@@ -85,17 +85,6 @@ export class MessageCommandBuilder {
 
     /**
      * Set required user permissions to execute the command
-     * @deprecated Use method `setRequiredMemberPermissions` instead
-     * TODO: Remove this method soon.
-     */
-    public setRequiredPermissions(permissions: PermissionResolvable[]): MessageCommandBuilder {
-        if (!permissions || !Array.isArray(permissions)) throw new TypeError('Invalid permissions parameter value.');
-        this.RequiredUserPermissions = permissions;
-        return this;
-    }
-
-    /**
-     * Set required user permissions to execute the command
      */
     public setRequiredMemberPermissions(...permissions: PermissionResolvable[]): MessageCommandBuilder {
         this.RequiredUserPermissions = permissions;

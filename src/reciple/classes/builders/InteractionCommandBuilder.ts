@@ -20,16 +20,6 @@ export class InteractionCommandBuilder extends SlashCommandBuilder {
 
     /**
      * Set required permissions to execute the command
-     * @deprecated Use method `setRequiredMemberPermissions` instead
-     */
-    public setRequiredPermissions(permissions: PermissionResolvable[]): InteractionCommandBuilder {
-        if (!permissions || !Array.isArray(permissions)) throw new TypeError('Invalid permissions parameter value.');
-        this.RequiredUserPermissions = permissions;
-        return this;
-    }
-
-    /**
-     * Set required permissions to execute the command
      */
     public setRequiredMemberPermissions(...permissions: PermissionResolvable[]): InteractionCommandBuilder {
         this.RequiredUserPermissions = permissions;
