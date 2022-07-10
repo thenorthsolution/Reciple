@@ -48,7 +48,7 @@ export interface RecipleClientCommands {
 export interface RecipleClientEvents extends ClientEvents {
     recipleMessageCommandCreate: [command: RecipleMessageCommandExecute];
     recipleInteractionCommandCreate: [command: RecipleInteractionCommandExecute];
-    recipleReplyError: [error: any];
+    recipleReplyError: [error: unknown];
 }
 
 export interface RecipleClient<Ready extends boolean = boolean> extends Client<Ready> {
@@ -106,7 +106,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
      * Execute `onLoad()` from client modules and register interaction commands if enabled
      */
     public async loadModules(): Promise<RecipleClient<Ready>> {
-        for (let m in this.modules) {
+        for (const m in this.modules) {
             const module_ = this.modules[m];
             if (typeof module_.script?.onLoad === 'function') {
                 await Promise.resolve(module_.script.onLoad(this)).catch(err => {
@@ -196,11 +196,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
         const parseCommand = getCommand(message.content, prefix || this.config.prefix || '!', this.config.commands.messageCommand.commandArgumentSeparator || ' ');
         if (!parseCommand || !parseCommand?.command) return; 
 
-        const command = this.commands.MESSAGE_COMMANDS[parseCommand.command.toLowerCase()]
-            ?? (this.config.commands.messageCommand.allowCommandAlias
-                ? Object.values(this.commands.MESSAGE_COMMANDS).find(c => c.aliases.some(a => a == parseCommand.command?.toLowerCase()))
-                : undefined
-                );
+        const command = this.findCommand(parseCommand.command, 'MESSAGE_COMMAND');
         if (!command) return;
 
         if (hasPermissions(command.name, message.member?.permissions, this.config.permissions.messageCommands, command)) {
@@ -247,7 +243,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
     public async interactionCommandExecute(interaction: Interaction|CommandInteraction): Promise<void|RecipleInteractionCommandExecute> {
         if (!interaction || !interaction.isCommand() || !this.isReady()) return;
 
-        const command = this.commands.INTERACTION_COMMANDS[interaction.commandName];
+        const command = this.findCommand(interaction.commandName, 'INTERACTION_COMMAND');
         if (!command) return;
 
         if (hasPermissions(command.name, interaction.memberPermissions ?? undefined, this.config.permissions.interactionCommands, command)) {
@@ -275,6 +271,23 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
         return this.config.messages[messageKey] ?? defaultMessage ?? messageKey;
     }
 
+    public findCommand(command: string, type: MessageCommandBuilder["builder"]): MessageCommandBuilder|undefined;
+    public findCommand(command: string, type: InteractionCommandBuilder["builder"]): InteractionCommandBuilder|undefined;
+    public findCommand(command: string, type: recipleCommandBuilders["builder"]): recipleCommandBuilders|undefined {
+        switch (type) {
+            case 'INTERACTION_COMMAND':
+                return this.commands.INTERACTION_COMMANDS[command];
+            case 'MESSAGE_COMMAND':
+                return this.commands.MESSAGE_COMMANDS[command.toLowerCase()]
+                    ?? (this.config.commands.messageCommand.allowCommandAlias
+                        ? Object.values(this.commands.MESSAGE_COMMANDS).find(c => c.aliases.some(a => a == command?.toLowerCase()))
+                        : undefined
+                    );
+            default:
+                throw new TypeError('Unknown command type');
+        }
+    }
+
     /**
      * Returns true if client logs is enabled
      */
@@ -282,7 +295,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
         return !!this.config.fileLogging.clientLogs;
     }
 
-    private replpyError(error: any) {
+    private replpyError(error: unknown) {
         this.emit('recipleReplyError', error);
     }
 
