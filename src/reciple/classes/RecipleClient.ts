@@ -273,6 +273,9 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
         return this.config.messages[messageKey] ?? defaultMessage ?? messageKey;
     }
 
+    /**
+     * Get command builder by name or alias if it's a message command 
+     */
     public findCommand(command: string, type: MessageCommandBuilder["builder"]): MessageCommandBuilder|undefined;
     public findCommand(command: string, type: InteractionCommandBuilder["builder"]): InteractionCommandBuilder|undefined;
     public findCommand(command: string, type: recipleCommandBuilders["builder"]): recipleCommandBuilders|undefined {
