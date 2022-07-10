@@ -13,7 +13,7 @@ import { getCommand, Logger as ILogger } from 'fallout-utility';
 import { Config, RecipleConfig } from './RecipleConfig';
 import { isIgnoredChannel } from '../isIgnoredChannel';
 import { CommandCooldowns } from './CommandCooldowns';
-import { hasPermissions } from '../hasPermissions';
+import { hasExecutePermissions } from '../permissions';
 import { version } from '../version';
 import { logger } from '../logger';
 
@@ -225,7 +225,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
             client: this
         };
 
-        if (hasPermissions(command.name, message.member?.permissions, this.config.permissions.messageCommands, command)) {
+        if (hasExecutePermissions(command.name, message.member?.permissions, this.config.permissions.messageCommands, command)) {
             if (
                 !command.allowExecuteInDM && message.channel.type === 'DM'
                 || !command.allowExecuteByBots
@@ -284,7 +284,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
             client: this
         };
 
-        if (hasPermissions(command.name, interaction.memberPermissions ?? undefined, this.config.permissions.interactionCommands, command)) {
+        if (hasExecutePermissions(command.name, interaction.memberPermissions ?? undefined, this.config.permissions.interactionCommands, command)) {
             if (!command || isIgnoredChannel(interaction.channelId, this.config.ignoredChannels)) return;
 
             await Promise.resolve(command.execute(options)).catch(err => command.halt ? command.halt(options, 'ERROR', err) : void 0);

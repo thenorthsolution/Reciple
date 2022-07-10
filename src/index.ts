@@ -4,7 +4,7 @@ export * from './reciple/classes/MessageCommandOptions';
 export * from './reciple/classes/builders/InteractionCommandBuilder';
 export * from './reciple/classes/builders/MessageCommandBuilder';
 export * from './reciple/classes/builders/MessageCommandOptionBuilder';
-export * from './reciple/hasPermissions';
+export * from './reciple/permissions';
 export * from './reciple/flags';
 export * from './reciple/isIgnoredChannel';
 export * from './reciple/logger';
