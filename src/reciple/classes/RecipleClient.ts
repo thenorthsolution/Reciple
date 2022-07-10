@@ -213,12 +213,12 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
 
             if (command.validateOptions) {
                 if (commandOptions.some(o => o.invalid)) {
-                    await message.reply(this.getMessage('invalidArguments', 'Invalid argument(s) given.')).catch(er => this.replpyError(er));
+                    await message.reply(this.getMessage('invalidArguments', 'Invalid argument(s) given.')).catch(er => this.replyError(er));
                     return;
                 }
 
                 if (commandOptions.some(o => o.missing)) {
-                    await message.reply(this.getMessage('notEnoughArguments', 'Not enough arguments.')).catch(er => this.replpyError(er));
+                    await message.reply(this.getMessage('notEnoughArguments', 'Not enough arguments.')).catch(er => this.replyError(er));
                     return;
                 }
             }
@@ -235,7 +235,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
             this.emit('recipleMessageCommandCreate', options);
             return options;
         } else {
-            await message.reply(this.getMessage('noPermissions', 'You do not have permission to use this command.')).catch(er => this.replpyError(er));
+            await message.reply(this.getMessage('noPermissions', 'You do not have permission to use this command.')).catch(er => this.replyError(er));
         }
     }
 
@@ -262,7 +262,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
             this.emit('recipleInteractionCommandCreate', options);
             return options;
         } else {
-            await interaction.reply(this.getMessage('noPermissions', 'You do not have permission to use this command.')).catch(er => this.replpyError(er));
+            await interaction.reply(this.getMessage('noPermissions', 'You do not have permission to use this command.')).catch(er => this.replyError(er));
         }
     }
 
@@ -297,7 +297,10 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
         return !!this.config.fileLogging.clientLogs;
     }
 
-    private replpyError(error: unknown) {
+    /**
+     * Emits the "recipleReplyError" event
+     */
+    private replyError(error: unknown) {
         this.emit('recipleReplyError', error);
     }
 
@@ -314,10 +317,10 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
 
         if ((command as RecipleMessageCommandExecute)?.message) {
             if (!this.config.commands.messageCommand.replyOnError) return;
-            await (command as RecipleMessageCommandExecute).message.reply(this.getMessage('error', 'An error occurred.')).catch(er => this.replpyError(er));
+            await (command as RecipleMessageCommandExecute).message.reply(this.getMessage('error', 'An error occurred.')).catch(er => this.replyError(er));
         } else if ((command as RecipleInteractionCommandExecute)?.interaction) {
             if (!this.config.commands.interactionCommand.replyOnError) return;
-            await (command as RecipleInteractionCommandExecute).interaction.followUp(this.getMessage('error', 'An error occurred.')).catch(er => this.replpyError(er));
+            await (command as RecipleInteractionCommandExecute).interaction.followUp(this.getMessage('error', 'An error occurred.')).catch(er => this.replyError(er));
         }
     }
 }
