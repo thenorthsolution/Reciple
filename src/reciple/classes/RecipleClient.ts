@@ -13,7 +13,7 @@ import { getCommand, Logger as ILogger } from 'fallout-utility';
 import { Config, RecipleConfig } from './RecipleConfig';
 import { isIgnoredChannel } from '../isIgnoredChannel';
 import { CommandCooldowns } from './CommandCooldowns';
-import { hasExecutePermissions } from '../permissions';
+import { botHasExecutePermissions, userHasCommandPermissions } from '../permissions';
 import { version } from '../version';
 import { logger } from '../logger';
 
@@ -225,7 +225,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
             client: this
         };
 
-        if (hasExecutePermissions(command.name, message.member?.permissions, this.config.permissions.messageCommands, command)) {
+        if (userHasCommandPermissions(command.name, message.member?.permissions, this.config.permissions.messageCommands, command)) {
             if (
                 !command.allowExecuteInDM && message.channel.type === 'DM'
                 || !command.allowExecuteByBots
@@ -255,7 +255,16 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
                 }
             }
 
-            await Promise.resolve(command.execute(options)).catch(err => this._commandExecuteError(err, options));
+            if (message.guild && !botHasExecutePermissions(message.guild, command.requiredBotPermissions)) {
+                if (!command.halt) {
+                    message.reply(this.getMessage('insufficientBotPerms', 'Insufficient bot permissions.')).catch(er => this.replyError(er));
+                } else {
+                    command.halt(options, 'MISSING_BOT_PERMISSIONS');
+                    this.emit('recipleMessageCommandHalt', options, 'MISSING_BOT_PERMISSIONS');
+                }
+            }
+
+            await Promise.resolve(command.execute(options)).catch(err => command.halt ? command.halt(options, 'ERROR', err) : void 0);
             this.emit('recipleMessageCommandCreate', options);
             return options;
         } else {
@@ -284,8 +293,17 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
             client: this
         };
 
-        if (hasExecutePermissions(command.name, interaction.memberPermissions ?? undefined, this.config.permissions.interactionCommands, command)) {
+        if (userHasCommandPermissions(command.name, interaction.memberPermissions ?? undefined, this.config.permissions.interactionCommands, command)) {
             if (!command || isIgnoredChannel(interaction.channelId, this.config.ignoredChannels)) return;
+
+            if (interaction.guild && botHasExecutePermissions(interaction.guild, command.requiredBotPermissions)) {
+                if (!command.halt) {
+                    await interaction.reply(this.getMessage('insufficientBotPerms', 'Insufficient bot permissions.')).catch(er => this.replyError(er));
+                } else {
+                    command.halt(options, 'MISSING_BOT_PERMISSIONS');
+                    this.emit('recipleInteractionCommandHalt', options, 'MISSING_BOT_PERMISSIONS');
+                }
+            }
 
             await Promise.resolve(command.execute(options)).catch(err => command.halt ? command.halt(options, 'ERROR', err) : void 0);
             this.emit('recipleInteractionCommandCreate', options);
