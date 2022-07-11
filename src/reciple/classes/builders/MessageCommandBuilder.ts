@@ -1,7 +1,7 @@
 import { MessageCommandOptionBuilder } from './MessageCommandOptionBuilder';
-import { CommandHaltFunction, RecipleClient } from '../RecipleClient';
+import { RecipleClient, RecipleHaltedCommandData } from '../RecipleClient';
 import { MessageCommandOptionManager } from '../MessageCommandOptionManager';
-import { Message, PermissionResolvable } from 'discord.js';
+import { Awaitable, Message, PermissionResolvable } from 'discord.js';
 import { Command as CommandMessage } from 'fallout-utility';
 
 
@@ -33,8 +33,8 @@ export class MessageCommandBuilder {
     public RequiredUserPermissions: PermissionResolvable[] = [];
     public allowExecuteInDM: boolean = true;
     public allowExecuteByBots: boolean = false;
-    public halt?: CommandHaltFunction<RecipleMessageCommandExecuteData>;
-    public execute: (options: RecipleMessageCommandExecuteData) => void = () => { /* Execute */ };
+    public halt?: (haltData: RecipleHaltedCommandData<MessageCommandBuilder>) => Awaitable<boolean>;
+    public execute: (executeData: RecipleMessageCommandExecuteData) => void = () => { /* Execute */ };
 
     /**
      * Sets the command name
@@ -112,7 +112,7 @@ export class MessageCommandBuilder {
     /**
      * Function when the command is interupted before execution 
      */
-    public setHalt(halt?: CommandHaltFunction<RecipleMessageCommandExecuteData>): MessageCommandBuilder {
+    public setHalt(halt?: (haltData: RecipleHaltedCommandData<MessageCommandBuilder>) => Awaitable<boolean>): MessageCommandBuilder {
         this.halt = halt ? halt : undefined;
         return this;
     }

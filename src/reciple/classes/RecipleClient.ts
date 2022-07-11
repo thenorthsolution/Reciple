@@ -12,7 +12,7 @@ import { MessageCommandOptionManager } from './MessageCommandOptionManager';
 import { getCommand, Logger as ILogger } from 'fallout-utility';
 import { Config, RecipleConfig } from './RecipleConfig';
 import { isIgnoredChannel } from '../isIgnoredChannel';
-import { CommandCooldownManager } from './CommandCooldownManager';
+import { CommandCooldownManager, CooledDownUser } from './CommandCooldownManager';
 import { botHasExecutePermissions, userHasCommandPermissions } from '../permissions';
 import { version } from '../version';
 import { logger } from '../logger';
@@ -36,17 +36,16 @@ import {
     RecipleScript
 } from '../modules';
 
-export type CommandHaltReason = 'ERROR'|'COOLDOWN'|'INVALID_ARGUMENTS'|'MISSING_ARGUMENTS'|'MISSING_MEMBER_PERMISSIONS'|'MISSING_BOT_PERMISSIONS';
-export type CommandHaltFunction<ExecuteData extends RecipleCommandBuildersExecuteData> = (executeData: ExecuteData, reason: ExecuteData extends RecipleInteractionCommandExecuteData ? Omit<CommandHaltReason, 'INVALID_ARGUMENTS'|'MISSING_ARGUMENTS'> : CommandHaltReason, ...args: CommandHaltFunctionParams[CommandHaltReason]) => Awaitable<boolean>;
+export type CommandHaltReason<Builder extends RecipleCommandBuilders> = RecipleHaltedCommandData<Builder>["reason"];
+export type RecipleHaltedCommandData<Builder extends RecipleCommandBuilders> = CommandErrorData<Builder>|CommandCooldownData<Builder>|CommandInvalidArguments<Builder>|CommandMissingArguments<Builder>|CommandMissingMemberPermissions<Builder>|CommandMissingBotPermissions<Builder>;
 
-export interface CommandHaltFunctionParams {
-    'ERROR': [err: any];
-    'COOLDOWN': [duration: number, cooldown: number];
-    'INVALID_ARGUMENTS': [arguments: MessageCommandOptionManager];
-    'MISSING_ARGUMENTS': [arguments: MessageCommandOptionManager];
-    'MISSING_MEMBER_PERMISSIONS': [];
-    'MISSING_BOT_PERMISSIONS': [];
-}
+export interface CommandHaltBaseData<Builder extends RecipleCommandBuilders> { executeData: Builder extends InteractionCommandBuilder ? RecipleInteractionCommandExecuteData : RecipleMessageCommandExecuteData };
+export interface CommandErrorData<Builder extends RecipleCommandBuilders> extends CommandHaltBaseData<Builder> { reason: 'ERROR'; error: any; }
+export interface CommandCooldownData<Builder extends RecipleCommandBuilders> extends CommandHaltBaseData<Builder>,CooledDownUser { reason: 'COOLDOWN'; }
+export interface CommandInvalidArguments<Builder extends RecipleCommandBuilders> extends CommandHaltBaseData<Builder> { reason: 'INVALID_ARGUMENTS'; invalidArguments: MessageCommandOptionManager; }
+export interface CommandMissingArguments<Builder extends RecipleCommandBuilders> extends CommandHaltBaseData<Builder> { reason: 'MISSING_ARGUMENTS'; missingArguments: MessageCommandOptionManager; }
+export interface CommandMissingMemberPermissions<Builder extends RecipleCommandBuilders> extends CommandHaltBaseData<Builder> { reason: 'MISSING_MEMBER_PERMISSIONS'; }
+export interface CommandMissingBotPermissions<Builder extends RecipleCommandBuilders> extends CommandHaltBaseData<Builder> { reason: 'MISSING_BOT_PERMISSIONS'; }
 
 export interface RecipleClientOptions extends ClientOptions { config?: Config; }
 
@@ -231,14 +230,14 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
 
             if (command.validateOptions) {
                 if (commandOptions.some(o => o.invalid)) {
-                    if (!command?.halt || !command.halt(executeData, 'INVALID_ARGUMENTS', executeData.options)) {
+                    if (!command?.halt || !await command.halt({ executeData, reason: 'INVALID_ARGUMENTS', invalidArguments: new MessageCommandOptionManager(executeData.options.filter(o => o.invalid)) })) {
                         message.reply(this.getMessage('invalidArguments', 'Invalid argument(s) given.')).catch(er => this.replyError(er));
                         return;
                     }
                 }
 
                 if (commandOptions.some(o => o.missing)) {
-                    if (!command.halt || !command.halt(executeData, 'MISSING_ARGUMENTS', executeData.options)) {
+                    if (!command.halt || !await command.halt({ executeData, reason: 'MISSING_ARGUMENTS', missingArguments: new MessageCommandOptionManager(executeData.options.filter(o => o.missing)) })) {
                         message.reply(this.getMessage('notEnoughArguments', 'Not enough arguments.')).catch(er => this.replyError(er));
                         return;
                     }
@@ -246,43 +245,38 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
             }
 
             if (message.guild && !botHasExecutePermissions(message.guild, command.requiredBotPermissions)) {
-                if (!command.halt || !command.halt(executeData, 'MISSING_BOT_PERMISSIONS')) {
+                if (!command.halt || !await command.halt({ executeData, reason: 'MISSING_BOT_PERMISSIONS' })) {
                     message.reply(this.getMessage('insufficientBotPerms', 'Insufficient bot permissions.')).catch(er => this.replyError(er));
                     return;
                 }
             }
 
-            if (command.cooldown && !this.commandCooldowns.isCooledDown({
+            const userCooldown: Omit<CooledDownUser, "expireTime"> = {
                 user: message.author,
                 command: command.name,
                 channel: message.channel,
                 guild: message.guild,
                 type: 'MESSAGE_COMMAND'
-            })) {
-                this.commandCooldowns.add({
-                    user: message.author,
-                    channel: message.channel,
-                    command: command.name,
-                    type: 'MESSAGE_COMMAND',
-                    guild: message.guild,
-                    expireTime: Date.now() + command.cooldown
-                });
+            };
+
+            if (command.cooldown && !this.commandCooldowns.isCooledDown(userCooldown)) {
+                this.commandCooldowns.add({ ...userCooldown, expireTime: Date.now() + command.cooldown });
             } else if (command.cooldown) {
-                if (!command.halt || !command.halt(executeData, 'COOLDOWN')) {
+                if (!command.halt || !await command.halt({ executeData, reason: 'COOLDOWN', ...this.commandCooldowns.get(userCooldown)! })) {
                     await message.reply(this.getMessage('cooldown', 'You cannot execute this command right now due to the cooldown.')).catch(er => this.replyError(er));
                 }
             }
 
             try {
-                await Promise.resolve(command.execute(executeData)).catch(err => command.halt ? command.halt(executeData, 'ERROR', err) : this._commandExecuteError(err, executeData));
+                await Promise.resolve(command.execute(executeData)).catch(async err => !command.halt || !await command.halt({ executeData, reason: 'ERROR', error: err }) ? this._commandExecuteError(err, executeData) : void 0);
                 this.emit('recipleMessageCommandCreate', executeData);
                 return executeData;
             } catch (err) {
-                if (!command.halt || !command.halt(executeData, 'ERROR', err)) {
+                if (!command.halt || !await command.halt({ executeData, reason: 'ERROR', error: err })) {
                     this._commandExecuteError(err as Error, executeData);
                 }
             }
-        } else if (!command.halt || !command.halt(executeData, 'MISSING_MEMBER_PERMISSIONS')) {
+        } else if (!command.halt || !await command.halt({ executeData, reason: 'MISSING_MEMBER_PERMISSIONS' })) {
             message.reply(this.getMessage('noPermissions', 'You do not have permission to use this command.')).catch(er => this.replyError(er));
         }
     }
@@ -307,44 +301,39 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
             if (!command || isIgnoredChannel(interaction.channelId, this.config.ignoredChannels)) return;
 
             if (interaction.guild && botHasExecutePermissions(interaction.guild, command.requiredBotPermissions)) {
-                if (!command.halt || !command.halt(executeData, 'MISSING_BOT_PERMISSIONS')) {
+                if (!command.halt || !await command.halt({ executeData, reason: 'MISSING_BOT_PERMISSIONS' })) {
                     await interaction.reply(this.getMessage('insufficientBotPerms', 'Insufficient bot permissions.')).catch(er => this.replyError(er));
                     return;
                 }
             }
 
-            if (command.cooldown && !this.commandCooldowns.isCooledDown({
+            const userCooldown: Omit<CooledDownUser, 'expireTime'> = {
                 user: interaction.user,
                 command: command.name,
                 channel: interaction.channel ?? undefined,
                 guild: interaction.guild,
                 type: 'INTERACTION_COMMAND'
-            })) {
-                this.commandCooldowns.add({
-                    user: interaction.user,
-                    channel: interaction.channel ?? undefined,
-                    command: interaction.commandName,
-                    type: 'INTERACTION_COMMAND',
-                    guild: interaction.guild,
-                    expireTime: Date.now() + command.cooldown
-                });
+            };
+
+            if (command.cooldown && !this.commandCooldowns.isCooledDown(userCooldown)) {
+                this.commandCooldowns.add({ ...userCooldown, expireTime: Date.now() + command.cooldown });
             } else if (command.cooldown) {
-                if (!command.halt || !command.halt(executeData, 'COOLDOWN')) {
+                if (!command.halt || !await command.halt({ executeData, reason: 'COOLDOWN', ...this.commandCooldowns.get(userCooldown)! })) {
                     await interaction.reply(this.getMessage('cooldown', 'You cannot execute this command right now due to the cooldown.')).catch(er => this.replyError(er));
                     return;
                 }
             }
 
             try {
-                await Promise.resolve(command.execute(executeData)).catch(err => command.halt ? command.halt(executeData, 'ERROR', err) : this._commandExecuteError(err, executeData));
+                await Promise.resolve(command.execute(executeData)).catch(async err => !command.halt || !await command.halt({ executeData, reason: 'ERROR', error: err }) ? this._commandExecuteError(err, executeData) : void 0);
                 this.emit('recipleInteractionCommandCreate', executeData);
                 return executeData;
             } catch (err) {
-                if (!command.halt || !command.halt(executeData, 'ERROR', err)) {
+                if (!command.halt || !await command.halt({ executeData, reason: 'ERROR', error: err })) {
                     this._commandExecuteError(err as Error, executeData);
                 }
             }
-        } else if (!command.halt || !command.halt(executeData, 'MISSING_MEMBER_PERMISSIONS')) {
+        } else if (!command.halt || !await command.halt({ executeData, reason: 'MISSING_MEMBER_PERMISSIONS' })) {
             await interaction.reply(this.getMessage('noPermissions', 'You do not have permission to use this command.')).catch(er => this.replyError(er));
         }
     }
