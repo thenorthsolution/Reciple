@@ -1,4 +1,4 @@
-import { InteractionCommandBuilder, RecipleInteractionCommandExecuteData } from './classes/builders/InteractionCommandBuilder';
+import { RecipleInteractionCommandBuilder, RecipleInteractionCommandExecuteData } from './classes/builders/InteractionCommandBuilder';
 import { MessageCommandBuilder, RecipleMessageCommandExecuteData } from './classes/builders/MessageCommandBuilder';
 import { existsSync, mkdirSync, readdirSync } from 'fs';
 import { version, isSupportedVersion } from './version';
@@ -7,7 +7,7 @@ import wildcard from 'wildcard-match';
 import path from 'path';
 
 
-export type RecipleCommandBuilders = MessageCommandBuilder|InteractionCommandBuilder;
+export type RecipleCommandBuilders = MessageCommandBuilder|RecipleInteractionCommandBuilder;
 export type RecipleCommandBuildersExecuteData = RecipleInteractionCommandExecuteData|RecipleMessageCommandExecuteData;
 export type LoadedModules = { commands: RecipleCommandBuilders[], modules: RecipleModule[] };
 
