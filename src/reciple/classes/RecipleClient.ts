@@ -232,23 +232,23 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
                 if (commandOptions.some(o => o.invalid)) {
                     if (!command?.halt || !await command.halt({ executeData, reason: 'INVALID_ARGUMENTS', invalidArguments: new MessageCommandOptionManager(executeData.options.filter(o => o.invalid)) })) {
                         message.reply(this.getMessage('invalidArguments', 'Invalid argument(s) given.')).catch(er => this.replyError(er));
-                        return;
                     }
+                    return;
                 }
 
                 if (commandOptions.some(o => o.missing)) {
                     if (!command.halt || !await command.halt({ executeData, reason: 'MISSING_ARGUMENTS', missingArguments: new MessageCommandOptionManager(executeData.options.filter(o => o.missing)) })) {
                         message.reply(this.getMessage('notEnoughArguments', 'Not enough arguments.')).catch(er => this.replyError(er));
-                        return;
                     }
+                    return;
                 }
             }
 
             if (message.guild && !botHasExecutePermissions(message.guild, command.requiredBotPermissions)) {
                 if (!command.halt || !await command.halt({ executeData, reason: 'MISSING_BOT_PERMISSIONS' })) {
                     message.reply(this.getMessage('insufficientBotPerms', 'Insufficient bot permissions.')).catch(er => this.replyError(er));
-                    return;
                 }
+                return;
             }
 
             const userCooldown: Omit<CooledDownUser, "expireTime"> = {
@@ -265,6 +265,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
                 if (!command.halt || !await command.halt({ executeData, reason: 'COOLDOWN', ...this.commandCooldowns.get(userCooldown)! })) {
                     await message.reply(this.getMessage('cooldown', 'You cannot execute this command right now due to the cooldown.')).catch(er => this.replyError(er));
                 }
+                return;
             }
 
             try {
@@ -292,7 +293,6 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
 
         const executeData: RecipleInteractionCommandExecuteData = {
             interaction: interaction,
-            command: command,
             builder: command,
             client: this
         };
@@ -303,8 +303,8 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
             if (interaction.guild && botHasExecutePermissions(interaction.guild, command.requiredBotPermissions)) {
                 if (!command.halt || !await command.halt({ executeData, reason: 'MISSING_BOT_PERMISSIONS' })) {
                     await interaction.reply(this.getMessage('insufficientBotPerms', 'Insufficient bot permissions.')).catch(er => this.replyError(er));
-                    return;
                 }
+                return;
             }
 
             const userCooldown: Omit<CooledDownUser, 'expireTime'> = {
@@ -320,8 +320,8 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
             } else if (command.cooldown) {
                 if (!command.halt || !await command.halt({ executeData, reason: 'COOLDOWN', ...this.commandCooldowns.get(userCooldown)! })) {
                     await interaction.reply(this.getMessage('cooldown', 'You cannot execute this command right now due to the cooldown.')).catch(er => this.replyError(er));
-                    return;
                 }
+                return;
             }
 
             try {

@@ -4,7 +4,6 @@ import { SlashCommandBuilder } from '@discordjs/builders';
 
 export interface RecipleInteractionCommandExecuteData {
     interaction: CommandInteraction;
-    command: InteractionCommandBuilder;
     builder: InteractionCommandBuilder;
     client: RecipleClient<true>;
 }
