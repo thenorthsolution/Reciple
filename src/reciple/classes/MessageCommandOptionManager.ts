@@ -1,6 +1,6 @@
 import { MessageCommandValidatedOption } from './builders/MessageCommandBuilder';
 
-export class MessageCommandOptions extends Array<MessageCommandValidatedOption> {
+export class MessageCommandOptionManager extends Array<MessageCommandValidatedOption> {
     constructor(options: MessageCommandValidatedOption[]) {
         super();
         this.push(...options);

@@ -2,21 +2,21 @@ import { CommandInteraction, PermissionResolvable } from 'discord.js';
 import { CommandHaltFunction, RecipleClient } from '../RecipleClient';
 import { SlashCommandBuilder } from '@discordjs/builders';
 
-export interface RecipleInteractionCommandExecute {
+export interface RecipleInteractionCommandExecuteData {
     interaction: CommandInteraction;
-    command: InteractionCommandBuilder;
-    builder: InteractionCommandBuilder;
+    command: RecipleInteractionCommandBuilder;
+    builder: RecipleInteractionCommandBuilder;
     client: RecipleClient<true>;
 }
 
-export class InteractionCommandBuilder extends SlashCommandBuilder {
+export class RecipleInteractionCommandBuilder extends SlashCommandBuilder {
     public readonly builder = 'INTERACTION_COMMAND';
     public cooldown: number = 0;
     public requiredBotPermissions: PermissionResolvable[] = [];
     public RequiredUserPermissions: PermissionResolvable[] = [];
     public allowExecuteInDM: boolean = true;
-    public halt?: CommandHaltFunction<RecipleInteractionCommandExecute>;
-    public execute: (options: RecipleInteractionCommandExecute) => void = () => { /* Execute */ };
+    public halt?: CommandHaltFunction<RecipleInteractionCommandExecuteData>;
+    public execute: (options: RecipleInteractionCommandExecuteData) => void = () => { /* Execute */ };
 
     /**
      * Sets the execute cooldown for this command.
@@ -38,7 +38,7 @@ export class InteractionCommandBuilder extends SlashCommandBuilder {
     /**
      * Function when the command is interupted before execution 
      */
-    public setHalt(halt?: CommandHaltFunction<RecipleInteractionCommandExecute>): InteractionCommandBuilder {
+    public setHalt(halt?: CommandHaltFunction<RecipleInteractionCommandExecuteData>): InteractionCommandBuilder {
         this.halt = halt ? halt : undefined;
         return this;
     }
@@ -46,7 +46,7 @@ export class InteractionCommandBuilder extends SlashCommandBuilder {
     /**
      * Function when the command is executed 
      */
-    public setExecute(execute: (options: RecipleInteractionCommandExecute) => void): InteractionCommandBuilder {
+    public setExecute(execute: (executeData: RecipleInteractionCommandExecuteData) => void): InteractionCommandBuilder {
         if (!execute || typeof execute !== 'function') throw new Error('execute must be a function.');
         this.execute = execute;
         return this;

@@ -1,11 +1,11 @@
-import { recipleCommandBuilders } from './modules';
+import { RecipleCommandBuilders } from './modules';
 import { Config } from './classes/RecipleConfig';
 import { Guild, PermissionResolvable, Permissions } from 'discord.js';
 
 /**
  * Check if the user has permissions to execute the given command name
  */
-export function userHasCommandPermissions(commandName: string, memberPermissions?: Permissions, configConmmandPermissions?: Config['permissions']['messageCommands']|Config['permissions']['interactionCommands'], builder?: recipleCommandBuilders): boolean {
+export function userHasCommandPermissions(commandName: string, memberPermissions?: Permissions, configConmmandPermissions?: Config['permissions']['messageCommands']|Config['permissions']['interactionCommands'], builder?: RecipleCommandBuilders): boolean {
     if (!configConmmandPermissions?.enabled) return true;
 
     const command = configConmmandPermissions.commands.find(c => c.command.toLowerCase() === commandName.toLowerCase()) ?? { permissions: builder?.RequiredUserPermissions ?? [] };

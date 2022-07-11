@@ -22,10 +22,10 @@
   "scripts": {
     "clean": "rm -rf bin",
     "build": "yarn run clean && npx tsc && yarn run reinstall",
-    "build:publish": "yarn run build && yarn publish",
+    "build:publish": "yarn run build && yarn publish && yarn run publish:docs",
     "build:pub-prerelease": "yarn run build && yarn publish --tag beta",
     "reinstall": "npm un reciple -g && npm i ./ -g",
-    "postpublish": "yarn run build:docs && yarn run update:docs",
+    "publish:docs": "yarn run build:docs && yarn run update:docs",
     "test": "yarn run build && yarn run test:start",
     "test:start": "cd test && npx reciple",
     "build:docs": "cd docs && yarn run build",

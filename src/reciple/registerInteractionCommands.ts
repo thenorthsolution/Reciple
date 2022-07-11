@@ -11,7 +11,7 @@ import {
 } from '@discordjs/builders';
 
 
-export type interactionCommandBuilders = InteractionCommandBuilder|ContextMenuCommandBuilder|
+export type InteractionBuilder = InteractionCommandBuilder|ContextMenuCommandBuilder|
     SlashCommandBuilder|SlashCommandSubcommandBuilder|
     SlashCommandOptionsOnlyBuilder|SlashCommandSubcommandGroupBuilder|
     SlashCommandSubcommandsOnlyBuilder;
@@ -19,7 +19,7 @@ export type interactionCommandBuilders = InteractionCommandBuilder|ContextMenuCo
 /**
  * Register interaction commands 
  */
-export async function registerInteractionCommands(client: RecipleClient, cmds?: (interactionCommandBuilders|ApplicationCommandDataResolvable)[], overwriteGuilds?: string|string[]): Promise<void> {
+export async function registerInteractionCommands(client: RecipleClient, cmds?: (InteractionBuilder|ApplicationCommandDataResolvable)[], overwriteGuilds?: string|string[]): Promise<void> {
     const commands = Object.values(cmds ?? client.commands.INTERACTION_COMMANDS).map(c => {
         if (typeof (c as InteractionCommandBuilder).toJSON == 'undefined') return c as ApplicationCommandDataResolvable;
         

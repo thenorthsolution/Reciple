@@ -1,6 +1,6 @@
 export * from './reciple/classes/RecipleClient';
 export * from './reciple/classes/RecipleConfig';
-export * from './reciple/classes/MessageCommandOptions';
+export * from './reciple/classes/MessageCommandOptionManager';
 export * from './reciple/classes/builders/InteractionCommandBuilder';
 export * from './reciple/classes/builders/MessageCommandBuilder';
 export * from './reciple/classes/builders/MessageCommandOptionBuilder';

@@ -1,18 +1,18 @@
 import { Guild, TextBasedChannel, User } from 'discord.js';
-import { recipleCommandBuilders } from '../modules';
+import { RecipleCommandBuilders } from '../modules';
 
 export interface CooledDownUser {
     user: User;
     command: string;
-    type: recipleCommandBuilders["builder"];
+    type: RecipleCommandBuilders["builder"];
     guild?: Guild|null;
     channel?: TextBasedChannel;
     expireTime: number;
 }
 
-export class CommandCooldowns extends Array<CooledDownUser> {
+export class CommandCooldownManager extends Array<CooledDownUser> {
     /**
-     * Alias for `CommandCooldowns#push()`
+     * Alias for `CommandCooldownManager#push()`
      */
     public add(...options: CooledDownUser[]) { 
         return this.push(...options);
@@ -24,7 +24,7 @@ export class CommandCooldowns extends Array<CooledDownUser> {
         let i = 0;
 
         for (const index in this) {
-            if (!CommandCooldowns.checkOptions(options, this[index])) continue;
+            if (!CommandCooldownManager.checkOptions(options, this[index])) continue;
             if (options.expireTime && this[index].expireTime > Date.now()) continue;
             if (limit && i >= limit) continue;
 
@@ -44,14 +44,14 @@ export class CommandCooldowns extends Array<CooledDownUser> {
 
     public clean(options?: Partial<Omit<CooledDownUser, 'expireTime'>>): void {
         for (const index in this) {
-            if (options && !CommandCooldowns.checkOptions(options, this[index])) return;
+            if (options && !CommandCooldownManager.checkOptions(options, this[index])) return;
             if (this[index].expireTime > Date.now()) return;
             this.slice(Number(index));
         }
     }
 
     public get(options: Partial<Omit<CooledDownUser, 'expireTime'>>): CooledDownUser|undefined {
-        return this.find(data => CommandCooldowns.checkOptions(options, data));
+        return this.find(data => CommandCooldownManager.checkOptions(options, data));
     }
 
     public static checkOptions(options: Partial<Omit<CooledDownUser, 'expireTime'>>, data: CooledDownUser): boolean {

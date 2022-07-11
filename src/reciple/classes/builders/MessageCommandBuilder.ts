@@ -1,13 +1,13 @@
 import { MessageCommandOptionBuilder } from './MessageCommandOptionBuilder';
 import { CommandHaltFunction, RecipleClient } from '../RecipleClient';
-import { MessageCommandOptions } from '../MessageCommandOptions';
+import { MessageCommandOptionManager } from '../MessageCommandOptionManager';
 import { Message, PermissionResolvable } from 'discord.js';
 import { Command as CommandMessage } from 'fallout-utility';
 
 
-export interface RecipleMessageCommandExecute {
+export interface RecipleMessageCommandExecuteData {
     message: Message;
-    options: MessageCommandOptions;
+    options: MessageCommandOptionManager;
     command: CommandMessage;
     builder: MessageCommandBuilder;
     client: RecipleClient<true>;
@@ -33,8 +33,8 @@ export class MessageCommandBuilder {
     public RequiredUserPermissions: PermissionResolvable[] = [];
     public allowExecuteInDM: boolean = true;
     public allowExecuteByBots: boolean = false;
-    public halt?: CommandHaltFunction<RecipleMessageCommandExecute>;
-    public execute: (options: RecipleMessageCommandExecute) => void = () => { /* Execute */ };
+    public halt?: CommandHaltFunction<RecipleMessageCommandExecuteData>;
+    public execute: (options: RecipleMessageCommandExecuteData) => void = () => { /* Execute */ };
 
     /**
      * Sets the command name
@@ -112,7 +112,7 @@ export class MessageCommandBuilder {
     /**
      * Function when the command is interupted before execution 
      */
-    public setHalt(halt?: CommandHaltFunction<RecipleMessageCommandExecute>): MessageCommandBuilder {
+    public setHalt(halt?: CommandHaltFunction<RecipleMessageCommandExecuteData>): MessageCommandBuilder {
         this.halt = halt ? halt : undefined;
         return this;
     }
@@ -120,7 +120,7 @@ export class MessageCommandBuilder {
     /**
      * Function when the command is executed
      */
-    public setExecute(execute: (options: RecipleMessageCommandExecute) => void): MessageCommandBuilder {
+    public setExecute(execute: (executeData: RecipleMessageCommandExecuteData) => void): MessageCommandBuilder {
         if (!execute || typeof execute !== 'function') throw new TypeError('execute must be a function.');
         this.execute = execute;
         return this;
