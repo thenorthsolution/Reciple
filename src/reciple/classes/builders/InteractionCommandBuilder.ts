@@ -22,7 +22,7 @@ export class RecipleInteractionCommandBuilder extends SlashCommandBuilder {
      * Sets the execute cooldown for this command.
      * - `0` means no cooldown
      */
-    public setCooldown(cooldown: number): InteractionCommandBuilder {
+    public setCooldown(cooldown: number): RecipleInteractionCommandBuilder {
         this.cooldown = cooldown;
         return this;
     }
@@ -30,7 +30,7 @@ export class RecipleInteractionCommandBuilder extends SlashCommandBuilder {
     /**
      * Set required permissions to execute the command
      */
-    public setRequiredMemberPermissions(...permissions: PermissionResolvable[]): InteractionCommandBuilder {
+    public setRequiredMemberPermissions(...permissions: PermissionResolvable[]): RecipleInteractionCommandBuilder {
         this.RequiredUserPermissions = permissions;
         return this;
     }
@@ -38,7 +38,7 @@ export class RecipleInteractionCommandBuilder extends SlashCommandBuilder {
     /**
      * Function when the command is interupted before execution 
      */
-    public setHalt(halt?: CommandHaltFunction<RecipleInteractionCommandExecuteData>): InteractionCommandBuilder {
+    public setHalt(halt?: CommandHaltFunction<RecipleInteractionCommandExecuteData>): RecipleInteractionCommandBuilder {
         this.halt = halt ? halt : undefined;
         return this;
     }
@@ -46,7 +46,7 @@ export class RecipleInteractionCommandBuilder extends SlashCommandBuilder {
     /**
      * Function when the command is executed 
      */
-    public setExecute(execute: (executeData: RecipleInteractionCommandExecuteData) => void): InteractionCommandBuilder {
+    public setExecute(execute: (executeData: RecipleInteractionCommandExecuteData) => void): RecipleInteractionCommandBuilder {
         if (!execute || typeof execute !== 'function') throw new Error('execute must be a function.');
         this.execute = execute;
         return this;
