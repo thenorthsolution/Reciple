@@ -4,12 +4,12 @@ import { SlashCommandBuilder } from '@discordjs/builders';
 
 export interface RecipleInteractionCommandExecuteData {
     interaction: CommandInteraction;
-    command: RecipleInteractionCommandBuilder;
-    builder: RecipleInteractionCommandBuilder;
+    command: InteractionCommandBuilder;
+    builder: InteractionCommandBuilder;
     client: RecipleClient<true>;
 }
 
-export class RecipleInteractionCommandBuilder extends SlashCommandBuilder {
+export class InteractionCommandBuilder extends SlashCommandBuilder {
     public readonly builder = 'INTERACTION_COMMAND';
     public cooldown: number = 0;
     public requiredBotPermissions: PermissionResolvable[] = [];
@@ -22,7 +22,7 @@ export class RecipleInteractionCommandBuilder extends SlashCommandBuilder {
      * Sets the execute cooldown for this command.
      * - `0` means no cooldown
      */
-    public setCooldown(cooldown: number): RecipleInteractionCommandBuilder {
+    public setCooldown(cooldown: number): InteractionCommandBuilder {
         this.cooldown = cooldown;
         return this;
     }
@@ -30,7 +30,7 @@ export class RecipleInteractionCommandBuilder extends SlashCommandBuilder {
     /**
      * Set required permissions to execute the command
      */
-    public setRequiredMemberPermissions(...permissions: PermissionResolvable[]): RecipleInteractionCommandBuilder {
+    public setRequiredMemberPermissions(...permissions: PermissionResolvable[]): InteractionCommandBuilder {
         this.RequiredUserPermissions = permissions;
         return this;
     }
@@ -38,7 +38,7 @@ export class RecipleInteractionCommandBuilder extends SlashCommandBuilder {
     /**
      * Function when the command is interupted before execution 
      */
-    public setHalt(halt?: CommandHaltFunction<RecipleInteractionCommandExecuteData>): RecipleInteractionCommandBuilder {
+    public setHalt(halt?: CommandHaltFunction<RecipleInteractionCommandExecuteData>): InteractionCommandBuilder {
         this.halt = halt ? halt : undefined;
         return this;
     }
@@ -46,7 +46,7 @@ export class RecipleInteractionCommandBuilder extends SlashCommandBuilder {
     /**
      * Function when the command is executed 
      */
-    public setExecute(execute: (executeData: RecipleInteractionCommandExecuteData) => void): RecipleInteractionCommandBuilder {
+    public setExecute(execute: (executeData: RecipleInteractionCommandExecuteData) => void): InteractionCommandBuilder {
         if (!execute || typeof execute !== 'function') throw new Error('execute must be a function.');
         this.execute = execute;
         return this;

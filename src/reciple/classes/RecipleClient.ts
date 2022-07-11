@@ -5,7 +5,7 @@
 // and accidentally made it unreadable for humans. So, if you're
 // trying to understand this code, please, consider being a dog first.
 
-import { RecipleInteractionCommandBuilder, RecipleInteractionCommandExecuteData } from './builders/InteractionCommandBuilder';
+import { InteractionCommandBuilder, RecipleInteractionCommandExecuteData } from './builders/InteractionCommandBuilder';
 import { InteractionBuilder, registerInteractionCommands } from '../registerInteractionCommands';
 import { MessageCommandBuilder, RecipleMessageCommandExecuteData } from './builders/MessageCommandBuilder';
 import { MessageCommandOptionManager } from './MessageCommandOptionManager';
@@ -52,7 +52,7 @@ export interface RecipleClientOptions extends ClientOptions { config?: Config; }
 
 export interface RecipleClientCommands {
     MESSAGE_COMMANDS: { [commandName: string]: MessageCommandBuilder };
-    INTERACTION_COMMANDS: { [commandName: string]: RecipleInteractionCommandBuilder };
+    INTERACTION_COMMANDS: { [commandName: string]: InteractionCommandBuilder };
 }
 
 export interface RecipleClientEvents extends ClientEvents {
@@ -360,7 +360,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
      * Get command builder by name or alias if it's a message command 
      */
     public findCommand(command: string, type: MessageCommandBuilder["builder"]): MessageCommandBuilder|undefined;
-    public findCommand(command: string, type: RecipleInteractionCommandBuilder["builder"]): RecipleInteractionCommandBuilder|undefined;
+    public findCommand(command: string, type: InteractionCommandBuilder["builder"]): InteractionCommandBuilder|undefined;
     public findCommand(command: string, type: RecipleCommandBuilders["builder"]): RecipleCommandBuilders|undefined {
         switch (type) {
             case 'INTERACTION_COMMAND':

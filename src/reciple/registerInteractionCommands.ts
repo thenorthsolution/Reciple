@@ -1,4 +1,4 @@
-import { RecipleInteractionCommandBuilder } from './classes/builders/InteractionCommandBuilder';
+import { InteractionCommandBuilder } from './classes/builders/InteractionCommandBuilder';
 import { ApplicationCommandDataResolvable, PermissionString } from 'discord.js';
 import { RecipleClient } from './classes/RecipleClient';
 import {
@@ -11,7 +11,7 @@ import {
 } from '@discordjs/builders';
 
 
-export type InteractionBuilder = RecipleInteractionCommandBuilder|ContextMenuCommandBuilder|
+export type InteractionBuilder = InteractionCommandBuilder|ContextMenuCommandBuilder|
     SlashCommandBuilder|SlashCommandSubcommandBuilder|
     SlashCommandOptionsOnlyBuilder|SlashCommandSubcommandGroupBuilder|
     SlashCommandSubcommandsOnlyBuilder;
@@ -21,9 +21,9 @@ export type InteractionBuilder = RecipleInteractionCommandBuilder|ContextMenuCom
  */
 export async function registerInteractionCommands(client: RecipleClient, cmds?: (InteractionBuilder|ApplicationCommandDataResolvable)[], overwriteGuilds?: string|string[]): Promise<void> {
     const commands = Object.values(cmds ?? client.commands.INTERACTION_COMMANDS).map(c => {
-        if (typeof (c as RecipleInteractionCommandBuilder).toJSON == 'undefined') return c as ApplicationCommandDataResolvable;
+        if (typeof (c as InteractionCommandBuilder).toJSON == 'undefined') return c as ApplicationCommandDataResolvable;
         
-        const cmd = c as RecipleInteractionCommandBuilder;
+        const cmd = c as InteractionCommandBuilder;
 
         if (cmd?.builder === 'INTERACTION_COMMAND' && client.config.commands.interactionCommand.setRequiredPermissions) {
             const permissions = (
@@ -39,7 +39,7 @@ export async function registerInteractionCommands(client: RecipleClient, cmds?: 
             return cmd.toJSON() as ApplicationCommandDataResolvable;
         }
 
-        return (c as RecipleInteractionCommandBuilder).toJSON() as ApplicationCommandDataResolvable;
+        return (c as InteractionCommandBuilder).toJSON() as ApplicationCommandDataResolvable;
     }) ?? [];
 
     const configGuilds = overwriteGuilds ?? client.config.commands.interactionCommand.guilds;
