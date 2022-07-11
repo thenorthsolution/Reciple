@@ -23,12 +23,12 @@ export class CommandCooldowns extends Array<CooledDownUser> {
 
         let i = 0;
 
-        for(const key in this) {
-            if (!CommandCooldowns.checkOptions(options, this[key])) continue;
-            if (options.expireTime && this[key].expireTime < Date.now()) continue;
+        for (const index in this) {
+            if (!CommandCooldowns.checkOptions(options, this[index])) continue;
+            if (options.expireTime && this[index].expireTime > Date.now()) continue;
             if (limit && i >= limit) continue;
 
-            this.splice(Number(key));
+            this.splice(Number(index));
             i++;
         }
     }
@@ -36,18 +36,17 @@ export class CommandCooldowns extends Array<CooledDownUser> {
     public isCooledDown(options: Partial<Omit<CooledDownUser, 'expireTime'>>): boolean {
         const data = this.get(options);
         if (!data) return false;
+
+        this.remove({ ...data, channel: undefined, guild: undefined, type: undefined, command: undefined });
         if (data.expireTime < Date.now()) return false;
-        
-        this.remove({ ...data, channel: undefined, guild: undefined });
         return true;
     }
 
     public clean(options?: Partial<Omit<CooledDownUser, 'expireTime'>>): void {
-        for (const key in this) {
-            const data = this[key];
-
-            if (options && !CommandCooldowns.checkOptions(options, data)) continue;
-            if (data.expireTime > Date.now()) this.slice(Number(key));
+        for (const index in this) {
+            if (options && !CommandCooldowns.checkOptions(options, this[index])) return;
+            if (this[index].expireTime > Date.now()) return;
+            this.slice(Number(index));
         }
     }
 
