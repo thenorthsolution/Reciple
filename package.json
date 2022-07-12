@@ -1,9 +1,12 @@
 {
   "name": "reciple",
-  "version": "2.0.0-pre.1",
-  "description": "A Discord.js bot",
+  "version": "2.0.0",
+  "description": "Handler for Discord.js",
   "author": "FalloutStudios",
-  "homepage": "https://falloutstudios.github.io/Reciple",
+  "homepage": "https://reciple.js.org",
+  "bugs": {
+    "url": "https://github.com/FalloutStudios/reciple/issues"
+  },
   "license": "GPL-3.0",
   "main": "bin/index.js",
   "bin": {
