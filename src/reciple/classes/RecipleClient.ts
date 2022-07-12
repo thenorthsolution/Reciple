@@ -1,9 +1,4 @@
-// Dear precious programmer,
-// If you're trying to understand this code, please, consider that
-// at the time of writing this code, It was written the way humans
-// can understand it but I transformed into a dog at Apr 12th 2022
-// and accidentally made it unreadable for humans. So, if you're
-// trying to understand this code, please, consider being a dog first.
+// Not cool code
 
 import { InteractionCommandBuilder, RecipleInteractionCommandExecuteData } from './builders/InteractionCommandBuilder';
 import { InteractionBuilder, registerInteractionCommands } from '../registerInteractionCommands';
