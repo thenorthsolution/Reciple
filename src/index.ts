@@ -4,6 +4,7 @@ export * from './reciple/classes/MessageCommandOptionManager';
 export * from './reciple/classes/builders/InteractionCommandBuilder';
 export * from './reciple/classes/builders/MessageCommandBuilder';
 export * from './reciple/classes/builders/MessageCommandOptionBuilder';
+export * from './reciple/types/builders';
 export * from './reciple/types/commands';
 export * from './reciple/permissions';
 export * from './reciple/flags';
