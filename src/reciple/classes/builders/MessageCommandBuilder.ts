@@ -1,8 +1,9 @@
 import { MessageCommandOptionBuilder } from './MessageCommandOptionBuilder';
-import { RecipleClient, RecipleHaltedCommandData } from '../RecipleClient';
 import { MessageCommandOptionManager } from '../MessageCommandOptionManager';
 import { Awaitable, Message, PermissionResolvable } from 'discord.js';
+import { RecipleHaltedCommandData } from '../../types/commands';
 import { Command as CommandMessage } from 'fallout-utility';
+import { RecipleClient } from '../RecipleClient';
 
 
 export interface RecipleMessageCommandExecuteData {
