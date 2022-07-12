@@ -8,6 +8,7 @@
 import { InteractionCommandBuilder, RecipleInteractionCommandExecute } from './builders/InteractionCommandBuilder';
 import { interactionCommandBuilders, registerInteractionCommands } from '../registerInteractionCommands';
 import { MessageCommandBuilder, RecipleMessageCommandExecute } from './builders/MessageCommandBuilder';
+import { MessageCommandOptions } from './builders/MessageCommandOptions';
 import { getCommand, Logger as ILogger } from 'fallout-utility';
 import { isIgnoredChannel } from '../isIgnoredChannel';
 import { hasPermissions } from '../hasPermissions';
@@ -23,7 +24,9 @@ import {
     ClientOptions,
     CommandInteraction,
     Interaction,
-    Message
+    Message,
+    PermissionFlags,
+    PermissionString
 } from 'discord.js';
 
 import {
@@ -33,8 +36,17 @@ import {
     RecipleModule,
     RecipleScript
 } from '../modules';
-import { MessageCommandOptions } from './builders/MessageCommandOptions';
 
+export type CommandHaltReason = 'ERROR'|'COOLDOWN'|'NO_PERMISSIONS'|'MISSING_ARGUMENTS'|'MISSING_MEMBER_PERMISSIONS'|'MISSING_BOT_PERMISSIONS';
+export type CommandHaltFunction = <E extends keyof CommandHaltEvents>(options: RecipleMessageCommandExecute, reason: E, ...args: CommandHaltEvents[E]) => void;
+
+export interface CommandHaltEvents {
+    'ERROR': [err: any];
+    'COOLDOWN': [duration: number, cooldown: number];
+    'MISSING_ARGUMENTS': [arguments: MessageCommandOptions],
+    'MISSING_MEMBER_PERMISSIONS': [],
+    'MISSING_BOT_PERMISSIONS': [],
+}
 
 export interface RecipleClientOptions extends ClientOptions {
     config?: Config;

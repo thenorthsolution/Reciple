@@ -1,7 +1,6 @@
-import { CommandInteraction, PermissionFlags, PermissionString } from 'discord.js';
+import { CommandInteraction, PermissionResolvable } from 'discord.js';
+import { CommandHaltEvents, CommandHaltFunction, RecipleClient } from '../RecipleClient';
 import { SlashCommandBuilder } from '@discordjs/builders';
-import { RecipleClient } from '../RecipleClient';
-
 
 export interface RecipleInteractionCommandExecute {
     interaction: CommandInteraction;
@@ -12,16 +11,36 @@ export interface RecipleInteractionCommandExecute {
 
 export class InteractionCommandBuilder extends SlashCommandBuilder {
     public readonly builder = 'INTERACTION_COMMAND';
-    public requiredPermissions: (PermissionFlags|PermissionString)[] = [];
+    public cooldown: number = 0;
+    public requiredBotPermissions: PermissionResolvable[] = [];
+    public RequiredUserPermissions: PermissionResolvable[] = [];
     public allowExecuteInDM: boolean = true;
+    public halt?: CommandHaltFunction;
     public execute: (options: RecipleInteractionCommandExecute) => void = () => { /* Execute */ };
-    
+
     /**
-     * Set required permissions before executing the command
+     * Set required permissions to execute the command
+     * @deprecated Use method `setRequiredMemberPermissions` instead
      */
-    public setRequiredPermissions(requiredPermissions: (keyof PermissionFlags)[]): InteractionCommandBuilder {
-        if (!requiredPermissions || !Array.isArray(requiredPermissions)) throw new Error('requiredPermissions must be an array.');
-        this.requiredPermissions = requiredPermissions;
+    public setRequiredPermissions(permissions: PermissionResolvable[]): InteractionCommandBuilder {
+        if (!permissions || !Array.isArray(permissions)) throw new TypeError('Invalid permissions parameter value.');
+        this.RequiredUserPermissions = permissions;
+        return this;
+    }
+
+    /**
+     * Set required permissions to execute the command
+     */
+    public setRequiredMemberPermissions(...permissions: PermissionResolvable[]): InteractionCommandBuilder {
+        this.RequiredUserPermissions = permissions;
+        return this;
+    }
+
+    /**
+     * Function when the command is interupted before execution 
+     */
+    public setHalt(halt?: CommandHaltFunction): InteractionCommandBuilder {
+        this.halt = halt ? halt : undefined;
         return this;
     }
 

@@ -30,9 +30,9 @@ export async function registerInteractionCommands(client: RecipleClient, cmds?: 
                     client.config.permissions?.interactionCommands.enabled ?
                     client.config.permissions?.interactionCommands.commands.find(cmd_ => cmd_.command.toLowerCase() === cmd.name.toLowerCase())?.permissions :
                     undefined
-                ) ?? cmd.requiredPermissions;
+                ) ?? cmd.requiredBotPermissions;
 
-            cmd.setRequiredPermissions(permissions as PermissionString[]);
+            cmd.setRequiredMemberPermissions(permissions as PermissionString[]);
             client.commands.INTERACTION_COMMANDS[cmd.name] = cmd;
 
             if (client.isClientLogsEnabled()) client.logger.debug(`Set required permissions for ${cmd.name}`);
