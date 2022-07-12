@@ -13,8 +13,10 @@ commands:
     enabled: true
     # reply when an error occured
     replyOnError: false
+    # Enable the use of command cooldowns
+    enableCooldown: false
     # Allow executing commands via aliases
-    allowCommandAlias: false
+    allowCommandAlias: true
     # command argument separator
     commandArgumentSeparator: ' '
   interactionCommand:
@@ -22,6 +24,8 @@ commands:
     enabled: true
     # reply when an error occured
     replyOnError: false
+    # Enable the use of command cooldowns
+    enableCooldown: false
     # register interaction commands on bot ready
     registerCommands: true
     # set required permissions for interaction commands

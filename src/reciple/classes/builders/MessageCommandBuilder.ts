@@ -1,13 +1,13 @@
 import { MessageCommandOptionBuilder } from './MessageCommandOptionBuilder';
-import { Message, PermissionFlags, PermissionResolvable, PermissionString } from 'discord.js';
+import { MessageCommandOptionManager } from '../MessageCommandOptionManager';
+import { Awaitable, Message, PermissionResolvable } from 'discord.js';
+import { RecipleHaltedCommandData } from '../../types/commands';
 import { Command as CommandMessage } from 'fallout-utility';
-import { CommandHaltEvents, CommandHaltFunction, RecipleClient } from '../RecipleClient';
-import { MessageCommandOptions } from './MessageCommandOptions';
+import { RecipleClient } from '../RecipleClient';
 
-
-export interface RecipleMessageCommandExecute {
+export interface RecipleMessageCommandExecuteData {
     message: Message;
-    options: MessageCommandOptions;
+    options: MessageCommandOptionManager;
     command: CommandMessage;
     builder: MessageCommandBuilder;
     client: RecipleClient<true>;
@@ -33,8 +33,8 @@ export class MessageCommandBuilder {
     public RequiredUserPermissions: PermissionResolvable[] = [];
     public allowExecuteInDM: boolean = true;
     public allowExecuteByBots: boolean = false;
-    public halt?: CommandHaltFunction;
-    public execute: (options: RecipleMessageCommandExecute) => void = () => { /* Execute */ };
+    public halt?: (haltData: RecipleHaltedCommandData<MessageCommandBuilder>) => Awaitable<boolean>;
+    public execute: (executeData: RecipleMessageCommandExecuteData) => void = () => { /* Execute */ };
 
     /**
      * Sets the command name
@@ -85,17 +85,6 @@ export class MessageCommandBuilder {
 
     /**
      * Set required user permissions to execute the command
-     * @deprecated Use method `setRequiredMemberPermissions` instead
-     * TODO: Remove this method soon.
-     */
-    public setRequiredPermissions(permissions: PermissionResolvable[]): MessageCommandBuilder {
-        if (!permissions || !Array.isArray(permissions)) throw new TypeError('Invalid permissions parameter value.');
-        this.RequiredUserPermissions = permissions;
-        return this;
-    }
-
-    /**
-     * Set required user permissions to execute the command
      */
     public setRequiredMemberPermissions(...permissions: PermissionResolvable[]): MessageCommandBuilder {
         this.RequiredUserPermissions = permissions;
@@ -123,7 +112,7 @@ export class MessageCommandBuilder {
     /**
      * Function when the command is interupted before execution 
      */
-    public setHalt(halt?: CommandHaltFunction): MessageCommandBuilder {
+    public setHalt(halt?: (haltData: RecipleHaltedCommandData<MessageCommandBuilder>) => Awaitable<boolean>): MessageCommandBuilder {
         this.halt = halt ? halt : undefined;
         return this;
     }
@@ -131,7 +120,7 @@ export class MessageCommandBuilder {
     /**
      * Function when the command is executed
      */
-    public setExecute(execute: (options: RecipleMessageCommandExecute) => void): MessageCommandBuilder {
+    public setExecute(execute: (executeData: RecipleMessageCommandExecuteData) => void): MessageCommandBuilder {
         if (!execute || typeof execute !== 'function') throw new TypeError('execute must be a function.');
         this.execute = execute;
         return this;

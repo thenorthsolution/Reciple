@@ -1,10 +1,10 @@
-import { CommandInteraction, PermissionResolvable } from 'discord.js';
-import { CommandHaltEvents, CommandHaltFunction, RecipleClient } from '../RecipleClient';
+import { Awaitable, CommandInteraction, PermissionResolvable } from 'discord.js';
+import { RecipleHaltedCommandData } from '../../types/commands';
 import { SlashCommandBuilder } from '@discordjs/builders';
+import { RecipleClient } from '../RecipleClient';
 
-export interface RecipleInteractionCommandExecute {
+export interface RecipleInteractionCommandExecuteData {
     interaction: CommandInteraction;
-    command: InteractionCommandBuilder;
     builder: InteractionCommandBuilder;
     client: RecipleClient<true>;
 }
@@ -15,16 +15,15 @@ export class InteractionCommandBuilder extends SlashCommandBuilder {
     public requiredBotPermissions: PermissionResolvable[] = [];
     public RequiredUserPermissions: PermissionResolvable[] = [];
     public allowExecuteInDM: boolean = true;
-    public halt?: CommandHaltFunction;
-    public execute: (options: RecipleInteractionCommandExecute) => void = () => { /* Execute */ };
+    public halt?: (haltData: RecipleHaltedCommandData<InteractionCommandBuilder>) => Awaitable<boolean>;
+    public execute: (executeData: RecipleInteractionCommandExecuteData) => Awaitable<void> = () => { /* Execute */ };
 
     /**
-     * Set required permissions to execute the command
-     * @deprecated Use method `setRequiredMemberPermissions` instead
+     * Sets the execute cooldown for this command.
+     * - `0` means no cooldown
      */
-    public setRequiredPermissions(permissions: PermissionResolvable[]): InteractionCommandBuilder {
-        if (!permissions || !Array.isArray(permissions)) throw new TypeError('Invalid permissions parameter value.');
-        this.RequiredUserPermissions = permissions;
+    public setCooldown(cooldown: number): InteractionCommandBuilder {
+        this.cooldown = cooldown;
         return this;
     }
 
@@ -39,7 +38,7 @@ export class InteractionCommandBuilder extends SlashCommandBuilder {
     /**
      * Function when the command is interupted before execution 
      */
-    public setHalt(halt?: CommandHaltFunction): InteractionCommandBuilder {
+    public setHalt(halt?: (haltData: RecipleHaltedCommandData<InteractionCommandBuilder>) => Awaitable<boolean>): InteractionCommandBuilder {
         this.halt = halt ? halt : undefined;
         return this;
     }
@@ -47,7 +46,7 @@ export class InteractionCommandBuilder extends SlashCommandBuilder {
     /**
      * Function when the command is executed 
      */
-    public setExecute(execute: (options: RecipleInteractionCommandExecute) => void): InteractionCommandBuilder {
+    public setExecute(execute: (executeData: RecipleInteractionCommandExecuteData) => void): InteractionCommandBuilder {
         if (!execute || typeof execute !== 'function') throw new Error('execute must be a function.');
         this.execute = execute;
         return this;
