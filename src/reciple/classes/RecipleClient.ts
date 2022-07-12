@@ -34,7 +34,7 @@ import {
 export type CommandHaltReason<Builder extends RecipleCommandBuilders> = RecipleHaltedCommandData<Builder>["reason"];
 export type RecipleHaltedCommandData<Builder extends RecipleCommandBuilders> = CommandErrorData<Builder>|CommandCooldownData<Builder>|CommandInvalidArguments<Builder>|CommandMissingArguments<Builder>|CommandMissingMemberPermissions<Builder>|CommandMissingBotPermissions<Builder>;
 
-export interface CommandHaltBaseData<Builder extends RecipleCommandBuilders> { executeData: Builder extends InteractionCommandBuilder ? RecipleInteractionCommandExecuteData : RecipleMessageCommandExecuteData };
+export interface CommandHaltBaseData<Builder extends RecipleCommandBuilders> { executeData: Builder extends InteractionCommandBuilder ? RecipleInteractionCommandExecuteData : RecipleMessageCommandExecuteData }
 export interface CommandErrorData<Builder extends RecipleCommandBuilders> extends CommandHaltBaseData<Builder> { reason: 'ERROR'; error: any; }
 export interface CommandCooldownData<Builder extends RecipleCommandBuilders> extends CommandHaltBaseData<Builder>,CooledDownUser { reason: 'COOLDOWN'; }
 export interface CommandInvalidArguments<Builder extends RecipleCommandBuilders> extends CommandHaltBaseData<Builder> { reason: 'INVALID_ARGUMENTS'; invalidArguments: MessageCommandOptionManager; }
