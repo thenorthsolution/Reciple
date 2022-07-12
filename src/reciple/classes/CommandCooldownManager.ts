@@ -18,6 +18,9 @@ export class CommandCooldownManager extends Array<CooledDownUser> {
         return this.push(...options);
     }
 
+    /**
+     * Remove cooldown from specific user, channel or guild
+     */
     public remove(options: Partial<CooledDownUser>, limit: number = 0) {
         if (!Object.keys(options).length) throw new TypeError('Provide atleast one option to remove cooldown data.');
 
@@ -33,6 +36,9 @@ export class CommandCooldownManager extends Array<CooledDownUser> {
         }
     }
 
+    /**
+     * Check if the given user is cooled-down 
+     */
     public isCooledDown(options: Partial<Omit<CooledDownUser, 'expireTime'>>): boolean {
         const data = this.get(options);
         if (!data) return false;
@@ -42,6 +48,9 @@ export class CommandCooldownManager extends Array<CooledDownUser> {
         return true;
     }
 
+    /**
+     * Clear non cooled-down users from this array 
+     */
     public clean(options?: Partial<Omit<CooledDownUser, 'expireTime'>>): void {
         for (const index in this) {
             if (options && !CommandCooldownManager.checkOptions(options, this[index])) return;
@@ -50,10 +59,16 @@ export class CommandCooldownManager extends Array<CooledDownUser> {
         }
     }
 
+    /**
+     * Get someone's cooldown data 
+     */
     public get(options: Partial<Omit<CooledDownUser, 'expireTime'>>): CooledDownUser|undefined {
         return this.find(data => CommandCooldownManager.checkOptions(options, data));
     }
 
+    /**
+     * Check if the options are valid
+     */
     public static checkOptions(options: Partial<Omit<CooledDownUser, 'expireTime'>>, data: CooledDownUser): boolean {
         if (options?.user && options.user.id !== data.user.id) return false;
         if (options?.guild && options.guild.id !== data.guild?.id) return false;
