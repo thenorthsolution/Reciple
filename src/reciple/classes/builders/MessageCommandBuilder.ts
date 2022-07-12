@@ -5,7 +5,6 @@ import { RecipleHaltedCommandData } from '../../types/commands';
 import { Command as CommandMessage } from 'fallout-utility';
 import { RecipleClient } from '../RecipleClient';
 
-
 export interface RecipleMessageCommandExecuteData {
     message: Message;
     options: MessageCommandOptionManager;

@@ -1,14 +1,16 @@
 // Not cool code
 
 import { InteractionCommandBuilder, RecipleInteractionCommandExecuteData } from './builders/InteractionCommandBuilder';
-import { InteractionBuilder, registerInteractionCommands } from '../registerInteractionCommands';
 import { MessageCommandBuilder, RecipleMessageCommandExecuteData } from './builders/MessageCommandBuilder';
+import { InteractionBuilder, registerInteractionCommands } from '../registerInteractionCommands';
+import { RecipleCommandBuilders, RecipleCommandBuildersExecuteData } from '../types/builders';
+import { botHasExecutePermissions, userHasCommandPermissions } from '../permissions';
+import { CommandCooldownManager, CooledDownUser } from './CommandCooldownManager';
 import { MessageCommandOptionManager } from './MessageCommandOptionManager';
+import { loadModules, RecipleModule, RecipleScript } from '../modules';
 import { getCommand, Logger as ILogger } from 'fallout-utility';
 import { Config, RecipleConfig } from './RecipleConfig';
 import { isIgnoredChannel } from '../isIgnoredChannel';
-import { CommandCooldownManager, CooledDownUser } from './CommandCooldownManager';
-import { botHasExecutePermissions, userHasCommandPermissions } from '../permissions';
 import { version } from '../version';
 import { logger } from '../logger';
 
@@ -22,14 +24,6 @@ import {
     Interaction,
     Message
 } from 'discord.js';
-
-import {
-    loadModules,
-    RecipleCommandBuilders,
-    RecipleCommandBuildersExecuteData,
-    RecipleModule,
-    RecipleScript
-} from '../modules';
 
 export interface RecipleClientOptions extends ClientOptions { config?: Config; }
 
