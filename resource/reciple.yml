@@ -84,8 +84,14 @@ client:
 messages:
   notEnoughArguments: 'Not enough arguments.'
   invalidArguments: 'Invalid argument(s) given.'
+  insufficientBotPerms:
+    content: 'Insufficient bot permissions.'
+    ephemeral: true
   noPermissions:
     content: 'You do not have permission to use this command.'
+    ephemeral: true
+  cooldown:
+    content: 'You cannot execute this command right now due to the cooldown.'
     ephemeral: true
   error:
     content: 'An error occurred.'
