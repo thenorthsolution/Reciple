@@ -278,7 +278,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
         if (userHasCommandPermissions(command.name, interaction.memberPermissions ?? undefined, this.config.permissions.interactionCommands, command)) {
             if (!command || isIgnoredChannel(interaction.channelId, this.config.ignoredChannels)) return;
 
-            if (interaction.guild && botHasExecutePermissions(interaction.guild, command.requiredBotPermissions)) {
+            if (interaction.guild && !botHasExecutePermissions(interaction.guild, command.requiredBotPermissions)) {
                 if (!command.halt || !await command.halt({ executeData, reason: 'MISSING_BOT_PERMISSIONS' })) {
                     await interaction.reply(this.getMessage('insufficientBotPerms', 'Insufficient bot permissions.')).catch(er => this._replyError(er));
                 }
