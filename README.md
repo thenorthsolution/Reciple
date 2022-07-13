@@ -12,48 +12,54 @@ A simple Dicord.js command handler that just works.
 [![Discord Invite](https://i.imgur.com/GffJByO.png)](https://discord.gg/2CattJYNpw)
 
 ## Installation
-To install the bot, run the following command:
+To install the bot, run the following command in your terminal:
 
 ```bash
 npm i reciple
 ```
+```bash
+yarn add reciple
+```
+```bash
+pnpm add reciple
+```
 
-You can initialize the bot to the current directory with the following command:
+You can initialize the bot to the current directory with the following command in your terminal:
 
 ```bash
 npx reciple
 ```
 
-It will ask you to continue if the directory is not empty type `y` to continue after the bot has been initialized it will ask you for your bot token.
+It will ask you to continue if the directory is not empty. Type `y` to continue. After the bot has been initialized, it will ask you for your bot token.
 
-> You can always change the token later
+> You can change the token anytime you want
 
 ## Config
 
-You can configure the bot on `reciple.yml` in the bot root directory.
+You can configure the bot in `reciple.yml` located in the bot's root directory.
 
 ### Token
 
-You can directly change the token on `reciple.yml` like so:
+You can directly change the token in `reciple.yml`.
 
 ```yml
 token: "YOUR_TOKEN_HERE"
 ```
 
-Using environment variables is also supported:
+Using environment variables is also supported.
 
 ```yml
 token: "env:TOKEN_VARIABLE"
 ```
 
-You can override the token on the command line like so:
+You can override the given token using your terminal
 
 ```bash
 npx reciple --token "YOUR_TOKEN_HERE"
 ```
 
-## Running the bot
-To run the bot, run the following command:
+## Starting the bot
+To start the bot, run the following command:
 
 ```bash
 npx reciple
@@ -62,5 +68,4 @@ npx reciple
 > ## Fun Fact
 > The name reciple is from a minecraft bug. The bug was a misspelling of the word `recipe`. [View Mojang Bug Report](https://bugs.mojang.com/browse/MC-225837)
 
-# Save the Earth
 [#letTheEarthBreathe](https://rebellion.global/)
