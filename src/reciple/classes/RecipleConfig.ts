@@ -88,7 +88,7 @@ export class RecipleConfig {
             this.config = yaml.parse(defaultConfig);
             if (this.config && this.config.token === 'TOKEN') {
                 this.config.token = this.askToken() || this.config.token;
-                writeFileSync(this.configPath, replaceAll(defaultConfig, 'TOKEN', this.config.token), 'utf-8');
+                writeFileSync(this.configPath, replaceAll(defaultConfig, ' TOKEN', ` ${this.config.token}`), 'utf-8');
             }
 
             return this;
