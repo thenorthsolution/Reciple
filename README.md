@@ -17,12 +17,6 @@ To install the bot, run the following command in your terminal:
 ```bash
 npm i reciple
 ```
-```bash
-yarn add reciple
-```
-```bash
-pnpm add reciple
-```
 
 You can initialize the bot to the current directory with the following command in your terminal:
 
