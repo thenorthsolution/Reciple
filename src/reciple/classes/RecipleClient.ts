@@ -183,7 +183,6 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
      * Execute a Message command
      */
     public async messageCommandExecute(message: Message, prefix?: string): Promise<void|RecipleMessageCommandExecuteData> {
-        console.log(message);
         if (!message.content || !this.isReady()) return;
 
         const parseCommand = getCommand(message.content, prefix || this.config.prefix || '!', this.config.commands.messageCommand.commandArgumentSeparator || ' ');
