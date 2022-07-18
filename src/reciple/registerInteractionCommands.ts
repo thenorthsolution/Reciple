@@ -1,5 +1,5 @@
 import { InteractionCommandBuilder } from './classes/builders/InteractionCommandBuilder';
-import { ApplicationCommandDataResolvable, PermissionString } from 'discord.js';
+import { ApplicationCommandDataResolvable, PermissionsString } from 'discord.js';
 import { RecipleClient } from './classes/RecipleClient';
 import {
     ContextMenuCommandBuilder,
@@ -32,7 +32,7 @@ export async function registerInteractionCommands(client: RecipleClient, cmds?: 
                     undefined
                 ) ?? cmd.requiredBotPermissions;
 
-            cmd.setRequiredMemberPermissions(permissions as PermissionString[]);
+            cmd.setRequiredMemberPermissions(permissions as PermissionsString[]);
             client.commands.INTERACTION_COMMANDS[cmd.name] = cmd;
 
             if (client.isClientLogsEnabled()) client.logger.debug(`Set required permissions for ${cmd.name}`);

@@ -17,11 +17,13 @@ import { logger } from '../logger';
 import {
     ApplicationCommandDataResolvable,
     Awaitable,
+    ChannelType,
     Client,
     ClientEvents,
     ClientOptions,
     CommandInteraction,
     Interaction,
+    InteractionType,
     Message
 } from 'discord.js';
 
@@ -200,7 +202,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
 
         if (userHasCommandPermissions(command.name, message.member?.permissions, this.config.permissions.messageCommands, command)) {
             if (
-                !command.allowExecuteInDM && message.channel.type === 'DM'
+                !command.allowExecuteInDM && message.channel.type === ChannelType.DM
                 || !command.allowExecuteByBots
                 && (message.author.bot ||message.author.system)
                 || isIgnoredChannel(message.channelId, this.config.ignoredChannels)
@@ -264,7 +266,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
      * Execute an Interaction command 
      */
     public async interactionCommandExecute(interaction: Interaction|CommandInteraction): Promise<void|RecipleInteractionCommandExecuteData> {
-        if (!interaction || !interaction.isCommand() || !this.isReady()) return;
+        if (!interaction || interaction.type !== InteractionType.ApplicationCommand || !this.isReady()) return;
 
         const command = this.findCommand(interaction.commandName, 'INTERACTION_COMMAND');
         if (!command) return;
