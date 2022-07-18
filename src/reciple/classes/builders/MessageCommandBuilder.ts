@@ -33,7 +33,7 @@ export class MessageCommandBuilder {
     public RequiredUserPermissions: PermissionResolvable[] = [];
     public allowExecuteInDM: boolean = true;
     public allowExecuteByBots: boolean = false;
-    public halt?: (haltData: RecipleHaltedCommandData<MessageCommandBuilder>) => Awaitable<boolean>;
+    public halt?: (haltData: RecipleHaltedCommandData<MessageCommandBuilder>) => Awaitable<boolean|void>;
     public execute: (executeData: RecipleMessageCommandExecuteData) => void = () => { /* Execute */ };
 
     /**
@@ -112,7 +112,7 @@ export class MessageCommandBuilder {
     /**
      * Function when the command is interupted before execution 
      */
-    public setHalt(halt?: (haltData: RecipleHaltedCommandData<MessageCommandBuilder>) => Awaitable<boolean>): MessageCommandBuilder {
+    public setHalt(halt?: (haltData: RecipleHaltedCommandData<MessageCommandBuilder>) => Awaitable<boolean|void>): MessageCommandBuilder {
         this.halt = halt ? halt : undefined;
         return this;
     }

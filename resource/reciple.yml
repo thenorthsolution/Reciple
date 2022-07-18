@@ -74,11 +74,9 @@ fileLogging:
   logFilePath: './logs/latest.log'
 
 # Client options
+# Use an intent calculator like https://discord-intents-calculator.vercel.app/ to get valid intents
 client:
-  intents:
-    - 'GUILDS'
-    - 'GUILD_MEMBERS'
-    - 'GUILD_MESSAGES'
+  intents: 33283
 
 # Bot replies
 messages:

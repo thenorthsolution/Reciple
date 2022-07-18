@@ -15,7 +15,7 @@ export class InteractionCommandBuilder extends SlashCommandBuilder {
     public requiredBotPermissions: PermissionResolvable[] = [];
     public RequiredUserPermissions: PermissionResolvable[] = [];
     public allowExecuteInDM: boolean = true;
-    public halt?: (haltData: RecipleHaltedCommandData<InteractionCommandBuilder>) => Awaitable<boolean>;
+    public halt?: (haltData: RecipleHaltedCommandData<InteractionCommandBuilder>) => Awaitable<boolean|void>;
     public execute: (executeData: RecipleInteractionCommandExecuteData) => Awaitable<void> = () => { /* Execute */ };
 
     /**
@@ -38,7 +38,7 @@ export class InteractionCommandBuilder extends SlashCommandBuilder {
     /**
      * Function when the command is interupted before execution 
      */
-    public setHalt(halt?: (haltData: RecipleHaltedCommandData<InteractionCommandBuilder>) => Awaitable<boolean>): InteractionCommandBuilder {
+    public setHalt(halt?: (haltData: RecipleHaltedCommandData<InteractionCommandBuilder>) => Awaitable<boolean|void>): InteractionCommandBuilder {
         this.halt = halt ? halt : undefined;
         return this;
     }
