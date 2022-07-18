@@ -1,6 +1,6 @@
 {
   "name": "reciple",
-  "version": "2.0.2",
+  "version": "3.0.0-pre.1",
   "description": "Handler for Discord.js",
   "author": "FalloutStudios",
   "homepage": "https://reciple.js.org",
@@ -36,7 +36,7 @@
   },
   "dependencies": {
     "chalk": "4.1.2",
-    "commander": "^9.3.0",
+    "commander": "^9.4.0",
     "dotenv": "^16.0.1",
     "fallout-utility": "^1.4.2",
     "semver": "^7.3.7",
@@ -46,7 +46,7 @@
   "devDependencies": {
     "@types/node": "^18.0.3",
     "@types/semver": "^7.3.10",
-    "discord.js": "^13.8.1",
+    "discord.js": "^14.0.2",
     "typescript": "^4.7.4"
   },
   "peerDependencies": {
