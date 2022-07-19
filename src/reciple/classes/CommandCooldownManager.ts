@@ -1,5 +1,5 @@
 import { Guild, TextBasedChannel, User } from 'discord.js';
-import { RecipleCommandBuilders, RecipleCommandBuilderTypes } from '../types/builders';
+import { RecipleCommandBuilderTypes } from '../types/builders';
 
 export interface CooledDownUser {
     user: User;

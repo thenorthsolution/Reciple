@@ -26,6 +26,7 @@ import {
     InteractionType,
     Message
 } from 'discord.js';
+import { RecipleHaltedCommandReasons } from '../types/commands';
 
 export interface RecipleClientOptions extends ClientOptions { config?: Config; }
 
@@ -210,22 +211,22 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
 
             if (command.validateOptions) {
                 if (commandOptions.some(o => o.invalid)) {
-                    if (!command?.halt || !await command.halt({ executeData, reason: 'INVALID_ARGUMENTS', invalidArguments: new MessageCommandOptionManager(executeData.options.filter(o => o.invalid)) })) {
+                    if (!command?.halt || !await command.halt({ executeData, reason: RecipleHaltedCommandReasons.InvalidArguments, invalidArguments: new MessageCommandOptionManager(executeData.options.filter(o => o.invalid)) })) {
                         message.reply(this.getMessage('invalidArguments', 'Invalid argument(s) given.')).catch(er => this._replyError(er));
                     }
                     return;
                 }
 
                 if (commandOptions.some(o => o.missing)) {
-                    if (!command.halt || !await command.halt({ executeData, reason: 'MISSING_ARGUMENTS', missingArguments: new MessageCommandOptionManager(executeData.options.filter(o => o.missing)) })) {
-                        message.reply(this.getMessage('notEnoughArguments', 'Not enough arguments.')).catch(er => this._replyError(er));
+                    if (!command.halt || !await command.halt({ executeData, reason: RecipleHaltedCommandReasons.MissingArguments, missingArguments: new MessageCommandOptionManager(executeData.options.filter(o => o.missing)) })) {
+                        message.reply(this.getMessage('missingArguments', 'Not enough arguments.')).catch(er => this._replyError(er));
                     }
                     return;
                 }
             }
 
             if (message.guild && !botHasExecutePermissions(message.guild, command.requiredBotPermissions)) {
-                if (!command.halt || !await command.halt({ executeData, reason: 'MISSING_BOT_PERMISSIONS' })) {
+                if (!command.halt || !await command.halt({ executeData, reason: RecipleHaltedCommandReasons.MissingBotPermissions })) {
                     message.reply(this.getMessage('insufficientBotPerms', 'Insufficient bot permissions.')).catch(er => this._replyError(er));
                 }
                 return;
@@ -242,22 +243,25 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
             if (this.config.commands.messageCommand.enableCooldown && command.cooldown && !this.commandCooldowns.isCooledDown(userCooldown)) {
                 this.commandCooldowns.add({ ...userCooldown, expireTime: Date.now() + command.cooldown });
             } else if (this.config.commands.messageCommand.enableCooldown && command.cooldown) {
-                if (!command.halt || !await command.halt({ executeData, reason: 'COOLDOWN', ...this.commandCooldowns.get(userCooldown)! })) {
+                if (!command.halt || !await command.halt({ executeData, reason: RecipleHaltedCommandReasons.Cooldown, ...this.commandCooldowns.get(userCooldown)! })) {
                     await message.reply(this.getMessage('cooldown', 'You cannot execute this command right now due to the cooldown.')).catch(er => this._replyError(er));
                 }
+
                 return;
             }
 
             try {
-                await Promise.resolve(command.execute(executeData)).catch(async err => !command.halt || !await command.halt({ executeData, reason: 'ERROR', error: err }) ? this._commandExecuteError(err, executeData) : void 0);
-                this.emit('recipleMessageCommandCreate', executeData);
+                await Promise.resolve(command.execute(executeData))
+                .then(() => this.emit('recipleMessageCommandCreate', executeData))
+                .catch(async err => !command.halt || !await command.halt({ executeData, reason: RecipleHaltedCommandReasons.Error, error: err }) ? this._commandExecuteError(err, executeData) : void 0);
+                
                 return executeData;
             } catch (err) {
-                if (!command.halt || !await command.halt({ executeData, reason: 'ERROR', error: err })) {
+                if (!command.halt || !await command.halt({ executeData, reason: RecipleHaltedCommandReasons.Error, error: err })) {
                     this._commandExecuteError(err as Error, executeData);
                 }
             }
-        } else if (!command.halt || !await command.halt({ executeData, reason: 'MISSING_MEMBER_PERMISSIONS' })) {
+        } else if (!command.halt || !await command.halt({ executeData, reason: RecipleHaltedCommandReasons.MissingMemberPermissions })) {
             message.reply(this.getMessage('noPermissions', 'You do not have permission to use this command.')).catch(er => this._replyError(er));
         }
     }
@@ -281,9 +285,10 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
             if (!command || isIgnoredChannel(interaction.channelId, this.config.ignoredChannels)) return;
 
             if (interaction.guild && !botHasExecutePermissions(interaction.guild, command.requiredBotPermissions)) {
-                if (!command.halt || !await command.halt({ executeData, reason: 'MISSING_BOT_PERMISSIONS' })) {
+                if (!command.halt || !await command.halt({ executeData, reason: RecipleHaltedCommandReasons.MissingBotPermissions })) {
                     await interaction.reply(this.getMessage('insufficientBotPerms', 'Insufficient bot permissions.')).catch(er => this._replyError(er));
                 }
+
                 return;
             }
 
@@ -298,22 +303,25 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
             if (this.config.commands.interactionCommand.enableCooldown && command.cooldown && !this.commandCooldowns.isCooledDown(userCooldown)) {
                 this.commandCooldowns.add({ ...userCooldown, expireTime: Date.now() + command.cooldown });
             } else if (this.config.commands.interactionCommand.enableCooldown && command.cooldown) {
-                if (!command.halt || !await command.halt({ executeData, reason: 'COOLDOWN', ...this.commandCooldowns.get(userCooldown)! })) {
+                if (!command.halt || !await command.halt({ executeData, reason: RecipleHaltedCommandReasons.Cooldown, ...this.commandCooldowns.get(userCooldown)! })) {
                     await interaction.reply(this.getMessage('cooldown', 'You cannot execute this command right now due to the cooldown.')).catch(er => this._replyError(er));
                 }
+
                 return;
             }
 
             try {
-                await Promise.resolve(command.execute(executeData)).catch(async err => !command.halt || !await command.halt({ executeData, reason: 'ERROR', error: err }) ? this._commandExecuteError(err, executeData) : void 0);
-                this.emit('recipleInteractionCommandCreate', executeData);
+                await Promise.resolve(command.execute(executeData))
+                .then(() => this.emit('recipleInteractionCommandCreate', executeData))
+                .catch(async err => !command.halt || !await command.halt({ executeData, reason: RecipleHaltedCommandReasons.Error, error: err }) ? this._commandExecuteError(err, executeData) : void 0);
+
                 return executeData;
             } catch (err) {
-                if (!command.halt || !await command.halt({ executeData, reason: 'ERROR', error: err })) {
+                if (!command.halt || !await command.halt({ executeData, reason: RecipleHaltedCommandReasons.Error, error: err })) {
                     this._commandExecuteError(err as Error, executeData);
                 }
             }
-        } else if (!command.halt || !await command.halt({ executeData, reason: 'MISSING_MEMBER_PERMISSIONS' })) {
+        } else if (!command.halt || !await command.halt({ executeData, reason: RecipleHaltedCommandReasons.MissingMemberPermissions })) {
             await interaction.reply(this.getMessage('noPermissions', 'You do not have permission to use this command.')).catch(er => this._replyError(er));
         }
     }

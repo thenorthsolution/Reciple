@@ -80,7 +80,7 @@ client:
 
 # Bot replies
 messages:
-  notEnoughArguments: 'Not enough arguments.'
+  missingArguments: 'Not enough arguments.'
   invalidArguments: 'Invalid argument(s) given.'
   insufficientBotPerms:
     content: 'Insufficient bot permissions.'
