@@ -2,6 +2,7 @@ import { Awaitable, CommandInteraction, PermissionResolvable } from 'discord.js'
 import { RecipleHaltedCommandData } from '../../types/commands';
 import { SlashCommandBuilder } from '@discordjs/builders';
 import { RecipleClient } from '../RecipleClient';
+import { RecipleCommandBuilderTypes } from '../../types/builders';
 
 export interface RecipleInteractionCommandExecuteData {
     interaction: CommandInteraction;
@@ -10,7 +11,7 @@ export interface RecipleInteractionCommandExecuteData {
 }
 
 export class InteractionCommandBuilder extends SlashCommandBuilder {
-    public readonly builder = 'INTERACTION_COMMAND';
+    public readonly builder = RecipleCommandBuilderTypes.InteractionCommand;
     public cooldown: number = 0;
     public requiredBotPermissions: PermissionResolvable[] = [];
     public RequiredUserPermissions: PermissionResolvable[] = [];
