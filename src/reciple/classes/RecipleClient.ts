@@ -31,8 +31,8 @@ import { RecipleHaltedCommandReasons } from '../types/commands';
 export interface RecipleClientOptions extends ClientOptions { config?: Config; }
 
 export interface RecipleClientCommands {
-    MESSAGE_COMMANDS: { [commandName: string]: MessageCommandBuilder };
-    INTERACTION_COMMANDS: { [commandName: string]: InteractionCommandBuilder };
+    messageCommands: { [commandName: string]: MessageCommandBuilder };
+    interactionCommands: { [commandName: string]: InteractionCommandBuilder };
 }
 
 export interface RecipleClientEvents extends ClientEvents {
@@ -62,7 +62,7 @@ export interface RecipleClient<Ready extends boolean = boolean> extends Client<R
 
 export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready> {
     public config: Config = RecipleConfig.getDefaultConfig();
-    public commands: RecipleClientCommands = { MESSAGE_COMMANDS: {}, INTERACTION_COMMANDS: {} };
+    public commands: RecipleClientCommands = { messageCommands: {}, interactionCommands: {} };
     public otherApplicationCommandData: (InteractionBuilder|ApplicationCommandDataResolvable)[] = [];
     public commandCooldowns: CommandCooldownManager = new CommandCooldownManager();
     public modules: RecipleModule[] = [];
@@ -119,12 +119,12 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
 
         if (this.isClientLogsEnabled()) {
             this.logger.info(`${this.modules.length} modules loaded.`);
-            this.logger.info(`${Object.keys(this.commands.MESSAGE_COMMANDS).length} message commands loaded.`);
-            this.logger.info(`${Object.keys(this.commands.INTERACTION_COMMANDS).length} interaction commands loaded.`);
+            this.logger.info(`${Object.keys(this.commands.messageCommands).length} message commands loaded.`);
+            this.logger.info(`${Object.keys(this.commands.interactionCommands).length} interaction commands loaded.`);
         }
 
         if (this.config.commands.interactionCommand.registerCommands) {
-            await registerInteractionCommands(this, [...Object.values(this.commands.INTERACTION_COMMANDS), ...this.otherApplicationCommandData]);
+            await registerInteractionCommands(this, [...Object.values(this.commands.interactionCommands), ...this.otherApplicationCommandData]);
         }
 
         return this;
@@ -152,7 +152,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
         }
 
         if (!registerCommands || !this.config.commands.interactionCommand.registerCommands) return;
-        await registerInteractionCommands(this, [...Object.values(this.commands.INTERACTION_COMMANDS), ...this.otherApplicationCommandData]);
+        await registerInteractionCommands(this, [...Object.values(this.commands.interactionCommands), ...this.otherApplicationCommandData]);
     }
 
     /**
@@ -160,9 +160,9 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
      */
     public addCommand(command: RecipleCommandBuilders): RecipleClient<Ready> {
         if (command.builder === RecipleCommandBuilderTypes.MessageCommand) {
-            this.commands.MESSAGE_COMMANDS[command.name] = command;
+            this.commands.messageCommands[command.name] = command;
         } else if (command.builder === RecipleCommandBuilderTypes.InteractionCommand) {
-            this.commands.INTERACTION_COMMANDS[command.name] = command;
+            this.commands.interactionCommands[command.name] = command;
         } else if (this.isClientLogsEnabled()) {
             this.logger.error(`Unknow command "${typeof command ?? 'unknown'}".`);
         }
@@ -341,11 +341,11 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
     public findCommand(command: string, type: RecipleCommandBuilders["builder"]): RecipleCommandBuilders|undefined {
         switch (type) {
             case RecipleCommandBuilderTypes.InteractionCommand:
-                return this.commands.INTERACTION_COMMANDS[command];
+                return this.commands.interactionCommands[command];
             case RecipleCommandBuilderTypes.MessageCommand:
-                return this.commands.MESSAGE_COMMANDS[command.toLowerCase()]
+                return this.commands.messageCommands[command.toLowerCase()]
                     ?? (this.config.commands.messageCommand.allowCommandAlias
-                        ? Object.values(this.commands.MESSAGE_COMMANDS).find(c => c.aliases.some(a => a == command?.toLowerCase()))
+                        ? Object.values(this.commands.messageCommands).find(c => c.aliases.some(a => a == command?.toLowerCase()))
                         : undefined
                     );
             default:

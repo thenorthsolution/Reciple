@@ -21,7 +21,7 @@ export type InteractionBuilder = InteractionCommandBuilder|ContextMenuCommandBui
  * Register interaction commands 
  */
 export async function registerInteractionCommands(client: RecipleClient, cmds?: (InteractionBuilder|ApplicationCommandDataResolvable)[], overwriteGuilds?: string|string[]): Promise<void> {
-    const commands = Object.values(cmds ?? client.commands.INTERACTION_COMMANDS).map(c => {
+    const commands = Object.values(cmds ?? client.commands.interactionCommands).map(c => {
         if (typeof (c as InteractionCommandBuilder).toJSON == 'undefined') return c as ApplicationCommandDataResolvable;
         
         const cmd = c as InteractionCommandBuilder;
@@ -34,7 +34,7 @@ export async function registerInteractionCommands(client: RecipleClient, cmds?: 
                 ) ?? cmd.requiredBotPermissions;
 
             cmd.setRequiredMemberPermissions(permissions as PermissionsString[]);
-            client.commands.INTERACTION_COMMANDS[cmd.name] = cmd;
+            client.commands.interactionCommands[cmd.name] = cmd;
 
             if (client.isClientLogsEnabled()) client.logger.debug(`Set required permissions for ${cmd.name}`);
             return cmd.toJSON() as ApplicationCommandDataResolvable;
