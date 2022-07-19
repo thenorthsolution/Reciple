@@ -7,7 +7,7 @@ import { RecipleCommandBuilders, RecipleCommandBuildersExecuteData, RecipleComma
 import { botHasExecutePermissions, userHasCommandPermissions } from '../permissions';
 import { CommandCooldownManager, CooledDownUser } from './CommandCooldownManager';
 import { MessageCommandOptionManager } from './MessageCommandOptionManager';
-import { loadModules, RecipleModule, RecipleScript } from '../modules';
+import { loadModules, RecipleModule } from '../modules';
 import { getCommand, Logger as ILogger } from 'fallout-utility';
 import { Config, RecipleConfig } from './RecipleConfig';
 import { isIgnoredChannel } from '../isIgnoredChannel';
@@ -15,6 +15,7 @@ import { version } from '../version';
 import { logger } from '../logger';
 
 import {
+    ApplicationCommandData,
     ApplicationCommandDataResolvable,
     Awaitable,
     ChannelType,
@@ -27,6 +28,7 @@ import {
     Message
 } from 'discord.js';
 import { RecipleHaltedCommandReason } from '../types/commands';
+import { AddModuleOptions } from '../types/paramOptions';
 
 export interface RecipleClientOptions extends ClientOptions { config?: Config; }
 
@@ -63,7 +65,7 @@ export interface RecipleClient<Ready extends boolean = boolean> extends Client<R
 export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready> {
     public config: Config = RecipleConfig.getDefaultConfig();
     public commands: RecipleClientCommands = { messageCommands: {}, interactionCommands: {} };
-    public otherApplicationCommandData: (InteractionBuilder|ApplicationCommandDataResolvable)[] = [];
+    public otherApplicationCommandData: (InteractionBuilder|ApplicationCommandData)[] = [];
     public commandCooldowns: CommandCooldownManager = new CommandCooldownManager();
     public modules: RecipleModule[] = [];
     public logger: ILogger;
@@ -124,7 +126,11 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
         }
 
         if (this.config.commands.interactionCommand.registerCommands) {
-            await registerInteractionCommands(this, [...Object.values(this.commands.interactionCommands), ...this.otherApplicationCommandData]);
+            await registerInteractionCommands({
+                client: this,
+                commands: [...Object.values(this.commands.interactionCommands), ...this.otherApplicationCommandData],
+                guilds: this.config.commands.interactionCommand.guilds
+            });
         }
 
         return this;
@@ -133,7 +139,11 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
     /**
      * Add module
      */
-    public async addModule(script: RecipleScript, registerCommands: boolean = true, info?: RecipleModule['info']): Promise<void> {
+    public async addModule(options: AddModuleOptions): Promise<void> {
+        const { script } = options;
+        const registerCommands = options.registerInteractionCommands;
+        const info = options.moduleInfo;
+        
         this.modules.push({
             script,
             info: {
@@ -151,8 +161,11 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
             this.addCommand(command);
         }
 
-        if (!registerCommands || !this.config.commands.interactionCommand.registerCommands) return;
-        await registerInteractionCommands(this, [...Object.values(this.commands.interactionCommands), ...this.otherApplicationCommandData]);
+        if (registerCommands) await registerInteractionCommands({
+            client: this,
+            commands: [...Object.values(this.commands.interactionCommands), ...this.otherApplicationCommandData],
+            guilds: this.config.commands.interactionCommand.guilds
+        });
     }
 
     /**
@@ -186,7 +199,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
     public async messageCommandExecute(message: Message, prefix?: string): Promise<void|RecipleMessageCommandExecuteData> {
         if (!message.content || !this.isReady()) return;
 
-        const parseCommand = getCommand(message.content, prefix || this.config.prefix || '!', this.config.commands.messageCommand.commandArgumentSeparator || ' ');
+        const parseCommand = getCommand(message.content, prefix || this.config.commands.messageCommand.prefix || '!', this.config.commands.messageCommand.commandArgumentSeparator || ' ');
         if (!parseCommand || !parseCommand?.command) return; 
 
         const command = this.findCommand(parseCommand.command, RecipleCommandBuilderType.MessageCommand);
@@ -201,7 +214,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
             client: this
         };
 
-        if (userHasCommandPermissions(command.name, message.member?.permissions, this.config.permissions.messageCommands, command)) {
+        if (userHasCommandPermissions(command.name, message.member?.permissions, this.config.commands.messageCommand.permissions, command)) {
             if (
                 !command.allowExecuteInDM && message.channel.type === ChannelType.DM
                 || !command.allowExecuteByBots
@@ -281,7 +294,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
             client: this
         };
 
-        if (userHasCommandPermissions(command.name, interaction.memberPermissions ?? undefined, this.config.permissions.interactionCommands, command)) {
+        if (userHasCommandPermissions(command.name, interaction.memberPermissions ?? undefined, this.config.commands.interactionCommand.permissions, command)) {
             if (!command || isIgnoredChannel(interaction.channelId, this.config.ignoredChannels)) return;
 
             if (interaction.guild && !botHasExecutePermissions(interaction.guild, command.requiredBotPermissions)) {

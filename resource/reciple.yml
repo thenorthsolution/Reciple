@@ -2,52 +2,49 @@
 # To use env variable as a token just do it like this env:TOKEN_ENV
 token: TOKEN
 
-# Message command prefix
-prefix: '!'
-
 
 # Commands options
 commands:
   messageCommand:
     # enable message commands
     enabled: true
+    # command prefix
+    prefix: '!'
     # reply when an error occured
     replyOnError: false
     # Enable the use of command cooldowns
-    enableCooldown: false
+    enableCooldown: true
     # Allow executing commands via aliases
     allowCommandAlias: true
     # command argument separator
     commandArgumentSeparator: ' '
+    # Overwrite command permissions
+    permissions:
+      # enable overwriten command permissions
+      enabled: false
+      commands:
+        - command: 'example-command'
+          permissions: ['ADMINISTRATOR']
   interactionCommand:
     # enable interaction commands
     enabled: true
     # reply when an error occured
     replyOnError: false
     # Enable the use of command cooldowns
-    enableCooldown: false
+    enableCooldown: true
     # register interaction commands on bot ready
     registerCommands: true
     # set required permissions for interaction commands
     setRequiredPermissions: true
     # register commands to specific guild(s) empty to make it global
     guilds: []
-
-
-# Commands permissions
-permissions:
-  messageCommands:
-    # enable command permissions
-    enabled: true
-    commands:
-      - command: 'stop'
-        permissions: ['ADMINISTRATOR']
-  interactionCommands:
-    # enable command permissions
-    enabled: true
-    commands:
-      - command: 'stop'
-        permissions: ['ADMINISTRATOR']
+    # Overwrite command permissions
+    permissions:
+      # enable overwriten command permissions
+      enabled: false
+      commands:
+        - command: 'example-command'
+          permissions: ['ADMINISTRATOR']
 
 
 # Ignored channel IDs

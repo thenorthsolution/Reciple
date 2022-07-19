@@ -5,7 +5,7 @@ import { Config } from './classes/RecipleConfig';
 /**
  * Check if the user has permissions to execute the given command name
  */
-export function userHasCommandPermissions(commandName: string, memberPermissions?: PermissionsBitField, configConmmandPermissions?: Config['permissions']['messageCommands']|Config['permissions']['interactionCommands'], builder?: RecipleCommandBuilders): boolean {
+export function userHasCommandPermissions(commandName: string, memberPermissions?: PermissionsBitField, configConmmandPermissions?: Config['commands']['messageCommand']['permissions']|Config['commands']['interactionCommand']['permissions'], builder?: RecipleCommandBuilders): boolean {
     if (!configConmmandPermissions?.enabled) return true;
 
     const command = configConmmandPermissions.commands.find(c => c.command.toLowerCase() === commandName.toLowerCase()) ?? { permissions: builder?.RequiredUserPermissions ?? [] };

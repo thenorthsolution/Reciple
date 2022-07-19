@@ -1,51 +1,43 @@
 import { InteractionCommandBuilder } from './classes/builders/InteractionCommandBuilder';
-import { ApplicationCommandDataResolvable, PermissionsString } from 'discord.js';
-import { RecipleClient } from './classes/RecipleClient';
-import {
-    ContextMenuCommandBuilder,
-    SlashCommandBuilder,
-    SlashCommandSubcommandBuilder,
-    SlashCommandOptionsOnlyBuilder,
-    SlashCommandSubcommandGroupBuilder,
-    SlashCommandSubcommandsOnlyBuilder
-} from '@discordjs/builders';
+import { ApplicationCommandData, ApplicationCommandDataResolvable, PermissionsString } from 'discord.js';
+import { ContextMenuCommandBuilder, SlashCommandBuilder } from '@discordjs/builders';
 import { RecipleCommandBuilderType } from './types/builders';
+import { RegisterInteractionCommandsOptions } from './types/paramOptions';
 
 
-export type InteractionBuilder = InteractionCommandBuilder|ContextMenuCommandBuilder|
-    SlashCommandBuilder|SlashCommandSubcommandBuilder|
-    SlashCommandOptionsOnlyBuilder|SlashCommandSubcommandGroupBuilder|
-    SlashCommandSubcommandsOnlyBuilder;
+export type InteractionBuilder = ContextMenuCommandBuilder|InteractionCommandBuilder|SlashCommandBuilder;
 
 /**
  * Register interaction commands 
  */
-export async function registerInteractionCommands(client: RecipleClient, cmds?: (InteractionBuilder|ApplicationCommandDataResolvable)[], overwriteGuilds?: string|string[]): Promise<void> {
-    const commands = Object.values(cmds ?? client.commands.interactionCommands).map(c => {
-        if (typeof (c as InteractionCommandBuilder).toJSON == 'undefined') return c as ApplicationCommandDataResolvable;
-        
-        const cmd = c as InteractionCommandBuilder;
+export async function registerInteractionCommands(options: RegisterInteractionCommandsOptions): Promise<void> {
+    let { client, guilds } = options;
 
-        if (cmd?.builder === RecipleCommandBuilderType.InteractionCommand && client.config.commands.interactionCommand.setRequiredPermissions) {
+    guilds = typeof guilds == 'string' ? [guilds] : guilds;
+
+    const commands = Object.values(options.commands ?? client.commands.interactionCommands).map(cmd => {
+        if (typeof (cmd as InteractionBuilder)?.toJSON == 'undefined') return cmd as ApplicationCommandData;
+
+        cmd = cmd as InteractionBuilder;
+
+        if (cmd instanceof InteractionCommandBuilder && client.config.commands.interactionCommand.setRequiredPermissions) {
             const permissions = (
-                    client.config.permissions?.interactionCommands.enabled ?
-                    client.config.permissions?.interactionCommands.commands.find(cmd_ => cmd_.command.toLowerCase() === cmd.name.toLowerCase())?.permissions :
+                    client.config.commands.interactionCommand.permissions.enabled ?
+                    client.config.commands.interactionCommand.permissions.commands.find(cmd_ => cmd_.command.toLowerCase() === cmd.name.toLowerCase())?.permissions :
                     undefined
                 ) ?? cmd.requiredBotPermissions;
 
-            cmd.setRequiredMemberPermissions(permissions as PermissionsString[]);
+            cmd.setRequiredMemberPermissions(permissions);
             client.commands.interactionCommands[cmd.name] = cmd;
 
             if (client.isClientLogsEnabled()) client.logger.debug(`Set required permissions for ${cmd.name}`);
-            return cmd.toJSON() as ApplicationCommandDataResolvable;
+            return cmd.toJSON();
         }
 
-        return (c as InteractionCommandBuilder).toJSON() as ApplicationCommandDataResolvable;
+        return cmd.toJSON();
     }) ?? [];
 
-    const configGuilds = overwriteGuilds ?? client.config.commands.interactionCommand.guilds;
-    const guilds = typeof configGuilds === 'object' ? configGuilds : [configGuilds];
-
+    if (!client.isReady()) throw new Error('Client is not ready');
     if (!guilds || !guilds?.length) {
         client.application?.commands.set(commands).then(() => {
             if (client.isClientLogsEnabled()) client.logger.warn('No guilds were specified for interaction commands. Registered interaction commands globally.');
