@@ -8,25 +8,25 @@ export type RecipleHaltedCommandData<Builder extends RecipleCommandBuilders> = C
 
 export interface CommandHaltBaseData<Builder extends RecipleCommandBuilders> { executeData: Builder extends InteractionCommandBuilder ? RecipleInteractionCommandExecuteData : RecipleMessageCommandExecuteData }
 export interface CommandErrorData<Builder extends RecipleCommandBuilders> extends CommandHaltBaseData<Builder> {
-    reason: RecipleHaltedCommandReasons.Error; error: any;
+    reason: RecipleHaltedCommandReason.Error; error: any;
 }
 export interface CommandCooldownData<Builder extends RecipleCommandBuilders> extends CommandHaltBaseData<Builder>,CooledDownUser {
-    reason: RecipleHaltedCommandReasons.Cooldown;
+    reason: RecipleHaltedCommandReason.Cooldown;
 }
 export interface CommandInvalidArguments<Builder extends RecipleCommandBuilders> extends CommandHaltBaseData<Builder> {
-    reason: RecipleHaltedCommandReasons.InvalidArguments; invalidArguments: MessageCommandOptionManager;
+    reason: RecipleHaltedCommandReason.InvalidArguments; invalidArguments: MessageCommandOptionManager;
 }
 export interface CommandMissingArguments<Builder extends RecipleCommandBuilders> extends CommandHaltBaseData<Builder> {
-    reason: RecipleHaltedCommandReasons.MissingArguments; missingArguments: MessageCommandOptionManager;
+    reason: RecipleHaltedCommandReason.MissingArguments; missingArguments: MessageCommandOptionManager;
 }
 export interface CommandMissingMemberPermissions<Builder extends RecipleCommandBuilders> extends CommandHaltBaseData<Builder> {
-    reason: RecipleHaltedCommandReasons.MissingMemberPermissions;
+    reason: RecipleHaltedCommandReason.MissingMemberPermissions;
 }
 export interface CommandMissingBotPermissions<Builder extends RecipleCommandBuilders> extends CommandHaltBaseData<Builder> {
-    reason: RecipleHaltedCommandReasons.MissingBotPermissions;
+    reason: RecipleHaltedCommandReason.MissingBotPermissions;
 }
 
-export enum RecipleHaltedCommandReasons {
+export enum RecipleHaltedCommandReason {
     Error,
     Cooldown,
     InvalidArguments,
