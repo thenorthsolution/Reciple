@@ -9,6 +9,7 @@ import {
     SlashCommandSubcommandGroupBuilder,
     SlashCommandSubcommandsOnlyBuilder
 } from '@discordjs/builders';
+import { RecipleCommandBuilderTypes } from './types/builders';
 
 
 export type InteractionBuilder = InteractionCommandBuilder|ContextMenuCommandBuilder|
@@ -25,7 +26,7 @@ export async function registerInteractionCommands(client: RecipleClient, cmds?: 
         
         const cmd = c as InteractionCommandBuilder;
 
-        if (cmd?.builder === 'INTERACTION_COMMAND' && client.config.commands.interactionCommand.setRequiredPermissions) {
+        if (cmd?.builder === RecipleCommandBuilderTypes.InteractionCommand && client.config.commands.interactionCommand.setRequiredPermissions) {
             const permissions = (
                     client.config.permissions?.interactionCommands.enabled ?
                     client.config.permissions?.interactionCommands.commands.find(cmd_ => cmd_.command.toLowerCase() === cmd.name.toLowerCase())?.permissions :
