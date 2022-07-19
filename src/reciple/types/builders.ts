@@ -4,7 +4,7 @@ import { MessageCommandBuilder, RecipleMessageCommandExecuteData } from '../clas
 export type RecipleCommandBuilders = MessageCommandBuilder|InteractionCommandBuilder;
 export type RecipleCommandBuildersExecuteData = RecipleInteractionCommandExecuteData|RecipleMessageCommandExecuteData;
 
-export enum RecipleCommandBuilderTypes {
+export enum RecipleCommandBuilderType {
     MessageCommand,
     InteractionCommand
 }

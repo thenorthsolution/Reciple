@@ -3,7 +3,7 @@
 import { InteractionCommandBuilder, RecipleInteractionCommandExecuteData } from './builders/InteractionCommandBuilder';
 import { MessageCommandBuilder, RecipleMessageCommandExecuteData } from './builders/MessageCommandBuilder';
 import { InteractionBuilder, registerInteractionCommands } from '../registerInteractionCommands';
-import { RecipleCommandBuilders, RecipleCommandBuildersExecuteData, RecipleCommandBuilderTypes } from '../types/builders';
+import { RecipleCommandBuilders, RecipleCommandBuildersExecuteData, RecipleCommandBuilderType } from '../types/builders';
 import { botHasExecutePermissions, userHasCommandPermissions } from '../permissions';
 import { CommandCooldownManager, CooledDownUser } from './CommandCooldownManager';
 import { MessageCommandOptionManager } from './MessageCommandOptionManager';
@@ -159,9 +159,9 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
      * Add interaction or message command to client 
      */
     public addCommand(command: RecipleCommandBuilders): RecipleClient<Ready> {
-        if (command.builder === RecipleCommandBuilderTypes.MessageCommand) {
+        if (command.builder === RecipleCommandBuilderType.MessageCommand) {
             this.commands.messageCommands[command.name] = command;
-        } else if (command.builder === RecipleCommandBuilderTypes.InteractionCommand) {
+        } else if (command.builder === RecipleCommandBuilderType.InteractionCommand) {
             this.commands.interactionCommands[command.name] = command;
         } else if (this.isClientLogsEnabled()) {
             this.logger.error(`Unknow command "${typeof command ?? 'unknown'}".`);
@@ -189,7 +189,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
         const parseCommand = getCommand(message.content, prefix || this.config.prefix || '!', this.config.commands.messageCommand.commandArgumentSeparator || ' ');
         if (!parseCommand || !parseCommand?.command) return; 
 
-        const command = this.findCommand(parseCommand.command, RecipleCommandBuilderTypes.MessageCommand);
+        const command = this.findCommand(parseCommand.command, RecipleCommandBuilderType.MessageCommand);
         if (!command) return;
         
         const commandOptions = command.getCommandOptionValues(parseCommand);
@@ -237,7 +237,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
                 command: command.name,
                 channel: message.channel,
                 guild: message.guild,
-                type: RecipleCommandBuilderTypes.MessageCommand
+                type: RecipleCommandBuilderType.MessageCommand
             };
 
             if (this.config.commands.messageCommand.enableCooldown && command.cooldown && !this.commandCooldowns.isCooledDown(userCooldown)) {
@@ -272,7 +272,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
     public async interactionCommandExecute(interaction: Interaction|CommandInteraction): Promise<void|RecipleInteractionCommandExecuteData> {
         if (!interaction || interaction.type !== InteractionType.ApplicationCommand || !this.isReady()) return;
 
-        const command = this.findCommand(interaction.commandName, RecipleCommandBuilderTypes.InteractionCommand);
+        const command = this.findCommand(interaction.commandName, RecipleCommandBuilderType.InteractionCommand);
         if (!command) return;
 
         const executeData: RecipleInteractionCommandExecuteData = {
@@ -297,7 +297,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
                 command: command.name,
                 channel: interaction.channel ?? undefined,
                 guild: interaction.guild,
-                type: RecipleCommandBuilderTypes.InteractionCommand
+                type: RecipleCommandBuilderType.InteractionCommand
             };
 
             if (this.config.commands.interactionCommand.enableCooldown && command.cooldown && !this.commandCooldowns.isCooledDown(userCooldown)) {
@@ -340,9 +340,9 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
     public findCommand(command: string, type: InteractionCommandBuilder["builder"]): InteractionCommandBuilder|undefined;
     public findCommand(command: string, type: RecipleCommandBuilders["builder"]): RecipleCommandBuilders|undefined {
         switch (type) {
-            case RecipleCommandBuilderTypes.InteractionCommand:
+            case RecipleCommandBuilderType.InteractionCommand:
                 return this.commands.interactionCommands[command];
-            case RecipleCommandBuilderTypes.MessageCommand:
+            case RecipleCommandBuilderType.MessageCommand:
                 return this.commands.messageCommands[command.toLowerCase()]
                     ?? (this.config.commands.messageCommand.allowCommandAlias
                         ? Object.values(this.commands.messageCommands).find(c => c.aliases.some(a => a == command?.toLowerCase()))
@@ -372,7 +372,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
      */
     private async _commandExecuteError(err: Error, command: RecipleCommandBuildersExecuteData): Promise<void> {
         if (this.isClientLogsEnabled()) {
-            this.logger.error(`An error occured executing ${command.builder.builder == RecipleCommandBuilderTypes.MessageCommand ? 'message' : 'interaction'} command "${command.builder.name}"`);
+            this.logger.error(`An error occured executing ${command.builder.builder == RecipleCommandBuilderType.MessageCommand ? 'message' : 'interaction'} command "${command.builder.name}"`);
             this.logger.error(err);
         }
 

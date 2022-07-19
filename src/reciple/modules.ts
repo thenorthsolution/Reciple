@@ -1,4 +1,4 @@
-import { RecipleCommandBuilders, RecipleCommandBuilderTypes } from './types/builders';
+import { RecipleCommandBuilders, RecipleCommandBuilderType } from './types/builders';
 import { existsSync, mkdirSync, readdirSync } from 'fs';
 import { version, isSupportedVersion } from './version';
 import { RecipleClient } from './classes/RecipleClient';
@@ -52,7 +52,7 @@ export async function loadModules(client: RecipleClient, folder?: string): Promi
             if (!await Promise.resolve(module_.onStart(client))) throw new Error(script + ' onStart is not defined or returned false.');
             if (module_.commands) {
                 for (const command of module_.commands) {
-                    if (command.builder === RecipleCommandBuilderTypes.MessageCommand || command.builder === RecipleCommandBuilderTypes.InteractionCommand) {
+                    if (command.builder === RecipleCommandBuilderType.MessageCommand || command.builder === RecipleCommandBuilderType.InteractionCommand) {
                         commands.push(command);
                     }
                 }
@@ -72,7 +72,7 @@ export async function loadModules(client: RecipleClient, folder?: string): Promi
                     return false;
                 }
 
-                if (c.builder === RecipleCommandBuilderTypes.MessageCommand && c.options.length && c.options.some(o => !o.name)) {
+                if (c.builder === RecipleCommandBuilderType.MessageCommand && c.options.length && c.options.some(o => !o.name)) {
                     if (client.isClientLogsEnabled()) client.logger.error(`A ${c.builder} option name is not defined in ${script}`);
                     return false;
                 }

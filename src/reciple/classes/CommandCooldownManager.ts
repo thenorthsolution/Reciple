@@ -1,10 +1,10 @@
 import { Guild, TextBasedChannel, User } from 'discord.js';
-import { RecipleCommandBuilderTypes } from '../types/builders';
+import { RecipleCommandBuilderType } from '../types/builders';
 
 export interface CooledDownUser {
     user: User;
     command: string;
-    type: RecipleCommandBuilderTypes;
+    type: RecipleCommandBuilderType;
     guild?: Guild|null;
     channel?: TextBasedChannel;
     expireTime: number;

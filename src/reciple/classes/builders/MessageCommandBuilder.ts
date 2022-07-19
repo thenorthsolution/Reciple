@@ -4,7 +4,7 @@ import { Awaitable, Message, PermissionResolvable } from 'discord.js';
 import { RecipleHaltedCommandData } from '../../types/commands';
 import { Command as CommandMessage } from 'fallout-utility';
 import { RecipleClient } from '../RecipleClient';
-import { RecipleCommandBuilderTypes } from '../../types/builders';
+import { RecipleCommandBuilderType } from '../../types/builders';
 
 export interface RecipleMessageCommandExecuteData {
     message: Message;
@@ -23,7 +23,7 @@ export interface MessageCommandValidatedOption {
 }
 
 export class MessageCommandBuilder {
-    public readonly builder = RecipleCommandBuilderTypes.MessageCommand;
+    public readonly builder = RecipleCommandBuilderType.MessageCommand;
     public name: string = '';
     public cooldown: number = 0;
     public description: string = '';
