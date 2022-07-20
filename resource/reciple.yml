@@ -76,6 +76,7 @@ client:
     - 'Guilds'
     - 'GuildMembers'
     - 'GuildMessages'
+    - 'MessageContent'
 
 # Bot replies
 messages:
