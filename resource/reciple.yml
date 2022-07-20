@@ -24,7 +24,7 @@ commands:
       enabled: false
       commands:
         - command: 'example-command'
-          permissions: ['ADMINISTRATOR']
+          permissions: ['Administrator']
   interactionCommand:
     # enable interaction commands
     enabled: true
@@ -44,7 +44,7 @@ commands:
       enabled: false
       commands:
         - command: 'example-command'
-          permissions: ['ADMINISTRATOR']
+          permissions: ['Administrator']
 
 
 # Ignored channel IDs
@@ -71,9 +71,11 @@ fileLogging:
   logFilePath: './logs/latest.log'
 
 # Client options
-# Use an intent calculator like https://discord-intents-calculator.vercel.app/ to get valid intents
 client:
-  intents: 33283
+  intents:
+    - 'Guilds'
+    - 'GuildMembers'
+    - 'GuildMessages'
 
 # Bot replies
 messages:
