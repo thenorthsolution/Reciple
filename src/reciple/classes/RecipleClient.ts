@@ -3,8 +3,8 @@
 import { RecipleCommandBuilders, RecipleCommandBuildersExecuteData, RecipleCommandBuilderType } from '../types/builders';
 import { InteractionCommandBuilder, RecipleInteractionCommandExecuteData } from './builders/InteractionCommandBuilder';
 import { MessageCommandBuilder, RecipleMessageCommandExecuteData } from './builders/MessageCommandBuilder';
+import { botHasExecutePermissions, userHasCommandPermissions, isIgnoredChannel } from '../permissions';
 import { InteractionBuilder, registerInteractionCommands } from '../registerInteractionCommands';
-import { botHasExecutePermissions, userHasCommandPermissions } from '../permissions';
 import { CommandCooldownManager, CooledDownUser } from './CommandCooldownManager';
 import { MessageCommandOptionManager } from './MessageCommandOptionManager';
 import { getCommand, Logger as ILogger } from 'fallout-utility';
@@ -12,7 +12,6 @@ import { RecipleHaltedCommandReason } from '../types/commands';
 import { AddModuleOptions } from '../types/paramOptions';
 import { loadModules, RecipleModule } from '../modules';
 import { Config, RecipleConfig } from './RecipleConfig';
-import { isIgnoredChannel } from '../isIgnoredChannel';
 import { version } from '../version';
 import { logger } from '../logger';
 
