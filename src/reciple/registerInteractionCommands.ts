@@ -10,9 +10,8 @@ export type InteractionBuilder = ContextMenuCommandBuilder|InteractionCommandBui
  * Register interaction commands 
  */
 export async function registerInteractionCommands(options: RegisterInteractionCommandsOptions): Promise<void> {
-    let { client, guilds } = options;
-
-    guilds = typeof guilds == 'string' ? [guilds] : guilds;
+    const client = options.client;
+    const guilds = typeof options.guilds == 'string' ? [options.guilds] : options.guilds;
 
     const commands = Object.values(options.commands ?? client.commands.interactionCommands).map(cmd => {
         if (typeof (cmd as InteractionBuilder)?.toJSON == 'undefined') return cmd as ApplicationCommandData;
