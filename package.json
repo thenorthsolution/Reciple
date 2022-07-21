@@ -4,8 +4,15 @@
   "description": "Handler for Discord.js",
   "author": "FalloutStudios",
   "homepage": "https://reciple.js.org",
+  "contributors": [
+    "GhexterCortes <cortesghexter@gmail.com>"
+  ],
   "bugs": {
     "url": "https://github.com/FalloutStudios/reciple/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FalloutStudios/reciple.git"
   },
   "license": "GPL-3.0",
   "main": "bin/index.js",
@@ -46,10 +53,11 @@
   "devDependencies": {
     "@types/node": "^18.0.6",
     "@types/semver": "^7.3.10",
-    "discord.js": "^14.0.2",
+    "discord.js": "^14.0.3",
     "typescript": "^4.7.4"
   },
   "peerDependencies": {
-    "discord.js": "13.8.x"
-  }
+    "discord.js": "14.0.x"
+  },
+  "packageManager": "yarn@1.22.19"
 }
