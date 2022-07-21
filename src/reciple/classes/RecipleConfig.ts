@@ -13,14 +13,18 @@ export interface ConfigCommandPermissions {
 
 export interface Config {
     token: string;
-    prefix: string;
     commands: {
         messageCommand: {
             enabled: boolean;
+            prefix?: string;
             replyOnError: boolean;
             allowCommandAlias: boolean;
             enableCooldown: boolean;
             commandArgumentSeparator: string;
+            permissions: {
+                enabled: boolean;
+                commands: ConfigCommandPermissions[];
+            }
         }
         interactionCommand: {
             enabled: boolean;
@@ -28,17 +32,11 @@ export interface Config {
             registerCommands: boolean;
             enableCooldown: boolean;
             setRequiredPermissions: boolean;
-            guilds: string[]|string;
-        }
-    }
-    permissions: {
-        messageCommands: {
-            enabled: boolean;
-            commands: ConfigCommandPermissions[];
-        }
-        interactionCommands: {
-            enabled: boolean;
-            commands: ConfigCommandPermissions[];
+            guilds?: string[]|string;
+            permissions: {
+                enabled: boolean;
+                commands: ConfigCommandPermissions[];
+            }
         }
     }
     ignoredChannels: {

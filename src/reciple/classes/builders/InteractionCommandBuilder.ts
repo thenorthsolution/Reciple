@@ -2,6 +2,7 @@ import { Awaitable, CommandInteraction, PermissionResolvable } from 'discord.js'
 import { RecipleHaltedCommandData } from '../../types/commands';
 import { SlashCommandBuilder } from '@discordjs/builders';
 import { RecipleClient } from '../RecipleClient';
+import { RecipleCommandBuilderType } from '../../types/builders';
 
 export interface RecipleInteractionCommandExecuteData {
     interaction: CommandInteraction;
@@ -10,12 +11,12 @@ export interface RecipleInteractionCommandExecuteData {
 }
 
 export class InteractionCommandBuilder extends SlashCommandBuilder {
-    public readonly builder = 'INTERACTION_COMMAND';
+    public readonly builder = RecipleCommandBuilderType.InteractionCommand;
     public cooldown: number = 0;
     public requiredBotPermissions: PermissionResolvable[] = [];
     public RequiredUserPermissions: PermissionResolvable[] = [];
     public allowExecuteInDM: boolean = true;
-    public halt?: (haltData: RecipleHaltedCommandData<InteractionCommandBuilder>) => Awaitable<boolean>;
+    public halt?: (haltData: RecipleHaltedCommandData<InteractionCommandBuilder>) => Awaitable<boolean|void>;
     public execute: (executeData: RecipleInteractionCommandExecuteData) => Awaitable<void> = () => { /* Execute */ };
 
     /**
@@ -38,7 +39,7 @@ export class InteractionCommandBuilder extends SlashCommandBuilder {
     /**
      * Function when the command is interupted before execution 
      */
-    public setHalt(halt?: (haltData: RecipleHaltedCommandData<InteractionCommandBuilder>) => Awaitable<boolean>): InteractionCommandBuilder {
+    public setHalt(halt?: (haltData: RecipleHaltedCommandData<InteractionCommandBuilder>) => Awaitable<boolean|void>): InteractionCommandBuilder {
         this.halt = halt ? halt : undefined;
         return this;
     }
