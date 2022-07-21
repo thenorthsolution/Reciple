@@ -1,11 +1,11 @@
-import { Awaitable, CommandInteraction, PermissionResolvable } from 'discord.js';
+import { Awaitable, ChatInputCommandInteraction, PermissionResolvable } from 'discord.js';
 import { RecipleHaltedCommandData } from '../../types/commands';
 import { SlashCommandBuilder } from '@discordjs/builders';
 import { RecipleClient } from '../RecipleClient';
 import { RecipleCommandBuilderType } from '../../types/builders';
 
 export interface RecipleInteractionCommandExecuteData {
-    interaction: CommandInteraction;
+    interaction: ChatInputCommandInteraction;
     builder: InteractionCommandBuilder;
     client: RecipleClient<true>;
 }

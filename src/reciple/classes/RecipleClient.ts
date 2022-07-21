@@ -281,7 +281,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
      * Execute an Interaction command 
      */
     public async interactionCommandExecute(interaction: Interaction|CommandInteraction): Promise<void|RecipleInteractionCommandExecuteData> {
-        if (!interaction || interaction.type !== InteractionType.ApplicationCommand || !this.isReady()) return;
+        if (!interaction || interaction.type !== InteractionType.ApplicationCommand || !interaction.isChatInputCommand() || !this.isReady()) return;
 
         const command = this.findCommand(interaction.commandName, RecipleCommandBuilderType.InteractionCommand);
         if (!command) return;
