@@ -82,7 +82,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
     }
 
     /**
-     * Load modules
+     * Load modules from modules folder
      */
     public async startModules(folder?: string): Promise<RecipleClient<Ready>> {
         if (this.isClientLogsEnabled()) this.logger.info(`Loading Modules from ${folder ?? this.config.modulesFolder}`);
@@ -168,7 +168,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
     }
 
     /**
-     * Add interaction or message command to client 
+     * Add interaction or message command to client
      */
     public addCommand(command: RecipleCommandBuilders): RecipleClient<Ready> {
         if (command.builder === RecipleCommandBuilderType.MessageCommand) {
@@ -348,9 +348,9 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
     /**
      * Get command builder by name or alias if it's a message command 
      */
-    public findCommand(command: string, type: MessageCommandBuilder["builder"]): MessageCommandBuilder|undefined;
-    public findCommand(command: string, type: InteractionCommandBuilder["builder"]): InteractionCommandBuilder|undefined;
-    public findCommand(command: string, type: RecipleCommandBuilders["builder"]): RecipleCommandBuilders|undefined {
+    public findCommand(command: string, type: RecipleCommandBuilderType.MessageCommand): MessageCommandBuilder|undefined;
+    public findCommand(command: string, type: RecipleCommandBuilderType.InteractionCommand): InteractionCommandBuilder|undefined;
+    public findCommand(command: string, type: RecipleCommandBuilderType): RecipleCommandBuilders|undefined {
         switch (type) {
             case RecipleCommandBuilderType.InteractionCommand:
                 return this.commands.interactionCommands[command];
