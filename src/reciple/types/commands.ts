@@ -2,27 +2,27 @@ import { InteractionCommandBuilder, RecipleInteractionCommandExecuteData } from 
 import { RecipleMessageCommandExecuteData } from '../classes/builders/MessageCommandBuilder';
 import { CooledDownUser } from '../classes/CommandCooldownManager';
 import { MessageCommandOptionManager } from '../classes/MessageCommandOptionManager';
-import { RecipleCommandBuilders } from '../types/builders';
+import { RecipleCommandBuilder } from '../types/builders';
 
-export type RecipleHaltedCommandData<Builder extends RecipleCommandBuilders> = CommandErrorData<Builder>|CommandCooldownData<Builder>|(Builder extends InteractionCommandBuilder ? never : CommandInvalidArguments<Builder>|CommandMissingArguments<Builder>)|CommandMissingMemberPermissions<Builder>|CommandMissingBotPermissions<Builder>;
+export type RecipleHaltedCommandData<Builder extends RecipleCommandBuilder = RecipleCommandBuilder> = CommandErrorData<Builder>|CommandCooldownData<Builder>|(Builder extends InteractionCommandBuilder ? never : CommandInvalidArguments<Builder>|CommandMissingArguments<Builder>)|CommandMissingMemberPermissions<Builder>|CommandMissingBotPermissions<Builder>;
 
-export interface CommandHaltBaseData<Builder extends RecipleCommandBuilders> { executeData: Builder extends InteractionCommandBuilder ? RecipleInteractionCommandExecuteData : RecipleMessageCommandExecuteData }
-export interface CommandErrorData<Builder extends RecipleCommandBuilders> extends CommandHaltBaseData<Builder> {
+export interface CommandHaltBaseData<Builder extends RecipleCommandBuilder> { executeData: Builder extends InteractionCommandBuilder ? RecipleInteractionCommandExecuteData : RecipleMessageCommandExecuteData }
+export interface CommandErrorData<Builder extends RecipleCommandBuilder> extends CommandHaltBaseData<Builder> {
     reason: RecipleHaltedCommandReason.Error; error: any;
 }
-export interface CommandCooldownData<Builder extends RecipleCommandBuilders> extends CommandHaltBaseData<Builder>,CooledDownUser {
+export interface CommandCooldownData<Builder extends RecipleCommandBuilder> extends CommandHaltBaseData<Builder>,CooledDownUser {
     reason: RecipleHaltedCommandReason.Cooldown;
 }
-export interface CommandInvalidArguments<Builder extends RecipleCommandBuilders> extends CommandHaltBaseData<Builder> {
+export interface CommandInvalidArguments<Builder extends RecipleCommandBuilder> extends CommandHaltBaseData<Builder> {
     reason: RecipleHaltedCommandReason.InvalidArguments; invalidArguments: MessageCommandOptionManager;
 }
-export interface CommandMissingArguments<Builder extends RecipleCommandBuilders> extends CommandHaltBaseData<Builder> {
+export interface CommandMissingArguments<Builder extends RecipleCommandBuilder> extends CommandHaltBaseData<Builder> {
     reason: RecipleHaltedCommandReason.MissingArguments; missingArguments: MessageCommandOptionManager;
 }
-export interface CommandMissingMemberPermissions<Builder extends RecipleCommandBuilders> extends CommandHaltBaseData<Builder> {
+export interface CommandMissingMemberPermissions<Builder extends RecipleCommandBuilder> extends CommandHaltBaseData<Builder> {
     reason: RecipleHaltedCommandReason.MissingMemberPermissions;
 }
-export interface CommandMissingBotPermissions<Builder extends RecipleCommandBuilders> extends CommandHaltBaseData<Builder> {
+export interface CommandMissingBotPermissions<Builder extends RecipleCommandBuilder> extends CommandHaltBaseData<Builder> {
     reason: RecipleHaltedCommandReason.MissingBotPermissions;
 }
 
