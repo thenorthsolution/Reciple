@@ -7,11 +7,17 @@ import { existsSync, readFileSync, writeFileSync } from 'fs';
 import path from 'path';
 import yaml from 'yaml';
 
+/**
+ * Command permissions config object interface
+ */
 export interface ConfigCommandPermissions {
     command: string;
     permissions: PermissionResolvable[];
 }
 
+/**
+ * Reciple config object interface
+ */
 export interface Config {
     token: string;
     commands: {
@@ -61,11 +67,17 @@ export interface Config {
     version: string;
 }
 
+/**
+ * Create/parse reciple config
+ */
 export class RecipleConfig {
     public config?: Config;
     public configPath: string = './reciple.yml';
     public static defaultConfigPath = path.join(__dirname, '../../../resource/reciple.yml');
 
+    /**
+     * @param configPath Path to config
+     */
     constructor(configPath: string) {
         if (!configPath) throw new Error('Config path is not defined');
         this.configPath = configPath;
@@ -115,6 +127,7 @@ export class RecipleConfig {
 
     /**
      * Parse token from config 
+     * @param askIfNull Ask for token if the token is null/undefined
      */
     public parseToken(askIfNull: boolean = true): string|null {
         let token = __token || null;

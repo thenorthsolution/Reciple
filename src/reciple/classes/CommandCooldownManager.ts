@@ -2,6 +2,9 @@ import { RecipleCommandBuilderType } from '../types/builders';
 
 import { Guild, TextBasedChannel, User } from 'discord.js';
 
+/**
+ * Object interface for cooled-down user
+ */
 export interface CooledDownUser {
     user: User;
     command: string;
@@ -11,9 +14,13 @@ export interface CooledDownUser {
     expireTime: number;
 }
 
+/**
+ * Stores cooled-down users
+ */
 export class CommandCooldownManager extends Array<CooledDownUser> {
     /**
      * Alias for `CommandCooldownManager#push()`
+     * @param options Cooled-down user data
      */
     public add(...options: CooledDownUser[]) { 
         return this.push(...options);
@@ -21,6 +28,8 @@ export class CommandCooldownManager extends Array<CooledDownUser> {
 
     /**
      * Remove cooldown from specific user, channel or guild
+     * @param options Remove cooldown data options
+     * @param limit Remove cooldown data limit
      */
     public remove(options: Partial<CooledDownUser>, limit: number = 0) {
         if (!Object.keys(options).length) throw new TypeError('Provide atleast one option to remove cooldown data.');
@@ -39,6 +48,7 @@ export class CommandCooldownManager extends Array<CooledDownUser> {
 
     /**
      * Check if the given user is cooled-down 
+     * @param options Options to identify if user is on cooldown
      */
     public isCooledDown(options: Partial<Omit<CooledDownUser, 'expireTime'>>): boolean {
         const data = this.get(options);
@@ -50,7 +60,8 @@ export class CommandCooldownManager extends Array<CooledDownUser> {
     }
 
     /**
-     * Clear non cooled-down users from this array 
+     * Purge non cooled-down users from this array 
+     * @param options Clean cooldown options
      */
     public clean(options?: Partial<Omit<CooledDownUser, 'expireTime'>>): void {
         for (const index in this) {
@@ -62,6 +73,7 @@ export class CommandCooldownManager extends Array<CooledDownUser> {
 
     /**
      * Get someone's cooldown data 
+     * @param options Get cooldown data options
      */
     public get(options: Partial<Omit<CooledDownUser, 'expireTime'>>): CooledDownUser|undefined {
         return this.find(data => CommandCooldownManager.checkOptions(options, data));
@@ -69,6 +81,8 @@ export class CommandCooldownManager extends Array<CooledDownUser> {
 
     /**
      * Check if the options are valid
+     * @param options Options to validated
+     * @param data Cooled-down user data
      */
     public static checkOptions(options: Partial<Omit<CooledDownUser, 'expireTime'>>, data: CooledDownUser): boolean {
         if (options?.user && options.user.id !== data.user.id) return false;

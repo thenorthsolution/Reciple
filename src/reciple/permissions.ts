@@ -5,6 +5,10 @@ import { Guild, PermissionResolvable, PermissionsBitField } from 'discord.js';
 
 /**
  * Check if the user has permissions to execute the given command name
+ * @param commandName Command name
+ * @param memberPermissions Member permissions
+ * @param configConmmandPermissions Command permissions in config
+ * @param builder Command builder
  */
 export function userHasCommandPermissions(commandName: string, memberPermissions?: PermissionsBitField, configConmmandPermissions?: Config['commands']['messageCommand']['permissions']|Config['commands']['interactionCommand']['permissions'], builder?: RecipleCommandBuilder): boolean {
     if (!configConmmandPermissions?.enabled) return true;
@@ -17,6 +21,8 @@ export function userHasCommandPermissions(commandName: string, memberPermissions
 
 /**
  * Check if the bot has the required permissions in a guild
+ * @param guild Guild
+ * @param requiredPermissions Required guild bot permissions
  */
 export function botHasExecutePermissions(guild?: Guild, requiredPermissions?: PermissionResolvable[]): boolean {
     if (!requiredPermissions?.length) return true;
@@ -26,6 +32,8 @@ export function botHasExecutePermissions(guild?: Guild, requiredPermissions?: Pe
 
 /**
  * Check if the channel id is ignored in config file 
+ * @param channelId Check if channel id is in ignore list
+ * @param ignoredChannelsConfig Ignored channels config
  */
 export function isIgnoredChannel(channelId: string, ignoredChannelsConfig?: Config["ignoredChannels"]): boolean {
     if (!ignoredChannelsConfig?.enabled) return false;

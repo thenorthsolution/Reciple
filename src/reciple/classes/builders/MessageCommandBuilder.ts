@@ -7,6 +7,9 @@ import { MessageCommandOptionBuilder } from './MessageCommandOptionBuilder';
 import { Awaitable, Message, PermissionResolvable } from 'discord.js';
 import { Command as CommandMessage } from 'fallout-utility';
 
+/**
+ * Execute data for message command
+ */
 export interface RecipleMessageCommandExecuteData {
     message: Message;
     options: MessageCommandOptionManager;
@@ -15,6 +18,9 @@ export interface RecipleMessageCommandExecuteData {
     client: RecipleClient<true>;
 }
 
+/**
+ * Validated message command option
+ */
 export interface MessageCommandValidatedOption {
     name: string;
     value: string|undefined;
@@ -23,6 +29,9 @@ export interface MessageCommandValidatedOption {
     missing: boolean;
 }
 
+/**
+ * Reciple builder for message command
+ */
 export class MessageCommandBuilder {
     public readonly builder = RecipleCommandBuilderType.MessageCommand;
     public name: string = '';
@@ -40,6 +49,7 @@ export class MessageCommandBuilder {
 
     /**
      * Sets the command name
+     * @param name Command name
      */
     public setName(name: string): MessageCommandBuilder {
         if (!name || typeof name !== 'string' || !name.match(/^[\w-]{1,32}$/)) throw new TypeError('name must be a string and match the regex /^[\\w-]{1,32}$/');
@@ -49,6 +59,7 @@ export class MessageCommandBuilder {
     
     /**
      * Sets the command description
+     * @param description Command description
      */
     public setDescription(description: string): MessageCommandBuilder {
         if (!description || typeof description !== 'string') throw new TypeError('description must be a string.');
@@ -59,6 +70,7 @@ export class MessageCommandBuilder {
     /**
      * Sets the execute cooldown for this command.
      * - `0` means no cooldown
+     * @param cooldown Command cooldown in milliseconds
      */
     public setCooldown(cooldown: number): MessageCommandBuilder {
         this.cooldown = cooldown;
@@ -67,6 +79,7 @@ export class MessageCommandBuilder {
 
     /**
      * Add aliases to the command
+     * @param aliases Command aliases
      */
     public addAliases(...aliases: string[]): MessageCommandBuilder {
         if (!aliases.length) throw new TypeError('Provide atleast one alias');
@@ -79,6 +92,7 @@ export class MessageCommandBuilder {
 
     /**
      * Set required bot permissions to execute the command
+     * @param permissions Bot's required permissions
      */
     public setRequiredBotPermissions(...permissions: PermissionResolvable[]): MessageCommandBuilder {
         this.requiredBotPermissions = permissions;
@@ -86,7 +100,8 @@ export class MessageCommandBuilder {
     }
 
     /**
-     * Set required user permissions to execute the command
+     * Set required permissions to execute the command
+     * @param permissions User's return permissions
      */
     public setRequiredMemberPermissions(...permissions: PermissionResolvable[]): MessageCommandBuilder {
         this.RequiredUserPermissions = permissions;
@@ -95,6 +110,7 @@ export class MessageCommandBuilder {
 
     /**
      * Set if command can be executed in dms
+     * @param allowExecuteInDM `true` if the command can execute in DMs
      */
     public setAllowExecuteInDM(allowExecuteInDM: boolean): MessageCommandBuilder {
         if (typeof allowExecuteInDM !== 'boolean') throw new TypeError('allowExecuteInDM must be a boolean.');
@@ -104,6 +120,7 @@ export class MessageCommandBuilder {
 
     /**
      * Allow command to be executed by bots
+     * @param allowExecuteByBots `true` if the command can be executed by bots
      */
     public setAllowExecuteByBots(allowExecuteByBots: boolean): MessageCommandBuilder {
         if (typeof allowExecuteByBots !== 'boolean') throw new TypeError('allowExecuteByBots must be a boolean.');
@@ -112,7 +129,8 @@ export class MessageCommandBuilder {
     }
 
     /**
-     * Function when the command is interupted before execution 
+     * Function when the command is interupted 
+     * @param halt Function to execute when command is halted
      */
     public setHalt(halt?: (haltData: RecipleHaltedCommandData<MessageCommandBuilder>) => Awaitable<boolean|void>): MessageCommandBuilder {
         this.halt = halt ? halt : undefined;
@@ -120,7 +138,8 @@ export class MessageCommandBuilder {
     }
 
     /**
-     * Function when the command is executed
+     * Function when the command is executed 
+     * @param execute Function to execute when the command is called 
      */
     public setExecute(execute: (executeData: RecipleMessageCommandExecuteData) => void): MessageCommandBuilder {
         if (!execute || typeof execute !== 'function') throw new TypeError('execute must be a function.');
@@ -130,6 +149,7 @@ export class MessageCommandBuilder {
 
     /**
      * Add option to the command
+     * @param option Message option builder
      */
     public addOption(option: MessageCommandOptionBuilder|((constructor: MessageCommandOptionBuilder) => MessageCommandOptionBuilder)): MessageCommandBuilder {
         if (!option) throw new TypeError('option must be a MessageOption.');
@@ -144,7 +164,8 @@ export class MessageCommandBuilder {
     }
 
     /**
-     * Validate options before executing 
+     * Validate options before executing
+     * @param validateOptions `true` if the command options needs to be validated before executing
      */
     public setValidateOptions(validateOptions: boolean): MessageCommandBuilder {
         if (typeof validateOptions !== 'boolean') throw new TypeError('validateOptions must be a boolean.');
@@ -154,6 +175,7 @@ export class MessageCommandBuilder {
 
     /**
      * validate given command options 
+     * @param options Parsed message command data
      */
     public getCommandOptionValues(options: CommandMessage): MessageCommandValidatedOption[] {
         const args = options.args || [];

@@ -4,6 +4,9 @@ import { CooledDownUser } from '../classes/CommandCooldownManager';
 import { MessageCommandOptionManager } from '../classes/MessageCommandOptionManager';
 import { RecipleCommandBuilder } from '../types/builders';
 
+/**
+ * Halted command's data
+ */
 export type RecipleHaltedCommandData<Builder extends RecipleCommandBuilder = RecipleCommandBuilder> = CommandErrorData<Builder>|CommandCooldownData<Builder>|(Builder extends InteractionCommandBuilder ? never : CommandInvalidArguments<Builder>|CommandMissingArguments<Builder>)|CommandMissingMemberPermissions<Builder>|CommandMissingBotPermissions<Builder>;
 
 export interface CommandHaltBaseData<Builder extends RecipleCommandBuilder> { executeData: Builder extends InteractionCommandBuilder ? RecipleInteractionCommandExecuteData : RecipleMessageCommandExecuteData }
@@ -26,6 +29,9 @@ export interface CommandMissingBotPermissions<Builder extends RecipleCommandBuil
     reason: RecipleHaltedCommandReason.MissingBotPermissions;
 }
 
+/**
+ * Command halt reasons
+ */
 export enum RecipleHaltedCommandReason {
     Error,
     Cooldown,

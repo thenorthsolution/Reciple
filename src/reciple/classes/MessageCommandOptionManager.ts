@@ -1,6 +1,12 @@
 import { MessageCommandValidatedOption } from './builders/MessageCommandBuilder';
 
+/**
+ * Validated message options manager
+ */
 export class MessageCommandOptionManager extends Array<MessageCommandValidatedOption> {
+    /**
+     * @param options Validated options
+     */
     constructor(options: MessageCommandValidatedOption[]) {
         super();
         this.push(...options);
@@ -8,6 +14,8 @@ export class MessageCommandOptionManager extends Array<MessageCommandValidatedOp
 
     /**
      * Get the option info 
+     * @param name Option name
+     * @param requied Is the option required
      */
     public get(name: string, requied: true): MessageCommandValidatedOption;
     public get(name: string, requied?: boolean): MessageCommandValidatedOption|null;
@@ -20,6 +28,8 @@ export class MessageCommandOptionManager extends Array<MessageCommandValidatedOp
 
     /**
      * Get the option value 
+     * @param name Option name
+     * @param requied Is the option required
      */
     public getValue(name: string, requied: true): string;
     public getValue(name: string, requied?: boolean): string|null;

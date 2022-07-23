@@ -9,6 +9,7 @@ export type InteractionBuilder = ContextMenuCommandBuilder|InteractionCommandBui
 
 /**
  * Register interaction commands 
+ * @param options Register interaction commands options
  */
 export async function registerInteractionCommands(options: RegisterInteractionCommandsOptions): Promise<void> {
     const client = options.client;

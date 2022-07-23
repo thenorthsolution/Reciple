@@ -8,6 +8,9 @@ import wildcard from 'wildcard-match';
 
 export type LoadedModules = { commands: RecipleCommandBuilder[], modules: RecipleModule[] };
 
+/**
+ * Reciple script object interface
+ */
 export declare class RecipleScript {
     public versions: string | string[];
     public commands?: RecipleCommandBuilder[];
@@ -15,6 +18,9 @@ export declare class RecipleScript {
     public onStart(reciple: RecipleClient): boolean|Promise<boolean>;
 }
 
+/**
+ * Reciple module object interface
+ */
 export interface RecipleModule {
     script: RecipleScript;
     info: {
@@ -26,6 +32,8 @@ export interface RecipleModule {
 
 /**
  * Load modules from folder 
+ * @param client Reciple client
+ * @param folder Modules folder
  */
 export async function loadModules(client: RecipleClient, folder?: string): Promise<LoadedModules> {
     const response: LoadedModules = { commands: [], modules: [] };
