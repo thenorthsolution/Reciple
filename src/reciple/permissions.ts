@@ -21,7 +21,7 @@ export function userHasCommandPermissions(commandName: string, memberPermissions
 export function botHasExecutePermissions(guild?: Guild, requiredPermissions?: PermissionResolvable[]): boolean {
     if (!requiredPermissions?.length) return true;
 
-    return guild?.members.me ? guild.members.me?.permissions.has(requiredPermissions) : false;
+    return guild?.members.me ? guild.members.me.permissions.has(requiredPermissions) : false;
 }
 
 /**
