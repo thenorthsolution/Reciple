@@ -203,7 +203,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "docs@workspace:docs"
   dependencies:
-    typedoc: latest
+    typedoc: ^0.23.8
     typedoc-plugin-discord-types: ^1.0.2
     typedoc-plugin-djs-links: ^1.2.0
     typedoc-plugin-header-links: ^1.0.0
@@ -507,7 +507,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typedoc@npm:latest":
+"typedoc@npm:^0.23.8":
   version: 0.23.8
   resolution: "typedoc@npm:0.23.8"
   dependencies:
