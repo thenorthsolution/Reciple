@@ -1,9 +1,10 @@
-import { RecipleCommandBuilders, RecipleCommandBuilderType } from './types/builders';
-import { existsSync, mkdirSync, readdirSync } from 'fs';
-import { version, isSupportedVersion } from './version';
 import { RecipleClient } from './classes/RecipleClient';
-import wildcard from 'wildcard-match';
+import { RecipleCommandBuilders, RecipleCommandBuilderType } from './types/builders';
+import { isSupportedVersion, version } from './version';
+
+import { existsSync, mkdirSync, readdirSync } from 'fs';
 import path from 'path';
+import wildcard from 'wildcard-match';
 
 export type LoadedModules = { commands: RecipleCommandBuilders[], modules: RecipleModule[] };
 

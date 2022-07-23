@@ -1,32 +1,21 @@
 // Not cool code
-
-import { RecipleCommandBuilders, RecipleCommandBuildersExecuteData, RecipleCommandBuilderType } from '../types/builders';
-import { InteractionCommandBuilder, RecipleInteractionCommandExecuteData } from './builders/InteractionCommandBuilder';
-import { MessageCommandBuilder, RecipleMessageCommandExecuteData } from './builders/MessageCommandBuilder';
-import { botHasExecutePermissions, userHasCommandPermissions, isIgnoredChannel } from '../permissions';
+import { logger } from '../logger';
+import { loadModules, RecipleModule } from '../modules';
+import { botHasExecutePermissions, isIgnoredChannel, userHasCommandPermissions } from '../permissions';
 import { InteractionBuilder, registerInteractionCommands } from '../registerInteractionCommands';
-import { CommandCooldownManager, CooledDownUser } from './CommandCooldownManager';
-import { MessageCommandOptionManager } from './MessageCommandOptionManager';
-import { getCommand, Logger as ILogger } from 'fallout-utility';
+import { RecipleCommandBuilders, RecipleCommandBuildersExecuteData, RecipleCommandBuilderType } from '../types/builders';
 import { RecipleHaltedCommandReason } from '../types/commands';
 import { AddModuleOptions } from '../types/paramOptions';
-import { loadModules, RecipleModule } from '../modules';
-import { Config, RecipleConfig } from './RecipleConfig';
 import { version } from '../version';
-import { logger } from '../logger';
+import { InteractionCommandBuilder, RecipleInteractionCommandExecuteData } from './builders/InteractionCommandBuilder';
+import { MessageCommandBuilder, RecipleMessageCommandExecuteData } from './builders/MessageCommandBuilder';
+import { CommandCooldownManager, CooledDownUser } from './CommandCooldownManager';
+import { MessageCommandOptionManager } from './MessageCommandOptionManager';
+import { Config, RecipleConfig } from './RecipleConfig';
 
-import {
-    ApplicationCommandData,
-    Awaitable,
-    ChannelType,
-    Client,
-    ClientEvents,
-    ClientOptions,
-    CommandInteraction,
-    Interaction,
-    InteractionType,
-    Message
-} from 'discord.js';
+import { ApplicationCommandData, Awaitable, ChannelType, Client, ClientEvents, ClientOptions, CommandInteraction, Interaction, InteractionType, Message } from 'discord.js';
+import { getCommand, Logger as ILogger } from 'fallout-utility';
+
 
 export interface RecipleClientOptions extends ClientOptions { config?: Config; }
 

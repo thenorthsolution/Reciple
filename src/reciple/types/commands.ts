@@ -1,7 +1,7 @@
 import { InteractionCommandBuilder, RecipleInteractionCommandExecuteData } from '../classes/builders/InteractionCommandBuilder';
 import { RecipleMessageCommandExecuteData } from '../classes/builders/MessageCommandBuilder';
-import { MessageCommandOptionManager } from '../classes/MessageCommandOptionManager';
 import { CooledDownUser } from '../classes/CommandCooldownManager';
+import { MessageCommandOptionManager } from '../classes/MessageCommandOptionManager';
 import { RecipleCommandBuilders } from '../types/builders';
 
 export type RecipleHaltedCommandData<Builder extends RecipleCommandBuilders> = CommandErrorData<Builder>|CommandCooldownData<Builder>|(Builder extends InteractionCommandBuilder ? never : CommandInvalidArguments<Builder>|CommandMissingArguments<Builder>)|CommandMissingMemberPermissions<Builder>|CommandMissingBotPermissions<Builder>;

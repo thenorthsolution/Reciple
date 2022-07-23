@@ -1,6 +1,7 @@
-import { InteractionBuilder } from '../registerInteractionCommands';
-import { RecipleModule, RecipleScript } from '../modules';
 import { RecipleClient } from '../classes/RecipleClient';
+import { RecipleModule, RecipleScript } from '../modules';
+import { InteractionBuilder } from '../registerInteractionCommands';
+
 import { ApplicationCommandData } from 'discord.js';
 
 export interface AddModuleOptions {

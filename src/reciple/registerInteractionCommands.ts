@@ -1,6 +1,7 @@
 import { InteractionCommandBuilder } from './classes/builders/InteractionCommandBuilder';
-import { ContextMenuCommandBuilder, SlashCommandBuilder } from '@discordjs/builders';
 import { RegisterInteractionCommandsOptions } from './types/paramOptions';
+
+import { ContextMenuCommandBuilder, SlashCommandBuilder } from '@discordjs/builders';
 import { ApplicationCommandData } from 'discord.js';
 
 

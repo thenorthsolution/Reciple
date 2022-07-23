@@ -1,10 +1,12 @@
 #!/usr/bin/env node
-import { RecipleConfig } from './reciple/classes/RecipleConfig';
 import { RecipleClient } from './reciple/classes/RecipleClient';
-import { readdirSync, existsSync } from 'fs';
-import { version } from './reciple/version';
+import { RecipleConfig } from './reciple/classes/RecipleConfig';
 import { flags } from './reciple/flags';
+import { version } from './reciple/version';
+
 import { input } from 'fallout-utility';
+import { existsSync, readdirSync } from 'fs';
+
 import 'dotenv/config';
 
 if (flags.version) {

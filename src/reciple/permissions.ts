@@ -1,6 +1,7 @@
-import { Guild, PermissionResolvable, PermissionsBitField } from 'discord.js';
-import { RecipleCommandBuilders } from './types/builders';
 import { Config } from './classes/RecipleConfig';
+import { RecipleCommandBuilders } from './types/builders';
+
+import { Guild, PermissionResolvable, PermissionsBitField } from 'discord.js';
 
 /**
  * Check if the user has permissions to execute the given command name

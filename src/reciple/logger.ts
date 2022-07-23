@@ -1,6 +1,7 @@
-import { Logger, LogLevels } from 'fallout-utility';
 import { flags } from './flags';
+
 import chalk from 'chalk';
+import { Logger, LogLevels } from 'fallout-utility';
 
 /**
  * Create new logger
