@@ -29,14 +29,14 @@
   ],
   "scripts": {
     "clean": "rm -rf bin",
-    "build": "yarn run clean && npx tsc && yarn build:docs",
-    "build:publish": "yarn run build && yarn publish && yarn run publish:docs",
-    "build:pub-prerelease": "yarn run build && yarn publish --tag pre",
+    "build": "yarn clean && yarn exec tsc",
+    "build:publish": "yarn build && yarn publish && yarn build:docs && yarn publish:docs",
+    "build:pub-prerelease": "yarn build && yarn publish --tag pre",
     "build:docs": "yarn workspace docs build",
     "update:docs": "yarn workspace docs update",
-    "test": "yarn run build && yarn run test:start",
-    "test:start": "cd test && npx reciple",
-    "publish:docs": "yarn run build:docs && yarn run update:docs"
+    "test": "yarn build && yarn test:start",
+    "test:start": "cd test && yarn exec reciple",
+    "publish:docs": "yarn build:docs && yarn update:docs"
   },
   "dependencies": {
     "chalk": "4.1.2",
