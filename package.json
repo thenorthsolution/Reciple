@@ -16,9 +16,7 @@
   },
   "license": "GPL-3.0",
   "main": "bin/index.js",
-  "bin": {
-    "reciple": "bin/bin.js"
-  },
+  "bin": "bin/bin.js",
   "engines": {
     "node": ">=16.9.0"
   },
@@ -34,12 +32,12 @@
     "build": "yarn run clean && npx tsc && yarn run reinstall",
     "build:publish": "yarn run build && yarn publish && yarn run publish:docs",
     "build:pub-prerelease": "yarn run build && yarn publish --tag pre",
-    "reinstall": "npm un reciple -g && npm i ./ -g",
-    "publish:docs": "yarn run build:docs && yarn run update:docs",
+    "build:docs": "yarn workspace docs build",
+    "update:docs": "yarn workspace docs update",
     "test": "yarn run build && yarn run test:start",
     "test:start": "cd test && npx reciple",
-    "build:docs": "cd docs && yarn run build",
-    "update:docs": "cd docs && yarn run update"
+    "reinstall": "npm un reciple -g && npm i ./ -g",
+    "publish:docs": "yarn run build:docs && yarn run update:docs"
   },
   "dependencies": {
     "chalk": "4.1.2",
@@ -60,7 +58,7 @@
     "discord.js": "14.0.x"
   },
   "workspaces": [
-    "docs/*"
+    "./docs/"
   ],
-  "packageManager": "yarn@1.22.19"
+  "packageManager": "yarn@3.2.2"
 }
