@@ -175,44 +175,50 @@ export class MessageCommandBuilder {
 
     /**
      * validate given command options 
+     * @deprecated use `validateMessageCommandOptions()` instead
      * @param options Parsed message command data
      */
-    public getCommandOptionValues(options: CommandMessage): MessageCommandValidatedOption[] {
-        const args = options.args || [];
-        const required = this.options.filter(o => o.required);
-        const optional = this.options.filter(o => !o.required);
-        const allOptions = [...required, ...optional];
-        const result: MessageCommandValidatedOption[] = [];
+    // TODO: Remove this on the next major update
+    public getCommandOptionValues(options: CommandMessage): MessageCommandOptionManager {
+        return validateMessageCommandOptions(this, options);
+    }
+}
 
-        let i = 0;
-        for (const option of allOptions) {
-            const arg = args[i];
-            const value: MessageCommandValidatedOption = {
-                name: option.name,
-                value: arg ?? undefined,
-                required: option.required,
-                invalid: false,
-                missing: false
-            };
+export function validateMessageCommandOptions(builder: MessageCommandBuilder, options: CommandMessage): MessageCommandOptionManager {
+    const args = options.args || [];
+    const required = builder.options.filter(o => o.required);
+    const optional = builder.options.filter(o => !o.required);
+    const allOptions = [...required, ...optional];
+    const result: MessageCommandValidatedOption[] = [];
 
-            if (arg == undefined && option.required) {
-                value.missing = true;
-                result.push(value);
-                continue;
-            }
+    let i = 0;
+    for (const option of allOptions) {
+        const arg = args[i];
+        const value: MessageCommandValidatedOption = {
+            name: option.name,
+            value: arg ?? undefined,
+            required: option.required,
+            invalid: false,
+            missing: false
+        };
 
-            if (arg == undefined && !option.required) {
-                result.push(value);
-                continue;
-            }
-
-            const validate = option.validator ? option.validator(arg) : true;
-            if (!validate) value.invalid = true;
-
+        if (arg == undefined && option.required) {
+            value.missing = true;
             result.push(value);
-            i++;
+            continue;
         }
 
-        return result;
+        if (arg == undefined && !option.required) {
+            result.push(value);
+            continue;
+        }
+
+        const validate = option.validator ? option.validator(arg) : true;
+        if (!validate) value.invalid = true;
+
+        result.push(value);
+        i++;
     }
+
+    return new MessageCommandOptionManager(result);
 }

@@ -8,7 +8,7 @@ import { RecipleHaltedCommandData, RecipleHaltedCommandReason } from '../types/c
 import { AddModuleOptions } from '../types/paramOptions';
 import { version } from '../version';
 import { InteractionCommandBuilder, RecipleInteractionCommandExecuteData } from './builders/InteractionCommandBuilder';
-import { MessageCommandBuilder, RecipleMessageCommandExecuteData } from './builders/MessageCommandBuilder';
+import { MessageCommandBuilder, RecipleMessageCommandExecuteData, validateMessageCommandOptions } from './builders/MessageCommandBuilder';
 import { CommandCooldownManager, CooledDownUser } from './CommandCooldownManager';
 import { MessageCommandOptionManager } from './MessageCommandOptionManager';
 import { Config, RecipleConfig } from './RecipleConfig';
@@ -211,10 +211,10 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
         const command = this.findCommand(parseCommand.command, RecipleCommandBuilderType.MessageCommand);
         if (!command) return;
         
-        const commandOptions = command.getCommandOptionValues(parseCommand);
+        const commandOptions = validateMessageCommandOptions(command, parseCommand);
         const executeData: RecipleMessageCommandExecuteData = {
             message: message,
-            options: new MessageCommandOptionManager(commandOptions),
+            options: commandOptions,
             command: parseCommand,
             builder: command,
             client: this
