@@ -59,5 +59,8 @@
   "peerDependencies": {
     "discord.js": "14.0.x"
   },
+  "workspaces": [
+    "docs/*"
+  ],
   "packageManager": "yarn@1.22.19"
 }
