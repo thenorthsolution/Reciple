@@ -1,8 +1,9 @@
-import { Awaitable, ChatInputCommandInteraction, PermissionResolvable } from 'discord.js';
-import { RecipleHaltedCommandData } from '../../types/commands';
-import { SlashCommandBuilder } from '@discordjs/builders';
-import { RecipleClient } from '../RecipleClient';
 import { RecipleCommandBuilderType } from '../../types/builders';
+import { RecipleHaltedCommandData } from '../../types/commands';
+import { RecipleClient } from '../RecipleClient';
+
+import { SlashCommandBuilder } from '@discordjs/builders';
+import { Awaitable, ChatInputCommandInteraction, PermissionResolvable } from 'discord.js';
 
 export interface RecipleInteractionCommandExecuteData {
     interaction: ChatInputCommandInteraction;
@@ -25,6 +26,14 @@ export class InteractionCommandBuilder extends SlashCommandBuilder {
      */
     public setCooldown(cooldown: number): InteractionCommandBuilder {
         this.cooldown = cooldown;
+        return this;
+    }
+
+    /**
+     * Set required bot permissions to execute the command
+     */
+     public setRequiredBotPermissions(...permissions: PermissionResolvable[]): InteractionCommandBuilder {
+        this.requiredBotPermissions = permissions;
         return this;
     }
 

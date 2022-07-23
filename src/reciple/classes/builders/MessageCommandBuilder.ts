@@ -1,10 +1,11 @@
-import { MessageCommandOptionBuilder } from './MessageCommandOptionBuilder';
-import { MessageCommandOptionManager } from '../MessageCommandOptionManager';
-import { Awaitable, Message, PermissionResolvable } from 'discord.js';
-import { RecipleHaltedCommandData } from '../../types/commands';
-import { Command as CommandMessage } from 'fallout-utility';
-import { RecipleClient } from '../RecipleClient';
 import { RecipleCommandBuilderType } from '../../types/builders';
+import { RecipleHaltedCommandData } from '../../types/commands';
+import { MessageCommandOptionManager } from '../MessageCommandOptionManager';
+import { RecipleClient } from '../RecipleClient';
+import { MessageCommandOptionBuilder } from './MessageCommandOptionBuilder';
+
+import { Awaitable, Message, PermissionResolvable } from 'discord.js';
+import { Command as CommandMessage } from 'fallout-utility';
 
 export interface RecipleMessageCommandExecuteData {
     message: Message;
@@ -77,7 +78,7 @@ export class MessageCommandBuilder {
     }
 
     /**
-     * Set required per
+     * Set required bot permissions to execute the command
      */
     public setRequiredBotPermissions(...permissions: PermissionResolvable[]): MessageCommandBuilder {
         this.requiredBotPermissions = permissions;
