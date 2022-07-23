@@ -29,14 +29,13 @@
   ],
   "scripts": {
     "clean": "rm -rf bin",
-    "build": "yarn run clean && npx tsc && yarn run reinstall",
+    "build": "yarn run clean && npx tsc && yarn build:docs",
     "build:publish": "yarn run build && yarn publish && yarn run publish:docs",
     "build:pub-prerelease": "yarn run build && yarn publish --tag pre",
     "build:docs": "yarn workspace docs build",
     "update:docs": "yarn workspace docs update",
     "test": "yarn run build && yarn run test:start",
     "test:start": "cd test && npx reciple",
-    "reinstall": "npm un reciple -g && npm i ./ -g",
     "publish:docs": "yarn run build:docs && yarn run update:docs"
   },
   "dependencies": {
