@@ -2,9 +2,9 @@
 # To use env variable as a token just do it like this env:TOKEN_ENV
 token: TOKEN
 
-
 # Commands options
 commands:
+  # message command options
   messageCommand:
     # enable message commands
     enabled: true
@@ -12,25 +12,27 @@ commands:
     prefix: '!'
     # reply when an error occured
     replyOnError: false
-    # Enable the use of command cooldowns
+    # enable the use of command cooldowns
     enableCooldown: true
-    # Allow executing commands via aliases
+    # allow executing commands via aliases
     allowCommandAlias: true
     # command argument separator
     commandArgumentSeparator: ' '
-    # Overwrite command permissions
+    # overwrite command permissions
     permissions:
       # enable overwriten command permissions
       enabled: false
       commands:
         - command: 'example-command'
           permissions: ['Administrator']
+
+  # Interaction command options
   interactionCommand:
     # enable interaction commands
     enabled: true
     # reply when an error occured
     replyOnError: false
-    # Enable the use of command cooldowns
+    # enable the use of command cooldowns
     enableCooldown: true
     # register interaction commands on bot ready
     registerCommands: true
@@ -38,7 +40,7 @@ commands:
     setRequiredPermissions: true
     # register commands to specific guild(s) empty to make it global
     guilds: []
-    # Overwrite command permissions
+    # overwrite command permissions
     permissions:
       # enable overwriten command permissions
       enabled: false
@@ -71,6 +73,7 @@ fileLogging:
   logFilePath: './logs/latest.log'
 
 # Client options
+# Learn more about client options at https://discord.js.org/#/docs/discord.js/main/typedef/ClientOptions
 client:
   intents:
     - 'Guilds'
@@ -78,7 +81,7 @@ client:
     - 'GuildMessages'
     - 'MessageContent'
 
-# Bot replies
+# Bot messages
 messages:
   missingArguments: 'Not enough arguments.'
   invalidArguments: 'Invalid argument(s) given.'
@@ -99,16 +102,16 @@ messages:
 ignoredFiles: []
 
 
-###################################################
-#                                                 #
-#   #####  #####  #    #   ###   #####  ####      #
-#   #   #  #   #  # #  #  #      #      #   #     #
-#   #   #  #####  #  # #  # ###  ###    ####      #
-#   #  #   #   #  #    #  #   #  #      #   #     #
-#   ###    #   #  #    #   ###   #####  #    #    #
-#                                                 #
-###################################################
-## Modifying these values below can cause errors ##
+####################################################
+#                                                  #
+#    #####  #####  #    #   ###   #####  ####      #
+#    #   #  #   #  # #  #  #      #      #   #     #
+#    #   #  #####  #  # #  # ###  ###    ####      #
+#    #  #   #   #  #    #  #   #  #      #   #     #
+#    ###    #   #  #    #   ###   #####  #    #    #
+#                                                  #
+####################################################
+## Modifying these values below can break reciple ##
 
 # Modules folder
 modulesFolder: 'modules'
