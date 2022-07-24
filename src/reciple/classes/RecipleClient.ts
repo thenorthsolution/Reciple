@@ -234,7 +234,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
 
             if (command.validateOptions) {
                 if (commandOptions.some(o => o.invalid)) {
-                    if (!command?.halt || !await command.halt({ executeData, reason: RecipleHaltedCommandReason.InvalidArguments, invalidArguments: new MessageCommandOptionManager(executeData.options.filter(o => o.invalid)) })) {
+                    if (!await this._haltCommand(command, { executeData, reason: RecipleHaltedCommandReason.InvalidArguments, invalidArguments: new MessageCommandOptionManager(executeData.options.filter(o => o.invalid)) })) {
                         message.reply(this.getMessage('invalidArguments', 'Invalid argument(s) given.')).catch(er => this._replyError(er));
                     }
                     return;
@@ -414,12 +414,12 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
                     ? await (command.builder == RecipleCommandBuilderType.InteractionCommand
                             ? Promise.resolve(command.halt(haltData as RecipleHaltedCommandData<InteractionCommandBuilder>))
                             : Promise.resolve(command.halt(haltData as RecipleHaltedCommandData<MessageCommandBuilder>))
-                    ).catch(() => false)
+                    ).catch(err => { throw err; })
                     : false
                 ) ?? false;
         } catch (err) {
             if (this.isClientLogsEnabled()) {
-                this.logger.error(`Halt command "${command.name}" execute error`);
+                this.logger.error(`An error occured executing command halt for "${command.name}"`);
                 this.logger.error(err);
             }
             return false;
