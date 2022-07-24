@@ -25,7 +25,7 @@ export async function registerInteractionCommands(options: RecipleRegisterIntera
                     client.config.commands.interactionCommand.permissions.enabled ?
                     client.config.commands.interactionCommand.permissions.commands.find(cmd_ => cmd_.command.toLowerCase() === cmd.name.toLowerCase())?.permissions :
                     undefined
-                ) ?? cmd.requiredUserPermissions;
+                ) ?? cmd.requiredMemberPermissions;
 
             cmd.setRequiredMemberPermissions(...permissions);
             client.commands.interactionCommands[cmd.name] = cmd;

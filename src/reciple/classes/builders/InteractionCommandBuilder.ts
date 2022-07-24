@@ -21,7 +21,7 @@ export class InteractionCommandBuilder extends SlashCommandBuilder {
     public readonly builder = RecipleCommandBuilderType.InteractionCommand;
     public cooldown: number = 0;
     public requiredBotPermissions: PermissionResolvable[] = [];
-    public requiredUserPermissions: PermissionResolvable[] = [];
+    public requiredMemberPermissions: PermissionResolvable[] = [];
     public allowExecuteInDM: boolean = true;
     public halt?: (haltData: RecipleHaltedCommandData<InteractionCommandBuilder>) => Awaitable<boolean|void>;
     public execute: (executeData: InteractionCommandExecuteData) => Awaitable<void> = () => { /* Execute */ };
@@ -50,7 +50,7 @@ export class InteractionCommandBuilder extends SlashCommandBuilder {
      * @param permissions User's return permissions
      */
     public setRequiredMemberPermissions(...permissions: PermissionResolvable[]): InteractionCommandBuilder {
-        this.requiredUserPermissions = permissions;
+        this.requiredMemberPermissions = permissions;
         return this;
     }
 

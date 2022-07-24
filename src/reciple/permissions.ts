@@ -13,7 +13,7 @@ export function userHasCommandPermissions(options: RecipleUserHasCommandPermissi
                 ? options.commandPermissions?.commands.find(c => c.command.toLowerCase() === options.builder.name.toLowerCase())
                 : null
             )
-            ?? { permissions: options.builder.requiredUserPermissions };
+            ?? { permissions: options.builder.requiredMemberPermissions };
     if (!command.permissions.length) return true;
 
     return options.memberPermissions ? options.memberPermissions.has(command.permissions) : false;
