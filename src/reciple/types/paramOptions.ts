@@ -4,7 +4,7 @@ import { InteractionBuilder } from '../registerInteractionCommands';
 
 import { ApplicationCommandData } from 'discord.js';
 
-export interface AddModuleOptions {
+export interface RecipleAddModuleOptions {
     /**
      * The Module script
      */

@@ -10,7 +10,7 @@ import { Command as CommandMessage } from 'fallout-utility';
 /**
  * Execute data for message command
  */
-export interface RecipleMessageCommandExecuteData {
+export interface MessageCommandExecuteData {
     message: Message;
     options: MessageCommandOptionManager;
     command: CommandMessage;
@@ -45,7 +45,7 @@ export class MessageCommandBuilder {
     public allowExecuteInDM: boolean = true;
     public allowExecuteByBots: boolean = false;
     public halt?: (haltData: RecipleHaltedCommandData<MessageCommandBuilder>) => Awaitable<boolean|void>;
-    public execute: (executeData: RecipleMessageCommandExecuteData) => void = () => { /* Execute */ };
+    public execute: (executeData: MessageCommandExecuteData) => void = () => { /* Execute */ };
 
     /**
      * Sets the command name
@@ -141,7 +141,7 @@ export class MessageCommandBuilder {
      * Function when the command is executed 
      * @param execute Function to execute when the command is called 
      */
-    public setExecute(execute: (executeData: RecipleMessageCommandExecuteData) => void): MessageCommandBuilder {
+    public setExecute(execute: (executeData: MessageCommandExecuteData) => void): MessageCommandBuilder {
         if (!execute || typeof execute !== 'function') throw new TypeError('execute must be a function.');
         this.execute = execute;
         return this;

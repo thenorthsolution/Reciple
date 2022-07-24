@@ -1,5 +1,5 @@
-import { InteractionCommandBuilder, RecipleInteractionCommandExecuteData } from '../classes/builders/InteractionCommandBuilder';
-import { MessageCommandBuilder, RecipleMessageCommandExecuteData } from '../classes/builders/MessageCommandBuilder';
+import { InteractionCommandBuilder, InteractionCommandExecuteData } from '../classes/builders/InteractionCommandBuilder';
+import { MessageCommandBuilder, MessageCommandExecuteData } from '../classes/builders/MessageCommandBuilder';
 
 /**
  * Reciple command builders
@@ -8,7 +8,7 @@ export type RecipleCommandBuilder = MessageCommandBuilder|InteractionCommandBuil
 /**
  * Reciple command builders execute data
  */
-export type RecipleCommandBuildersExecuteData = RecipleInteractionCommandExecuteData|RecipleMessageCommandExecuteData;
+export type RecipleCommandBuildersExecuteData = InteractionCommandExecuteData|MessageCommandExecuteData;
 
 /**
  * Types of Reciple command builders

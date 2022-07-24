@@ -20,10 +20,8 @@ export function isValidVersion(ver: string) {
 export function parseVersion(ver: string) {
     if (!isValidVersion(ver)) throw new TypeError(`Invalid version: ${ver}`);
 
-    const [major, minor, patch] = `${semver.coerce(ver)}`?.split('.') ?? [];
-    return { major: parseInt(major), minor: parseInt(minor), patch: parseInt(patch) };
+    return semver.parse(ver);
 }
-
 /**
  * Check if the given version is supported by the given version range
  * @param versionRange Version range

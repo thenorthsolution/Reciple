@@ -8,7 +8,7 @@ import { Awaitable, ChatInputCommandInteraction, PermissionResolvable } from 'di
 /**
  * Execute data for interaction command
  */
-export interface RecipleInteractionCommandExecuteData {
+export interface InteractionCommandExecuteData {
     interaction: ChatInputCommandInteraction;
     builder: InteractionCommandBuilder;
     client: RecipleClient<true>;
@@ -24,7 +24,7 @@ export class InteractionCommandBuilder extends SlashCommandBuilder {
     public RequiredUserPermissions: PermissionResolvable[] = [];
     public allowExecuteInDM: boolean = true;
     public halt?: (haltData: RecipleHaltedCommandData<InteractionCommandBuilder>) => Awaitable<boolean|void>;
-    public execute: (executeData: RecipleInteractionCommandExecuteData) => Awaitable<void> = () => { /* Execute */ };
+    public execute: (executeData: InteractionCommandExecuteData) => Awaitable<void> = () => { /* Execute */ };
 
     /**
      * Sets the execute cooldown for this command.
@@ -67,7 +67,7 @@ export class InteractionCommandBuilder extends SlashCommandBuilder {
      * Function when the command is executed 
      * @param execute Function to execute when the command is called 
      */
-    public setExecute(execute: (executeData: RecipleInteractionCommandExecuteData) => void): InteractionCommandBuilder {
+    public setExecute(execute: (executeData: InteractionCommandExecuteData) => void): InteractionCommandBuilder {
         if (!execute || typeof execute !== 'function') throw new Error('execute must be a function.');
         this.execute = execute;
         return this;

@@ -71,7 +71,7 @@ export interface Config {
  * Create/parse reciple config
  */
 export class RecipleConfig {
-    public config?: Config;
+    public config: Config = RecipleConfig.getDefaultConfig();
     public configPath: string = './reciple.yml';
     public static defaultConfigPath = path.join(__dirname, '../../../resource/reciple.yml');
 

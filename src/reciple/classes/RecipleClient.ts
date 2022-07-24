@@ -1,14 +1,14 @@
 // Not cool code
-import { createLogger, logger } from '../logger';
+import { createLogger } from '../logger';
 import { loadModules, RecipleModule } from '../modules';
 import { botHasExecutePermissions, isIgnoredChannel, userHasCommandPermissions } from '../permissions';
 import { InteractionBuilder, registerInteractionCommands } from '../registerInteractionCommands';
 import { RecipleCommandBuilder, RecipleCommandBuildersExecuteData, RecipleCommandBuilderType } from '../types/builders';
 import { RecipleHaltedCommandData, RecipleHaltedCommandReason } from '../types/commands';
-import { AddModuleOptions } from '../types/paramOptions';
+import { RecipleAddModuleOptions } from '../types/paramOptions';
 import { version } from '../version';
-import { InteractionCommandBuilder, RecipleInteractionCommandExecuteData } from './builders/InteractionCommandBuilder';
-import { MessageCommandBuilder, RecipleMessageCommandExecuteData, validateMessageCommandOptions } from './builders/MessageCommandBuilder';
+import { InteractionCommandBuilder, InteractionCommandExecuteData } from './builders/InteractionCommandBuilder';
+import { MessageCommandBuilder, MessageCommandExecuteData, validateMessageCommandOptions } from './builders/MessageCommandBuilder';
 import { CommandCooldownManager, CooledDownUser } from './CommandCooldownManager';
 import { MessageCommandOptionManager } from './MessageCommandOptionManager';
 import { Config, RecipleConfig } from './RecipleConfig';
@@ -33,8 +33,8 @@ export interface RecipleClientCommands {
  * Reciple client events
  */
 export interface RecipleClientEvents extends ClientEvents {
-    recipleMessageCommandCreate: [executeData: RecipleMessageCommandExecuteData];
-    recipleInteractionCommandCreate: [executeData: RecipleInteractionCommandExecuteData];
+    recipleMessageCommandCreate: [executeData: MessageCommandExecuteData];
+    recipleInteractionCommandCreate: [executeData: InteractionCommandExecuteData];
     recipleReplyError: [error: unknown];
 }
 
@@ -142,7 +142,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
      * Add module
      * @param options Module options
      */
-    public async addModule(options: AddModuleOptions): Promise<void> {
+    public async addModule(options: RecipleAddModuleOptions): Promise<void> {
         const { script } = options;
         const registerCommands = options.registerInteractionCommands;
         const info = options.moduleInfo;
@@ -202,7 +202,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
      * @param message Message command executor
      * @param prefix Message command prefix
      */
-    public async messageCommandExecute(message: Message, prefix?: string): Promise<void|RecipleMessageCommandExecuteData> {
+    public async messageCommandExecute(message: Message, prefix?: string): Promise<void|MessageCommandExecuteData> {
         if (!message.content || !this.isReady()) return;
 
         const parseCommand = getCommand(message.content, prefix || this.config.commands.messageCommand.prefix || '!', this.config.commands.messageCommand.commandArgumentSeparator || ' ');
@@ -212,7 +212,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
         if (!command) return;
         
         const commandOptions = validateMessageCommandOptions(command, parseCommand);
-        const executeData: RecipleMessageCommandExecuteData = {
+        const executeData: MessageCommandExecuteData = {
             message: message,
             options: commandOptions,
             command: parseCommand,
@@ -289,13 +289,13 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
      * Execute an Interaction command 
      * @param interaction Command Interaction
      */
-    public async interactionCommandExecute(interaction: Interaction|ChatInputCommandInteraction): Promise<void|RecipleInteractionCommandExecuteData> {
+    public async interactionCommandExecute(interaction: Interaction|ChatInputCommandInteraction): Promise<void|InteractionCommandExecuteData> {
         if (!interaction || interaction.type !== InteractionType.ApplicationCommand || !interaction.isChatInputCommand() || !this.isReady()) return;
 
         const command = this.findCommand(interaction.commandName, RecipleCommandBuilderType.InteractionCommand);
         if (!command) return;
 
-        const executeData: RecipleInteractionCommandExecuteData = {
+        const executeData: InteractionCommandExecuteData = {
             interaction: interaction,
             builder: command,
             client: this
@@ -431,12 +431,12 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
 
         if (!err || !command) return;
 
-        if ((command as RecipleMessageCommandExecuteData)?.message) {
+        if ((command as MessageCommandExecuteData)?.message) {
             if (!this.config.commands.messageCommand.replyOnError) return;
-            await (command as RecipleMessageCommandExecuteData).message.reply(this.getMessage('error', 'An error occurred.')).catch(er => this._replyError(er));
-        } else if ((command as RecipleInteractionCommandExecuteData)?.interaction) {
+            await (command as MessageCommandExecuteData).message.reply(this.getMessage('error', 'An error occurred.')).catch(er => this._replyError(er));
+        } else if ((command as InteractionCommandExecuteData)?.interaction) {
             if (!this.config.commands.interactionCommand.replyOnError) return;
-            await (command as RecipleInteractionCommandExecuteData).interaction.followUp(this.getMessage('error', 'An error occurred.')).catch(er => this._replyError(er));
+            await (command as InteractionCommandExecuteData).interaction.followUp(this.getMessage('error', 'An error occurred.')).catch(er => this._replyError(er));
         }
     }
 }
