@@ -111,7 +111,7 @@ ignoredFiles: []
 #    ###    #   #  #    #   ###   #####  #    #    #
 #                                                  #
 ####################################################
-## Modifying these values below can break reciple ##
+## Modifying the values below could break reciple ##
 
 # Modules folder
 modulesFolder: 'modules'
