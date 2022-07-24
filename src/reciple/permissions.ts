@@ -1,22 +1,28 @@
 import { Config } from './classes/RecipleConfig';
-import { RecipleCommandBuilders } from './types/builders';
+import { RecipleUserHasCommandPermissionsOptions } from './types/paramOptions';
 
-import { Guild, PermissionResolvable, PermissionsBitField } from 'discord.js';
+import { Guild, PermissionResolvable } from 'discord.js';
 
 /**
  * Check if the user has permissions to execute the given command name
+ * @param options options
  */
-export function userHasCommandPermissions(commandName: string, memberPermissions?: PermissionsBitField, configConmmandPermissions?: Config['commands']['messageCommand']['permissions']|Config['commands']['interactionCommand']['permissions'], builder?: RecipleCommandBuilders): boolean {
-    if (!configConmmandPermissions?.enabled) return true;
-
-    const command = configConmmandPermissions.commands.find(c => c.command.toLowerCase() === commandName.toLowerCase()) ?? { permissions: builder?.RequiredUserPermissions ?? [] };
+export function userHasCommandPermissions(options: RecipleUserHasCommandPermissionsOptions): boolean {
+    const command = (
+                options.commandPermissions?.enabled
+                ? options.commandPermissions?.commands.find(c => c.command.toLowerCase() === options.builder.name.toLowerCase())
+                : null
+            )
+            ?? { permissions: options.builder.requiredMemberPermissions };
     if (!command.permissions.length) return true;
-    
-    return memberPermissions ? memberPermissions.has(command.permissions) : false;
+
+    return options.memberPermissions ? options.memberPermissions.has(command.permissions) : false;
 }
 
 /**
  * Check if the bot has the required permissions in a guild
+ * @param guild Guild
+ * @param requiredPermissions Required guild bot permissions
  */
 export function botHasExecutePermissions(guild?: Guild, requiredPermissions?: PermissionResolvable[]): boolean {
     if (!requiredPermissions?.length) return true;
@@ -26,6 +32,8 @@ export function botHasExecutePermissions(guild?: Guild, requiredPermissions?: Pe
 
 /**
  * Check if the channel id is ignored in config file 
+ * @param channelId Check if channel id is in ignore list
+ * @param ignoredChannelsConfig Ignored channels config
  */
 export function isIgnoredChannel(channelId: string, ignoredChannelsConfig?: Config["ignoredChannels"]): boolean {
     if (!ignoredChannelsConfig?.enabled) return false;

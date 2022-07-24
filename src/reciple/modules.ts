@@ -1,20 +1,26 @@
 import { RecipleClient } from './classes/RecipleClient';
-import { RecipleCommandBuilders, RecipleCommandBuilderType } from './types/builders';
+import { RecipleCommandBuilder, RecipleCommandBuilderType } from './types/builders';
 import { isSupportedVersion, version } from './version';
 
 import { existsSync, mkdirSync, readdirSync } from 'fs';
 import path from 'path';
 import wildcard from 'wildcard-match';
 
-export type LoadedModules = { commands: RecipleCommandBuilders[], modules: RecipleModule[] };
+export type LoadedModules = { commands: RecipleCommandBuilder[], modules: RecipleModule[] };
 
+/**
+ * Reciple script object interface
+ */
 export declare class RecipleScript {
     public versions: string | string[];
-    public commands?: RecipleCommandBuilders[];
+    public commands?: RecipleCommandBuilder[];
     public onLoad?(reciple: RecipleClient): void|Promise<void>;
     public onStart(reciple: RecipleClient): boolean|Promise<boolean>;
 }
 
+/**
+ * Reciple module object interface
+ */
 export interface RecipleModule {
     script: RecipleScript;
     info: {
@@ -26,6 +32,8 @@ export interface RecipleModule {
 
 /**
  * Load modules from folder 
+ * @param client Reciple client
+ * @param folder Modules folder
  */
 export async function loadModules(client: RecipleClient, folder?: string): Promise<LoadedModules> {
     const response: LoadedModules = { commands: [], modules: [] };
@@ -39,7 +47,7 @@ export async function loadModules(client: RecipleClient, folder?: string): Promi
 
     for (const script of scripts) {
         const modulePath = path.join(process.cwd(), modulesDir, script);
-        const commands: RecipleCommandBuilders[] = [];
+        const commands: RecipleCommandBuilder[] = [];
         let module_: RecipleScript;
 
         try {

@@ -1,22 +1,41 @@
 {
   "name": "reciple",
-  "version": "3.0.3",
-  "description": "Handler for Discord.js",
+  "version": "3.1.0",
+  "bin": "bin/bin.js",
+  "license": "GPL-3.0",
+  "main": "bin/index.js",
   "author": "FalloutStudios",
+  "description": "Handler for Discord.js",
   "homepage": "https://reciple.js.org",
+  "keywords": [
+    "Discord",
+    "Discord.js handler",
+    "Reciple"
+  ],
   "contributors": [
     "GhexterCortes <cortesghexter@gmail.com>"
   ],
   "bugs": {
     "url": "https://github.com/FalloutStudios/reciple/issues"
   },
+  "scripts": {
+    "clean": "rm -rf bin",
+    "build": "yarn clean && yarn exec tsc",
+    "build:publish": "yarn build && yarn publish && yarn build:docs && yarn publish:docs",
+    "build:pub-prerelease": "yarn build && yarn publish --tag pre",
+    "build:docs": "yarn workspace docs build",
+    "update:docs": "yarn workspace docs update",
+    "test": "yarn build && yarn test:start",
+    "test:start": "cd test && yarn exec reciple -D",
+    "publish:docs": "yarn build:docs && yarn update:docs"
+  },
+  "workspaces": [
+    "./docs/"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/FalloutStudios/reciple.git"
   },
-  "license": "GPL-3.0",
-  "main": "bin/index.js",
-  "bin": "bin/bin.js",
   "engines": {
     "node": ">=16.9.0"
   },
@@ -27,17 +46,6 @@
     "LICENSE",
     "README.md"
   ],
-  "scripts": {
-    "clean": "rm -rf bin",
-    "build": "yarn clean && yarn exec tsc",
-    "build:publish": "yarn build && yarn publish && yarn build:docs && yarn publish:docs",
-    "build:pub-prerelease": "yarn build && yarn publish --tag pre",
-    "build:docs": "yarn workspace docs build",
-    "update:docs": "yarn workspace docs update",
-    "test": "yarn build && yarn test:start",
-    "test:start": "cd test && yarn exec reciple",
-    "publish:docs": "yarn build:docs && yarn update:docs"
-  },
   "dependencies": {
     "chalk": "4.1.2",
     "commander": "^9.4.0",
@@ -56,8 +64,5 @@
   "peerDependencies": {
     "discord.js": "14.0.x"
   },
-  "workspaces": [
-    "./docs/"
-  ],
   "packageManager": "yarn@3.2.2"
 }

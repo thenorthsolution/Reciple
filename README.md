@@ -1,7 +1,10 @@
 <h1 align="center">
     <img src="https://i.imgur.com/DWM0tJL.png" width="50%">
     <br>
-    <a href="https://npmjs.org/package/reciple">
+</h1>
+
+<h3 align="center">
+<a href="https://npmjs.org/package/reciple">
         <img src="https://img.shields.io/npm/v/reciple?label=latest%20npm%20release%20">
     </a>
     <a href="https://github.com/FalloutStudios/Reciple/blob/main/LICENSE">
@@ -10,12 +13,10 @@
     <a href="https://www.codefactor.io/repository/github/falloutstudios/reciple/overview/main">
         <img src="https://www.codefactor.io/repository/github/falloutstudios/reciple/badge/main">
     </a>
-</h1>
 
-A simple Dicord.js command handler that just works.
+A simple Dicord.js handler that just works.<h3>
 
-# Join Discord
-[![Discord Invite](https://i.imgur.com/GffJByO.png)](https://discord.gg/2CattJYNpw)
+****
 
 ## Installation
 To install the bot, run the following command in your terminal:
@@ -57,6 +58,9 @@ You can override the given token using your terminal
 ```bash
 npx reciple --token "YOUR_TOKEN_HERE"
 ```
+```bash
+npx reciple --token "env:TOKEN_VARIABLE"
+```
 
 ## Starting the bot
 To start the bot, run the following command:
@@ -67,5 +71,11 @@ npx reciple
 
 > ## Fun Fact
 > The name reciple is from a minecraft bug. The bug was a misspelling of the word `recipe`. [View Mojang Bug Report](https://bugs.mojang.com/browse/MC-225837)
+
+
+# Join Discord
+[![Discord Invite](https://i.imgur.com/GffJByO.png)](https://discord.gg/2CattJYNpw)
+
+****
 
 [#letTheEarthBreathe](https://rebellion.global/)

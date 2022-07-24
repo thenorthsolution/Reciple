@@ -7,6 +7,7 @@ export const version = `${semver.coerce(require('../../package.json').version)}`
 
 /**
  * Check if the version is valid
+ * @param ver Version string to validated
  */
 export function isValidVersion(ver: string) {
     return semver.valid(semver.coerce(ver)) !== null;
@@ -14,16 +15,17 @@ export function isValidVersion(ver: string) {
 
 /**
  * Parse the version string
+ * @param ver Parse version string
  */
 export function parseVersion(ver: string) {
     if (!isValidVersion(ver)) throw new TypeError(`Invalid version: ${ver}`);
 
-    const [major, minor, patch] = `${semver.coerce(ver)}`?.split('.') ?? [];
-    return { major: parseInt(major), minor: parseInt(minor), patch: parseInt(patch) };
+    return semver.parse(ver);
 }
-
 /**
  * Check if the given version is supported by the given version range
+ * @param versionRange Version range
+ * @param supportedVersion Version to match given version range
  */
 export function isSupportedVersion(versionRange: string, supportedVersion?: string) {
     supportedVersion = supportedVersion || version;
