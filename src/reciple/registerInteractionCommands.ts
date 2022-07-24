@@ -21,13 +21,11 @@ export async function registerInteractionCommands(options: RecipleRegisterIntera
         cmd = cmd as InteractionBuilder;
 
         if (cmd instanceof InteractionCommandBuilder && client.config.commands.interactionCommand.setRequiredPermissions) {
-            const permissions = (
-                    client.config.commands.interactionCommand.permissions.enabled ?
-                    client.config.commands.interactionCommand.permissions.commands.find(cmd_ => cmd_.command.toLowerCase() === cmd.name.toLowerCase())?.permissions :
-                    undefined
-                ) ?? cmd.requiredMemberPermissions;
+            const permissions = client.config.commands.interactionCommand.permissions.enabled
+                    ? client.config.commands.interactionCommand.permissions.commands.find(cmd_ => cmd_.command.toLowerCase() === cmd.name.toLowerCase())?.permissions
+                    : undefined;
 
-            cmd.setRequiredMemberPermissions(...permissions);
+            if (permissions) cmd.setRequiredMemberPermissions(...permissions);
             client.commands.interactionCommands[cmd.name] = cmd;
 
             if (client.isClientLogsEnabled()) client.logger.debug(`Set required permissions for ${cmd.name}`);
