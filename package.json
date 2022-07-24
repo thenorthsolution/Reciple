@@ -1,6 +1,6 @@
 {
   "name": "reciple",
-  "version": "3.1.0",
+  "version": "3.1.1",
   "bin": "bin/bin.js",
   "license": "GPL-3.0",
   "main": "bin/index.js",
