@@ -1,5 +1,5 @@
 import { InteractionCommandBuilder } from './classes/builders/InteractionCommandBuilder';
-import { RegisterInteractionCommandsOptions } from './types/paramOptions';
+import { RecipleRegisterInteractionCommandsOptions } from './types/paramOptions';
 
 import { ContextMenuCommandBuilder, SlashCommandBuilder } from '@discordjs/builders';
 import { ApplicationCommandData } from 'discord.js';
@@ -11,7 +11,7 @@ export type InteractionBuilder = InteractionCommandBuilder|ContextMenuCommandBui
  * Register interaction commands 
  * @param options Register interaction commands options
  */
-export async function registerInteractionCommands(options: RegisterInteractionCommandsOptions): Promise<void> {
+export async function registerInteractionCommands(options: RecipleRegisterInteractionCommandsOptions): Promise<void> {
     const client = options.client;
     const guilds = typeof options.guilds == 'string' ? [options.guilds] : options.guilds;
 
