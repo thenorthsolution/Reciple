@@ -2,7 +2,7 @@
 import { createLogger } from '../logger';
 import { loadModules, RecipleModule } from '../modules';
 import { botHasExecutePermissions, isIgnoredChannel, userHasCommandPermissions } from '../permissions';
-import { InteractionBuilder, registerInteractionCommands } from '../registerInteractionCommands';
+import { ApplicationCommandBuilder, registerInteractionCommands } from '../registerInteractionCommands';
 import { RecipleCommandBuilder, RecipleCommandBuildersExecuteData, RecipleCommandBuilderType } from '../types/builders';
 import { RecipleHaltedCommandData, RecipleHaltedCommandReason } from '../types/commands';
 import { RecipleAddModuleOptions } from '../types/paramOptions';
@@ -63,7 +63,7 @@ export interface RecipleClient<Ready extends boolean = boolean> extends Client<R
 export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready> {
     public config: Config = RecipleConfig.getDefaultConfig();
     public commands: RecipleClientCommands = { messageCommands: {}, interactionCommands: {} };
-    public otherApplicationCommandData: (InteractionBuilder|ApplicationCommandData)[] = [];
+    public otherApplicationCommandData: (ApplicationCommandBuilder|ApplicationCommandData)[] = [];
     public commandCooldowns: CommandCooldownManager = new CommandCooldownManager();
     public modules: RecipleModule[] = [];
     public logger: ILogger;

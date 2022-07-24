@@ -5,7 +5,7 @@ import { ContextMenuCommandBuilder, SlashCommandBuilder } from '@discordjs/build
 import { ApplicationCommandData } from 'discord.js';
 
 
-export type InteractionBuilder = InteractionCommandBuilder|ContextMenuCommandBuilder|SlashCommandBuilder;
+export type ApplicationCommandBuilder = InteractionCommandBuilder|ContextMenuCommandBuilder|SlashCommandBuilder;
 
 /**
  * Register interaction commands 
@@ -16,9 +16,9 @@ export async function registerInteractionCommands(options: RecipleRegisterIntera
     const guilds = typeof options.guilds == 'string' ? [options.guilds] : options.guilds;
 
     const commands = Object.values(options.commands ?? client.commands.interactionCommands).map(cmd => {
-        if (typeof (cmd as InteractionBuilder)?.toJSON == 'undefined') return cmd as ApplicationCommandData;
+        if (typeof (cmd as ApplicationCommandBuilder)?.toJSON == 'undefined') return cmd as ApplicationCommandData;
 
-        cmd = cmd as InteractionBuilder;
+        cmd = cmd as ApplicationCommandBuilder;
 
         if (cmd instanceof InteractionCommandBuilder && client.config.commands.interactionCommand.setRequiredPermissions) {
             const permissions = client.config.commands.interactionCommand.permissions.enabled

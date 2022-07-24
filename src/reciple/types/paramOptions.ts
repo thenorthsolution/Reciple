@@ -1,7 +1,7 @@
 import { RecipleClient } from '../classes/RecipleClient';
 import { Config } from '../classes/RecipleConfig';
 import { RecipleModule, RecipleScript } from '../modules';
-import { InteractionBuilder } from '../registerInteractionCommands';
+import { ApplicationCommandBuilder } from '../registerInteractionCommands';
 import { RecipleCommandBuilder } from './builders';
 
 import { ApplicationCommandData, PermissionsBitField } from 'discord.js';
@@ -29,7 +29,7 @@ export interface RecipleRegisterInteractionCommandsOptions {
     /**
      * Commands to register
      */
-    commands: (ApplicationCommandData|InteractionBuilder)[];
+    commands: (ApplicationCommandData|ApplicationCommandBuilder)[];
     /**PermissionResolvable
      * Set guild to not register commands globally
      */
