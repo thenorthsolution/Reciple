@@ -35,7 +35,7 @@
     "build:docs": "yarn workspace docs build",
     "update:docs": "yarn workspace docs update",
     "test": "yarn build && yarn test:start",
-    "test:start": "cd test && yarn exec reciple",
+    "test:start": "cd test && yarn exec reciple -D",
     "publish:docs": "yarn build:docs && yarn update:docs"
   },
   "dependencies": {
