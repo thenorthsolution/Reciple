@@ -41,7 +41,7 @@ export class MessageCommandBuilder {
     public options: MessageCommandOptionBuilder[] = [];
     public validateOptions: boolean = false;
     public requiredBotPermissions: PermissionResolvable[] = [];
-    public RequiredUserPermissions: PermissionResolvable[] = [];
+    public requiredUserPermissions: PermissionResolvable[] = [];
     public allowExecuteInDM: boolean = true;
     public allowExecuteByBots: boolean = false;
     public halt?: (haltData: RecipleHaltedCommandData<MessageCommandBuilder>) => Awaitable<boolean|void>;
@@ -104,7 +104,7 @@ export class MessageCommandBuilder {
      * @param permissions User's return permissions
      */
     public setRequiredMemberPermissions(...permissions: PermissionResolvable[]): MessageCommandBuilder {
-        this.RequiredUserPermissions = permissions;
+        this.requiredUserPermissions = permissions;
         return this;
     }
 
