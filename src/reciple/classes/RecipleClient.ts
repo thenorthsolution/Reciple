@@ -220,7 +220,11 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
             client: this
         };
 
-        if (userHasCommandPermissions(command.name, message.member?.permissions, this.config.commands.messageCommand.permissions, command)) {
+        if (userHasCommandPermissions({
+            builder: command,
+            memberPermissions: message.member?.permissions,
+            commandPermissions: this.config.commands.messageCommand.permissions
+        })) {
             if (
                 !command.allowExecuteInDM && message.channel.type === ChannelType.DM
                 || !command.allowExecuteByBots
@@ -301,7 +305,11 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
             client: this
         };
 
-        if (userHasCommandPermissions(command.name, interaction.memberPermissions ?? undefined, this.config.commands.interactionCommand.permissions, command)) {
+        if (userHasCommandPermissions({
+            builder: command,
+            memberPermissions: interaction.memberPermissions ?? undefined,
+            commandPermissions: this.config.commands.interactionCommand.permissions
+        })) {
             if (!command || isIgnoredChannel(interaction.channelId, this.config.ignoredChannels)) return;
 
             if (interaction.guild && !botHasExecutePermissions(interaction.guild, command.requiredBotPermissions)) {

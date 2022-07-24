@@ -38,6 +38,6 @@ export interface RecipleRegisterInteractionCommandsOptions {
 
 export interface RecipleUserHasCommandPermissionsOptions {
     builder: RecipleCommandBuilder;
-    memberPermissions: PermissionsBitField;
+    memberPermissions?: PermissionsBitField;
     commandPermissions?: Config["commands"]["interactionCommand"]["permissions"]|Config["commands"]["messageCommand"]["permissions"];
 }
