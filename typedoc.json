@@ -1,0 +1,30 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "entryPoints": [
+    "./src/index.ts"
+  ],
+  "entryPointStrategy": "expand",
+  "out": "./docs/docs",
+  "plugin": [
+    "typedoc-plugin-mdn-links",
+    "typedoc-plugin-djs-links",
+    "typedoc-plugin-discord-types"
+  ],
+  "theme": "default",
+  "name": "Reciple.js",
+  "cname": "reciple.js.org",
+  "json": "./docs/docs/docs.json",
+  "tsconfig": "./tsconfig.json",
+  "includeVersion": true,
+  "excludeExternals": true,
+  "hideGenerator": true,
+  "gitRemote": "https://github.com/FalloutStudios/Reciple.git",
+  "githubPages": true,
+  "customCss": "./docs/style.css",
+  "sort": [
+    "kind",
+    "instance-first",
+    "alphabetical"
+  ],
+  "pretty": false
+}

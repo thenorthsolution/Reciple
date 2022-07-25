@@ -4,7 +4,7 @@
 </h1>
 
 <h3 align="center">
-<a href="https://npmjs.org/package/reciple">
+    <a href="https://npmjs.org/package/reciple">
         <img src="https://img.shields.io/npm/v/reciple?label=latest%20npm%20release%20">
     </a>
     <a href="https://github.com/FalloutStudios/Reciple/blob/main/LICENSE">
@@ -14,11 +14,13 @@
         <img src="https://www.codefactor.io/repository/github/falloutstudios/reciple/badge/main">
     </a>
 
-A simple Dicord.js handler that just works.<h3>
+A simple Dicord.js handler that just works.
+</h3>
 
 ****
 
 ## Installation
+
 To install the bot, run the following command in your terminal:
 
 ```bash
@@ -58,6 +60,9 @@ You can override the given token using your terminal
 ```bash
 npx reciple --token "YOUR_TOKEN_HERE"
 ```
+
+Use env variable
+
 ```bash
 npx reciple --token "env:TOKEN_VARIABLE"
 ```

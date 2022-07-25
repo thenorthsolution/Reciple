@@ -1,6 +1,6 @@
 {
   "name": "reciple",
-  "version": "3.1.2",
+  "version": "3.1.3",
   "bin": "bin/bin.js",
   "license": "GPL-3.0",
   "main": "bin/index.js",
@@ -23,7 +23,7 @@
     "build": "yarn clean && yarn exec tsc",
     "build:publish": "yarn build && yarn npm publish && yarn build:docs && yarn publish:docs",
     "build:pub-prerelease": "yarn build && yarn publish --tag pre",
-    "build:docs": "yarn workspace docs build",
+    "build:docs": "yarn exec typedoc --tsconfig ./docs/typedoc.json",
     "update:docs": "yarn workspace docs update",
     "test": "yarn build && yarn test:start",
     "test:start": "cd test && yarn exec reciple -D",
@@ -50,15 +50,20 @@
     "chalk": "4.1.2",
     "commander": "^9.4.0",
     "dotenv": "^16.0.1",
-    "fallout-utility": "^1.4.2",
+    "fallout-utility": "^1.4.3",
     "semver": "^7.3.7",
     "wildcard-match": "^5.1.2",
     "yaml": "^2.1.1"
   },
   "devDependencies": {
-    "@types/node": "^18.0.6",
+    "@types/node": "^18.6.1",
     "@types/semver": "^7.3.10",
+    "better-docs": "^2.7.2",
     "discord.js": "^14.0.3",
+    "typedoc": "^0.23.9",
+    "typedoc-plugin-discord-types": "^1.0.2",
+    "typedoc-plugin-djs-links": "^1.2.0",
+    "typedoc-plugin-mdn-links": "^2.0.0",
     "typescript": "^4.7.4"
   },
   "peerDependencies": {
