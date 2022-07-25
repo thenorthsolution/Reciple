@@ -117,4 +117,4 @@ ignoredFiles: []
 modulesFolder: 'modules'
 
 # Current version
-version: VERSION
+version: ^VERSION

@@ -4,6 +4,7 @@ import { RecipleConfig } from './reciple/classes/RecipleConfig';
 import { flags } from './reciple/flags';
 import { version } from './reciple/version';
 
+import chalk from 'chalk';
 import { input } from 'fallout-utility';
 import { existsSync, readdirSync } from 'fs';
 
@@ -21,7 +22,16 @@ if (readdirSync('./').filter(f => !f.startsWith('.') && allowedFiles.indexOf(f))
     if (ask.toString().toLowerCase() !== 'y') process.exit(0);
 }
 
-const config = new RecipleConfig(flags.config ?? './reciple.yml').parseConfig().getConfig();
+let configParser: RecipleConfig;
+
+try {
+    configParser = new RecipleConfig(flags.config ?? './reciple.yml').parseConfig();
+} catch (err) {
+    console.error(`${chalk.bold.red('Config Error')}: ${chalk.white((err as Error).message)}`);
+    process.exit(1);
+}
+
+const config = configParser.getConfig();
 const client = new RecipleClient({ config: config, ...config.client });
 
 if (config.fileLogging.clientLogs) client.logger.info('Reciple Client v' + version + ' is starting...');
