@@ -61,7 +61,7 @@ export async function loadModules(client: RecipleClient, folder?: string): Promi
             if (!await Promise.resolve(module_.onStart(client))) throw new Error(script + ' onStart is not defined or returned false.');
             if (module_.commands) {
                 for (const command of module_.commands) {
-                    if (command.builder === RecipleCommandBuilderType.MessageCommand || command.builder === RecipleCommandBuilderType.InteractionCommand) {
+                    if (command.builder === RecipleCommandBuilderType.MessageCommand || command.builder === RecipleCommandBuilderType.SlashCommand) {
                         commands.push(command);
                     }
                 }

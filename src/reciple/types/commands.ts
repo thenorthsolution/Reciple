@@ -1,5 +1,5 @@
-import { InteractionCommandBuilder, InteractionCommandExecuteData } from '../classes/builders/InteractionCommandBuilder';
 import { MessageCommandExecuteData } from '../classes/builders/MessageCommandBuilder';
+import { SlashCommandBuilder, SlashCommandExecuteData } from '../classes/builders/SlashCommandBuilder';
 import { CooledDownUser } from '../classes/CommandCooldownManager';
 import { MessageCommandOptionManager } from '../classes/MessageCommandOptionManager';
 import { RecipleCommandBuilder } from '../types/builders';
@@ -7,9 +7,9 @@ import { RecipleCommandBuilder } from '../types/builders';
 /**
  * Halted command's data
  */
-export type RecipleHaltedCommandData<Builder extends RecipleCommandBuilder = RecipleCommandBuilder> = RecipleCommandErrorData<Builder>|RecipleCommandCooldownData<Builder>|(Builder extends InteractionCommandBuilder ? never : RecipleCommandInvalidArguments<Builder>|RecipleCommandMissingArguments<Builder>)|RecipleCommandMissingMemberPermissions<Builder>|RecipleCommandMissingBotPermissions<Builder>;
+export type RecipleHaltedCommandData<Builder extends RecipleCommandBuilder = RecipleCommandBuilder> = RecipleCommandErrorData<Builder>|RecipleCommandCooldownData<Builder>|(Builder extends SlashCommandBuilder ? never : RecipleCommandInvalidArguments<Builder>|RecipleCommandMissingArguments<Builder>)|RecipleCommandMissingMemberPermissions<Builder>|RecipleCommandMissingBotPermissions<Builder>;
 
-export interface RecipleCommandHaltBaseData<Builder extends RecipleCommandBuilder> { executeData: Builder extends InteractionCommandBuilder ? InteractionCommandExecuteData : MessageCommandExecuteData }
+export interface RecipleCommandHaltBaseData<Builder extends RecipleCommandBuilder> { executeData: Builder extends SlashCommandBuilder ? SlashCommandExecuteData : MessageCommandExecuteData }
 export interface RecipleCommandErrorData<Builder extends RecipleCommandBuilder> extends RecipleCommandHaltBaseData<Builder> {
     reason: RecipleHaltedCommandReason.Error; error: any;
 }

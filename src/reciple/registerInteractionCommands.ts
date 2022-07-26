@@ -1,32 +1,31 @@
-import { InteractionCommandBuilder } from './classes/builders/InteractionCommandBuilder';
-import { RecipleRegisterInteractionCommandsOptions } from './types/paramOptions';
+import { SlashCommandBuilder } from './classes/builders/SlashCommandBuilder';
+import { RecipleRegisterApplicationCommandsOptions } from './types/paramOptions';
 
-import { ContextMenuCommandBuilder, SlashCommandBuilder } from '@discordjs/builders';
-import { ApplicationCommandData } from 'discord.js';
+import { ApplicationCommandData, ContextMenuCommandBuilder, SlashCommandBuilder as DiscordJsSlashCommandBuilder } from 'discord.js';
 
 
-export type ApplicationCommandBuilder = InteractionCommandBuilder|ContextMenuCommandBuilder|SlashCommandBuilder;
+export type ApplicationCommandBuilder = SlashCommandBuilder|ContextMenuCommandBuilder|DiscordJsSlashCommandBuilder;
 
 /**
- * Register interaction commands 
- * @param options Register interaction commands options
+ * Register application commands 
+ * @param options Register application commands options
  */
-export async function registerInteractionCommands(options: RecipleRegisterInteractionCommandsOptions): Promise<void> {
+export async function registerApplicatiobCommands(options: RecipleRegisterApplicationCommandsOptions): Promise<void> {
     const client = options.client;
     const guilds = typeof options.guilds == 'string' ? [options.guilds] : options.guilds;
 
-    const commands = Object.values(options.commands ?? client.commands.interactionCommands).map(cmd => {
+    const commands = Object.values(options.commands ?? client.commands.slashCommands).map(cmd => {
         if (typeof (cmd as ApplicationCommandBuilder)?.toJSON == 'undefined') return cmd as ApplicationCommandData;
 
         cmd = cmd as ApplicationCommandBuilder;
 
-        if (cmd instanceof InteractionCommandBuilder && client.config.commands.interactionCommand.setRequiredPermissions) {
-            const permissions = client.config.commands.interactionCommand.permissions.enabled
-                    ? client.config.commands.interactionCommand.permissions.commands.find(cmd_ => cmd_.command.toLowerCase() === cmd.name.toLowerCase())?.permissions
+        if (cmd instanceof SlashCommandBuilder && client.config.commands.slashCommand.setRequiredPermissions) {
+            const permissions = client.config.commands.slashCommand.permissions.enabled
+                    ? client.config.commands.slashCommand.permissions.commands.find(cmd_ => cmd_.command.toLowerCase() === cmd.name.toLowerCase())?.permissions
                     : undefined;
 
             if (permissions) cmd.setRequiredMemberPermissions(...permissions);
-            client.commands.interactionCommands[cmd.name] = cmd;
+            client.commands.slashCommands[cmd.name] = cmd;
 
             if (client.isClientLogsEnabled()) client.logger.debug(`Set required permissions for ${cmd.name}`);
             return cmd.toJSON();

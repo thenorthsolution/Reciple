@@ -2,13 +2,13 @@
 import { createLogger } from '../logger';
 import { loadModules, RecipleModule } from '../modules';
 import { botHasExecutePermissions, isIgnoredChannel, userHasCommandPermissions } from '../permissions';
-import { ApplicationCommandBuilder, registerInteractionCommands } from '../registerInteractionCommands';
+import { ApplicationCommandBuilder, registerApplicatiobCommands } from '../registerInteractionCommands';
 import { RecipleCommandBuilder, RecipleCommandBuildersExecuteData, RecipleCommandBuilderType } from '../types/builders';
 import { RecipleHaltedCommandData, RecipleHaltedCommandReason } from '../types/commands';
 import { RecipleAddModuleOptions } from '../types/paramOptions';
 import { version } from '../version';
-import { InteractionCommandBuilder, InteractionCommandExecuteData } from './builders/InteractionCommandBuilder';
 import { MessageCommandBuilder, MessageCommandExecuteData, validateMessageCommandOptions } from './builders/MessageCommandBuilder';
+import { SlashCommandBuilder, SlashCommandExecuteData } from './builders/SlashCommandBuilder';
 import { CommandCooldownManager, CooledDownUser } from './CommandCooldownManager';
 import { MessageCommandOptionManager } from './MessageCommandOptionManager';
 import { Config, RecipleConfig } from './RecipleConfig';
@@ -26,7 +26,7 @@ export interface RecipleClientOptions extends ClientOptions { config?: Config; }
  */
 export interface RecipleClientCommands {
     messageCommands: { [commandName: string]: MessageCommandBuilder };
-    interactionCommands: { [commandName: string]: InteractionCommandBuilder };
+    slashCommands: { [commandName: string]: SlashCommandBuilder };
 }
 
 /**
@@ -34,7 +34,7 @@ export interface RecipleClientCommands {
  */
 export interface RecipleClientEvents extends ClientEvents {
     recipleMessageCommandCreate: [executeData: MessageCommandExecuteData];
-    recipleInteractionCommandCreate: [executeData: InteractionCommandExecuteData];
+    recipleInteractionCommandCreate: [executeData: SlashCommandExecuteData];
     recipleReplyError: [error: unknown];
 }
 
@@ -65,7 +65,7 @@ export interface RecipleClient<Ready extends boolean = boolean> extends Client<R
  */
 export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready> {
     public config: Config = RecipleConfig.getDefaultConfig();
-    public commands: RecipleClientCommands = { messageCommands: {}, interactionCommands: {} };
+    public commands: RecipleClientCommands = { messageCommands: {}, slashCommands: {} };
     public otherApplicationCommandData: (ApplicationCommandBuilder|ApplicationCommandData)[] = [];
     public commandCooldowns: CommandCooldownManager = new CommandCooldownManager();
     public modules: RecipleModule[] = [];
@@ -101,7 +101,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
     }
 
     /**
-     * Execute `onLoad()` from client modules and register interaction commands if enabled
+     * Execute `onLoad()` from client modules and register application commands if enabled
      */
     public async loadModules(): Promise<RecipleClient<Ready>> {
         for (const m in this.modules) {
@@ -127,14 +127,14 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
         if (this.isClientLogsEnabled()) {
             this.logger.info(`${this.modules.length} modules loaded.`);
             this.logger.info(`${Object.keys(this.commands.messageCommands).length} message commands loaded.`);
-            this.logger.info(`${Object.keys(this.commands.interactionCommands).length} interaction commands loaded.`);
+            this.logger.info(`${Object.keys(this.commands.slashCommands).length} slash commands loaded.`);
         }
 
-        if (this.config.commands.interactionCommand.registerCommands) {
-            await registerInteractionCommands({
+        if (this.config.commands.slashCommand.registerCommands) {
+            await registerApplicatiobCommands({
                 client: this,
-                commands: [...Object.values(this.commands.interactionCommands), ...this.otherApplicationCommandData],
-                guilds: this.config.commands.interactionCommand.guilds
+                commands: [...Object.values(this.commands.slashCommands), ...this.otherApplicationCommandData],
+                guilds: this.config.commands.slashCommand.guilds
             });
         }
 
@@ -147,7 +147,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
      */
     public async addModule(options: RecipleAddModuleOptions): Promise<void> {
         const { script } = options;
-        const registerCommands = options.registerInteractionCommands;
+        const registerCommands = options.registerApplicationCommands;
         const info = options.moduleInfo;
         
         this.modules.push({
@@ -167,22 +167,22 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
             this.addCommand(command);
         }
 
-        if (registerCommands) await registerInteractionCommands({
+        if (registerCommands) await registerApplicatiobCommands({
             client: this,
-            commands: [...Object.values(this.commands.interactionCommands), ...this.otherApplicationCommandData],
-            guilds: this.config.commands.interactionCommand.guilds
+            commands: [...Object.values(this.commands.slashCommands), ...this.otherApplicationCommandData],
+            guilds: this.config.commands.slashCommand.guilds
         });
     }
 
     /**
-     * Add interaction or message command to client
-     * @param command Interaction/Message command builder
+     * Add slash or message command to client
+     * @param command Slash/Message command builder
      */
     public addCommand(command: RecipleCommandBuilder): RecipleClient<Ready> {
         if (command.builder === RecipleCommandBuilderType.MessageCommand) {
             this.commands.messageCommands[command.name] = command;
-        } else if (command.builder === RecipleCommandBuilderType.InteractionCommand) {
-            this.commands.interactionCommands[command.name] = command;
+        } else if (command.builder === RecipleCommandBuilderType.SlashCommand) {
+            this.commands.slashCommands[command.name] = command;
         } else if (this.isClientLogsEnabled()) {
             this.logger.error(`Unknow command "${typeof command ?? 'unknown'}".`);
         }
@@ -195,7 +195,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
      */
     public addCommandListeners(): RecipleClient<Ready> {
         if (this.config.commands.messageCommand.enabled) this.on('messageCreate', (message) => { this.messageCommandExecute(message) });
-        if (this.config.commands.interactionCommand.enabled) this.on('interactionCreate', (interaction) => { this.interactionCommandExecute(interaction) });
+        if (this.config.commands.slashCommand.enabled) this.on('interactionCreate', (interaction) => { this.slashCommandExecute(interaction) });
 
         return this;
     }
@@ -293,17 +293,17 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
     }
 
     /**
-     * Execute an Interaction command 
-     * @param interaction Command Interaction
+     * Execute a slash command 
+     * @param interaction Slash command interaction
      */
-    public async interactionCommandExecute(interaction: Interaction|ChatInputCommandInteraction): Promise<void|InteractionCommandExecuteData> {
+    public async slashCommandExecute(interaction: Interaction|ChatInputCommandInteraction): Promise<void|SlashCommandExecuteData> {
         if (!interaction || interaction.type !== InteractionType.ApplicationCommand || !interaction.isChatInputCommand() || !this.isReady()) return;
 
-        const command = this.findCommand(interaction.commandName, RecipleCommandBuilderType.InteractionCommand);
+        const command = this.findCommand(interaction.commandName, RecipleCommandBuilderType.SlashCommand);
         if (!command) return;
 
-        const executeData: InteractionCommandExecuteData = {
-            interaction: interaction,
+        const executeData: SlashCommandExecuteData = {
+            interaction,
             builder: command,
             client: this
         };
@@ -311,7 +311,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
         if (userHasCommandPermissions({
             builder: command,
             memberPermissions: interaction.memberPermissions ?? undefined,
-            commandPermissions: this.config.commands.interactionCommand.permissions
+            commandPermissions: this.config.commands.slashCommand.permissions
         })) {
             if (!command || isIgnoredChannel(interaction.channelId, this.config.ignoredChannels)) return;
 
@@ -328,12 +328,12 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
                 command: command.name,
                 channel: interaction.channel ?? undefined,
                 guild: interaction.guild,
-                type: RecipleCommandBuilderType.InteractionCommand
+                type: RecipleCommandBuilderType.SlashCommand
             };
 
-            if (this.config.commands.interactionCommand.enableCooldown && command.cooldown && !this.commandCooldowns.isCooledDown(userCooldown)) {
+            if (this.config.commands.slashCommand.enableCooldown && command.cooldown && !this.commandCooldowns.isCooledDown(userCooldown)) {
                 this.commandCooldowns.add({ ...userCooldown, expireTime: Date.now() + command.cooldown });
-            } else if (this.config.commands.interactionCommand.enableCooldown && command.cooldown) {
+            } else if (this.config.commands.slashCommand.enableCooldown && command.cooldown) {
                 if (!await this._haltCommand(command, { executeData, reason: RecipleHaltedCommandReason.Cooldown, ...this.commandCooldowns.get(userCooldown)! })) {
                     await interaction.reply(this.getMessage('cooldown', 'You cannot execute this command right now due to the cooldown.')).catch(er => this._replyError(er));
                 }
@@ -372,11 +372,11 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
      * @param type Command type
      */
     public findCommand(command: string, type: RecipleCommandBuilderType.MessageCommand): MessageCommandBuilder|undefined;
-    public findCommand(command: string, type: RecipleCommandBuilderType.InteractionCommand): InteractionCommandBuilder|undefined;
+    public findCommand(command: string, type: RecipleCommandBuilderType.SlashCommand): SlashCommandBuilder|undefined;
     public findCommand(command: string, type: RecipleCommandBuilderType): RecipleCommandBuilder|undefined {
         switch (type) {
-            case RecipleCommandBuilderType.InteractionCommand:
-                return this.commands.interactionCommands[command];
+            case RecipleCommandBuilderType.SlashCommand:
+                return this.commands.slashCommands[command];
             case RecipleCommandBuilderType.MessageCommand:
                 return this.commands.messageCommands[command.toLowerCase()]
                     ?? (this.config.commands.messageCommand.allowCommandAlias
@@ -408,14 +408,14 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
      * @param command Halted command's builder
      * @param haltData Halted command's data
      */
-    private async _haltCommand(command: InteractionCommandBuilder, haltData: RecipleHaltedCommandData<InteractionCommandBuilder>): Promise<boolean>;
+    private async _haltCommand(command: SlashCommandBuilder, haltData: RecipleHaltedCommandData<SlashCommandBuilder>): Promise<boolean>;
     private async _haltCommand(command: MessageCommandBuilder, haltData: RecipleHaltedCommandData<MessageCommandBuilder>): Promise<boolean>;
     private async _haltCommand(command: RecipleCommandBuilder, haltData: RecipleHaltedCommandData): Promise<boolean> {
         try {
             return (
                 command.halt
-                    ? await (command.builder == RecipleCommandBuilderType.InteractionCommand
-                            ? Promise.resolve(command.halt(haltData as RecipleHaltedCommandData<InteractionCommandBuilder>))
+                    ? await (command.builder == RecipleCommandBuilderType.SlashCommand
+                            ? Promise.resolve(command.halt(haltData as RecipleHaltedCommandData<SlashCommandBuilder>))
                             : Promise.resolve(command.halt(haltData as RecipleHaltedCommandData<MessageCommandBuilder>))
                     ).catch(err => { throw err; })
                     : false
@@ -432,11 +432,11 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
     /**
      * Error message when a command fails to execute
      * @param err Received error
-     * @param command Interaction/Message command execute data
+     * @param command Slash/Message command execute data
      */
     private async _commandExecuteError(err: Error, command: RecipleCommandBuildersExecuteData): Promise<void> {
         if (this.isClientLogsEnabled()) {
-            this.logger.error(`An error occured executing ${command.builder.builder == RecipleCommandBuilderType.MessageCommand ? 'message' : 'interaction'} command "${command.builder.name}"`);
+            this.logger.error(`An error occured executing ${command.builder.builder == RecipleCommandBuilderType.MessageCommand ? 'message' : 'slash'} command "${command.builder.name}"`);
             this.logger.error(err);
         }
 
@@ -445,9 +445,9 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
         if ((command as MessageCommandExecuteData)?.message) {
             if (!this.config.commands.messageCommand.replyOnError) return;
             await (command as MessageCommandExecuteData).message.reply(this.getMessage('error', 'An error occurred.')).catch(er => this._replyError(er));
-        } else if ((command as InteractionCommandExecuteData)?.interaction) {
-            if (!this.config.commands.interactionCommand.replyOnError) return;
-            await (command as InteractionCommandExecuteData).interaction.followUp(this.getMessage('error', 'An error occurred.')).catch(er => this._replyError(er));
+        } else if ((command as SlashCommandExecuteData)?.interaction) {
+            if (!this.config.commands.slashCommand.replyOnError) return;
+            await (command as SlashCommandExecuteData).interaction.followUp(this.getMessage('error', 'An error occurred.')).catch(er => this._replyError(er));
         }
     }
 }

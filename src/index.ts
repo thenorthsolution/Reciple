@@ -2,7 +2,7 @@ export * from './reciple/classes/CommandCooldownManager';
 export * from './reciple/classes/MessageCommandOptionManager';
 export * from './reciple/classes/RecipleClient';
 export * from './reciple/classes/RecipleConfig';
-export * from './reciple/classes/builders/InteractionCommandBuilder';
+export * from './reciple/classes/builders/SlashCommandBuilder';
 export * from './reciple/classes/builders/MessageCommandBuilder';
 export * from './reciple/classes/builders/MessageCommandOptionBuilder';
 export * from './reciple/types/builders';

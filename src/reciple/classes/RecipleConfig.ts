@@ -33,7 +33,7 @@ export interface Config {
                 commands: ConfigCommandPermissions[];
             }
         }
-        interactionCommand: {
+        slashCommand: {
             enabled: boolean;
             replyOnError: boolean;
             registerCommands: boolean;
