@@ -2,7 +2,7 @@ import { RecipleCommandBuilderType } from '../../types/builders';
 import { RecipleHaltedCommandData } from '../../types/commands';
 import { RecipleClient } from '../RecipleClient';
 
-import { Awaitable, ChatInputCommandInteraction, PermissionResolvable, SlashCommandBuilder, SlashCommandSubcommandBuilder, SlashCommandSubcommandGroupBuilder, SlashCommandSubcommandsOnlyBuilder } from 'discord.js';
+import { Awaitable, ChatInputCommandInteraction, PermissionResolvable, SlashCommandBuilder } from 'discord.js';
 
 /**
  * Execute data for interaction command
@@ -11,14 +11,6 @@ export interface InteractionCommandExecuteData {
     interaction: ChatInputCommandInteraction;
     builder: InteractionCommandBuilder;
     client: RecipleClient<true>;
-}
-
-export interface InteractionCommandSubcommandsOnlyBuilder extends SlashCommandSubcommandsOnlyBuilder,Pick<InteractionCommandBuilder, "setCooldown" | "setRequiredBotPermissions" | "setRequiredMemberPermissions" | "setHalt" | "setExecute"> {
-}
-
-export interface InteractionCommandBuilder extends SlashCommandBuilder {
-    addSubcommandGroup(input: SlashCommandSubcommandGroupBuilder | ((subcommandGroup: SlashCommandSubcommandGroupBuilder) => SlashCommandSubcommandGroupBuilder)): SlashCommandSubcommandsOnlyBuilder;
-    addSubcommand(input: SlashCommandSubcommandBuilder | ((subcommandGroup: SlashCommandSubcommandBuilder) => SlashCommandSubcommandBuilder)): SlashCommandSubcommandsOnlyBuilder;
 }
 
 /**
