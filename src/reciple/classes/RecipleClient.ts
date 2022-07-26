@@ -60,6 +60,9 @@ export interface RecipleClient<Ready extends boolean = boolean> extends Client<R
     isReady(): this is RecipleClient<true>;
 }
 
+/**
+ * The reciple client
+ */
 export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready> {
     public config: Config = RecipleConfig.getDefaultConfig();
     public commands: RecipleClientCommands = { messageCommands: {}, interactionCommands: {} };
