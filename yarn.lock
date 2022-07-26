@@ -410,13 +410,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/prompt-sync@npm:^4.1.1":
-  version: 4.1.1
-  resolution: "@types/prompt-sync@npm:4.1.1"
-  checksum: 483254d80da52af768293e1a0c2f6d231f27161bc25aca855b252b054ba69435507e4a0a5a0f49dc571c15dfb767ef34ba2e7fbf1aa1a5ff8d1fb3a7093fb072
-  languageName: node
-  linkType: hard
-
 "@types/semver@npm:^7.3.10":
   version: 7.3.10
   resolution: "@types/semver@npm:7.3.10"
@@ -478,10 +471,24 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ansi-regex@npm:^5.0.0, ansi-regex@npm:^5.0.1":
+"ansi-regex@npm:^4.1.0":
+  version: 4.1.1
+  resolution: "ansi-regex@npm:4.1.1"
+  checksum: b1a6ee44cb6ecdabaa770b2ed500542714d4395d71c7e5c25baa631f680fb2ad322eb9ba697548d498a6fd366949fc8b5bfcf48d49a32803611f648005b01888
+  languageName: node
+  linkType: hard
+
+"ansi-regex@npm:^5.0.1":
   version: 5.0.1
   resolution: "ansi-regex@npm:5.0.1"
   checksum: 2aa4bb54caf2d622f1afdad09441695af2a83aa3fe8b8afa581d205e57ed4261c183c4d3877cee25794443fde5876417d859c108078ab788d6af7e4fe52eb66b
+  languageName: node
+  linkType: hard
+
+"ansi-regex@npm:^6.0.1":
+  version: 6.0.1
+  resolution: "ansi-regex@npm:6.0.1"
+  checksum: 1ff8b7667cded1de4fa2c9ae283e979fc87036864317da86a2e546725f96406746411d0d85e87a2d12fa5abd715d90006de7fa4fa0477c92321ad3b4c7d4e169
   languageName: node
   linkType: hard
 
@@ -976,28 +983,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fallout-utility@npm:^1.4.2":
-  version: 1.4.2
-  resolution: "fallout-utility@npm:1.4.2"
+"fallout-utility@npm:^1.4.4":
+  version: 1.4.4
+  resolution: "fallout-utility@npm:1.4.4"
   dependencies:
-    "@types/prompt-sync": ^4.1.1
     chalk: ^4.1.2
-    prompt-sync: 4.1.6
-    strip-ansi: 6.0.0
-  checksum: ca022d2e998a20b7f64dfeef6e9c9780663ae98a85191da37645b062b8af0f0963c9e039cf4fba1ef10955c233119d329a09a3565d59c29bc0d31544ef384ff2
-  languageName: node
-  linkType: hard
-
-"fallout-utility@npm:^1.4.3":
-  version: 1.4.3
-  resolution: "fallout-utility@npm:1.4.3"
-  dependencies:
-    "@types/prompt-sync": ^4.1.1
-    chalk: ^4.1.2
-    fallout-utility: ^1.4.2
-    prompt-sync: 4.1.6
-    strip-ansi: 6.0.0
-  checksum: 153ef3517c162945f3e49782fcb36b408e54d217316946a8b1f754871e832f14152102537ce95a14c5f9f51b5f530ea76c0782e1f806dd4e2d4d78afcd26101d
+    prompt-sync: ^4.2.0
+    strip-ansi: ^7.0.1
+  checksum: b100c709c161a83644797ddb1f6866ccab74accf31d2c8b4fce2292e7be0b3e3f39c2070525a752fdcc096bc0357f56ae280d97f3beb6324abf740f7d6780065
   languageName: node
   linkType: hard
 
@@ -1588,10 +1581,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prompt-sync@npm:4.1.6":
-  version: 4.1.6
-  resolution: "prompt-sync@npm:4.1.6"
-  checksum: 1d92b49e57945d48a60682d32722075dd9a7e7c1fde6e5ddc469efa77b1b16f0d0fb54c098a51dcc2e30b5f82d4e6923ea75e2b6e2e1cf9eb8e8a06cf1d1175d
+"prompt-sync@npm:^4.2.0":
+  version: 4.2.0
+  resolution: "prompt-sync@npm:4.2.0"
+  dependencies:
+    strip-ansi: ^5.0.0
+  checksum: b14dfb7d2520f384324b49a64c033e92cf2889e34a148037d66b0b89e43f530a93344aebf57c4abe3ae4e351080e22388f7141ea0fbc56b1b9a7f152d5d4a423
   languageName: node
   linkType: hard
 
@@ -1839,7 +1834,7 @@ __metadata:
     commander: ^9.4.0
     discord.js: ^14.0.3
     dotenv: ^16.0.1
-    fallout-utility: ^1.4.3
+    fallout-utility: ^1.4.4
     semver: ^7.3.7
     typedoc: ^0.23.9
     typedoc-plugin-discord-types: ^1.0.2
@@ -2031,12 +2026,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"strip-ansi@npm:6.0.0":
-  version: 6.0.0
-  resolution: "strip-ansi@npm:6.0.0"
+"strip-ansi@npm:^5.0.0":
+  version: 5.2.0
+  resolution: "strip-ansi@npm:5.2.0"
   dependencies:
-    ansi-regex: ^5.0.0
-  checksum: 04c3239ede44c4d195b0e66c0ad58b932f08bec7d05290416d361ff908ad282ecdaf5d9731e322c84f151d427436bde01f05b7422c3ec26dd927586736b0e5d0
+    ansi-regex: ^4.1.0
+  checksum: bdb5f76ade97062bd88e7723aa019adbfacdcba42223b19ccb528ffb9fb0b89a5be442c663c4a3fb25268eaa3f6ea19c7c3fbae830bd1562d55adccae1fcec46
   languageName: node
   linkType: hard
 
@@ -2046,6 +2041,15 @@ __metadata:
   dependencies:
     ansi-regex: ^5.0.1
   checksum: f3cd25890aef3ba6e1a74e20896c21a46f482e93df4a06567cebf2b57edabb15133f1f94e57434e0a958d61186087b1008e89c94875d019910a213181a14fc8c
+  languageName: node
+  linkType: hard
+
+"strip-ansi@npm:^7.0.1":
+  version: 7.0.1
+  resolution: "strip-ansi@npm:7.0.1"
+  dependencies:
+    ansi-regex: ^6.0.1
+  checksum: 257f78fa433520e7f9897722731d78599cb3fce29ff26a20a5e12ba4957463b50a01136f37c43707f4951817a75e90820174853d6ccc240997adc5df8f966039
   languageName: node
   linkType: hard
 
