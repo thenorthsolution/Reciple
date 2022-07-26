@@ -18,7 +18,6 @@
   "includeVersion": true,
   "excludeExternals": true,
   "hideGenerator": true,
-  "gitRemote": "https://github.com/FalloutStudios/Reciple.git",
   "githubPages": true,
   "customCss": "./docs/style.css",
   "sort": [
