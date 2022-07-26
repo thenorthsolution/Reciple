@@ -485,13 +485,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ansi-regex@npm:^6.0.1":
-  version: 6.0.1
-  resolution: "ansi-regex@npm:6.0.1"
-  checksum: 1ff8b7667cded1de4fa2c9ae283e979fc87036864317da86a2e546725f96406746411d0d85e87a2d12fa5abd715d90006de7fa4fa0477c92321ad3b4c7d4e169
-  languageName: node
-  linkType: hard
-
 "ansi-styles@npm:^3.2.1":
   version: 3.2.1
   resolution: "ansi-styles@npm:3.2.1"
@@ -983,14 +976,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fallout-utility@npm:^1.4.4":
-  version: 1.4.4
-  resolution: "fallout-utility@npm:1.4.4"
+"fallout-utility@npm:^1.4.6":
+  version: 1.4.6
+  resolution: "fallout-utility@npm:1.4.6"
   dependencies:
     chalk: ^4.1.2
     prompt-sync: ^4.2.0
-    strip-ansi: ^7.0.1
-  checksum: b100c709c161a83644797ddb1f6866ccab74accf31d2c8b4fce2292e7be0b3e3f39c2070525a752fdcc096bc0357f56ae280d97f3beb6324abf740f7d6780065
+    strip-ansi: ^6.0.1
+  checksum: 1baffc1c69e920d4ee80431f704c720cc219f2019879b77a02a8d0b7bfe430aff60e681fa2fde886289cc4adaac671212ca86b3f76372f9c7f6b3725213ce93a
   languageName: node
   linkType: hard
 
@@ -1834,7 +1827,7 @@ __metadata:
     commander: ^9.4.0
     discord.js: ^14.0.3
     dotenv: ^16.0.1
-    fallout-utility: ^1.4.4
+    fallout-utility: ^1.4.6
     semver: ^7.3.7
     typedoc: ^0.23.9
     typedoc-plugin-discord-types: ^1.0.2
@@ -2041,15 +2034,6 @@ __metadata:
   dependencies:
     ansi-regex: ^5.0.1
   checksum: f3cd25890aef3ba6e1a74e20896c21a46f482e93df4a06567cebf2b57edabb15133f1f94e57434e0a958d61186087b1008e89c94875d019910a213181a14fc8c
-  languageName: node
-  linkType: hard
-
-"strip-ansi@npm:^7.0.1":
-  version: 7.0.1
-  resolution: "strip-ansi@npm:7.0.1"
-  dependencies:
-    ansi-regex: ^6.0.1
-  checksum: 257f78fa433520e7f9897722731d78599cb3fce29ff26a20a5e12ba4957463b50a01136f37c43707f4951817a75e90820174853d6ccc240997adc5df8f966039
   languageName: node
   linkType: hard
 
