@@ -57,7 +57,7 @@ export async function loadModules(client: RecipleClient, folder?: string): Promi
             if (!module_.versions?.length) throw new Error('Module does not have supported versions.');
             const versions = typeof module_.versions === 'object' ? module_.versions : [module_.versions];
 
-            if (!versions.some(v => isSupportedVersion(v, version))) throw new Error('Module versions is not defined or unsupported; supported versions: ' + module_.versions ?? 'none' + '; current version: '+ version);
+            if (!client.config.disableVersionCheck && !versions.some(v => isSupportedVersion(v, version))) throw new Error('Module versions is not defined or unsupported; supported versions: ' + module_.versions ?? 'none' + '; current version: '+ version);
             if (!await Promise.resolve(module_.onStart(client))) throw new Error(script + ' onStart is not defined or returned false.');
             if (module_.commands) {
                 for (const command of module_.commands) {

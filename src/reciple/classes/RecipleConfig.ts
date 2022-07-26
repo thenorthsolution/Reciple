@@ -64,6 +64,7 @@ export interface Config {
     }
     ignoredFiles: string[];
     modulesFolder: string;
+    disableVersionCheck: boolean;
     version: string;
 }
 

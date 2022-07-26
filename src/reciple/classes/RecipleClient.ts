@@ -2,7 +2,7 @@
 import { createLogger } from '../logger';
 import { loadModules, RecipleModule } from '../modules';
 import { botHasExecutePermissions, isIgnoredChannel, userHasCommandPermissions } from '../permissions';
-import { ApplicationCommandBuilder, registerApplicatiobCommands } from '../registerInteractionCommands';
+import { ApplicationCommandBuilder, registerApplicationCommands } from '../registerInteractionCommands';
 import { RecipleCommandBuilder, RecipleCommandBuildersExecuteData, RecipleCommandBuilderType } from '../types/builders';
 import { RecipleHaltedCommandData, RecipleHaltedCommandReason } from '../types/commands';
 import { RecipleAddModuleOptions } from '../types/paramOptions';
@@ -131,7 +131,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
         }
 
         if (this.config.commands.slashCommand.registerCommands) {
-            await registerApplicatiobCommands({
+            await registerApplicationCommands({
                 client: this,
                 commands: [...Object.values(this.commands.slashCommands), ...this.otherApplicationCommandData],
                 guilds: this.config.commands.slashCommand.guilds
@@ -167,7 +167,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
             this.addCommand(command);
         }
 
-        if (registerCommands) await registerApplicatiobCommands({
+        if (registerCommands) await registerApplicationCommands({
             client: this,
             commands: [...Object.values(this.commands.slashCommands), ...this.otherApplicationCommandData],
             guilds: this.config.commands.slashCommand.guilds

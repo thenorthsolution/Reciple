@@ -27,7 +27,7 @@ commands:
           permissions: ['Administrator']
 
   # Interaction command options
-  interactionCommand:
+  slashCommand:
     # enable interaction commands
     enabled: true
     # reply when an error occured
@@ -115,6 +115,9 @@ ignoredFiles: []
 
 # Modules folder
 modulesFolder: 'modules'
+
+# Load modules regardless of its supported versions
+disableVersionCheck: false
 
 # Current version
 version: ^VERSION
