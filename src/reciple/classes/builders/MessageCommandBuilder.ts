@@ -1,5 +1,5 @@
-import { RecipleCommandBuilderType } from '../../types/builders';
-import { RecipleHaltedCommandData } from '../../types/commands';
+import { CommandBuilderType } from '../../types/builders';
+import { HaltedCommandData } from '../../types/commands';
 import { MessageCommandOptionManager } from '../MessageCommandOptionManager';
 import { RecipleClient } from '../RecipleClient';
 import { MessageCommandOptionBuilder } from './MessageCommandOptionBuilder';
@@ -33,7 +33,7 @@ export interface MessageCommandValidatedOption {
  * Reciple builder for message command
  */
 export class MessageCommandBuilder {
-    public readonly builder = RecipleCommandBuilderType.MessageCommand;
+    public readonly builder = CommandBuilderType.MessageCommand;
     public name: string = '';
     public cooldown: number = 0;
     public description: string = '';
@@ -44,7 +44,7 @@ export class MessageCommandBuilder {
     public requiredMemberPermissions: PermissionResolvable[] = [];
     public allowExecuteInDM: boolean = true;
     public allowExecuteByBots: boolean = false;
-    public halt?: (haltData: RecipleHaltedCommandData<MessageCommandBuilder>) => Awaitable<boolean|void>;
+    public halt?: (haltData: HaltedCommandData<MessageCommandBuilder>) => Awaitable<boolean|void>;
     public execute: (executeData: MessageCommandExecuteData) => void = () => { /* Execute */ };
 
     /**
@@ -132,7 +132,7 @@ export class MessageCommandBuilder {
      * Function when the command is interupted 
      * @param halt Function to execute when command is halted
      */
-    public setHalt(halt?: (haltData: RecipleHaltedCommandData<MessageCommandBuilder>) => Awaitable<boolean|void>): MessageCommandBuilder {
+    public setHalt(halt?: (haltData: HaltedCommandData<MessageCommandBuilder>) => Awaitable<boolean|void>): MessageCommandBuilder {
         this.halt = halt ? halt : undefined;
         return this;
     }

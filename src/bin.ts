@@ -15,9 +15,9 @@ if (flags.version) {
     process.exit(0);
 }
 
-const allowedFiles = ['node_modules', 'reciple.yml', 'package.json', 'package.lock.json', 'modules.yml', '.rmmcache'];
+const allowedFiles = ['node_modules', 'reciple.yml', 'package.json'];
 
-if (readdirSync('./').filter(f => !f.startsWith('.') && allowedFiles.indexOf(f)).length > 0 && !existsSync('./reciple.yml')) {
+if (readdirSync('./').filter(f => !f.startsWith('.') && allowedFiles.indexOf(f)).length > 0 && !existsSync(flags.config ?? './reciple.yml')) {
     const ask = input('This directory does not contain reciple.yml. Would you like to init axis here? [y/n] ') ?? '';
     if (ask.toString().toLowerCase() !== 'y') process.exit(0);
 }

@@ -2,11 +2,11 @@ import { RecipleClient } from '../classes/RecipleClient';
 import { Config } from '../classes/RecipleConfig';
 import { RecipleModule, RecipleScript } from '../modules';
 import { ApplicationCommandBuilder } from '../registerInteractionCommands';
-import { RecipleCommandBuilder } from './builders';
+import { CommandBuilder } from './builders';
 
 import { ApplicationCommandData, PermissionsBitField } from 'discord.js';
 
-export interface RecipleAddModuleOptions {
+export interface RecipleClientAddModuleOptions {
     /**
      * The Module script
      */
@@ -21,7 +21,7 @@ export interface RecipleAddModuleOptions {
     moduleInfo?: RecipleModule["info"];
 }
 
-export interface RecipleRegisterApplicationCommandsOptions {
+export interface RegisterApplicationCommandsOptions {
     /**
      * Bot client
      */
@@ -36,8 +36,8 @@ export interface RecipleRegisterApplicationCommandsOptions {
     guilds?: string|string[];
 }
 
-export interface RecipleUserHasCommandPermissionsOptions {
-    builder: RecipleCommandBuilder;
+export interface UserHasCommandPermissionsOptions {
+    builder: CommandBuilder;
     memberPermissions?: PermissionsBitField;
     commandPermissions?: Config["commands"]["slashCommand"]["permissions"]|Config["commands"]["messageCommand"]["permissions"];
 }

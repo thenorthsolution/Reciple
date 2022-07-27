@@ -4,16 +4,16 @@ import { SlashCommandBuilder, SlashCommandExecuteData } from '../classes/builder
 /**
  * Reciple command builders
  */
-export type RecipleCommandBuilder = MessageCommandBuilder|SlashCommandBuilder;
+export type CommandBuilder = MessageCommandBuilder|SlashCommandBuilder;
 /**
  * Reciple command builders execute data
  */
-export type RecipleCommandBuildersExecuteData = SlashCommandExecuteData|MessageCommandExecuteData;
+export type CommandBuilderExecuteData = SlashCommandExecuteData|MessageCommandExecuteData;
 
 /**
  * Types of Reciple command builders
  */
-export enum RecipleCommandBuilderType {
+export enum CommandBuilderType {
     MessageCommand,
     SlashCommand
 }

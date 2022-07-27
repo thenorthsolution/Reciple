@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from './classes/builders/SlashCommandBuilder';
-import { RecipleRegisterApplicationCommandsOptions } from './types/paramOptions';
+import { RegisterApplicationCommandsOptions } from './types/paramOptions';
 
 import { ApplicationCommandData, ContextMenuCommandBuilder, SlashCommandBuilder as DiscordJsSlashCommandBuilder } from 'discord.js';
 
@@ -10,7 +10,7 @@ export type ApplicationCommandBuilder = SlashCommandBuilder|ContextMenuCommandBu
  * Register application commands 
  * @param options Register application commands options
  */
-export async function registerApplicationCommands(options: RecipleRegisterApplicationCommandsOptions): Promise<void> {
+export async function registerApplicationCommands(options: RegisterApplicationCommandsOptions): Promise<void> {
     const client = options.client;
     const guilds = typeof options.guilds == 'string' ? [options.guilds] : options.guilds;
 

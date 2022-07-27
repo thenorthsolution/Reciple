@@ -1,5 +1,5 @@
-import { RecipleCommandBuilderType } from '../../types/builders';
-import { RecipleHaltedCommandData } from '../../types/commands';
+import { CommandBuilderType } from '../../types/builders';
+import { HaltedCommandData } from '../../types/commands';
 import { RecipleClient } from '../RecipleClient';
 
 import {
@@ -33,12 +33,12 @@ export interface SlashCommandBuilder extends DiscordJsSlashCommandBuilder {
  * Reciple builder for interaction/slash command
  */
 export class SlashCommandBuilder extends DiscordJsSlashCommandBuilder {
-    public readonly builder = RecipleCommandBuilderType.SlashCommand;
+    public readonly builder = CommandBuilderType.SlashCommand;
     public cooldown: number = 0;
     public requiredBotPermissions: PermissionResolvable[] = [];
     public requiredMemberPermissions: PermissionResolvable[] = [];
     public allowExecuteInDM: boolean = true;
-    public halt?: (haltData: RecipleHaltedCommandData<SlashCommandBuilder>) => Awaitable<boolean|void>;
+    public halt?: (haltData: HaltedCommandData<SlashCommandBuilder>) => Awaitable<boolean|void>;
     public execute: (executeData: SlashCommandExecuteData) => Awaitable<void> = () => { /* Execute */ };
 
     /**
@@ -73,7 +73,7 @@ export class SlashCommandBuilder extends DiscordJsSlashCommandBuilder {
      * Function when the command is interupted 
      * @param halt Function to execute when command is halted
      */
-    public setHalt(halt?: (haltData: RecipleHaltedCommandData<SlashCommandBuilder>) => Awaitable<boolean|void>): SlashCommandBuilder {
+    public setHalt(halt?: (haltData: HaltedCommandData<SlashCommandBuilder>) => Awaitable<boolean|void>): SlashCommandBuilder {
         this.halt = halt ? halt : undefined;
         return this;
     }
