@@ -19,7 +19,7 @@
     "url": "https://github.com/FalloutStudios/reciple/issues"
   },
   "scripts": {
-    "clean": "rm -rf bin",
+    "clean": "yarn exec rimraf bin",
     "build": "yarn clean && yarn exec tsc",
     "build:publish": "yarn build && yarn npm publish && yarn build:docs && yarn publish:docs",
     "build:pub-prerelease": "yarn build && yarn npm publish --tag pre",
@@ -59,6 +59,7 @@
     "@types/node": "^18.6.1",
     "@types/semver": "^7.3.10",
     "discord.js": "^14.0.3",
+    "rimraf": "^3.0.2",
     "typedoc": "^0.23.9",
     "typedoc-plugin-discord-types": "^1.0.2",
     "typedoc-plugin-djs-links": "^1.2.0",
