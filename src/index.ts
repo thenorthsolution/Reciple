@@ -12,5 +12,5 @@ export * from './reciple/flags';
 export * from './reciple/logger';
 export * from './reciple/modules';
 export * from './reciple/permissions';
-export * from './reciple/registerInteractionCommands';
+export * from './reciple/registerApplicationCommands';
 export * from './reciple/version';

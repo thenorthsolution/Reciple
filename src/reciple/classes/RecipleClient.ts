@@ -2,7 +2,7 @@
 import { createLogger } from '../logger';
 import { loadModules, RecipleModule } from '../modules';
 import { botHasExecutePermissions, isIgnoredChannel, userHasCommandPermissions } from '../permissions';
-import { ApplicationCommandBuilder, registerApplicationCommands } from '../registerInteractionCommands';
+import { ApplicationCommandBuilder, registerApplicationCommands } from '../registerApplicationCommands';
 import { CommandBuilder, CommandBuilderExecuteData, CommandBuilderType } from '../types/builders';
 import { HaltedCommandData, HaltedCommandReason } from '../types/commands';
 import { RecipleClientAddModuleOptions } from '../types/paramOptions';

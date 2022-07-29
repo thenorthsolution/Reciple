@@ -1,7 +1,7 @@
 import { RecipleClient } from '../classes/RecipleClient';
 import { Config } from '../classes/RecipleConfig';
 import { RecipleModule, RecipleScript } from '../modules';
-import { ApplicationCommandBuilder } from '../registerInteractionCommands';
+import { ApplicationCommandBuilder } from '../registerApplicationCommands';
 import { CommandBuilder } from './builders';
 
 import { ApplicationCommandData, PermissionsBitField } from 'discord.js';
