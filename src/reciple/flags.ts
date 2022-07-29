@@ -1,9 +1,12 @@
-import { program } from 'commander';
+import { Command } from 'commander';
 
 /**
  * Used flags
  */
-export const flags = program
+export const flags = new Command()
+        .name('reciple')
+        .description('Reciple.js - Discord.js handler cli')
+        .version(`v${require('../../package.json').version}`, '-v, --version')
         .option('-t, --token <token>', 'Replace used bot token')
         .option('-c, --config <config>', 'Change path to config file')
         .option('-D, --debugmode', 'Enabled debug mode')

@@ -10,11 +10,6 @@ import { existsSync, readdirSync } from 'fs';
 
 import 'dotenv/config';
 
-if (flags.version) {
-    console.log(`v${version}`);
-    process.exit(0);
-}
-
 const allowedFiles = ['node_modules', 'reciple.yml', 'package.json'];
 
 if (readdirSync('./').filter(f => !f.startsWith('.') && allowedFiles.indexOf(f)).length > 0 && !existsSync(flags.config ?? './reciple.yml')) {
@@ -46,5 +41,7 @@ if (config.fileLogging.clientLogs) client.logger.info('Reciple Client v' + versi
         client.addCommandListeners();
     });
 
-    client.login(config.token);
+    client.login(config.token).catch(err => {
+        if (client.isClientLogsEnabled()) client.logger.error(err);
+    });
 })();
