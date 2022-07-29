@@ -1,13 +1,12 @@
 #!/usr/bin/env node
+
 import { RecipleClient } from './reciple/classes/RecipleClient';
 import { RecipleConfig } from './reciple/classes/RecipleConfig';
-import { flags } from './reciple/flags';
 import { rawVersion } from './reciple/version';
-
-import chalk from 'chalk';
-import { input } from 'fallout-utility';
 import { existsSync, readdirSync } from 'fs';
-
+import { flags } from './reciple/flags';
+import { input } from 'fallout-utility';
+import chalk from 'chalk';
 import 'dotenv/config';
 
 const allowedFiles = ['node_modules', 'reciple.yml', 'package.json'];

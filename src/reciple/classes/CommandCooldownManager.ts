@@ -1,6 +1,5 @@
-import { CommandBuilderType } from '../types/builders';
-
 import { Guild, TextBasedChannel, User } from 'discord.js';
+import { CommandBuilderType } from '../types/builders';
 
 /**
  * Object interface for cooled-down user

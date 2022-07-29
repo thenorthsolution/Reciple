@@ -1,7 +1,7 @@
 import { MessageCommandExecuteData } from '../classes/builders/MessageCommandBuilder';
 import { SlashCommandBuilder, SlashCommandExecuteData } from '../classes/builders/SlashCommandBuilder';
-import { CooledDownUser } from '../classes/CommandCooldownManager';
 import { MessageCommandOptionManager } from '../classes/MessageCommandOptionManager';
+import { CooledDownUser } from '../classes/CommandCooldownManager';
 import { CommandBuilder } from '../types/builders';
 
 /**

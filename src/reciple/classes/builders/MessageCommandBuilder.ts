@@ -1,11 +1,10 @@
-import { CommandBuilderType } from '../../types/builders';
-import { HaltedCommandData } from '../../types/commands';
 import { MessageCommandOptionManager } from '../MessageCommandOptionManager';
-import { RecipleClient } from '../RecipleClient';
 import { MessageCommandOptionBuilder } from './MessageCommandOptionBuilder';
-
 import { Awaitable, Message, PermissionResolvable } from 'discord.js';
 import { Command as CommandMessage } from 'fallout-utility';
+import { CommandBuilderType } from '../../types/builders';
+import { HaltedCommandData } from '../../types/commands';
+import { RecipleClient } from '../RecipleClient';
 
 /**
  * Execute data for message command

@@ -1,8 +1,6 @@
+import { ApplicationCommandData, ContextMenuCommandBuilder, SlashCommandBuilder as DiscordJsSlashCommandBuilder } from 'discord.js';
 import { SlashCommandBuilder } from './classes/builders/SlashCommandBuilder';
 import { RegisterApplicationCommandsOptions } from './types/paramOptions';
-
-import { ApplicationCommandData, ContextMenuCommandBuilder, SlashCommandBuilder as DiscordJsSlashCommandBuilder } from 'discord.js';
-
 
 export type ApplicationCommandBuilder = SlashCommandBuilder|ContextMenuCommandBuilder|DiscordJsSlashCommandBuilder;
 

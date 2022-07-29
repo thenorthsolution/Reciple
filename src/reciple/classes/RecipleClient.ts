@@ -1,20 +1,30 @@
-// Not cool code
-import { createLogger } from '../logger';
-import { loadModules, RecipleModule } from '../modules';
+import { MessageCommandBuilder, MessageCommandExecuteData, validateMessageCommandOptions } from './builders/MessageCommandBuilder';
 import { botHasExecutePermissions, isIgnoredChannel, userHasCommandPermissions } from '../permissions';
 import { ApplicationCommandBuilder, registerApplicationCommands } from '../registerApplicationCommands';
 import { CommandBuilder, CommandBuilderExecuteData, CommandBuilderType } from '../types/builders';
-import { HaltedCommandData, HaltedCommandReason } from '../types/commands';
-import { RecipleClientAddModuleOptions } from '../types/paramOptions';
-import { version } from '../version';
-import { MessageCommandBuilder, MessageCommandExecuteData, validateMessageCommandOptions } from './builders/MessageCommandBuilder';
 import { SlashCommandBuilder, SlashCommandExecuteData } from './builders/SlashCommandBuilder';
 import { CommandCooldownManager, CooledDownUser } from './CommandCooldownManager';
 import { MessageCommandOptionManager } from './MessageCommandOptionManager';
-import { Config, RecipleConfig } from './RecipleConfig';
-
-import { ApplicationCommandData, Awaitable, ChannelType, ChatInputCommandInteraction, Client, ClientEvents, ClientOptions, Interaction, InteractionType, Message } from 'discord.js';
+import { HaltedCommandData, HaltedCommandReason } from '../types/commands';
+import { RecipleClientAddModuleOptions } from '../types/paramOptions';
 import { getCommand, Logger as ILogger } from 'fallout-utility';
+import { Config, RecipleConfig } from './RecipleConfig';
+import { loadModules, RecipleModule } from '../modules';
+import { createLogger } from '../logger';
+import { version } from '../version';
+
+import {
+    ApplicationCommandData,
+    Awaitable,
+    ChannelType,
+    ChatInputCommandInteraction,
+    Client,
+    ClientEvents,
+    ClientOptions,
+    Interaction,
+    InteractionType,
+    Message
+} from 'discord.js';
 
 /**
  * options for Reciple client
