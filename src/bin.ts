@@ -2,7 +2,7 @@
 import { RecipleClient } from './reciple/classes/RecipleClient';
 import { RecipleConfig } from './reciple/classes/RecipleConfig';
 import { flags } from './reciple/flags';
-import { version } from './reciple/version';
+import { rawVersion } from './reciple/version';
 
 import chalk from 'chalk';
 import { input } from 'fallout-utility';
@@ -29,7 +29,7 @@ try {
 const config = configParser.getConfig();
 const client = new RecipleClient({ config: config, ...config.client });
 
-if (config.fileLogging.clientLogs) client.logger.info('Reciple Client v' + version + ' is starting...');
+if (config.fileLogging.clientLogs) client.logger.info('Reciple Client v' + rawVersion + ' is starting...');
 
 (async () => {
     await client.startModules();
