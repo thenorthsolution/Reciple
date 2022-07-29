@@ -13,7 +13,7 @@ import 'dotenv/config';
 const allowedFiles = ['node_modules', 'reciple.yml', 'package.json'];
 
 if (readdirSync('./').filter(f => !f.startsWith('.') && allowedFiles.indexOf(f)).length > 0 && !existsSync(flags.config ?? './reciple.yml')) {
-    const ask = input('This directory does not contain reciple.yml. Would you like to init axis here? [y/n] ') ?? '';
+    const ask = (flags.yes ? 'y' : null) ?? input('This directory does not contain reciple.yml. Would you like to init axis here? [y/n] ') ?? '';
     if (ask.toString().toLowerCase() !== 'y') process.exit(0);
 }
 
