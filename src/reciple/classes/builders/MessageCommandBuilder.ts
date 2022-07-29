@@ -220,5 +220,5 @@ export function validateMessageCommandOptions(builder: MessageCommandBuilder, op
         i++;
     }
 
-    return new MessageCommandOptionManager(result);
+    return new MessageCommandOptionManager(...result);
 }
