@@ -1,11 +1,10 @@
-import { RecipleCommandBuilderType } from '../../types/builders';
-import { RecipleHaltedCommandData } from '../../types/commands';
 import { MessageCommandOptionManager } from '../MessageCommandOptionManager';
-import { RecipleClient } from '../RecipleClient';
 import { MessageCommandOptionBuilder } from './MessageCommandOptionBuilder';
-
 import { Awaitable, Message, PermissionResolvable } from 'discord.js';
 import { Command as CommandMessage } from 'fallout-utility';
+import { CommandBuilderType } from '../../types/builders';
+import { HaltedCommandData } from '../../types/commands';
+import { RecipleClient } from '../RecipleClient';
 
 /**
  * Execute data for message command
@@ -33,7 +32,7 @@ export interface MessageCommandValidatedOption {
  * Reciple builder for message command
  */
 export class MessageCommandBuilder {
-    public readonly builder = RecipleCommandBuilderType.MessageCommand;
+    public readonly builder = CommandBuilderType.MessageCommand;
     public name: string = '';
     public cooldown: number = 0;
     public description: string = '';
@@ -44,7 +43,7 @@ export class MessageCommandBuilder {
     public requiredMemberPermissions: PermissionResolvable[] = [];
     public allowExecuteInDM: boolean = true;
     public allowExecuteByBots: boolean = false;
-    public halt?: (haltData: RecipleHaltedCommandData<MessageCommandBuilder>) => Awaitable<boolean|void>;
+    public halt?: (haltData: HaltedCommandData<MessageCommandBuilder>) => Awaitable<boolean|void>;
     public execute: (executeData: MessageCommandExecuteData) => void = () => { /* Execute */ };
 
     /**
@@ -132,7 +131,7 @@ export class MessageCommandBuilder {
      * Function when the command is interupted 
      * @param halt Function to execute when command is halted
      */
-    public setHalt(halt?: (haltData: RecipleHaltedCommandData<MessageCommandBuilder>) => Awaitable<boolean|void>): MessageCommandBuilder {
+    public setHalt(halt?: (haltData: HaltedCommandData<MessageCommandBuilder>) => Awaitable<boolean|void>): MessageCommandBuilder {
         this.halt = halt ? halt : undefined;
         return this;
     }
@@ -172,16 +171,6 @@ export class MessageCommandBuilder {
         this.validateOptions = validateOptions;
         return this;
     }
-
-    /**
-     * validate given command options 
-     * @deprecated use `validateMessageCommandOptions()` instead
-     * @param options Parsed message command data
-     */
-    // TODO: Remove this on the next major update
-    public getCommandOptionValues(options: CommandMessage): MessageCommandOptionManager {
-        return validateMessageCommandOptions(this, options);
-    }
 }
 
 export function validateMessageCommandOptions(builder: MessageCommandBuilder, options: CommandMessage): MessageCommandOptionManager {
@@ -220,5 +209,5 @@ export function validateMessageCommandOptions(builder: MessageCommandBuilder, op
         i++;
     }
 
-    return new MessageCommandOptionManager(result);
+    return new MessageCommandOptionManager(...result);
 }

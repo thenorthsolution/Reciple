@@ -1,13 +1,12 @@
-import { Config } from './classes/RecipleConfig';
-import { RecipleUserHasCommandPermissionsOptions } from './types/paramOptions';
-
+import { UserHasCommandPermissionsOptions } from './types/paramOptions';
 import { Guild, PermissionResolvable } from 'discord.js';
+import { Config } from './classes/RecipleConfig';
 
 /**
  * Check if the user has permissions to execute the given command name
  * @param options options
  */
-export function userHasCommandPermissions(options: RecipleUserHasCommandPermissionsOptions): boolean {
+export function userHasCommandPermissions(options: UserHasCommandPermissionsOptions): boolean {
     const command = (
                 options.commandPermissions?.enabled
                 ? options.commandPermissions?.commands.find(c => c.command.toLowerCase() === options.builder.name.toLowerCase())

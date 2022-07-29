@@ -1,19 +1,19 @@
-import { InteractionCommandBuilder, InteractionCommandExecuteData } from '../classes/builders/InteractionCommandBuilder';
 import { MessageCommandBuilder, MessageCommandExecuteData } from '../classes/builders/MessageCommandBuilder';
+import { SlashCommandBuilder, SlashCommandExecuteData } from '../classes/builders/SlashCommandBuilder';
 
 /**
  * Reciple command builders
  */
-export type RecipleCommandBuilder = MessageCommandBuilder|InteractionCommandBuilder;
+export type CommandBuilder = MessageCommandBuilder|SlashCommandBuilder;
 /**
  * Reciple command builders execute data
  */
-export type RecipleCommandBuildersExecuteData = InteractionCommandExecuteData|MessageCommandExecuteData;
+export type CommandBuilderExecuteData = SlashCommandExecuteData|MessageCommandExecuteData;
 
 /**
  * Types of Reciple command builders
  */
-export enum RecipleCommandBuilderType {
+export enum CommandBuilderType {
     MessageCommand,
-    InteractionCommand
+    SlashCommand
 }

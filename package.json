@@ -1,6 +1,6 @@
 {
   "name": "reciple",
-  "version": "3.1.4",
+  "version": "4.0.0-pre.4",
   "bin": "bin/bin.js",
   "license": "GPL-3.0",
   "main": "bin/index.js",
@@ -19,10 +19,10 @@
     "url": "https://github.com/FalloutStudios/reciple/issues"
   },
   "scripts": {
-    "clean": "rm -rf bin",
+    "clean": "yarn exec rimraf bin",
     "build": "yarn clean && yarn exec tsc",
     "build:publish": "yarn build && yarn npm publish && yarn build:docs && yarn publish:docs",
-    "build:pub-prerelease": "yarn build && yarn publish --tag pre",
+    "build:publish-prerelease": "yarn build && yarn npm publish --tag pre",
     "build:docs": "yarn exec typedoc --tsconfig ./docs/typedoc.json",
     "update:docs": "yarn workspace docs update",
     "test": "yarn build && yarn test:start",
@@ -58,8 +58,8 @@
   "devDependencies": {
     "@types/node": "^18.6.1",
     "@types/semver": "^7.3.10",
-    "better-docs": "^2.7.2",
     "discord.js": "^14.0.3",
+    "rimraf": "^3.0.2",
     "typedoc": "^0.23.9",
     "typedoc-plugin-discord-types": "^1.0.2",
     "typedoc-plugin-djs-links": "^1.2.0",

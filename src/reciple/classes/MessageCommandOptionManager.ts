@@ -7,9 +7,8 @@ export class MessageCommandOptionManager extends Array<MessageCommandValidatedOp
     /**
      * @param options Validated options
      */
-    constructor(options: MessageCommandValidatedOption[]) {
-        super();
-        this.push(...options);
+    constructor(...options: MessageCommandValidatedOption[]) {
+        super(...(options ?? []));
     }
 
     /**

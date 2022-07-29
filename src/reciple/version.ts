@@ -6,6 +6,11 @@ import semver from 'semver';
 export const version = `${semver.coerce(require('../../package.json').version)}`;
 
 /**
+ * Current reciple version from package.json
+ */
+export const rawVersion = require('../../package.json').version;
+
+/**
  * Check if the version is valid
  * @param ver Version string to validated
  */

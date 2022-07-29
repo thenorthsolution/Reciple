@@ -1,24 +1,18 @@
 #!/usr/bin/env node
+
 import { RecipleClient } from './reciple/classes/RecipleClient';
 import { RecipleConfig } from './reciple/classes/RecipleConfig';
-import { flags } from './reciple/flags';
-import { version } from './reciple/version';
-
-import chalk from 'chalk';
-import { input } from 'fallout-utility';
+import { rawVersion } from './reciple/version';
 import { existsSync, readdirSync } from 'fs';
-
+import { flags } from './reciple/flags';
+import { input } from 'fallout-utility';
+import chalk from 'chalk';
 import 'dotenv/config';
 
-if (flags.version) {
-    console.log(`v${version}`);
-    process.exit(0);
-}
+const allowedFiles = ['node_modules', 'reciple.yml', 'package.json'];
 
-const allowedFiles = ['node_modules', 'reciple.yml', 'package.json', 'package.lock.json', 'modules.yml', '.rmmcache'];
-
-if (readdirSync('./').filter(f => !f.startsWith('.') && allowedFiles.indexOf(f)).length > 0 && !existsSync('./reciple.yml')) {
-    const ask = input('This directory does not contain reciple.yml. Would you like to init axis here? [y/n] ') ?? '';
+if (readdirSync('./').filter(f => !f.startsWith('.') && allowedFiles.indexOf(f)).length > 0 && !existsSync(flags.config ?? './reciple.yml')) {
+    const ask = (flags.yes ? 'y' : null) ?? input('This directory does not contain reciple.yml. Would you like to init axis here? [y/n] ') ?? '';
     if (ask.toString().toLowerCase() !== 'y') process.exit(0);
 }
 
@@ -34,7 +28,7 @@ try {
 const config = configParser.getConfig();
 const client = new RecipleClient({ config: config, ...config.client });
 
-if (config.fileLogging.clientLogs) client.logger.info('Reciple Client v' + version + ' is starting...');
+if (config.fileLogging.clientLogs) client.logger.info('Reciple Client v' + rawVersion + ' is starting...');
 
 (async () => {
     await client.startModules();
@@ -46,5 +40,7 @@ if (config.fileLogging.clientLogs) client.logger.info('Reciple Client v' + versi
         client.addCommandListeners();
     });
 
-    client.login(config.token);
+    client.login(config.token).catch(err => {
+        if (client.isClientLogsEnabled()) client.logger.error(err);
+    });
 })();

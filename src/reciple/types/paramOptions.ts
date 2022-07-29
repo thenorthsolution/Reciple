@@ -1,27 +1,26 @@
+import { ApplicationCommandBuilder } from '../registerApplicationCommands';
+import { ApplicationCommandData, PermissionsBitField } from 'discord.js';
+import { RecipleModule, RecipleScript } from '../modules';
 import { RecipleClient } from '../classes/RecipleClient';
 import { Config } from '../classes/RecipleConfig';
-import { RecipleModule, RecipleScript } from '../modules';
-import { ApplicationCommandBuilder } from '../registerInteractionCommands';
-import { RecipleCommandBuilder } from './builders';
+import { CommandBuilder } from './builders';
 
-import { ApplicationCommandData, PermissionsBitField } from 'discord.js';
-
-export interface RecipleAddModuleOptions {
+export interface RecipleClientAddModuleOptions {
     /**
      * The Module script
      */
     script: RecipleScript;
     /**
-     * Register interaction commands if possible
+     * Register application commands if possible
      */
-    registerInteractionCommands?: boolean;
+    registerApplicationCommands?: boolean;
     /**
      * Module optional info
      */
     moduleInfo?: RecipleModule["info"];
 }
 
-export interface RecipleRegisterInteractionCommandsOptions {
+export interface RegisterApplicationCommandsOptions {
     /**
      * Bot client
      */
@@ -30,14 +29,14 @@ export interface RecipleRegisterInteractionCommandsOptions {
      * Commands to register
      */
     commands: (ApplicationCommandData|ApplicationCommandBuilder)[];
-    /**PermissionResolvable
+    /**
      * Set guild to not register commands globally
      */
     guilds?: string|string[];
 }
 
-export interface RecipleUserHasCommandPermissionsOptions {
-    builder: RecipleCommandBuilder;
+export interface UserHasCommandPermissionsOptions {
+    builder: CommandBuilder;
     memberPermissions?: PermissionsBitField;
-    commandPermissions?: Config["commands"]["interactionCommand"]["permissions"]|Config["commands"]["messageCommand"]["permissions"];
+    commandPermissions?: Config["commands"]["slashCommand"]["permissions"]|Config["commands"]["messageCommand"]["permissions"];
 }
