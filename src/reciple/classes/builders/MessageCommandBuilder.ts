@@ -172,16 +172,6 @@ export class MessageCommandBuilder {
         this.validateOptions = validateOptions;
         return this;
     }
-
-    /**
-     * validate given command options 
-     * @deprecated use `validateMessageCommandOptions()` instead
-     * @param options Parsed message command data
-     */
-    // TODO: Remove this on the next major update
-    public getCommandOptionValues(options: CommandMessage): MessageCommandOptionManager {
-        return validateMessageCommandOptions(this, options);
-    }
 }
 
 export function validateMessageCommandOptions(builder: MessageCommandBuilder, options: CommandMessage): MessageCommandOptionManager {
