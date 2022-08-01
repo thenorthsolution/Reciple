@@ -221,7 +221,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
         const command = this.findCommand(parseCommand.command, CommandBuilderType.MessageCommand);
         if (!command) return;
         
-        const commandOptions = validateMessageCommandOptions(command, parseCommand);
+        const commandOptions = await validateMessageCommandOptions(command, parseCommand);
         const executeData: MessageCommandExecuteData = {
             message: message,
             options: commandOptions,

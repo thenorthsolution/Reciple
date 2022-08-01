@@ -86,7 +86,7 @@ export class RecipleConfig {
     /**
      * Parse the config file
      */
-    public parseConfig(): RecipleConfig {
+    public parseConfig(): this {
         if (!existsSync(this.configPath)) {
             const defaultConfigPath = RecipleConfig.defaultConfigPath;
             if (!existsSync(defaultConfigPath)) throw new Error('Default Config file not found. Please reinstall Reciple.');

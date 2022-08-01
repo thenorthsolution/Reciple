@@ -1,4 +1,4 @@
-import { CommandBuilderType } from '../../types/builders';
+import { CommandBuilderType, CommandExecuteFunction, CommandHaltFunction } from '../../types/builders';
 import { HaltedCommandData } from '../../types/commands';
 import { RecipleClient } from '../RecipleClient';
 
@@ -38,15 +38,15 @@ export class SlashCommandBuilder extends DiscordJsSlashCommandBuilder {
     public requiredBotPermissions: PermissionResolvable[] = [];
     public requiredMemberPermissions: PermissionResolvable[] = [];
     public allowExecuteInDM: boolean = true;
-    public halt?: (haltData: HaltedCommandData<SlashCommandBuilder>) => Awaitable<boolean|void>;
-    public execute: (executeData: SlashCommandExecuteData) => Awaitable<void> = () => { /* Execute */ };
+    public halt?: CommandHaltFunction<this>;
+    public execute: CommandExecuteFunction<this> = () => { /* Execute */ };
 
     /**
      * Sets the execute cooldown for this command.
      * - `0` means no cooldown
      * @param cooldown Command cooldown in milliseconds
      */
-    public setCooldown(cooldown: number): SlashCommandBuilder {
+    public setCooldown(cooldown: number): this {
         this.cooldown = cooldown;
         return this;
     }
@@ -55,7 +55,7 @@ export class SlashCommandBuilder extends DiscordJsSlashCommandBuilder {
      * Set required bot permissions to execute the command
      * @param permissions Bot's required permissions
      */
-     public setRequiredBotPermissions(...permissions: PermissionResolvable[]): SlashCommandBuilder {
+     public setRequiredBotPermissions(...permissions: PermissionResolvable[]): this {
         this.requiredBotPermissions = permissions;
         return this;
     }
@@ -64,7 +64,7 @@ export class SlashCommandBuilder extends DiscordJsSlashCommandBuilder {
      * Set required permissions to execute the command
      * @param permissions User's return permissions
      */
-    public setRequiredMemberPermissions(...permissions: PermissionResolvable[]): SlashCommandBuilder {
+    public setRequiredMemberPermissions(...permissions: PermissionResolvable[]): this {
         this.requiredMemberPermissions = permissions;
         return this;
     }
@@ -73,7 +73,7 @@ export class SlashCommandBuilder extends DiscordJsSlashCommandBuilder {
      * Function when the command is interupted 
      * @param halt Function to execute when command is halted
      */
-    public setHalt(halt?: (haltData: HaltedCommandData<SlashCommandBuilder>) => Awaitable<boolean|void>): SlashCommandBuilder {
+    public setHalt(halt?: CommandHaltFunction<this>): this {
         this.halt = halt ? halt : undefined;
         return this;
     }
@@ -82,7 +82,7 @@ export class SlashCommandBuilder extends DiscordJsSlashCommandBuilder {
      * Function when the command is executed 
      * @param execute Function to execute when the command is called 
      */
-    public setExecute(execute: (executeData: SlashCommandExecuteData) => void): SlashCommandBuilder {
+    public setExecute(execute: CommandExecuteFunction<this>): this {
         if (!execute || typeof execute !== 'function') throw new Error('execute must be a function.');
         this.execute = execute;
         return this;
