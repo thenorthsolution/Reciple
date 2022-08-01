@@ -304,7 +304,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
      * @param interaction Slash command interaction
      */
     public async slashCommandExecute(interaction: Interaction|ChatInputCommandInteraction): Promise<void|SlashCommandExecuteData> {
-        if (!interaction || interaction.type !== InteractionType.ApplicationCommand || !interaction.isChatInputCommand() || !this.isReady()) return;
+        if (!interaction || !interaction.isChatInputCommand() || !this.isReady()) return;
 
         const command = this.findCommand(interaction.commandName, CommandBuilderType.SlashCommand);
         if (!command) return;
