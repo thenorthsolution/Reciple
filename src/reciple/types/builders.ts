@@ -15,12 +15,12 @@ export type CommandBuilderExecuteData = SlashCommandExecuteData|MessageCommandEx
 /**
  * Reciple command halt function
  */
-export type CommandHaltFunction<Builder extends CommandBuilder> = (haltData: HaltedCommandData<Builder>) => Awaitable<boolean|null|undefined|void>;
+export type CommandHaltFunction<Builder extends CommandBuilder> = (haltData: HaltedCommandData<Builder>) => Promise<boolean|null|undefined|void>|boolean|null|undefined|void;
 
 /**
  * Reciple command execute function
  */
-export type CommandExecuteFunction<Builder extends CommandBuilder> = (executeData: Builder extends MessageCommandBuilder ? MessageCommandExecuteData : SlashCommandExecuteData) => Awaitable<void>;
+export type CommandExecuteFunction<Builder extends CommandBuilder> = (executeData: Builder extends MessageCommandBuilder ? MessageCommandExecuteData : SlashCommandExecuteData) => Promise<void>|void;
 
 /**
  * Types of Reciple command builders
