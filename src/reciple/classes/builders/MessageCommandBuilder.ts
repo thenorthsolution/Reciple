@@ -1,9 +1,9 @@
-import { CommandBuilderType, AnyCommandExecuteData, AnyCommandExecuteFunction, AnyCommandHaltFunction } from '../../types/builders';
+import { CommandBuilderType, AnyCommandExecuteData, CommandHaltFunction, CommandExecuteFunction } from '../../types/builders';
 import { MessageCommandOptionManager } from '../MessageCommandOptionManager';
 import { MessageCommandOptionBuilder } from './MessageCommandOptionBuilder';
 import { Command as CommandMessage } from 'fallout-utility';
 import { Message, PermissionResolvable } from 'discord.js';
-import { AnyCommandHaltData } from '../../types/commands';
+import { CommandHaltData } from '../../types/commands';
 import { RecipleClient } from '../RecipleClient';
 
 /**
@@ -31,17 +31,17 @@ export interface MessageCommandValidatedOption {
 /**
  * Message command halt data
  */
-export type MessageCommandHaltData = AnyCommandHaltData<CommandBuilderType.MessageCommand>;
+export type MessageCommandHaltData = CommandHaltData<CommandBuilderType.MessageCommand>;
 
 /**
  * Message command halt function
  */
-export type MessageCommandHaltFunction = AnyCommandHaltFunction<CommandBuilderType.MessageCommand>;
+export type MessageCommandHaltFunction = CommandHaltFunction<CommandBuilderType.MessageCommand>;
 
 /**
  * Message command execute function
  */
-export type MessageCommandExecuteFunction = AnyCommandExecuteFunction<CommandBuilderType.MessageCommand>;
+export type MessageCommandExecuteFunction = CommandExecuteFunction<CommandBuilderType.MessageCommand>;
 
 /**
  * Reciple builder for message command
@@ -185,13 +185,6 @@ export class MessageCommandBuilder {
         if (typeof validateOptions !== 'boolean') throw new TypeError('validateOptions must be a boolean.');
         this.validateOptions = validateOptions;
         return this;
-    }
-
-    /**
-     * True if this is a message command builder
-     */
-    public isMessageCommand(): this is MessageCommandBuilder {
-        return this instanceof MessageCommandBuilder;
     }
 
     /**

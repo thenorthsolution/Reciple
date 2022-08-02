@@ -1,13 +1,18 @@
-import { MessageCommandExecuteData } from '../classes/builders/MessageCommandBuilder';
+import { MessageCommandExecuteData, MessageCommandHaltData } from '../classes/builders/MessageCommandBuilder';
+import { SlashCommandExecuteData, SlashCommandHaltData } from '../classes/builders/SlashCommandBuilder';
 import { MessageCommandOptionManager } from '../classes/MessageCommandOptionManager';
-import { SlashCommandExecuteData } from '../classes/builders/SlashCommandBuilder';
 import { CommandBuilderType, AnyCommandExecuteData } from '../types/builders';
 import { CooledDownUser } from '../classes/CommandCooldownManager';
 
 /**
- * Any Halted command's data
+ * Any reciple halted command data
  */
-export type AnyCommandHaltData<T extends CommandBuilderType = CommandBuilderType> = CommandErrorData<T>|CommandCooldownData<T>|(T extends CommandBuilderType.SlashCommand ? never : CommandInvalidArguments<T>|CommandMissingArguments<T>)|CommandMissingMemberPermissions<T>|CommandMissingBotPermissions<T>;
+export type AnyCommandHaltData = SlashCommandHaltData|MessageCommandHaltData;
+
+/**
+ * Halted command data
+ */
+export type CommandHaltData<T extends CommandBuilderType> = CommandErrorData<T>|CommandCooldownData<T>|(T extends CommandBuilderType.SlashCommand ? never : CommandInvalidArguments<T>|CommandMissingArguments<T>)|CommandMissingMemberPermissions<T>|CommandMissingBotPermissions<T>;
 
 /**
  * Command halt reason base interface

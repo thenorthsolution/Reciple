@@ -1,5 +1,5 @@
-import { CommandBuilderType, AnyCommandExecuteData, AnyCommandExecuteFunction, AnyCommandHaltFunction } from '../../types/builders';
-import { AnyCommandHaltData } from '../../types/commands';
+import { CommandBuilderType, AnyCommandExecuteData, CommandHaltFunction, CommandExecuteFunction } from '../../types/builders';
+import { CommandHaltData } from '../../types/commands';
 import { RecipleClient } from '../RecipleClient';
 
 import {
@@ -31,17 +31,17 @@ export interface SlashCommandBuilder extends DiscordJsSlashCommandBuilder {
 /**
  * Slash command halt data
  */
-export type SlashCommandHaltData = AnyCommandHaltData<CommandBuilderType.SlashCommand>;
+export type SlashCommandHaltData = CommandHaltData<CommandBuilderType.SlashCommand>;
 
 /**
  * Slash command halt function
  */
-export type SlashCommandHaltFunction = AnyCommandHaltFunction<CommandBuilderType.SlashCommand>;
+export type SlashCommandHaltFunction = CommandHaltFunction<CommandBuilderType.SlashCommand>;
 
 /**
  * Slash command execute function
  */
-export type SlashCommandExecuteFunction = AnyCommandExecuteFunction<CommandBuilderType.SlashCommand>;
+export type SlashCommandExecuteFunction = CommandExecuteFunction<CommandBuilderType.SlashCommand>;
 
 /**
  * Reciple builder for interaction/slash command
@@ -100,13 +100,6 @@ export class SlashCommandBuilder extends DiscordJsSlashCommandBuilder {
         if (!execute || typeof execute !== 'function') throw new Error('execute must be a function.');
         this.execute = execute;
         return this;
-    }
-    
-    /**
-     * True if this is a slash command builder
-     */
-    public isSlashCommand(): this is SlashCommandBuilder {
-        return this instanceof SlashCommandBuilder;
     }
 
     /**
