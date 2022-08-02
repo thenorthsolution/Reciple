@@ -60,7 +60,7 @@ export async function loadModules(client: RecipleClient, folder?: string): Promi
             if (!await Promise.resolve(module_.onStart(client))) throw new Error(script + ' onStart is not defined or returned false.');
             if (module_.commands) {
                 for (const command of module_.commands) {
-                    if (command.builder === CommandBuilderType.MessageCommand || command.builder === CommandBuilderType.SlashCommand) {
+                    if (command.type === CommandBuilderType.MessageCommand || command.type === CommandBuilderType.SlashCommand) {
                         commands.push(command);
                     }
                 }
@@ -76,12 +76,12 @@ export async function loadModules(client: RecipleClient, folder?: string): Promi
         response.commands.push(
             ...commands.filter((c) => {
                 if (!c.name) {
-                    if (client.isClientLogsEnabled()) client.logger.error(`A ${c.builder} command name is not defined in ${script}`);
+                    if (client.isClientLogsEnabled()) client.logger.error(`A ${CommandBuilderType[c.type]} command name is not defined in ${script}`);
                     return false;
                 }
 
-                if (c.builder === CommandBuilderType.MessageCommand && c.options.length && c.options.some(o => !o.name)) {
-                    if (client.isClientLogsEnabled()) client.logger.error(`A ${c.builder} option name is not defined in ${script}`);
+                if (c.type === CommandBuilderType.MessageCommand && c.options.length && c.options.some(o => !o.name)) {
+                    if (client.isClientLogsEnabled()) client.logger.error(`A ${CommandBuilderType[c.type]} option name is not defined in ${script}`);
                     return false;
                 }
 

@@ -1,26 +1,26 @@
 import { Awaitable } from 'discord.js';
 import { MessageCommandBuilder, MessageCommandExecuteData } from '../classes/builders/MessageCommandBuilder';
 import { SlashCommandBuilder, SlashCommandExecuteData } from '../classes/builders/SlashCommandBuilder';
-import { HaltedCommandData } from './commands';
+import { CommandHaltData } from './commands';
 
 /**
  * Reciple command builders
  */
 export type CommandBuilder = MessageCommandBuilder|SlashCommandBuilder;
 /**
- * Reciple command builders execute data
+ * Reciple command execute data
  */
-export type CommandBuilderExecuteData = SlashCommandExecuteData|MessageCommandExecuteData;
+export type CommandExecuteData = SlashCommandExecuteData|MessageCommandExecuteData;
 
 /**
  * Reciple command halt function
  */
-export type CommandHaltFunction<Builder extends CommandBuilder> = (haltData: HaltedCommandData<Builder>) => Awaitable<boolean|null|undefined|void>;
+export type CommandHaltFunction<T extends CommandBuilderType> = (haltData: CommandHaltData<T>) => Awaitable<boolean|null|undefined|void>;
 
 /**
  * Reciple command execute function
  */
-export type CommandExecuteFunction<Builder extends CommandBuilder> = (executeData: Builder extends MessageCommandBuilder ? MessageCommandExecuteData : SlashCommandExecuteData) => Awaitable<void>;
+export type CommandExecuteFunction<T extends CommandBuilderType> = (executeData: T extends CommandBuilderType.SlashCommand ? SlashCommandExecuteData : MessageCommandExecuteData) => Awaitable<void>;
 
 /**
  * Types of Reciple command builders

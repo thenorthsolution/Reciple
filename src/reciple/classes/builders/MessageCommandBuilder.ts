@@ -1,4 +1,4 @@
-import { CommandBuilderType, CommandExecuteFunction, CommandHaltFunction } from '../../types/builders';
+import { CommandBuilderType, CommandExecuteData, CommandExecuteFunction, CommandHaltFunction } from '../../types/builders';
 import { MessageCommandOptionManager } from '../MessageCommandOptionManager';
 import { MessageCommandOptionBuilder } from './MessageCommandOptionBuilder';
 import { Command as CommandMessage } from 'fallout-utility';
@@ -31,7 +31,7 @@ export interface MessageCommandValidatedOption {
  * Reciple builder for message command
  */
 export class MessageCommandBuilder {
-    public readonly builder = CommandBuilderType.MessageCommand;
+    public readonly type = CommandBuilderType.MessageCommand;
     public name: string = '';
     public cooldown: number = 0;
     public description: string = '';
@@ -42,8 +42,8 @@ export class MessageCommandBuilder {
     public requiredMemberPermissions: PermissionResolvable[] = [];
     public allowExecuteInDM: boolean = true;
     public allowExecuteByBots: boolean = false;
-    public halt?: CommandHaltFunction<this>;
-    public execute: CommandExecuteFunction<this> = () => { /* Execute */ };
+    public halt?: CommandHaltFunction<this["type"]>;
+    public execute: CommandExecuteFunction<this["type"]> = () => { /* Execute */ };
 
     /**
      * Sets the command name
@@ -130,7 +130,7 @@ export class MessageCommandBuilder {
      * Function when the command is interupted 
      * @param halt Function to execute when command is halted
      */
-    public setHalt(halt?: CommandHaltFunction<this>): this {
+    public setHalt(halt?: this["type"]): this {
         this.halt = halt ? halt : undefined;
         return this;
     }
@@ -139,7 +139,7 @@ export class MessageCommandBuilder {
      * Function when the command is executed 
      * @param execute Function to execute when the command is called 
      */
-    public setExecute(execute: CommandExecuteFunction<this>): this {
+    public setExecute(execute: this["execute"]): this {
         if (!execute || typeof execute !== 'function') throw new TypeError('execute must be a function.');
         this.execute = execute;
         return this;
@@ -169,6 +169,20 @@ export class MessageCommandBuilder {
         if (typeof validateOptions !== 'boolean') throw new TypeError('validateOptions must be a boolean.');
         this.validateOptions = validateOptions;
         return this;
+    }
+
+    /**
+     * Is a message command builder 
+     */
+    public static isMessageCommandBuilder(builder: any): builder is MessageCommandBuilder {
+        return builder instanceof MessageCommandBuilder;
+    }
+
+    /**
+     * Is a message command execute data
+     */
+    public static isMessageCommandExecuteData(executeData: CommandExecuteData): executeData is MessageCommandExecuteData {
+        return (executeData as MessageCommandExecuteData).builder !== undefined && this.isMessageCommandBuilder((executeData as MessageCommandExecuteData).builder);
     }
 }
 

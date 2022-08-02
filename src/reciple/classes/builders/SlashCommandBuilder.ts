@@ -1,9 +1,7 @@
-import { CommandBuilderType, CommandExecuteFunction, CommandHaltFunction } from '../../types/builders';
-import { HaltedCommandData } from '../../types/commands';
+import { CommandBuilderType, CommandExecuteData, CommandExecuteFunction, CommandHaltFunction } from '../../types/builders';
 import { RecipleClient } from '../RecipleClient';
 
 import {
-    Awaitable,
     ChatInputCommandInteraction,
     PermissionResolvable,
     SlashCommandBuilder as DiscordJsSlashCommandBuilder,
@@ -33,13 +31,13 @@ export interface SlashCommandBuilder extends DiscordJsSlashCommandBuilder {
  * Reciple builder for interaction/slash command
  */
 export class SlashCommandBuilder extends DiscordJsSlashCommandBuilder {
-    public readonly builder = CommandBuilderType.SlashCommand;
+    public readonly type = CommandBuilderType.SlashCommand;
     public cooldown: number = 0;
     public requiredBotPermissions: PermissionResolvable[] = [];
     public requiredMemberPermissions: PermissionResolvable[] = [];
     public allowExecuteInDM: boolean = true;
-    public halt?: CommandHaltFunction<this>;
-    public execute: CommandExecuteFunction<this> = () => { /* Execute */ };
+    public halt?: CommandHaltFunction<this["type"]>;
+    public execute: CommandExecuteFunction<this["type"]> = () => { /* Execute */ };
 
     /**
      * Sets the execute cooldown for this command.
@@ -73,7 +71,7 @@ export class SlashCommandBuilder extends DiscordJsSlashCommandBuilder {
      * Function when the command is interupted 
      * @param halt Function to execute when command is halted
      */
-    public setHalt(halt?: CommandHaltFunction<this>): this {
+    public setHalt(halt?: this["halt"]): this {
         this.halt = halt ? halt : undefined;
         return this;
     }
@@ -82,9 +80,23 @@ export class SlashCommandBuilder extends DiscordJsSlashCommandBuilder {
      * Function when the command is executed 
      * @param execute Function to execute when the command is called 
      */
-    public setExecute(execute: CommandExecuteFunction<this>): this {
+    public setExecute(execute: this["execute"]): this {
         if (!execute || typeof execute !== 'function') throw new Error('execute must be a function.');
         this.execute = execute;
         return this;
+    }
+
+    /**
+     * Is a slash command builder
+     */
+    public static isSlashCommandBuilder(builder: any): builder is SlashCommandBuilder {
+        return builder instanceof SlashCommandBuilder;
+    }
+
+    /**
+     * Is a slash command execute data 
+     */
+    public static isSlashCommandExecuteData(executeData: CommandExecuteData): executeData is SlashCommandExecuteData {
+        return (executeData as SlashCommandExecuteData).builder !== undefined && this.isSlashCommandBuilder((executeData as SlashCommandExecuteData).builder);
     }
 }

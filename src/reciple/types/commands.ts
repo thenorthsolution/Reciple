@@ -1,38 +1,45 @@
 import { MessageCommandExecuteData } from '../classes/builders/MessageCommandBuilder';
-import { SlashCommandBuilder, SlashCommandExecuteData } from '../classes/builders/SlashCommandBuilder';
+import { SlashCommandExecuteData } from '../classes/builders/SlashCommandBuilder';
 import { MessageCommandOptionManager } from '../classes/MessageCommandOptionManager';
 import { CooledDownUser } from '../classes/CommandCooldownManager';
-import { CommandBuilder } from '../types/builders';
+import { CommandBuilderType, CommandExecuteData } from '../types/builders';
 
 /**
  * Halted command's data
  */
-export type HaltedCommandData<Builder extends CommandBuilder = CommandBuilder> = CommandErrorData<Builder>|CommandCooldownData<Builder>|(Builder extends SlashCommandBuilder ? never : CommandInvalidArguments<Builder>|CommandMissingArguments<Builder>)|CommandMissingMemberPermissions<Builder>|CommandMissingBotPermissions<Builder>;
+export type CommandHaltData<T extends CommandBuilderType = CommandBuilderType> = CommandErrorData<T>|CommandCooldownData<T>|(T extends CommandBuilderType.SlashCommand ? never : CommandInvalidArguments<T>|CommandMissingArguments<T>)|CommandMissingMemberPermissions<T>|CommandMissingBotPermissions<T>;
 
-export interface CommandHaltBaseData<Builder extends CommandBuilder> { executeData: Builder extends SlashCommandBuilder ? SlashCommandExecuteData : MessageCommandExecuteData }
-export interface CommandErrorData<Builder extends CommandBuilder> extends CommandHaltBaseData<Builder> {
-    reason: HaltedCommandReason.Error; error: any;
+export interface CommandHaltBaseData<T extends CommandBuilderType> {
+    executeData: T extends CommandBuilderType.SlashCommand
+                    ? SlashCommandExecuteData
+                    : T extends CommandBuilderType.MessageCommand 
+                        ? MessageCommandExecuteData
+                        : CommandExecuteData
 }
-export interface CommandCooldownData<Builder extends CommandBuilder> extends CommandHaltBaseData<Builder>,CooledDownUser {
-    reason: HaltedCommandReason.Cooldown;
+
+export interface CommandErrorData<T extends CommandBuilderType> extends CommandHaltBaseData<T> {
+    reason: CommandHaltReason.Error; error: any;
 }
-export interface CommandInvalidArguments<Builder extends CommandBuilder> extends CommandHaltBaseData<Builder> {
-    reason: HaltedCommandReason.InvalidArguments; invalidArguments: MessageCommandOptionManager;
+export interface CommandCooldownData<T extends CommandBuilderType> extends CommandHaltBaseData<T>,CooledDownUser {
+    reason: CommandHaltReason.Cooldown;
 }
-export interface CommandMissingArguments<Builder extends CommandBuilder> extends CommandHaltBaseData<Builder> {
-    reason: HaltedCommandReason.MissingArguments; missingArguments: MessageCommandOptionManager;
+export interface CommandInvalidArguments<T extends CommandBuilderType> extends CommandHaltBaseData<T> {
+    reason: CommandHaltReason.InvalidArguments; invalidArguments: MessageCommandOptionManager;
 }
-export interface CommandMissingMemberPermissions<Builder extends CommandBuilder> extends CommandHaltBaseData<Builder> {
-    reason: HaltedCommandReason.MissingMemberPermissions;
+export interface CommandMissingArguments<T extends CommandBuilderType> extends CommandHaltBaseData<T> {
+    reason: CommandHaltReason.MissingArguments; missingArguments: MessageCommandOptionManager;
 }
-export interface CommandMissingBotPermissions<Builder extends CommandBuilder> extends CommandHaltBaseData<Builder> {
-    reason: HaltedCommandReason.MissingBotPermissions;
+export interface CommandMissingMemberPermissions<T extends CommandBuilderType> extends CommandHaltBaseData<T> {
+    reason: CommandHaltReason.MissingMemberPermissions;
+}
+export interface CommandMissingBotPermissions<T extends CommandBuilderType> extends CommandHaltBaseData<T> {
+    reason: CommandHaltReason.MissingBotPermissions;
 }
 
 /**
  * Command halt reasons
  */
-export enum HaltedCommandReason {
+export enum CommandHaltReason {
     Error,
     Cooldown,
     InvalidArguments,
