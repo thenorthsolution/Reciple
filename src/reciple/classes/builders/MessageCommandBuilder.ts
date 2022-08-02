@@ -146,7 +146,7 @@ export class MessageCommandBuilder {
      * Function when the command is interupted 
      * @param halt Function to execute when command is halted
      */
-    public setHalt(halt?: this["type"]): this {
+    public setHalt(halt?: this["halt"]): this {
         this.halt = halt ? halt : undefined;
         return this;
     }
