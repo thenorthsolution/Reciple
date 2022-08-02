@@ -1,20 +1,24 @@
 import { MessageCommandExecuteData } from '../classes/builders/MessageCommandBuilder';
-import { SlashCommandExecuteData } from '../classes/builders/SlashCommandBuilder';
 import { MessageCommandOptionManager } from '../classes/MessageCommandOptionManager';
+import { SlashCommandExecuteData } from '../classes/builders/SlashCommandBuilder';
+import { CommandBuilderType, AnyCommandExecuteData } from '../types/builders';
 import { CooledDownUser } from '../classes/CommandCooldownManager';
-import { CommandBuilderType, CommandExecuteData } from '../types/builders';
 
 /**
- * Halted command's data
+ * Any Halted command's data
  */
-export type CommandHaltData<T extends CommandBuilderType = CommandBuilderType> = CommandErrorData<T>|CommandCooldownData<T>|(T extends CommandBuilderType.SlashCommand ? never : CommandInvalidArguments<T>|CommandMissingArguments<T>)|CommandMissingMemberPermissions<T>|CommandMissingBotPermissions<T>;
+export type AnyCommandHaltData<T extends CommandBuilderType = CommandBuilderType> = CommandErrorData<T>|CommandCooldownData<T>|(T extends CommandBuilderType.SlashCommand ? never : CommandInvalidArguments<T>|CommandMissingArguments<T>)|CommandMissingMemberPermissions<T>|CommandMissingBotPermissions<T>;
+
+/**
+ * 
+ */
 
 export interface CommandHaltReasonBase<T extends CommandBuilderType> {
     executeData: T extends CommandBuilderType.SlashCommand
                     ? SlashCommandExecuteData
                     : T extends CommandBuilderType.MessageCommand 
                         ? MessageCommandExecuteData
-                        : CommandExecuteData
+                        : AnyCommandExecuteData
 }
 
 export interface CommandErrorData<T extends CommandBuilderType> extends CommandHaltReasonBase<T> {

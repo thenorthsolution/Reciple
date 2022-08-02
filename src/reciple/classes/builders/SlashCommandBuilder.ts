@@ -1,4 +1,5 @@
-import { CommandBuilderType, CommandExecuteData, CommandExecuteFunction, CommandHaltFunction } from '../../types/builders';
+import { CommandBuilderType, AnyCommandExecuteData, AnyCommandExecuteFunction, AnyCommandHaltFunction } from '../../types/builders';
+import { AnyCommandHaltData } from '../../types/commands';
 import { RecipleClient } from '../RecipleClient';
 
 import {
@@ -28,6 +29,21 @@ export interface SlashCommandBuilder extends DiscordJsSlashCommandBuilder {
 }
 
 /**
+ * Slash command halt data
+ */
+export type SlashCommandHaltData = AnyCommandHaltData<CommandBuilderType.SlashCommand>;
+
+/**
+ * Slash command halt function
+ */
+export type SlashCommandHaltFunction = AnyCommandHaltFunction<CommandBuilderType.SlashCommand>;
+
+/**
+ * Slash command execute function
+ */
+export type SlashCommandExecuteFunction = AnyCommandExecuteFunction<CommandBuilderType.SlashCommand>;
+
+/**
  * Reciple builder for interaction/slash command
  */
 export class SlashCommandBuilder extends DiscordJsSlashCommandBuilder {
@@ -36,8 +52,8 @@ export class SlashCommandBuilder extends DiscordJsSlashCommandBuilder {
     public requiredBotPermissions: PermissionResolvable[] = [];
     public requiredMemberPermissions: PermissionResolvable[] = [];
     public allowExecuteInDM: boolean = true;
-    public halt?: CommandHaltFunction<this["type"]>;
-    public execute: CommandExecuteFunction<this["type"]> = () => { /* Execute */ };
+    public halt?: SlashCommandHaltFunction;
+    public execute: SlashCommandExecuteFunction = () => { /* Execute */ };
 
     /**
      * Sets the execute cooldown for this command.
@@ -96,7 +112,7 @@ export class SlashCommandBuilder extends DiscordJsSlashCommandBuilder {
     /**
      * Is a slash command execute data 
      */
-    public static isSlashCommandExecuteData(executeData: CommandExecuteData): executeData is SlashCommandExecuteData {
+    public static isSlashCommandExecuteData(executeData: AnyCommandExecuteData): executeData is SlashCommandExecuteData {
         return (executeData as SlashCommandExecuteData).builder !== undefined && this.isSlashCommandBuilder((executeData as SlashCommandExecuteData).builder);
     }
 }

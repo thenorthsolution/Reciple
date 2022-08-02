@@ -1,8 +1,9 @@
-import { CommandBuilderType, CommandExecuteData, CommandExecuteFunction, CommandHaltFunction } from '../../types/builders';
+import { CommandBuilderType, AnyCommandExecuteData, AnyCommandExecuteFunction, AnyCommandHaltFunction } from '../../types/builders';
 import { MessageCommandOptionManager } from '../MessageCommandOptionManager';
 import { MessageCommandOptionBuilder } from './MessageCommandOptionBuilder';
 import { Command as CommandMessage } from 'fallout-utility';
 import { Message, PermissionResolvable } from 'discord.js';
+import { AnyCommandHaltData } from '../../types/commands';
 import { RecipleClient } from '../RecipleClient';
 
 /**
@@ -28,6 +29,21 @@ export interface MessageCommandValidatedOption {
 }
 
 /**
+ * Message command halt data
+ */
+export type MessageCommandHaltData = AnyCommandHaltData<CommandBuilderType.MessageCommand>;
+
+/**
+ * Message command halt function
+ */
+export type MessageCommandHaltFunction = AnyCommandHaltFunction<CommandBuilderType.MessageCommand>;
+
+/**
+ * Message command execute function
+ */
+export type MessageCommandExecuteFunction = AnyCommandExecuteFunction<CommandBuilderType.MessageCommand>;
+
+/**
  * Reciple builder for message command
  */
 export class MessageCommandBuilder {
@@ -42,8 +58,8 @@ export class MessageCommandBuilder {
     public requiredMemberPermissions: PermissionResolvable[] = [];
     public allowExecuteInDM: boolean = true;
     public allowExecuteByBots: boolean = false;
-    public halt?: CommandHaltFunction<this["type"]>;
-    public execute: CommandExecuteFunction<this["type"]> = () => { /* Execute */ };
+    public halt?: MessageCommandHaltFunction;
+    public execute: MessageCommandExecuteFunction = () => { /* Execute */ };
 
     /**
      * Sets the command name
@@ -181,7 +197,7 @@ export class MessageCommandBuilder {
     /**
      * Is a message command execute data
      */
-    public static isMessageCommandExecuteData(executeData: CommandExecuteData): executeData is MessageCommandExecuteData {
+    public static isMessageCommandExecuteData(executeData: AnyCommandExecuteData): executeData is MessageCommandExecuteData {
         return (executeData as MessageCommandExecuteData).builder !== undefined && this.isMessageCommandBuilder((executeData as MessageCommandExecuteData).builder);
     }
 }

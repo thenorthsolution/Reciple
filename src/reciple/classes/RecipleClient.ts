@@ -1,11 +1,11 @@
-import { MessageCommandBuilder, MessageCommandExecuteData, validateMessageCommandOptions } from './builders/MessageCommandBuilder';
-import { botHasExecutePermissions, isIgnoredChannel, userHasCommandPermissions } from '../permissions';
+import { MessageCommandBuilder, MessageCommandExecuteData, MessageCommandHaltData, validateMessageCommandOptions } from './builders/MessageCommandBuilder';
+import { SlashCommandBuilder, SlashCommandExecuteData, SlashCommandHaltData } from './builders/SlashCommandBuilder';
 import { ApplicationCommandBuilder, registerApplicationCommands } from '../registerApplicationCommands';
-import { CommandBuilder, CommandBuilderType, CommandExecuteData } from '../types/builders';
-import { SlashCommandBuilder, SlashCommandExecuteData } from './builders/SlashCommandBuilder';
+import { botHasExecutePermissions, isIgnoredChannel, userHasCommandPermissions } from '../permissions';
+import { AnyCommandBuilder, CommandBuilderType, AnyCommandExecuteData } from '../types/builders';
 import { CommandCooldownManager, CooledDownUser } from './CommandCooldownManager';
 import { MessageCommandOptionManager } from './MessageCommandOptionManager';
-import { CommandHaltData, CommandHaltReason } from '../types/commands';
+import { AnyCommandHaltData, CommandHaltReason } from '../types/commands';
 import { RecipleClientAddModuleOptions } from '../types/paramOptions';
 import { getCommand, Logger as ILogger } from 'fallout-utility';
 import { Config, RecipleConfig } from './RecipleConfig';
@@ -22,7 +22,6 @@ import {
     ClientEvents,
     ClientOptions,
     Interaction,
-    InteractionType,
     Message
 } from 'discord.js';
 
@@ -185,7 +184,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
      * Add slash or message command to client
      * @param command Slash/Message command builder
      */
-    public addCommand(command: CommandBuilder): RecipleClient<Ready> {
+    public addCommand(command: AnyCommandBuilder): RecipleClient<Ready> {
         if (command.type === CommandBuilderType.MessageCommand) {
             this.commands.messageCommands[command.name] = command;
         } else if (command.type === CommandBuilderType.SlashCommand) {
@@ -380,7 +379,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
      */
     public findCommand(command: string, type: CommandBuilderType.MessageCommand): MessageCommandBuilder|undefined;
     public findCommand(command: string, type: CommandBuilderType.SlashCommand): SlashCommandBuilder|undefined;
-    public findCommand(command: string, type: CommandBuilderType): CommandBuilder|undefined {
+    public findCommand(command: string, type: CommandBuilderType): AnyCommandBuilder|undefined {
         switch (type) {
             case CommandBuilderType.SlashCommand:
                 return this.commands.slashCommands[command];
@@ -415,15 +414,15 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
      * @param command Halted command's builder
      * @param haltData Halted command's data
      */
-    private async _haltCommand(command: SlashCommandBuilder, haltData: CommandHaltData<CommandBuilderType.SlashCommand>): Promise<boolean>;
-    private async _haltCommand(command: MessageCommandBuilder, haltData: CommandHaltData<CommandBuilderType.MessageCommand>): Promise<boolean>;
-    private async _haltCommand(command: CommandBuilder, haltData: CommandHaltData): Promise<boolean> {
+    private async _haltCommand(command: SlashCommandBuilder, haltData: SlashCommandHaltData): Promise<boolean>;
+    private async _haltCommand(command: MessageCommandBuilder, haltData: MessageCommandHaltData): Promise<boolean>;
+    private async _haltCommand(command: AnyCommandBuilder, haltData: AnyCommandHaltData): Promise<boolean> {
         try {
             return (
                 command.halt
                     ? await (command.type == CommandBuilderType.SlashCommand
-                            ? Promise.resolve(command.halt(haltData as CommandHaltData<CommandBuilderType.SlashCommand>))
-                            : Promise.resolve(command.halt(haltData as CommandHaltData<CommandBuilderType.MessageCommand>))
+                        ? Promise.resolve(command.halt(haltData as SlashCommandHaltData))
+                        : Promise.resolve(command.halt(haltData as MessageCommandHaltData))
                     ).catch(err => { throw err; })
                     : false
                 ) ?? false;
@@ -441,7 +440,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
      * @param err Received error
      * @param command Slash/Message command execute data
      */
-    private async _commandExecuteError(err: Error, command: CommandExecuteData): Promise<void> {
+    private async _commandExecuteError(err: Error, command: AnyCommandExecuteData): Promise<void> {
         if (this.isClientLogsEnabled()) {
             this.logger.error(`An error occured executing ${command.builder.type == CommandBuilderType.MessageCommand ? 'message' : 'slash'} command "${command.builder.name}"`);
             this.logger.error(err);
