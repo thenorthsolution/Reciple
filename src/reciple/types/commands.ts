@@ -10,9 +10,8 @@ import { CooledDownUser } from '../classes/CommandCooldownManager';
 export type AnyCommandHaltData<T extends CommandBuilderType = CommandBuilderType> = CommandErrorData<T>|CommandCooldownData<T>|(T extends CommandBuilderType.SlashCommand ? never : CommandInvalidArguments<T>|CommandMissingArguments<T>)|CommandMissingMemberPermissions<T>|CommandMissingBotPermissions<T>;
 
 /**
- * 
+ * Command halt reason base interface
  */
-
 export interface CommandHaltReasonBase<T extends CommandBuilderType> {
     executeData: T extends CommandBuilderType.SlashCommand
                     ? SlashCommandExecuteData
@@ -22,16 +21,19 @@ export interface CommandHaltReasonBase<T extends CommandBuilderType> {
 }
 
 export interface CommandErrorData<T extends CommandBuilderType> extends CommandHaltReasonBase<T> {
-    reason: CommandHaltReason.Error; error: any;
+    reason: CommandHaltReason.Error;
+    error: any;
 }
 export interface CommandCooldownData<T extends CommandBuilderType> extends CommandHaltReasonBase<T>,CooledDownUser {
     reason: CommandHaltReason.Cooldown;
 }
 export interface CommandInvalidArguments<T extends CommandBuilderType> extends CommandHaltReasonBase<T> {
-    reason: CommandHaltReason.InvalidArguments; invalidArguments: MessageCommandOptionManager;
+    reason: CommandHaltReason.InvalidArguments;
+    invalidArguments: MessageCommandOptionManager;
 }
 export interface CommandMissingArguments<T extends CommandBuilderType> extends CommandHaltReasonBase<T> {
-    reason: CommandHaltReason.MissingArguments; missingArguments: MessageCommandOptionManager;
+    reason: CommandHaltReason.MissingArguments;
+    missingArguments: MessageCommandOptionManager;
 }
 export interface CommandMissingMemberPermissions<T extends CommandBuilderType> extends CommandHaltReasonBase<T> {
     reason: CommandHaltReason.MissingMemberPermissions;

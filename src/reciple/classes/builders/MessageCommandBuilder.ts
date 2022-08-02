@@ -188,6 +188,13 @@ export class MessageCommandBuilder {
     }
 
     /**
+     * True if this is a message command builder
+     */
+    public isMessageCommand(): this is MessageCommandBuilder {
+        return this instanceof MessageCommandBuilder;
+    }
+
+    /**
      * Is a message command builder 
      */
     public static isMessageCommandBuilder(builder: any): builder is MessageCommandBuilder {

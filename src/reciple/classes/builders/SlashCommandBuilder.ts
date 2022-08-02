@@ -101,6 +101,13 @@ export class SlashCommandBuilder extends DiscordJsSlashCommandBuilder {
         this.execute = execute;
         return this;
     }
+    
+    /**
+     * True if this is a slash command builder
+     */
+    public isSlashCommand(): this is SlashCommandBuilder {
+        return this instanceof SlashCommandBuilder;
+    }
 
     /**
      * Is a slash command builder
