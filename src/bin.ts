@@ -36,7 +36,7 @@ if (config.fileLogging.clientLogs) client.logger.info('Reciple Client v' + rawVe
     client.on('ready', async () => {
         if (client.isClientLogsEnabled()) client.logger.warn(`Logged in as ${client.user?.tag || 'Unknown'}!`);
 
-        client.on('cacheSweep', (message) => {
+        client.on('cacheSweep', () => {
             client.cooldowns.clean();
         });
 
