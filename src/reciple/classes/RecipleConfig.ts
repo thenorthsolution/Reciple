@@ -45,11 +45,6 @@ export interface Config {
             }
         }
     }
-    ignoredChannels: {
-        enabled: boolean;
-        convertToAllowList: boolean;
-        channels: string[];
-    }
     fileLogging: {
         enabled: boolean;
         debugmode: boolean;

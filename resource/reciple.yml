@@ -49,16 +49,6 @@ commands:
           permissions: ['Administrator']
 
 
-# Ignored channel IDs
-ignoredChannels:
-  # enable ignored channels
-  enabled: false
-  # convert to only allowed channels
-  convertToAllowList: false
-  # channel IDs
-  channels: []
-
-
 # Logger options
 fileLogging:
   # enable console output to file

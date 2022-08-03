@@ -1,8 +1,8 @@
 import { MessageCommandBuilder, MessageCommandExecuteData, MessageCommandHaltData, validateMessageCommandOptions } from './builders/MessageCommandBuilder';
 import { SlashCommandBuilder, SlashCommandExecuteData, SlashCommandHaltData } from './builders/SlashCommandBuilder';
 import { ApplicationCommandBuilder, registerApplicationCommands } from '../registerApplicationCommands';
-import { botHasExecutePermissions, isIgnoredChannel, userHasCommandPermissions } from '../permissions';
 import { AnyCommandBuilder, CommandBuilderType, AnyCommandExecuteData } from '../types/builders';
+import { botHasExecutePermissions, userHasCommandPermissions } from '../permissions';
 import { CommandCooldownManager, CooledDownUser } from './CommandCooldownManager';
 import { MessageCommandOptionManager } from './MessageCommandOptionManager';
 import { AnyCommandHaltData, CommandHaltReason } from '../types/commands';
@@ -234,13 +234,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
             memberPermissions: message.member?.permissions,
             commandPermissions: this.config.commands.messageCommand.permissions
         })) {
-            if (
-                !command.allowExecuteInDM && message.channel.type === ChannelType.DM
-                || !command.allowExecuteByBots
-                && (message.author.bot ||message.author.system)
-                || isIgnoredChannel(message.channelId, this.config.ignoredChannels)
-            ) return;
-
+            if (!command.allowExecuteInDM && message.channel.type === ChannelType.DM || !command.allowExecuteByBots && (message.author.bot ||message.author.system)) return;
             if (command.validateOptions) {
                 if (commandOptions.some(o => o.invalid)) {
                     if (!await this._haltCommand(command, { executeData, reason: CommandHaltReason.InvalidArguments, invalidArguments: new MessageCommandOptionManager(...executeData.options.filter(o => o.invalid)) })) {
@@ -319,8 +313,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
             memberPermissions: interaction.memberPermissions ?? undefined,
             commandPermissions: this.config.commands.slashCommand.permissions
         })) {
-            if (!command || isIgnoredChannel(interaction.channelId, this.config.ignoredChannels)) return;
-
+            if (!command) return;
             if (interaction.guild && !botHasExecutePermissions(interaction.guild, command.requiredBotPermissions)) {
                 if (!await this._haltCommand(command, { executeData, reason: CommandHaltReason.MissingBotPermissions })) {
                     await interaction.reply(this.getMessage('insufficientBotPerms', 'Insufficient bot permissions.')).catch(er => this._replyError(er));
