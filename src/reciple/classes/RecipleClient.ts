@@ -73,7 +73,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
     public config: Config = RecipleConfig.getDefaultConfig();
     public commands: RecipleClientCommands = { messageCommands: {}, slashCommands: {} };
     public otherApplicationCommandData: (ApplicationCommandBuilder|ApplicationCommandData)[] = [];
-    public commandCooldowns: CommandCooldownManager = new CommandCooldownManager();
+    public cooldowns: CommandCooldownManager = new CommandCooldownManager();
     public modules: RecipleModule[] = [];
     public logger: ILogger;
     public version: string = version;
@@ -266,10 +266,10 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
                 type: CommandBuilderType.MessageCommand
             };
 
-            if (this.config.commands.messageCommand.enableCooldown && command.cooldown && !this.commandCooldowns.isCooledDown(userCooldown)) {
-                this.commandCooldowns.add({ ...userCooldown, expireTime: Date.now() + command.cooldown });
+            if (this.config.commands.messageCommand.enableCooldown && command.cooldown && !this.cooldowns.isCooledDown(userCooldown)) {
+                this.cooldowns.add({ ...userCooldown, expireTime: Date.now() + command.cooldown });
             } else if (this.config.commands.messageCommand.enableCooldown && command.cooldown) {
-                if (!await this._haltCommand(command, { executeData, reason: CommandHaltReason.Cooldown, ...this.commandCooldowns.get(userCooldown)! })) {
+                if (!await this._haltCommand(command, { executeData, reason: CommandHaltReason.Cooldown, ...this.cooldowns.get(userCooldown)! })) {
                     await message.reply(this.getMessage('cooldown', 'You cannot execute this command right now due to the cooldown.')).catch(er => this._replyError(er));
                 }
 
@@ -330,10 +330,10 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
                 type: CommandBuilderType.SlashCommand
             };
 
-            if (this.config.commands.slashCommand.enableCooldown && command.cooldown && !this.commandCooldowns.isCooledDown(userCooldown)) {
-                this.commandCooldowns.add({ ...userCooldown, expireTime: Date.now() + command.cooldown });
+            if (this.config.commands.slashCommand.enableCooldown && command.cooldown && !this.cooldowns.isCooledDown(userCooldown)) {
+                this.cooldowns.add({ ...userCooldown, expireTime: Date.now() + command.cooldown });
             } else if (this.config.commands.slashCommand.enableCooldown && command.cooldown) {
-                if (!await this._haltCommand(command, { executeData, reason: CommandHaltReason.Cooldown, ...this.commandCooldowns.get(userCooldown)! })) {
+                if (!await this._haltCommand(command, { executeData, reason: CommandHaltReason.Cooldown, ...this.cooldowns.get(userCooldown)! })) {
                     await interaction.reply(this.getMessage('cooldown', 'You cannot execute this command right now due to the cooldown.')).catch(er => this._replyError(er));
                 }
 
