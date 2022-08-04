@@ -20,14 +20,6 @@ export interface SlashCommandExecuteData {
     client: RecipleClient<true>;
 }
 
-export interface SlashCommandSubcommandsOnlyBuilder extends DiscordJsSlashCommandSubcommandsOnlyBuilder,Pick<SlashCommandBuilder, "setCooldown" | "setRequiredBotPermissions" | "setRequiredMemberPermissions" | "setHalt" | "setExecute"> {
-}
-
-export interface SlashCommandBuilder extends DiscordJsSlashCommandBuilder {
-    addSubcommandGroup(input: SlashCommandSubcommandGroupBuilder | ((subcommandGroup: SlashCommandSubcommandGroupBuilder) => SlashCommandSubcommandGroupBuilder)): SlashCommandSubcommandsOnlyBuilder;
-    addSubcommand(input: SlashCommandSubcommandBuilder | ((subcommandGroup: SlashCommandSubcommandBuilder) => SlashCommandSubcommandBuilder)): SlashCommandSubcommandsOnlyBuilder;
-}
-
 /**
  * Slash command halt data
  */
@@ -42,6 +34,12 @@ export type SlashCommandHaltFunction = CommandHaltFunction<CommandBuilderType.Sl
  * Slash command execute function
  */
 export type SlashCommandExecuteFunction = CommandExecuteFunction<CommandBuilderType.SlashCommand>;
+
+export interface SlashCommandSubcommandsOnlyBuilder extends DiscordJsSlashCommandSubcommandsOnlyBuilder,Pick<SlashCommandBuilder, "setCooldown" | "setRequiredBotPermissions" | "setRequiredMemberPermissions" | "setHalt" | "setExecute"> {}
+export interface SlashCommandBuilder extends DiscordJsSlashCommandBuilder {
+    addSubcommandGroup(input: SlashCommandSubcommandGroupBuilder | ((subcommandGroup: SlashCommandSubcommandGroupBuilder) => SlashCommandSubcommandGroupBuilder)): SlashCommandSubcommandsOnlyBuilder;
+    addSubcommand(input: SlashCommandSubcommandBuilder | ((subcommandGroup: SlashCommandSubcommandBuilder) => SlashCommandSubcommandBuilder)): SlashCommandSubcommandsOnlyBuilder;
+}
 
 /**
  * Reciple builder for interaction/slash command
@@ -69,7 +67,7 @@ export class SlashCommandBuilder extends DiscordJsSlashCommandBuilder {
      * Set required bot permissions to execute the command
      * @param permissions Bot's required permissions
      */
-     public setRequiredBotPermissions(...permissions: PermissionResolvable[]): this {
+    public setRequiredBotPermissions(...permissions: PermissionResolvable[]): this {
         this.requiredBotPermissions = permissions;
         return this;
     }
