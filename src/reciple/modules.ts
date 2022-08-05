@@ -37,7 +37,7 @@ export interface RecipleModule {
  */
 export async function getModules(client: RecipleClient, folder?: string): Promise<LoadedModules> {
     const response: LoadedModules = { commands: [], modules: [] };
-    const modulesDir = folder || './modules';
+    const modulesDir = folder || 'modules';
     if (!existsSync(modulesDir)) mkdirSync(modulesDir, { recursive: true });
 
     const ignoredFiles = (client.config.ignoredFiles || []).map(file => file.endsWith('.js') ? file : `${file}.js`);
@@ -46,7 +46,7 @@ export async function getModules(client: RecipleClient, folder?: string): Promis
     });
 
     for (const script of scripts) {
-        const modulePath = path.join(process.cwd(), modulesDir, script);
+        const modulePath = path.join(modulesDir, script);
         const commands: AnyCommandBuilder[] = [];
         let module_: RecipleScript;
 

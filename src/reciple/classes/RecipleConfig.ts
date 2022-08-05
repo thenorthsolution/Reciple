@@ -2,7 +2,7 @@ import { ClientOptions, PermissionResolvable } from 'discord.js';
 import { existsSync, readFileSync, writeFileSync } from 'fs';
 import { isSupportedVersion, version } from '../version';
 import { input, replaceAll } from 'fallout-utility';
-import { token as __token } from '../flags';
+import { cwd, token as __token } from '../flags';
 import path from 'path';
 import yaml from 'yaml';
 
@@ -67,7 +67,7 @@ export interface Config {
  */
 export class RecipleConfig {
     public config: Config = RecipleConfig.getDefaultConfig();
-    public configPath: string = './reciple.yml';
+    public configPath: string = path.join(cwd, 'reciple.yml');
     public static defaultConfigPath = path.join(__dirname, '../../../resource/reciple.yml');
 
     /**
@@ -125,13 +125,8 @@ export class RecipleConfig {
      * @param askIfNull Ask for token if the token is null/undefined
      */
     public parseToken(askIfNull: boolean = true): string|null {
-        let token = __token || null;
-
-        if (!this.config && !token) return token;
-        if (this.config && !this.config?.token && !token) return token || (askIfNull ? this.askToken() : null);
-        
-        token = token || this.config?.token || null;
-        if (!token) return token;
+        let token = __token || this.config?.token || null;
+        if (!token) return token || (askIfNull ? this.askToken() : null);
 
         const envToken = token.toString().split(':');
         if (envToken.length === 2 && envToken[0].toLocaleLowerCase() === 'env' && envToken[1]) {
@@ -152,7 +147,7 @@ export class RecipleConfig {
      * Ask for a token
      */
     private askToken(): string|null {
-        return __token || input({ 'text': 'Bot Token >>> ', echo: '*', repeatIfEmpty: true, exitStrings: ['exit', 'quit', ''], sigint: true }) || null;
+        return __token || input({ text: 'Bot Token >>> ', echo: '*', repeatIfEmpty: true, sigint: true }) || null;
     }
 
     /**

@@ -26,6 +26,8 @@ import {
     normalizeArray,
     RestOrArray
 } from 'discord.js';
+import path from 'path';
+import { cwd } from '../flags';
 
 /**
  * options for Reciple client
@@ -91,7 +93,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
         if (!options.config) throw new Error('Config is not defined.');
         this.config = {...this.config, ...(options.config ?? {})};
 
-        if (this.config.fileLogging.enabled) this.logger.logFile(this.config.fileLogging.logFilePath, false);
+        if (this.config.fileLogging.enabled) this.logger.logFile(this.config.fileLogging.logFilePath ?? path.join(cwd, 'logs/latest.log'), false);
     }
 
     /**
@@ -99,7 +101,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
      * @param folders List of folders that contains the modules you want to load
      */
     public async startModules(...folders: RestOrArray<string>): Promise<RecipleClient<Ready>> {
-        folders = normalizeArray(folders);
+        folders = normalizeArray(folders).map(f => path.join(cwd, f));
 
         for (const folder of folders) {
             if (this.isClientLogsEnabled()) this.logger.info(`Loading Modules from ${folder}`);
