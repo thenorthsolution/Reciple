@@ -1,6 +1,5 @@
 import { UserHasCommandPermissionsOptions } from './types/paramOptions';
 import { Guild, PermissionResolvable } from 'discord.js';
-import { Config } from './classes/RecipleConfig';
 
 /**
  * Check if the user has permissions to execute the given command name
