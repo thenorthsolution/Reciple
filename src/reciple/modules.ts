@@ -52,10 +52,12 @@ export async function loadModules(client: RecipleClient, folder?: string): Promi
 
         try {
             const reqMod = require(modulePath);
-            module_ = reqMod?.default === undefined ? reqMod.default : reqMod;
+            module_ = reqMod?.default !== undefined ? reqMod.default : reqMod;
 
+            if (!module_?.versions.length) throw new Error(`${modulePath} does not have supported versions.`);
+            
             const versions = normalizeArray([module_.versions] as RestOrArray<string>);
-            if (!module_.versions?.length) throw new Error(`${modulePath} does not have supported versions.`);
+
             if (!client.config.disableVersionCheck && !versions.some(v => isSupportedVersion(v, version))) throw new Error(`${modulePath} is unsupported; current version: ${version}; module supported versions: ` + versions.join(', ') ?? 'none');
             if (!await Promise.resolve(module_.onStart(client)).catch(() => null)) throw new Error(script + ' onStart returned false or undefined.');
             if (module_.commands) {
@@ -93,7 +95,7 @@ export async function loadModules(client: RecipleClient, folder?: string): Promi
             script: module_,
             info: {
                 filename: script,
-                versions: normalizeArray(module_.versions as RestOrArray<string>),
+                versions: normalizeArray([module_.versions] as RestOrArray<string>),
                 path: modulePath
             }
         });
