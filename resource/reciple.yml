@@ -23,8 +23,9 @@ commands:
       # enable overwriten command permissions
       enabled: false
       commands:
-        - command: 'example-command'
-          permissions: ['Administrator']
+        - command: example-command
+          permissions:
+            - Administrator
 
   # Interaction command options
   slashCommand:
@@ -45,8 +46,9 @@ commands:
       # enable overwriten command permissions
       enabled: false
       commands:
-        - command: 'example-command'
-          permissions: ['Administrator']
+        - command: example-command
+          permissions:
+            - Administrator
 
 
 # Logger options
@@ -60,32 +62,32 @@ fileLogging:
   # stringify logged JSONs
   stringifyLoggedJSON: false
   # log file path
-  logFilePath:
+  logFilePath: logs/latest.log
 
 # Client options
 # Learn more about client options at https://discord.js.org/#/docs/discord.js/main/typedef/ClientOptions
 client:
   intents:
-    - 'Guilds'
-    - 'GuildMembers'
-    - 'GuildMessages'
-    - 'MessageContent'
+    - Guilds
+    - GuildMembers
+    - GuildMessages
+    - MessageContent
 
 # Bot messages
 messages:
-  missingArguments: 'Not enough arguments.'
-  invalidArguments: 'Invalid argument(s) given.'
+  missingArguments: Not enough arguments.
+  invalidArguments: Invalid argument(s) given.
   insufficientBotPerms:
-    content: 'Insufficient bot permissions.'
+    content: Insufficient bot permissions.
     ephemeral: true
   noPermissions:
-    content: 'You do not have permission to use this command.'
+    content: You do not have permission to use this command.
     ephemeral: true
   cooldown:
-    content: 'You cannot execute this command right now due to the cooldown.'
+    content: You cannot execute this command right now due to the cooldown.
     ephemeral: true
   error:
-    content: 'An error occurred.'
+    content: An error occurred.
     ephemeral: true
 
 # Ignored Files
