@@ -60,12 +60,12 @@ export class SlashCommandBuilder extends DiscordJsSlashCommandBuilder implements
         return this;
     }
 
-    public setRequiredBotPermissions(...permissions: RestOrArray<PermissionResolvable>[]): this {
+    public setRequiredBotPermissions(...permissions: RestOrArray<PermissionResolvable>): this {
         this.requiredBotPermissions = normalizeArray(permissions);
         return this;
     }
 
-    public setRequiredMemberPermissions(...permissions: RestOrArray<PermissionResolvable>[]): this {
+    public setRequiredMemberPermissions(...permissions: RestOrArray<PermissionResolvable>): this {
         this.requiredMemberPermissions = normalizeArray(permissions);
         return this;
     }
