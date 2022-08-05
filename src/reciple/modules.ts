@@ -1,10 +1,10 @@
 import { AnyCommandBuilder, CommandBuilderType } from './types/builders';
+import { normalizeArray, RestOrArray } from 'discord.js';
 import { RecipleClient } from './classes/RecipleClient';
 import { isSupportedVersion, version } from './version';
 import { existsSync, mkdirSync, readdirSync } from 'fs';
 import wildcard from 'wildcard-match';
 import path from 'path';
-import { normalizeArray, RestOrArray } from 'discord.js';
 
 export type LoadedModules = { commands: AnyCommandBuilder[], modules: RecipleModule[] };
 

@@ -23,7 +23,7 @@ export const commander = new Command()
 export const flags = commander.opts();
 
 /**
- * Temporary token flag
+ * Token flag
  */
 export const token: string|undefined = flags.token;
 

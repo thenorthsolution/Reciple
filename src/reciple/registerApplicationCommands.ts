@@ -1,4 +1,4 @@
-import { ApplicationCommandData, ContextMenuCommandBuilder, SlashCommandBuilder as DiscordJsSlashCommandBuilder } from 'discord.js';
+import { ApplicationCommandData, ContextMenuCommandBuilder, normalizeArray, RestOrArray, SlashCommandBuilder as DiscordJsSlashCommandBuilder } from 'discord.js';
 import { SlashCommandBuilder } from './classes/builders/SlashCommandBuilder';
 import { RegisterApplicationCommandsOptions } from './types/paramOptions';
 
@@ -10,7 +10,7 @@ export type ApplicationCommandBuilder = SlashCommandBuilder|ContextMenuCommandBu
  */
 export async function registerApplicationCommands(options: RegisterApplicationCommandsOptions): Promise<void> {
     const client = options.client;
-    const guilds = typeof options.guilds == 'string' ? [options.guilds] : options.guilds;
+    const guilds = normalizeArray(options.guilds as RestOrArray<string>);
 
     const commands = Object.values(options.commands ?? client.commands.slashCommands).map(cmd => {
         if (typeof (cmd as ApplicationCommandBuilder)?.toJSON == 'undefined') return cmd as ApplicationCommandData;

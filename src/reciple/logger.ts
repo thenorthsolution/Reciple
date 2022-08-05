@@ -1,8 +1,6 @@
 import { Logger, LogLevels } from 'fallout-utility';
-import { cwd, flags } from './flags'
+import { flags } from './flags'
 import chalk from 'chalk';
-import { createWriteStream } from 'fs';
-import path from 'path';
 
 /**
  * Create new logger
