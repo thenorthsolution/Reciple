@@ -57,7 +57,7 @@ export interface Config {
         [messageKey: string]: any;
     }
     ignoredFiles: string[];
-    modulesFolder: string;
+    modulesFolder: string|string[];
     disableVersionCheck: boolean;
     version: string;
 }

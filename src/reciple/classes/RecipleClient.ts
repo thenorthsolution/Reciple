@@ -9,7 +9,7 @@ import { AnyCommandHaltData, CommandHaltReason } from '../types/commands';
 import { RecipleClientAddModuleOptions } from '../types/paramOptions';
 import { getCommand, Logger as ILogger } from 'fallout-utility';
 import { Config, RecipleConfig } from './RecipleConfig';
-import { loadModules, RecipleModule } from '../modules';
+import { getModules, RecipleModule } from '../modules';
 import { createLogger } from '../logger';
 import { version } from '../version';
 
@@ -22,7 +22,9 @@ import {
     ClientEvents,
     ClientOptions,
     Interaction,
-    Message
+    Message,
+    normalizeArray,
+    RestOrArray
 } from 'discord.js';
 
 /**
@@ -94,15 +96,23 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
 
     /**
      * Load modules from modules folder
-     * @param folder Modules folder
+     * @param folders List of folders that contains the modules you want to load
      */
-    public async startModules(folder?: string): Promise<RecipleClient<Ready>> {
-        if (this.isClientLogsEnabled()) this.logger.info(`Loading Modules from ${folder ?? this.config.modulesFolder}`);
+    public async startModules(...folders: RestOrArray<string>): Promise<RecipleClient<Ready>> {
+        folders = normalizeArray(folders);
 
-        const modules = await loadModules(this, folder);
-        if (!modules) throw new Error('Failed to load modules.');
+        for (const folder of folders) {
+            if (this.isClientLogsEnabled()) this.logger.info(`Loading Modules from ${folder}`);
 
-        this.modules = modules.modules;
+            const modules = await getModules(this, folder).catch(() => null);
+            if (!modules) {
+                if (this.isClientLogsEnabled()) this.logger.error(`Failed to load modules from ${folder}`);
+                continue;
+            }
+
+            this.modules = modules.modules;
+        }
+
         return this;
     }
 
