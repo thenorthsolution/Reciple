@@ -17,7 +17,7 @@ export async function registerApplicationCommands(options: RegisterApplicationCo
 
         cmd = cmd as ApplicationCommandBuilder;
 
-        if (cmd instanceof SlashCommandBuilder && client.config.commands.slashCommand.setRequiredPermissions) {
+        if (SlashCommandBuilder.isSlashCommandBuilder(cmd) && client.config.commands.slashCommand.setRequiredPermissions) {
             const permissions = client.config.commands.slashCommand.permissions.enabled
                     ? client.config.commands.slashCommand.permissions.commands.find(cmd_ => cmd_.command.toLowerCase() === cmd.name.toLowerCase())?.permissions
                     : undefined;
@@ -28,7 +28,6 @@ export async function registerApplicationCommands(options: RegisterApplicationCo
             }
 
             client.commands.slashCommands[cmd.name] = cmd;
-            return cmd.toJSON();
         }
 
         return cmd.toJSON();

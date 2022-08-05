@@ -20,18 +20,6 @@ export interface ConfigCommandPermissions {
 export interface Config {
     token: string;
     commands: {
-        messageCommand: {
-            enabled: boolean;
-            prefix?: string;
-            replyOnError: boolean;
-            allowCommandAlias: boolean;
-            enableCooldown: boolean;
-            commandArgumentSeparator: string;
-            permissions: {
-                enabled: boolean;
-                commands: ConfigCommandPermissions[];
-            }
-        }
         slashCommand: {
             enabled: boolean;
             replyOnError: boolean;
@@ -39,6 +27,18 @@ export interface Config {
             enableCooldown: boolean;
             setRequiredPermissions: boolean;
             guilds?: string[]|string;
+            permissions: {
+                enabled: boolean;
+                commands: ConfigCommandPermissions[];
+            }
+        }
+        messageCommand: {
+            enabled: boolean;
+            prefix?: string;
+            replyOnError: boolean;
+            allowCommandAlias: boolean;
+            enableCooldown: boolean;
+            commandArgumentSeparator: string;
             permissions: {
                 enabled: boolean;
                 commands: ConfigCommandPermissions[];

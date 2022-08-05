@@ -4,6 +4,7 @@ import { isSupportedVersion, version } from './version';
 import { existsSync, mkdirSync, readdirSync } from 'fs';
 import wildcard from 'wildcard-match';
 import path from 'path';
+import { normalizeArray, RestOrArray } from 'discord.js';
 
 export type LoadedModules = { commands: AnyCommandBuilder[], modules: RecipleModule[] };
 
@@ -51,13 +52,12 @@ export async function loadModules(client: RecipleClient, folder?: string): Promi
 
         try {
             const reqMod = require(modulePath);
-            module_ = typeof reqMod?.default != 'undefined' ? reqMod.default : reqMod;
+            module_ = reqMod?.default === undefined ? reqMod.default : reqMod;
 
-            if (!module_.versions?.length) throw new Error('Module does not have supported versions.');
-            const versions = typeof module_.versions === 'object' ? module_.versions : [module_.versions];
-
-            if (!client.config.disableVersionCheck && !versions.some(v => isSupportedVersion(v, version))) throw new Error('Module versions is not defined or unsupported; supported versions: ' + module_.versions ?? 'none' + '; current version: '+ version);
-            if (!await Promise.resolve(module_.onStart(client))) throw new Error(script + ' onStart is not defined or returned false.');
+            const versions = normalizeArray([module_.versions] as RestOrArray<string>);
+            if (!module_.versions?.length) throw new Error(`${modulePath} does not have supported versions.`);
+            if (!client.config.disableVersionCheck && !versions.some(v => isSupportedVersion(v, version))) throw new Error(`${modulePath} is unsupported; current version: ${version}; module supported versions: ` + versions.join(', ') ?? 'none');
+            if (!await Promise.resolve(module_.onStart(client)).catch(() => null)) throw new Error(script + ' onStart returned false or undefined.');
             if (module_.commands) {
                 for (const command of module_.commands) {
                     if (command.type === CommandBuilderType.MessageCommand || command.type === CommandBuilderType.SlashCommand) {
@@ -76,12 +76,12 @@ export async function loadModules(client: RecipleClient, folder?: string): Promi
         response.commands.push(
             ...commands.filter((c) => {
                 if (!c.name) {
-                    if (client.isClientLogsEnabled()) client.logger.error(`A ${CommandBuilderType[c.type]} command name is not defined in ${script}`);
+                    if (client.isClientLogsEnabled()) client.logger.error(`A ${CommandBuilderType[c.type]} command name is not defined in ${modulePath}`);
                     return false;
                 }
 
                 if (c.type === CommandBuilderType.MessageCommand && c.options.length && c.options.some(o => !o.name)) {
-                    if (client.isClientLogsEnabled()) client.logger.error(`A ${CommandBuilderType[c.type]} option name is not defined in ${script}`);
+                    if (client.isClientLogsEnabled()) client.logger.error(`A ${CommandBuilderType[c.type]} option name is not defined in ${modulePath}`);
                     return false;
                 }
 
@@ -93,12 +93,12 @@ export async function loadModules(client: RecipleClient, folder?: string): Promi
             script: module_,
             info: {
                 filename: script,
-                versions: typeof module_.versions === 'string' ? [module_.versions] : module_.versions,
+                versions: normalizeArray(module_.versions as RestOrArray<string>),
                 path: modulePath
             }
         });
 
-        if (client.isClientLogsEnabled()) client.logger.info(`Loaded module ${script}`);
+        if (client.isClientLogsEnabled()) client.logger.info(`Loaded module ${modulePath}`);
     }
 
     return response;
