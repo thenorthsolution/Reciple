@@ -30,4 +30,4 @@ export const token: string|undefined = flags.token;
 /**
  * Current working directory
  */
-export const cwd = path.join(process.cwd(), commander.args[0] || '.');
+export const cwd = commander.args[0] || process.cwd();
