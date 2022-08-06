@@ -7,7 +7,7 @@ import { AnyCommandBuilder } from './builders';
 
 export interface RecipleClientAddModuleOptions {
     /**
-     * The Module script
+     * The module script
      */
     script: RecipleScript;
     /**

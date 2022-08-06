@@ -12,7 +12,7 @@ export const commander = new Command()
         .argument('[current-working-directory]', 'Change the current working directory')
         .option('-t, --token <token>', 'Replace used bot token')
         .option('-c, --config <config>', 'Change path to config file')
-        .option('-D, --debugmode', 'Enabled debug mode')
+        .option('-D, --debugmode', 'Enable debug mode')
         .option('-y, --yes', 'Automatically agree to Reciple confirmation prompts')
         .option('-v, --version', 'Display version')
         .parse();

@@ -3,36 +3,36 @@ import { SlashCommandBuilder, SlashCommandExecuteData, SlashCommandExecuteFuncti
 import { Awaitable, PermissionResolvable, RestOrArray } from 'discord.js';
 
 /**
- * Any Reciple command builders
+ * Any command builders
  */
 export type AnyCommandBuilder = SlashCommandBuilder|MessageCommandBuilder;
 /**
- * Any Reciple command execute data
+ * Any command execute data
  */
 export type AnyCommandExecuteData = SlashCommandExecuteData|MessageCommandExecuteData;
 
 /**
- * Any Reciple command halt functions
+ * Any command halt functions
  */
 export type AnyCommandHaltFunction = SlashCommandHaltFunction|MessageCommandHaltFunction;
 
 /**
- * Any reciple command execute function
+ * Any command execute function
  */
 export type AnyCommandExecuteFunction = SlashCommandExecuteFunction|MessageCommandExecuteFunction;
 
 /**
- * Reciple command halt function
+ * command halt function
  */
 export type CommandHaltFunction<T extends CommandBuilderType> = (haltData: T extends CommandBuilderType.SlashCommand ? SlashCommandHaltData : MessageCommandHaltData) => Awaitable<boolean|null|undefined|void>;
 
 /**
- * Reciple command execute function
+ * command execute function
  */
 export type CommandExecuteFunction<T extends CommandBuilderType> = (executeData: T extends CommandBuilderType.SlashCommand ? SlashCommandExecuteData : MessageCommandExecuteData) => Awaitable<void>;
 
 /**
- * Types of Reciple command builders
+ * Types of command builders
  */
 export enum CommandBuilderType {
     MessageCommand,

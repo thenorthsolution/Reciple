@@ -29,7 +29,7 @@ export interface MessageCommandValidatedOption {
 }
 
 /**
- * Message command halt data
+ * Halt data for message command
  */
 export type MessageCommandHaltData = CommandHaltData<CommandBuilderType.MessageCommand>;
 

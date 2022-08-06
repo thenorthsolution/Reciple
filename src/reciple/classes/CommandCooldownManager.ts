@@ -2,7 +2,7 @@ import { Guild, normalizeArray, RestOrArray, TextBasedChannel, User } from 'disc
 import { CommandBuilderType } from '../types/builders';
 
 /**
- * Object interface for cooled-down user
+ * cooled-down user object interface
  */
 export interface CooledDownUser {
     user: User;
@@ -14,7 +14,7 @@ export interface CooledDownUser {
 }
 
 /**
- * Stores cooled-down users
+ * cooled-down users manager
  */
 export class CommandCooldownManager extends Array<CooledDownUser> {
     constructor(...data: RestOrArray<CooledDownUser>) {

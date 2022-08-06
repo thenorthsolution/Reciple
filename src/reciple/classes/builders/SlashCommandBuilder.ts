@@ -14,7 +14,7 @@ import {
 } from 'discord.js';
 
 /**
- * Execute data for interaction command
+ * Execute data for slash command
  */
 export interface SlashCommandExecuteData {
     interaction: ChatInputCommandInteraction;
@@ -44,9 +44,9 @@ export interface SlashCommandBuilder extends DiscordJsSlashCommandBuilder {
 }
 
 /**
- * Reciple builder for interaction/slash command
+ * Reciple builder for slash command
  */
-export class SlashCommandBuilder extends DiscordJsSlashCommandBuilder implements SharedCommandBuilderProperties {
+export class SlashCommandBuilder extends DiscordJsSlashCommandBuilder implements SharedCommandBuilderProperties,SlashCommandBuilder {
     public readonly type = CommandBuilderType.SlashCommand;
     public cooldown: number = 0;
     public requiredBotPermissions: PermissionResolvable[] = [];

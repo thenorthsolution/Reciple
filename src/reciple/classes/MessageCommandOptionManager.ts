@@ -5,9 +5,6 @@ import { normalizeArray, RestOrArray } from 'discord.js';
  * Validated message options manager
  */
 export class MessageCommandOptionManager extends Array<MessageCommandValidatedOption> {
-    /**
-     * @param data Validated options
-     */
     constructor(...data: RestOrArray<MessageCommandValidatedOption>) {
         super(...normalizeArray(data));
     }

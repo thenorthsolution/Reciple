@@ -30,12 +30,12 @@ import path from 'path';
 import { cwd } from '../flags';
 
 /**
- * options for Reciple client
+ * Options for Reciple client
  */
 export interface RecipleClientOptions extends ClientOptions { config?: Config; }
 
 /**
- * Reciple client commands object interface
+ * Reciple client commands
  */
 export interface RecipleClientCommands {
     slashCommands: { [commandName: string]: SlashCommandBuilder };
@@ -52,7 +52,7 @@ export interface RecipleClientEvents extends ClientEvents {
 }
 
 /**
- * Create new Reciple client
+ * Reciple client
  */
 export interface RecipleClient<Ready extends boolean = boolean> extends Client<Ready> {
     on<E extends keyof RecipleClientEvents>(event: E, listener: (...args: RecipleClientEvents[E]) => Awaitable<void>): this;

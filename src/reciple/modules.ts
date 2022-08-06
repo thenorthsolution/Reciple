@@ -5,11 +5,12 @@ import { isSupportedVersion, version } from './version';
 import { existsSync, mkdirSync, readdirSync } from 'fs';
 import wildcard from 'wildcard-match';
 import path from 'path';
+import { cwd } from './flags';
 
 export type LoadedModules = { commands: AnyCommandBuilder[], modules: RecipleModule[] };
 
 /**
- * Reciple script object interface
+ * Reciple script object
  */
 export interface RecipleScript {
     versions: string | string[];
@@ -19,7 +20,7 @@ export interface RecipleScript {
 }
 
 /**
- * Reciple module object interface
+ * Reciple module object
  */
 export interface RecipleModule {
     script: RecipleScript;
@@ -37,7 +38,7 @@ export interface RecipleModule {
  */
 export async function getModules(client: RecipleClient, folder?: string): Promise<LoadedModules> {
     const response: LoadedModules = { commands: [], modules: [] };
-    const modulesDir = folder || 'modules';
+    const modulesDir = folder || path.join(cwd, 'modules');
     if (!existsSync(modulesDir)) mkdirSync(modulesDir, { recursive: true });
 
     const ignoredFiles = (client.config.ignoredFiles || []).map(file => file.endsWith('.js') ? file : `${file}.js`);

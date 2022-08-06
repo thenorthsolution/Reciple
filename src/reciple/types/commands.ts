@@ -5,17 +5,17 @@ import { CommandBuilderType, AnyCommandExecuteData } from '../types/builders';
 import { CooledDownUser } from '../classes/CommandCooldownManager';
 
 /**
- * Any reciple halted command data
+ * Any command halt data
  */
 export type AnyCommandHaltData = SlashCommandHaltData|MessageCommandHaltData;
 
 /**
- * Halted command data
+ * command halt data
  */
 export type CommandHaltData<T extends CommandBuilderType> = CommandErrorData<T>|CommandCooldownData<T>|(T extends CommandBuilderType.SlashCommand ? never : CommandInvalidArguments<T>|CommandMissingArguments<T>)|CommandMissingMemberPermissions<T>|CommandMissingBotPermissions<T>;
 
 /**
- * Command halt reason base interface
+ * Command halt reason base
  */
 export interface CommandHaltReasonBase<T extends CommandBuilderType> {
     executeData: T extends CommandBuilderType.SlashCommand
