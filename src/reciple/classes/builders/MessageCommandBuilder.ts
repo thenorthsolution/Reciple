@@ -1,20 +1,18 @@
-import { CommandBuilderType, AnyCommandExecuteData, CommandHaltFunction, CommandExecuteFunction, SharedCommandBuilderProperties } from '../../types/builders';
+import { CommandBuilderType, CommandHaltFunction, CommandExecuteFunction, SharedCommandBuilderProperties } from '../../types/builders';
+import { AnyCommandExecuteData, BaseCommandExecuteData, CommandHaltData } from '../../types/commands';
 import { Message, normalizeArray, PermissionResolvable, RestOrArray } from 'discord.js';
 import { MessageCommandOptionManager } from '../MessageCommandOptionManager';
 import { MessageCommandOptionBuilder } from './MessageCommandOptionBuilder';
 import { Command as CommandMessage } from 'fallout-utility';
-import { CommandHaltData } from '../../types/commands';
-import { RecipleClient } from '../RecipleClient';
 
 /**
  * Execute data for message command
  */
-export interface MessageCommandExecuteData {
+export interface MessageCommandExecuteData extends BaseCommandExecuteData {
     message: Message;
     options: MessageCommandOptionManager;
     command: CommandMessage;
     builder: MessageCommandBuilder;
-    client: RecipleClient<true>;
 }
 
 /**

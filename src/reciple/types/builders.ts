@@ -6,10 +6,6 @@ import { Awaitable, PermissionResolvable, RestOrArray } from 'discord.js';
  * Any command builders
  */
 export type AnyCommandBuilder = SlashCommandBuilder|MessageCommandBuilder;
-/**
- * Any command execute data
- */
-export type AnyCommandExecuteData = SlashCommandExecuteData|MessageCommandExecuteData;
 
 /**
  * Any command halt functions

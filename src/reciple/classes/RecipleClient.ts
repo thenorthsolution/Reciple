@@ -1,11 +1,11 @@
 import { MessageCommandBuilder, MessageCommandExecuteData, MessageCommandHaltData, validateMessageCommandOptions } from './builders/MessageCommandBuilder';
 import { SlashCommandBuilder, SlashCommandExecuteData, SlashCommandHaltData } from './builders/SlashCommandBuilder';
 import { ApplicationCommandBuilder, registerApplicationCommands } from '../registerApplicationCommands';
-import { AnyCommandBuilder, CommandBuilderType, AnyCommandExecuteData } from '../types/builders';
+import { AnyCommandExecuteData, AnyCommandHaltData, CommandHaltReason } from '../types/commands';
 import { botHasExecutePermissions, userHasCommandPermissions } from '../permissions';
 import { CommandCooldownManager, CooledDownUser } from './CommandCooldownManager';
 import { MessageCommandOptionManager } from './MessageCommandOptionManager';
-import { AnyCommandHaltData, CommandHaltReason } from '../types/commands';
+import { AnyCommandBuilder, CommandBuilderType } from '../types/builders';
 import { RecipleClientAddModuleOptions } from '../types/paramOptions';
 import { getCommand, Logger as ILogger } from 'fallout-utility';
 import { Config, RecipleConfig } from './RecipleConfig';

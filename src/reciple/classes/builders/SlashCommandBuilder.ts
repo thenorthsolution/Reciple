@@ -1,6 +1,5 @@
-import { CommandBuilderType, AnyCommandExecuteData, CommandHaltFunction, CommandExecuteFunction, SharedCommandBuilderProperties } from '../../types/builders';
-import { CommandHaltData } from '../../types/commands';
-import { RecipleClient } from '../RecipleClient';
+import { CommandBuilderType, CommandHaltFunction, CommandExecuteFunction, SharedCommandBuilderProperties } from '../../types/builders';
+import { AnyCommandExecuteData, BaseCommandExecuteData, CommandHaltData } from '../../types/commands';
 
 import {
     ChatInputCommandInteraction,
@@ -16,10 +15,9 @@ import {
 /**
  * Execute data for slash command
  */
-export interface SlashCommandExecuteData {
+export interface SlashCommandExecuteData extends BaseCommandExecuteData {
     interaction: ChatInputCommandInteraction;
     builder: SlashCommandBuilder;
-    client: RecipleClient<true>;
 }
 
 /**
