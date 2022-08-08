@@ -1,9 +1,10 @@
 {
   "name": "reciple",
-  "version": "4.1.2",
+  "version": "5.0.0",
   "bin": "bin/bin.js",
   "license": "GPL-3.0",
   "main": "bin/index.js",
+  "typings": "bin/index.d.ts",
   "author": "FalloutStudios",
   "description": "Handler for Discord.js",
   "homepage": "https://reciple.js.org",

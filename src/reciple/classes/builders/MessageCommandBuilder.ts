@@ -1,19 +1,18 @@
-import { CommandBuilderType, CommandExecuteFunction, CommandHaltFunction } from '../../types/builders';
+import { CommandBuilderType, CommandHaltFunction, CommandExecuteFunction, SharedCommandBuilderProperties } from '../../types/builders';
+import { AnyCommandExecuteData, BaseCommandExecuteData, CommandHaltData } from '../../types/commands';
+import { Message, normalizeArray, PermissionResolvable, RestOrArray } from 'discord.js';
 import { MessageCommandOptionManager } from '../MessageCommandOptionManager';
 import { MessageCommandOptionBuilder } from './MessageCommandOptionBuilder';
 import { Command as CommandMessage } from 'fallout-utility';
-import { Message, PermissionResolvable } from 'discord.js';
-import { RecipleClient } from '../RecipleClient';
 
 /**
  * Execute data for message command
  */
-export interface MessageCommandExecuteData {
+export interface MessageCommandExecuteData extends BaseCommandExecuteData {
     message: Message;
     options: MessageCommandOptionManager;
     command: CommandMessage;
     builder: MessageCommandBuilder;
-    client: RecipleClient<true>;
 }
 
 /**
@@ -28,22 +27,37 @@ export interface MessageCommandValidatedOption {
 }
 
 /**
+ * Halt data for message command
+ */
+export type MessageCommandHaltData = CommandHaltData<CommandBuilderType.MessageCommand>;
+
+/**
+ * Message command halt function
+ */
+export type MessageCommandHaltFunction = CommandHaltFunction<CommandBuilderType.MessageCommand>;
+
+/**
+ * Message command execute function
+ */
+export type MessageCommandExecuteFunction = CommandExecuteFunction<CommandBuilderType.MessageCommand>;
+
+/**
  * Reciple builder for message command
  */
-export class MessageCommandBuilder {
-    public readonly builder = CommandBuilderType.MessageCommand;
+export class MessageCommandBuilder implements SharedCommandBuilderProperties {
+    public readonly type = CommandBuilderType.MessageCommand;
     public name: string = '';
-    public cooldown: number = 0;
     public description: string = '';
+    public cooldown: number = 0;
     public aliases: string[] = [];
-    public options: MessageCommandOptionBuilder[] = [];
     public validateOptions: boolean = false;
+    public options: MessageCommandOptionBuilder[] = [];
     public requiredBotPermissions: PermissionResolvable[] = [];
     public requiredMemberPermissions: PermissionResolvable[] = [];
     public allowExecuteInDM: boolean = true;
     public allowExecuteByBots: boolean = false;
-    public halt?: CommandHaltFunction<this>;
-    public execute: CommandExecuteFunction<this> = () => { /* Execute */ };
+    public halt?: MessageCommandHaltFunction;
+    public execute: MessageCommandExecuteFunction = () => { /* Execute */ };
 
     /**
      * Sets the command name
@@ -66,43 +80,17 @@ export class MessageCommandBuilder {
     }
 
     /**
-     * Sets the execute cooldown for this command.
-     * - `0` means no cooldown
-     * @param cooldown Command cooldown in milliseconds
-     */
-    public setCooldown(cooldown: number): this {
-        this.cooldown = cooldown;
-        return this;
-    }
-
-    /**
      * Add aliases to the command
      * @param aliases Command aliases
      */
-    public addAliases(...aliases: string[]): this {
+    public addAliases(...aliases: RestOrArray<string>): this {
+        aliases = normalizeArray(aliases);
+
         if (!aliases.length) throw new TypeError('Provide atleast one alias');
         if (aliases.some(a => !a || typeof a !== 'string' || !a.match(/^[\w-]{1,32}$/))) throw new TypeError('aliases must be strings and match the regex /^[\\w-]{1,32}$/');
         if (this.name && aliases.some(a => a == this.name)) throw new TypeError('alias cannot have same name to its real command name');
         
         this.aliases = [...new Set(aliases)];
-        return this;
-    }
-
-    /**
-     * Set required bot permissions to execute the command
-     * @param permissions Bot's required permissions
-     */
-    public setRequiredBotPermissions(...permissions: PermissionResolvable[]): this {
-        this.requiredBotPermissions = permissions;
-        return this;
-    }
-
-    /**
-     * Set required permissions to execute the command
-     * @param permissions User's return permissions
-     */
-    public setRequiredMemberPermissions(...permissions: PermissionResolvable[]): this {
-        this.requiredMemberPermissions = permissions;
         return this;
     }
 
@@ -123,25 +111,6 @@ export class MessageCommandBuilder {
     public setAllowExecuteByBots(allowExecuteByBots: boolean): this {
         if (typeof allowExecuteByBots !== 'boolean') throw new TypeError('allowExecuteByBots must be a boolean.');
         this.allowExecuteByBots = allowExecuteByBots;
-        return this;
-    }
-
-    /**
-     * Function when the command is interupted 
-     * @param halt Function to execute when command is halted
-     */
-    public setHalt(halt?: CommandHaltFunction<this>): this {
-        this.halt = halt ? halt : undefined;
-        return this;
-    }
-
-    /**
-     * Function when the command is executed 
-     * @param execute Function to execute when the command is called 
-     */
-    public setExecute(execute: CommandExecuteFunction<this>): this {
-        if (!execute || typeof execute !== 'function') throw new TypeError('execute must be a function.');
-        this.execute = execute;
         return this;
     }
 
@@ -169,6 +138,46 @@ export class MessageCommandBuilder {
         if (typeof validateOptions !== 'boolean') throw new TypeError('validateOptions must be a boolean.');
         this.validateOptions = validateOptions;
         return this;
+    }
+
+    public setCooldown(cooldown: number): this {
+        this.cooldown = cooldown;
+        return this;
+    }
+
+    public setRequiredBotPermissions(...permissions: RestOrArray<PermissionResolvable>): this {
+        this.requiredBotPermissions = normalizeArray(permissions);
+        return this;
+    }
+
+    public setRequiredMemberPermissions(...permissions: RestOrArray<PermissionResolvable>): this {
+        this.requiredMemberPermissions = normalizeArray(permissions);
+        return this;
+    }
+
+    public setHalt(halt?: this["halt"]): this {
+        this.halt = halt ? halt : undefined;
+        return this;
+    }
+
+    public setExecute(execute: this["execute"]): this {
+        if (!execute || typeof execute !== 'function') throw new TypeError('execute must be a function.');
+        this.execute = execute;
+        return this;
+    }
+
+    /**
+     * Is a message command builder 
+     */
+    public static isMessageCommandBuilder(builder: any): builder is MessageCommandBuilder {
+        return builder instanceof MessageCommandBuilder;
+    }
+
+    /**
+     * Is a message command execute data
+     */
+    public static isMessageCommandExecuteData(executeData: AnyCommandExecuteData): executeData is MessageCommandExecuteData {
+        return (executeData as MessageCommandExecuteData).builder !== undefined && this.isMessageCommandBuilder((executeData as MessageCommandExecuteData).builder);
     }
 }
 

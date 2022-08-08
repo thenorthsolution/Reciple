@@ -1,8 +1,8 @@
-import { Guild, TextBasedChannel, User } from 'discord.js';
+import { Guild, normalizeArray, RestOrArray, TextBasedChannel, User } from 'discord.js';
 import { CommandBuilderType } from '../types/builders';
 
 /**
- * Object interface for cooled-down user
+ * cooled-down user object interface
  */
 export interface CooledDownUser {
     user: User;
@@ -14,9 +14,13 @@ export interface CooledDownUser {
 }
 
 /**
- * Stores cooled-down users
+ * cooled-down users manager
  */
 export class CommandCooldownManager extends Array<CooledDownUser> {
+    constructor(...data: RestOrArray<CooledDownUser>) {
+        super(...normalizeArray(data));
+    }
+
     /**
      * Alias for `CommandCooldownManager#push()`
      * @param options Cooled-down user data

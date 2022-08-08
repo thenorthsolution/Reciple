@@ -3,11 +3,11 @@ import { ApplicationCommandData, PermissionsBitField } from 'discord.js';
 import { RecipleModule, RecipleScript } from '../modules';
 import { RecipleClient } from '../classes/RecipleClient';
 import { Config } from '../classes/RecipleConfig';
-import { CommandBuilder } from './builders';
+import { AnyCommandBuilder } from './builders';
 
 export interface RecipleClientAddModuleOptions {
     /**
-     * The Module script
+     * The module script
      */
     script: RecipleScript;
     /**
@@ -36,7 +36,7 @@ export interface RegisterApplicationCommandsOptions {
 }
 
 export interface UserHasCommandPermissionsOptions {
-    builder: CommandBuilder;
+    builder: AnyCommandBuilder;
     memberPermissions?: PermissionsBitField;
     commandPermissions?: Config["commands"]["slashCommand"]["permissions"]|Config["commands"]["messageCommand"]["permissions"];
 }
