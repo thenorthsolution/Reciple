@@ -4,8 +4,8 @@ import { RecipleClient } from './classes/RecipleClient';
 import { isSupportedVersion, version } from './version';
 import { existsSync, mkdirSync, readdirSync } from 'fs';
 import wildcard from 'wildcard-match';
-import path from 'path';
 import { cwd } from './flags';
+import path from 'path';
 
 export type LoadedModules = { commands: AnyCommandBuilder[], modules: RecipleModule[] };
 
