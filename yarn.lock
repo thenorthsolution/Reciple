@@ -71,17 +71,24 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:*, @types/node@npm:^18.6.1":
+"@types/node@npm:*":
   version: 18.6.1
   resolution: "@types/node@npm:18.6.1"
   checksum: 06331f68bc73d93b73977ae19ca87818e004bc7b8e70b0d4f73b0ea5e341a4a1ba6f0e79db8fb75a841af2b8d74552d6b9a8f846b267954689f57effedcf5d77
   languageName: node
   linkType: hard
 
-"@types/semver@npm:^7.3.10":
-  version: 7.3.10
-  resolution: "@types/semver@npm:7.3.10"
-  checksum: 7047c2822b1759b2b950f39cfcf261f2b9dca47b4b55bdebba0905a8553631f1531eb0f59264ffe4834d1198c8331c8e0010a4cd742f4e0b60abbf399d134364
+"@types/node@npm:^18.7.1":
+  version: 18.7.1
+  resolution: "@types/node@npm:18.7.1"
+  checksum: f1e2b701b107f97be01da4c46845cd23bcdcb2865f9abbb2847546d09587e726ea207daca6f0d1e72196875ef8c62feeeff5f1c1f2070445acd6d1a61d815c7c
+  languageName: node
+  linkType: hard
+
+"@types/semver@npm:^7.3.11":
+  version: 7.3.11
+  resolution: "@types/semver@npm:7.3.11"
+  checksum: 20c3fcc6247ce2382d41cd54e735db1d8de341ee2a75a211fe4218da153b73ccfd050177b0f2b54979912e1d4942e2767ea4dc124ef12a4deef291a43c10d55f
   languageName: node
   linkType: hard
 
@@ -190,9 +197,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"discord.js@npm:^14.1.2":
-  version: 14.1.2
-  resolution: "discord.js@npm:14.1.2"
+"discord.js@npm:^14.2.0":
+  version: 14.2.0
+  resolution: "discord.js@npm:14.2.0"
   dependencies:
     "@discordjs/builders": ^1.1.0
     "@discordjs/collection": ^1.0.1
@@ -203,9 +210,9 @@ __metadata:
     fast-deep-equal: ^3.1.3
     lodash.snakecase: ^4.1.1
     tslib: ^2.4.0
-    undici: ^5.8.0
+    undici: ^5.8.2
     ws: ^8.8.1
-  checksum: f392bbe8b469d90fb4beceafa052787facc38224d1bfa679f3e60f1dd10e83cad3cae33fe1c11e04c615ce4f73c2a6a0d9265b449d1b9b57b93b31e9a66ac106
+  checksum: 37ab9b68f3749c78049edc00f30d1662a0cc3fea27e6b23630559a9d3b794cd6e3b2e2cf69cf9f01087f0477e307cf8e3781d88e35e564debb720cfc0c8b423d
   languageName: node
   linkType: hard
 
@@ -340,7 +347,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"marked@npm:^4.0.16":
+"marked@npm:^4.0.18":
   version: 4.0.18
   resolution: "marked@npm:4.0.18"
   bin:
@@ -423,16 +430,16 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "reciple@workspace:."
   dependencies:
-    "@types/node": ^18.6.1
-    "@types/semver": ^7.3.10
+    "@types/node": ^18.7.1
+    "@types/semver": ^7.3.11
     chalk: 4.1.2
     commander: ^9.4.0
-    discord.js: ^14.1.2
+    discord.js: ^14.2.0
     dotenv: ^16.0.1
     fallout-utility: ^1.4.6
     rimraf: ^3.0.2
     semver: ^7.3.7
-    typedoc: ^0.23.9
+    typedoc: ^0.23.10
     typedoc-plugin-discord-types: ^1.0.2
     typedoc-plugin-djs-links: ^1.2.0
     typedoc-plugin-mdn-links: ^2.0.0
@@ -440,7 +447,7 @@ __metadata:
     wildcard-match: ^5.1.2
     yaml: ^2.1.1
   peerDependencies:
-    discord.js: ^14.0.3
+    discord.js: ^14.1.2
   bin:
     reciple: bin/bin.js
   languageName: unknown
@@ -583,19 +590,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typedoc@npm:^0.23.9":
-  version: 0.23.9
-  resolution: "typedoc@npm:0.23.9"
+"typedoc@npm:^0.23.10":
+  version: 0.23.10
+  resolution: "typedoc@npm:0.23.10"
   dependencies:
     lunr: ^2.3.9
-    marked: ^4.0.16
+    marked: ^4.0.18
     minimatch: ^5.1.0
     shiki: ^0.10.1
   peerDependencies:
     typescript: 4.6.x || 4.7.x
   bin:
     typedoc: bin/typedoc
-  checksum: 3b1eac3c4acfe7390f23ff35bea3cd694762b465c53605b159cf4abbb8e50b22f835d52a7f20c71b9219c79b6ab093346d671ebba67b922782f8658375a65347
+  checksum: 58dd8bc12856801c4f315812d03f209f706435e5f56edceeb3e01e456c7d058a127f3dee1674529d62b64dcc04847d8be5e4ce06921b9c5388b901dd976b92bf
   languageName: node
   linkType: hard
 
@@ -623,6 +630,13 @@ __metadata:
   version: 5.8.0
   resolution: "undici@npm:5.8.0"
   checksum: 7b486ad064da00628d3906e140b86223023cd3494c811da8d7aa1375c2392fe6a6ac421af236c056fd3d3136bba3a91b99e0505dde071dd946070946eb0718b8
+  languageName: node
+  linkType: hard
+
+"undici@npm:^5.8.2":
+  version: 5.8.2
+  resolution: "undici@npm:5.8.2"
+  checksum: 726e04bb37e2e285b4f632600c792efc9eaa5e06e37f9f34338352ac5e1dbd8ae3cdd12dd8761abfecffc5f200d1c7b91b41efb3a31c4e804ea341e5808ddfcf
   languageName: node
   linkType: hard
 

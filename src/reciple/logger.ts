@@ -14,10 +14,10 @@ export function createLogger (stringifyJSON: boolean, debugmode: boolean = false
         enableDebugMode: flags.debugmode as boolean|undefined ?? debugmode,
         loggerName: 'Main',
         prefixes: {
-            [LogLevels.INFO]: (name?: string) => `[${chalk.bold("INFO" + (name ? chalk.dim(" - ") + name : ''))}]`,
-            [LogLevels.WARN]: (name?: string) => `[${chalk.bold.yellow("WARN" + (name ? chalk.dim(" - ") + name : ''))}]`,
-            [LogLevels.ERROR]: (name?: string) => `[${chalk.bold.red("ERROR" + (name ? chalk.dim(" - ") + name : ''))}]`,
-            [LogLevels.DEBUG]: (name?: string) => `[${chalk.bold.blue("DEBUG" + (name ? chalk.dim(" - ") + name : ''))}]`
+            [LogLevels.INFO]: (name?: string) => `[${new Date().toLocaleTimeString()}][${(name ? name + "/" : '') + "INFO"}]`,
+            [LogLevels.WARN]: (name?: string) => `[${chalk.yellow(new Date().toLocaleTimeString())}][${chalk.yellow((name ? name + "/" : '') + "WARN")}]`,
+            [LogLevels.ERROR]: (name?: string) => `[${chalk.red(new Date().toLocaleTimeString())}][${chalk.red((name ? name + "/" : '') + "ERROR")}]`,
+            [LogLevels.DEBUG]: (name?: string) => `[${chalk.blue(new Date().toLocaleTimeString())}][${chalk.blue((name ? name + "/" : '') + "DEBUG")}]`
         },
         colorMessages: {
             [LogLevels.INFO]: (message: string) => message,
