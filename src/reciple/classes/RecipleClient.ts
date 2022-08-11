@@ -112,7 +112,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
                 continue;
             }
 
-            this.modules = modules.modules;
+            this.modules.push(...modules.modules);
         }
 
         return this;
