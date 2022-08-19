@@ -15,8 +15,8 @@ export type LoadedModules = { commands: AnyCommandBuilder[], modules: RecipleMod
 export interface RecipleScript {
     versions: string | string[];
     commands?: AnyCommandBuilder[];
-    onLoad?(reciple: RecipleClient): void|Promise<void>;
-    onStart(reciple: RecipleClient): boolean|Promise<boolean>;
+    onLoad?(client: RecipleClient): void|Promise<void>;
+    onStart(client: RecipleClient): boolean|Promise<boolean>;
 }
 
 /**

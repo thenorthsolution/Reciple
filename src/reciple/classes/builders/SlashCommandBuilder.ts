@@ -1,4 +1,4 @@
-import { CommandBuilderType, CommandHaltFunction, CommandExecuteFunction, SharedCommandBuilderProperties } from '../../types/builders';
+import { CommandBuilderType, CommandHaltFunction, CommandExecuteFunction, SharedCommandBuilderProperties, AnySlashCommandBuilder } from '../../types/builders';
 import { BaseCommandExecuteData, CommandHaltData } from '../../types/commands';
 
 import {
@@ -27,7 +27,7 @@ import {
  */
 export interface SlashCommandExecuteData extends BaseCommandExecuteData {
     interaction: ChatInputCommandInteraction;
-    builder: SlashCommandBuilder;
+    builder: AnySlashCommandBuilder;
 }
 
 /**

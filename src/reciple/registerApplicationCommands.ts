@@ -1,8 +1,9 @@
 import { ApplicationCommandData, ContextMenuCommandBuilder, normalizeArray, RestOrArray, SlashCommandBuilder as DiscordJsSlashCommandBuilder } from 'discord.js';
-import { SlashCommandBuilder, SlashCommandOptionsOnlyBuilder, SlashCommandSubcommandsOnlyBuilder } from './classes/builders/SlashCommandBuilder';
+import { SlashCommandBuilder } from './classes/builders/SlashCommandBuilder';
 import { RegisterApplicationCommandsOptions } from './types/paramOptions';
+import { AnySlashCommandBuilder } from './types/builders';
 
-export type ApplicationCommandBuilder = SlashCommandBuilder|SlashCommandSubcommandsOnlyBuilder|SlashCommandOptionsOnlyBuilder|ContextMenuCommandBuilder|DiscordJsSlashCommandBuilder;
+export type ApplicationCommandBuilder = AnySlashCommandBuilder|ContextMenuCommandBuilder|DiscordJsSlashCommandBuilder;
 
 /**
  * Register application commands 
