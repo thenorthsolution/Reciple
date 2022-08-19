@@ -1,5 +1,5 @@
 import { ApplicationCommandBuilder } from '../registerApplicationCommands';
-import { ApplicationCommandData, PermissionsBitField } from 'discord.js';
+import { ApplicationCommandData, PermissionsBitField, RESTPostAPIApplicationCommandsJSONBody } from 'discord.js';
 import { RecipleModule, RecipleScript } from '../modules';
 import { RecipleClient } from '../classes/RecipleClient';
 import { Config } from '../classes/RecipleConfig';

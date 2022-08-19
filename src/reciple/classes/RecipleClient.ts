@@ -1,11 +1,11 @@
 import { MessageCommandBuilder, MessageCommandExecuteData, MessageCommandHaltData, validateMessageCommandOptions } from './builders/MessageCommandBuilder';
 import { SlashCommandBuilder, SlashCommandExecuteData, SlashCommandHaltData } from './builders/SlashCommandBuilder';
 import { ApplicationCommandBuilder, registerApplicationCommands } from '../registerApplicationCommands';
+import { AnyCommandBuilder, AnySlashCommandBuilder, CommandBuilderType } from '../types/builders';
 import { AnyCommandExecuteData, AnyCommandHaltData, CommandHaltReason } from '../types/commands';
 import { botHasExecutePermissions, userHasCommandPermissions } from '../permissions';
 import { CommandCooldownManager, CooledDownUser } from './CommandCooldownManager';
 import { MessageCommandOptionManager } from './MessageCommandOptionManager';
-import { AnyCommandBuilder, CommandBuilderType } from '../types/builders';
 import { RecipleClientAddModuleOptions } from '../types/paramOptions';
 import { getCommand, Logger as ILogger } from 'fallout-utility';
 import { Config, RecipleConfig } from './RecipleConfig';
@@ -38,7 +38,7 @@ export interface RecipleClientOptions extends ClientOptions { config?: Config; }
  * Reciple client commands
  */
 export interface RecipleClientCommands {
-    slashCommands: { [commandName: string]: SlashCommandBuilder };
+    slashCommands: { [commandName: string]: AnySlashCommandBuilder };
     messageCommands: { [commandName: string]: MessageCommandBuilder };
 }
 

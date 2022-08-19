@@ -45,8 +45,8 @@ export type SlashCommandHaltFunction = CommandHaltFunction<CommandBuilderType.Sl
  */
 export type SlashCommandExecuteFunction = CommandExecuteFunction<CommandBuilderType.SlashCommand>;
 
-export interface SlashCommandSubcommandsOnlyBuilder extends DiscordJsSlashCommandSubcommandsOnlyBuilder,Pick<SlashCommandBuilder, "setCooldown" | "setRequiredBotPermissions" | "setRequiredMemberPermissions" | "setHalt" | "setExecute"> {}
-export interface SlashCommandOptionsOnlyBuilder extends DiscordJsSlashCommandOptionsOnlyBuilder,Pick<SlashCommandBuilder, "setCooldown" | "setRequiredBotPermissions" | "setRequiredMemberPermissions" | "setHalt" | "setExecute"> {}
+export type SlashCommandSubcommandsOnlyBuilder = Omit<SlashCommandBuilder, "addBooleanOption" | "addUserOption" | "addChannelOption" | "addRoleOption" | "addAttachmentOption" | "addMentionableOption" | "addStringOption" | "addIntegerOption" | "addNumberOption">;
+export type SlashCommandOptionsOnlyBuilder = Omit<SlashCommandBuilder, "addSubcommand" | "addSubcommandGroup">;
 export interface SlashCommandBuilder extends DiscordJsSlashCommandBuilder {
     addSubcommandGroup(input: SlashCommandSubcommandGroupBuilder | ((subcommandGroup: SlashCommandSubcommandGroupBuilder) => SlashCommandSubcommandGroupBuilder)): SlashCommandSubcommandsOnlyBuilder;
     addSubcommand(input: SlashCommandSubcommandBuilder | ((subcommandGroup: SlashCommandSubcommandBuilder) => SlashCommandSubcommandBuilder)): SlashCommandSubcommandsOnlyBuilder;

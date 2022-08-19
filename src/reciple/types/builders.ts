@@ -1,11 +1,16 @@
 import { MessageCommandBuilder, MessageCommandExecuteData, MessageCommandExecuteFunction, MessageCommandHaltData, MessageCommandHaltFunction } from '../classes/builders/MessageCommandBuilder';
-import { SlashCommandBuilder, SlashCommandExecuteData, SlashCommandExecuteFunction, SlashCommandHaltData, SlashCommandHaltFunction } from '../classes/builders/SlashCommandBuilder';
+import { SlashCommandBuilder, SlashCommandExecuteData, SlashCommandExecuteFunction, SlashCommandHaltData, SlashCommandHaltFunction, SlashCommandOptionsOnlyBuilder, SlashCommandSubcommandsOnlyBuilder } from '../classes/builders/SlashCommandBuilder';
 import { Awaitable, PermissionResolvable, RestOrArray } from 'discord.js';
 
 /**
  * Any command builders
  */
-export type AnyCommandBuilder = SlashCommandBuilder|MessageCommandBuilder;
+export type AnyCommandBuilder = AnySlashCommandBuilder|MessageCommandBuilder;
+
+/**
+ * Any slash command builders
+ */
+export type AnySlashCommandBuilder = SlashCommandBuilder|SlashCommandOptionsOnlyBuilder|SlashCommandSubcommandsOnlyBuilder;
 
 /**
  * Any command halt functions
