@@ -78,17 +78,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^18.7.1":
-  version: 18.7.1
-  resolution: "@types/node@npm:18.7.1"
-  checksum: f1e2b701b107f97be01da4c46845cd23bcdcb2865f9abbb2847546d09587e726ea207daca6f0d1e72196875ef8c62feeeff5f1c1f2070445acd6d1a61d815c7c
+"@types/node@npm:^18.7.6":
+  version: 18.7.6
+  resolution: "@types/node@npm:18.7.6"
+  checksum: 5122988c325eda8d1f5cbe4494916036aae1758f9d5bb2d8139a800b8bad1540fbb167cd3c759da9a5cb4600cd3507609ac7969747113c1549a3e4320a17b1a9
   languageName: node
   linkType: hard
 
-"@types/semver@npm:^7.3.11":
-  version: 7.3.11
-  resolution: "@types/semver@npm:7.3.11"
-  checksum: 20c3fcc6247ce2382d41cd54e735db1d8de341ee2a75a211fe4218da153b73ccfd050177b0f2b54979912e1d4942e2767ea4dc124ef12a4deef291a43c10d55f
+"@types/semver@npm:^7.3.12":
+  version: 7.3.12
+  resolution: "@types/semver@npm:7.3.12"
+  checksum: 35536b2fc5602904f21cae681f6c9498e177dab3f54ae37c92f9a1b7e43c35f18bcd81e1c98c1cf0d33ee046bb06c771e9928c1c00a401d56a03f56549252a15
   languageName: node
   linkType: hard
 
@@ -430,8 +430,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "reciple@workspace:."
   dependencies:
-    "@types/node": ^18.7.1
-    "@types/semver": ^7.3.11
+    "@types/node": ^18.7.6
+    "@types/semver": ^7.3.12
     chalk: 4.1.2
     commander: ^9.4.0
     discord.js: ^14.2.0
@@ -447,7 +447,7 @@ __metadata:
     wildcard-match: ^5.1.2
     yaml: ^2.1.1
   peerDependencies:
-    discord.js: ^14.1.2
+    discord.js: ^14.2.0
   bin:
     reciple: bin/bin.js
   languageName: unknown
