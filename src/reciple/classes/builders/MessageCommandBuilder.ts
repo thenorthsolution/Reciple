@@ -155,12 +155,12 @@ export class MessageCommandBuilder implements SharedCommandBuilderProperties {
         return this;
     }
 
-    public setHalt(halt?: this["halt"]): this {
-        this.halt = halt ? halt : undefined;
+    public setHalt(halt?: MessageCommandHaltFunction|null): this {
+        this.halt = halt ?? undefined;
         return this;
     }
 
-    public setExecute(execute: this["execute"]): this {
+    public setExecute(execute: MessageCommandExecuteFunction): this {
         if (!execute || typeof execute !== 'function') throw new TypeError('execute must be a function.');
         this.execute = execute;
         return this;
@@ -169,14 +169,14 @@ export class MessageCommandBuilder implements SharedCommandBuilderProperties {
     /**
      * Is a message command builder 
      */
-    public static isMessageCommandBuilder(builder: any): builder is MessageCommandBuilder {
+    public static isMessageCommandBuilder(builder: unknown): builder is MessageCommandBuilder {
         return builder instanceof MessageCommandBuilder;
     }
 
     /**
      * Is a message command execute data
      */
-    public static isMessageCommandExecuteData(executeData: AnyCommandExecuteData): executeData is MessageCommandExecuteData {
+    public static isMessageCommandExecuteData(executeData: unknown): executeData is MessageCommandExecuteData {
         return (executeData as MessageCommandExecuteData).builder !== undefined && this.isMessageCommandBuilder((executeData as MessageCommandExecuteData).builder);
     }
 }
