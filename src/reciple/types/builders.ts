@@ -49,7 +49,6 @@ export interface SharedCommandBuilderProperties {
     cooldown: number;
     requiredBotPermissions: PermissionResolvable[];
     requiredMemberPermissions: PermissionResolvable[];
-    allowExecuteInDM: boolean;
     halt?: AnyCommandHaltFunction;
     execute: AnyCommandExecuteFunction;
 

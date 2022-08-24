@@ -70,7 +70,6 @@ export class SlashCommandBuilder extends DiscordJsSlashCommandBuilder implements
     public cooldown: number = 0;
     public requiredBotPermissions: PermissionResolvable[] = [];
     public requiredMemberPermissions: PermissionResolvable[] = [];
-    public allowExecuteInDM: boolean = true;
     public halt?: SlashCommandHaltFunction;
     public execute: SlashCommandExecuteFunction = () => { /* Execute */ };
 
