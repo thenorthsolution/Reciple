@@ -87,10 +87,10 @@ export class MessageCommandBuilder implements SharedCommandBuilderProperties {
         aliases = normalizeArray(aliases);
 
         if (!aliases.length) throw new TypeError('Provide atleast one alias');
-        if (aliases.some(a => !a || typeof a !== 'string' || !a.match(/^[\w-]{1,32}$/))) throw new TypeError('aliases must be strings and match the regex /^[\\w-]{1,32}$/');
+        if (aliases.some(a => !a || typeof a !== 'string' || a.match(/^\s+$/))) throw new TypeError('aliases must be strings and should not contain whitespaces');
         if (this.name && aliases.some(a => a == this.name)) throw new TypeError('alias cannot have same name to its real command name');
         
-        this.aliases = [...new Set(aliases)];
+        this.aliases = [...new Set(aliases.map(s => s.toLowerCase()))];
         return this;
     }
 
