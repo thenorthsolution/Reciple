@@ -1,6 +1,5 @@
 import { rawVersion } from './version';
 import { Command } from 'commander';
-import path from 'path';
 
 /**
  * Commander
