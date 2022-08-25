@@ -93,7 +93,7 @@ export class RecipleConfig {
             
             this.config = yaml.parse(defaultConfig);
             if (this.config && this.config.token === 'TOKEN') {
-                this.config.token = this.askToken() || this.config.token;
+                this.config.token = this._askToken() || this.config.token;
                 writeFileSync(this.configPath, replaceAll(defaultConfig, ' TOKEN', ` ${this.config.token}`), 'utf-8');
             }
 
@@ -105,7 +105,7 @@ export class RecipleConfig {
         
         this.config = yaml.parse(config);
 
-        if (!this.isSupportedConfig()) throw new Error('Unsupported config version. Your config version: '+ (this.config?.version || 'No version specified.') + ', Reciple version: '+ version);
+        if (!this._isSupportedConfig()) throw new Error('Unsupported config version. Your config version: '+ (this.config?.version || 'No version specified.') + ', Reciple version: '+ version);
 
         return this;
     }
@@ -126,27 +126,27 @@ export class RecipleConfig {
      */
     public parseToken(askIfNull: boolean = true): string|null {
         let token = __token || this.config?.token || null;
-        if (!token) return token || (askIfNull ? this.askToken() : null);
+        if (!token) return token || (askIfNull ? this._askToken() : null);
 
         const envToken = token.toString().split(':');
         if (envToken.length === 2 && envToken[0].toLocaleLowerCase() === 'env' && envToken[1]) {
             token = process.env[envToken[1]] || null;
         }
 
-        return token || (askIfNull ? this.askToken() : null);
+        return token || (askIfNull ? this._askToken() : null);
     }
 
     /**
      * Check if the config version is supported
      */
-    private isSupportedConfig(): boolean {
+    protected _isSupportedConfig(): boolean {
         return isSupportedVersion(this.config?.version || '0.0.0', version);
     }
 
     /**
      * Ask for a token
      */
-    private askToken(): string|null {
+    protected _askToken(): string|null {
         return __token || input({ text: 'Bot Token >>> ', echo: '*', repeatIfEmpty: true, sigint: true }) || null;
     }
 
