@@ -266,17 +266,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
                 return;
             }
 
-            try {
-                await Promise.resolve(command.execute(executeData))
-                .then(() => this.emit('recipleCommandExecute', executeData))
-                .catch(async err => await this._haltCommand(command, { executeData, reason: CommandHaltReason.Error, error: err }) ? this._commandExecuteError(err, executeData) : void 0);
-
-                return executeData;
-            } catch (err) {
-                if (!await this._haltCommand(command, { executeData, reason: CommandHaltReason.Error, error: err })) {
-                    this._commandExecuteError(err as Error, executeData);
-                }
-            }
+           return this._executeCommand(command, executeData);
         } else if (!await this._haltCommand(command, { executeData, reason: CommandHaltReason.MissingMemberPermissions })) {
             await interaction.reply(this.getConfigMessage('noPermissions', 'You do not have permission to use this command.')).catch(er => this._replyError(er));
         }
@@ -352,17 +342,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
                 return;
             }
 
-            try {
-                await Promise.resolve(command.execute(executeData))
-                .then(() => this.emit('recipleCommandExecute', executeData))
-                .catch(async err => await this._haltCommand(command, { executeData, reason: CommandHaltReason.Error, error: err }) ? this._commandExecuteError(err, executeData) : void 0);
-                
-                return executeData;
-            } catch (err) {
-                if (!await this._haltCommand(command, { executeData, reason: CommandHaltReason.Error, error: err })) {
-                    this._commandExecuteError(err as Error, executeData);
-                }
-            }
+            return this._executeCommand(command, executeData);
         } else if (!await this._haltCommand(command, { executeData, reason: CommandHaltReason.MissingMemberPermissions })) {
             message.reply(this.getConfigMessage('noPermissions', 'You do not have permission to use this command.')).catch(er => this._replyError(er));
         }
@@ -410,7 +390,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
      * Emits the "recipleReplyError" event
      * @param error Received Error
      */
-    private _replyError(error: unknown) {
+    protected _replyError(error: unknown) {
         this.emit('recipleReplyError', error);
     }
 
@@ -419,9 +399,9 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
      * @param command Halted command's builder
      * @param haltData Halted command's data
      */
-    private async _haltCommand(command: SlashCommandBuilder, haltData: SlashCommandHaltData): Promise<boolean>;
-    private async _haltCommand(command: MessageCommandBuilder, haltData: MessageCommandHaltData): Promise<boolean>;
-    private async _haltCommand(command: AnyCommandBuilder, haltData: AnyCommandHaltData): Promise<boolean> {
+    protected async _haltCommand(command: SlashCommandBuilder, haltData: SlashCommandHaltData): Promise<boolean>;
+    protected async _haltCommand(command: MessageCommandBuilder, haltData: MessageCommandHaltData): Promise<boolean>;
+    protected async _haltCommand(command: AnyCommandBuilder, haltData: AnyCommandHaltData): Promise<boolean> {
         try {
             const haltResolved = (
                 command.halt
@@ -444,11 +424,41 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
     }
 
     /**
+     * Executes a command through a commandBuilder#execute method
+     * @param command Command builder
+     * @param executeData Command execute data
+     */
+    protected async _executeCommand(command: SlashCommandBuilder, executeData: SlashCommandExecuteData): Promise<SlashCommandExecuteData|void>;
+    protected async _executeCommand(command: MessageCommandBuilder, executeData: MessageCommandExecuteData): Promise<MessageCommandExecuteData|void>;
+    protected async _executeCommand(command: AnyCommandBuilder, executeData: AnyCommandExecuteData): Promise<AnyCommandExecuteData|void> {
+        try {
+            await Promise.resolve(
+                command.type === CommandBuilderType.SlashCommand
+                    ? command.execute(executeData as SlashCommandExecuteData)
+                    : command.execute(executeData as MessageCommandExecuteData)
+            )
+            .then(() => this.emit('recipleCommandExecute', executeData))
+            .catch(async err => await this._haltCommand(
+                command as any,
+                { executeData: executeData as any, reason: CommandHaltReason.Error, error: err })
+                    ? this._commandExecuteError(err, executeData)
+                    : void 0
+            );
+
+            return executeData;
+        } catch (err) {
+            if (!await this._haltCommand(command as any, { executeData: executeData as any, reason: CommandHaltReason.Error, error: err })) {
+                this._commandExecuteError(err as Error, executeData);
+            }
+        }
+    }
+
+    /**
      * Error message when a command fails to execute
      * @param err Received error
      * @param command Slash/Message command execute data
      */
-    private async _commandExecuteError(err: Error, command: AnyCommandExecuteData): Promise<void> {
+    protected async _commandExecuteError(err: Error, command: AnyCommandExecuteData): Promise<void> {
         if (this.isClientLogsEnabled()) {
             this.logger.error(`An error occured executing ${command.builder.type == CommandBuilderType.MessageCommand ? 'message' : 'slash'} command "${command.builder.name}"`);
             this.logger.error(err);
