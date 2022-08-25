@@ -9,8 +9,6 @@ import {
     SlashCommandBuilder as DiscordJsSlashCommandBuilder,
     SlashCommandSubcommandBuilder,
     SlashCommandSubcommandGroupBuilder,
-    SlashCommandSubcommandsOnlyBuilder as DiscordJsSlashCommandSubcommandsOnlyBuilder,
-    SlashCommandOptionsOnlyBuilder as DiscordJsSlashCommandOptionsOnlyBuilder,
     SlashCommandBooleanOption,
     SlashCommandUserOption,
     SlashCommandChannelOption,
