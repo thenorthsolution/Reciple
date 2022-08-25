@@ -1,6 +1,6 @@
 import { CommandBuilderType, CommandHaltFunction, CommandExecuteFunction, SharedCommandBuilderProperties } from '../../types/builders';
-import { AnyCommandExecuteData, BaseCommandExecuteData, CommandHaltData } from '../../types/commands';
 import { Message, normalizeArray, PermissionResolvable, RestOrArray } from 'discord.js';
+import { BaseCommandExecuteData, CommandHaltData } from '../../types/commands';
 import { MessageCommandOptionManager } from '../MessageCommandOptionManager';
 import { MessageCommandOptionBuilder } from './MessageCommandOptionBuilder';
 import { Command as CommandMessage } from 'fallout-utility';
