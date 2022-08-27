@@ -133,7 +133,7 @@ export interface SlashCommandData extends SharedCommandDataProperties,Omit<Share
     defaultPermission?: boolean;
     defaultMemberPermissions?: string|null;
     dmPermission?: boolean;
-    halt?: SlashCommandHaltData;
+    halt?: SlashCommandHaltFunction;
     execute: SlashCommandExecuteFunction;
 }
 

@@ -1,4 +1,4 @@
-import { AnyCommandBuilder, CommandBuilderType } from './types/builders';
+import { AnyCommandBuilder, AnyCommandData, CommandBuilderType, SlashCommandData } from './types/builders';
 import { normalizeArray, RestOrArray } from 'discord.js';
 import { RecipleClient } from './classes/RecipleClient';
 import { isSupportedVersion, version } from './version';
@@ -6,6 +6,8 @@ import { existsSync, mkdirSync, readdirSync } from 'fs';
 import wildcard from 'wildcard-match';
 import { cwd } from './flags';
 import path from 'path';
+import { MessageCommandBuilder } from './classes/builders/MessageCommandBuilder';
+import { SlashCommandBuilder } from './classes/builders/SlashCommandBuilder';
 
 export type LoadedModules = { commands: AnyCommandBuilder[], modules: RecipleModule[] };
 
@@ -14,7 +16,7 @@ export type LoadedModules = { commands: AnyCommandBuilder[], modules: RecipleMod
  */
 export interface RecipleScript {
     versions: string | string[];
-    commands?: AnyCommandBuilder[];
+    commands?: (AnyCommandBuilder|AnyCommandData)[];
     onLoad?(client: RecipleClient): void|Promise<void>;
     onStart(client: RecipleClient): boolean|Promise<boolean>;
 }
@@ -63,8 +65,10 @@ export async function getModules(client: RecipleClient, folder?: string): Promis
             if (!await Promise.resolve(module_.onStart(client)).catch(() => null)) throw new Error(script + ' onStart returned false or undefined.');
             if (module_.commands) {
                 for (const command of module_.commands) {
-                    if (command.type === CommandBuilderType.MessageCommand || command.type === CommandBuilderType.SlashCommand) {
-                        commands.push(command);
+                    if (command.type === CommandBuilderType.MessageCommand) {
+                        commands.push(MessageCommandBuilder.isMessageCommandBuilder(command) ? command : new MessageCommandBuilder(command));
+                    } else if (command.type === CommandBuilderType.SlashCommand) {
+                        commands.push(SlashCommandBuilder.isSlashCommandBuilder(command) ? command : new SlashCommandBuilder(command as SlashCommandData));
                     }
                 }
             }
