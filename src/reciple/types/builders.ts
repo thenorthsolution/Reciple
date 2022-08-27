@@ -9,6 +9,11 @@ import { MessageCommandOptionBuilder } from '../classes/builders/MessageCommandO
 export type AnyCommandBuilder = AnySlashCommandBuilder|MessageCommandBuilder;
 
 /**
+ * Any command data
+ */
+export type AnyCommandData = SlashCommandData|MessageCommandData;
+
+/**
  * Any slash command builders
  */
 export type AnySlashCommandBuilder = SlashCommandBuilder|SlashCommandOptionsOnlyBuilder|SlashCommandSubcommandsOnlyBuilder;
@@ -117,40 +122,19 @@ export interface SharedCommandDataProperties {
 /**
  * Slash command object data interface
  */
-export interface SlashCommandData extends SharedCommandDataProperties,Omit<SharedCommandBuilderProperties, "setCooldown"|"setRequiredBotPermissions"|"setRequiredMemberPermissions"|"setHalt"|"setExecute"> {
-    /**
-     * Command type
-     */
+export interface SlashCommandData extends SharedCommandDataProperties,Omit<SharedCommandBuilderProperties, "setCooldown"|"setRequiredBotPermissions"|"setRequiredMemberPermissions"|"setHalt"|"setExecute"|"halt"|"execute"> {
     type: CommandBuilderType.SlashCommand;
-    
-    /**
-     * Name localizations
-     */
     nameLocalizations?: LocalizationMap;
-    
-    /**
-     * Description localizations
-     */
     descriptionLocalizations?: LocalizationMap;
-
-    /**
-     * Command options
-     */
     options: SlashCommandOptionData[];
     /**
      * @deprecated This property is deprecated and will be removed in the future.
      */
     defaultPermission?: boolean;
-
-    /**
-     * Default guild member permissions
-     */
     defaultMemberPermissions?: string|null;
-
-    /**
-     * `true` if allowed in dms
-     */
     dmPermission?: boolean;
+    halt?: SlashCommandHaltData;
+    execute: SlashCommandExecuteFunction;
 }
 
 export interface SharedSlashCommandOptionData<V = string|number> extends SharedCommandDataProperties {
@@ -224,10 +208,14 @@ export interface SlashCommandSubCommandData extends SharedCommandDataProperties 
     options: SlashCommandOptionResolvable[];
 }
 
-export interface MessageCommandData extends SharedCommandDataProperties,Omit<SharedCommandBuilderProperties, "setCooldown"|"setRequiredBotPermissions"|"setRequiredMemberPermissions"|"setHalt"|"setExecute"> {
+export interface MessageCommandData extends SharedCommandDataProperties,Omit<SharedCommandBuilderProperties, "setCooldown"|"setRequiredBotPermissions"|"setRequiredMemberPermissions"|"setHalt"|"setExecute"|"halt"|"execute"> {
     type: CommandBuilderType.MessageCommand;
     aliases: string[];
     validateOptions: boolean;
+    allowExecuteInDM: boolean;
+    allowExecuteByBots: boolean;
+    halt?: MessageCommandHaltFunction;
+    execute: MessageCommandExecuteFunction;
     options: MessageCommandOptionResolvable[];
 }
 

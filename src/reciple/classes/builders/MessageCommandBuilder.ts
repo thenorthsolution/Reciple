@@ -1,9 +1,9 @@
-import { CommandBuilderType, CommandHaltFunction, CommandExecuteFunction, SharedCommandBuilderProperties, MessageCommandData } from '../../types/builders';
+import { CommandBuilderType, CommandHaltFunction, CommandExecuteFunction, SharedCommandBuilderProperties, MessageCommandData, AnyCommandData } from '../../types/builders';
 import { Message, normalizeArray, PermissionResolvable, RestOrArray } from 'discord.js';
 import { BaseCommandExecuteData, CommandHaltData } from '../../types/commands';
 import { MessageCommandOptionManager } from '../MessageCommandOptionManager';
 import { MessageCommandOptionBuilder } from './MessageCommandOptionBuilder';
-import { Command as CommandMessage } from 'fallout-utility';
+import { Command as CommandMessage, isNumber } from 'fallout-utility';
 
 /**
  * Execute data for message command
@@ -60,7 +60,18 @@ export class MessageCommandBuilder implements SharedCommandBuilderProperties {
     public execute: MessageCommandExecuteFunction = () => { /* Execute */ };
 
     constructor(data?: Partial<Omit<MessageCommandData, "type">>) {
-        // TODO: resolve builder data
+        if (data?.name !== undefined) this.setName(data.name);
+        if (data?.description !== undefined) this.setDescription(data.description);
+        if (isNumber(data?.cooldown)) this.setCooldown(data?.cooldown!);
+        if (data?.requiredBotPermissions !== undefined) this.setRequiredBotPermissions(data.requiredBotPermissions);
+        if (data?.requiredMemberPermissions !== undefined) this.setRequiredMemberPermissions(data.requiredMemberPermissions);
+        if (data?.halt !== undefined) this.setHalt(this.halt);
+        if (data?.execute !== undefined) this.setExecute(data.execute);
+        if (data?.aliases !== undefined) this.addAliases(data.aliases);
+        if (data?.allowExecuteByBots) this.setAllowExecuteByBots(true);
+        if (data?.allowExecuteInDM) this.setAllowExecuteInDM(true);
+        if (data?.validateOptions) this.setValidateOptions(true);
+        if (data?.options !== undefined) this.options = data.options.map(o => o instanceof MessageCommandOptionBuilder ? o : new MessageCommandOptionBuilder(o));
     }
 
     /**
@@ -168,6 +179,27 @@ export class MessageCommandBuilder implements SharedCommandBuilderProperties {
         if (!execute || typeof execute !== 'function') throw new TypeError('execute must be a function.');
         this.execute = execute;
         return this;
+    }
+
+    /**
+     * Returns JSON object of this builder
+     */
+    public toJSON(): MessageCommandData {
+        return {
+            type: this.type,
+            name: this.name,
+            description: this.description,
+            aliases: this.aliases,
+            cooldown: this.cooldown,
+            requiredBotPermissions: this.requiredBotPermissions,
+            requiredMemberPermissions: this.requiredMemberPermissions,
+            halt: this.halt,
+            execute: this.execute,
+            allowExecuteByBots: this.allowExecuteByBots,
+            allowExecuteInDM: this.allowExecuteInDM,
+            validateOptions: this.validateOptions,
+            options: this.options.map(o => o.toJSON()),
+        }
     }
 
     /**

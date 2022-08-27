@@ -1,5 +1,5 @@
-import { Awaitable } from 'discord.js';
 import { MessageCommandOptionData } from '../../types/builders';
+import { Awaitable } from 'discord.js';
 
 /**
  * Option builder for MessageCommandBuilder
@@ -11,7 +11,10 @@ export class MessageCommandOptionBuilder {
     public validator: (value: string) => Awaitable<boolean> = () => true;
 
     constructor(data?: Partial<MessageCommandOptionData>) {
-        // TODO: resolve builder data
+        if (data?.name !== undefined) this.setName(data.name);
+        if (data?.description !== undefined) this.setDescription(data.description);
+        if (data?.required !== undefined) this.setRequired(data.required);
+        if (data?.validator !== undefined) this.setValidator(data.validator);
     }
 
     /**
@@ -52,5 +55,14 @@ export class MessageCommandOptionBuilder {
         if (!validator || typeof validator !== 'function') throw new TypeError('validator must be a function.');
         this.validator = validator;
         return this;
+    }
+
+    public toJSON(): MessageCommandOptionData {
+        return {
+            name: this.name,
+            description: this.description,
+            required: this.required,
+            validator: this.validator,
+        };
     }
 }

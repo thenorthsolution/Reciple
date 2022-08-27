@@ -17,8 +17,10 @@ import {
     SlashCommandMentionableOption,
     SlashCommandStringOption,
     SlashCommandIntegerOption,
-    SlashCommandNumberOption
+    SlashCommandNumberOption,
+    RESTPostAPIApplicationCommandsJSONBody
 } from 'discord.js';
+import { isNumber } from 'fallout-utility';
 
 /**
  * Execute data for slash command
@@ -73,7 +75,16 @@ export class SlashCommandBuilder extends DiscordJsSlashCommandBuilder implements
 
     constructor(data?: Partial<Omit<SlashCommandData, "type">>) {
         super();
-        // TODO: resolve builder data
+        
+        if (data?.name !== undefined) this.setName(data.name);
+        if (data?.description !== undefined) this.setDescription(data.description);
+        if (isNumber(data?.cooldown)) this.setCooldown(data?.cooldown!);
+        if (data?.requiredBotPermissions !== undefined) this.setRequiredBotPermissions(data.requiredBotPermissions);
+        if (data?.requiredMemberPermissions !== undefined) this.setRequiredMemberPermissions(data.requiredMemberPermissions);
+        if (data?.halt !== undefined) this.setHalt(this.halt);
+        if (data?.execute !== undefined) this.setExecute(data.execute);
+        
+        // TODO: finish this
     }
 
     public setCooldown(cooldown: number): this {
