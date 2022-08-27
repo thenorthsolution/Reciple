@@ -83,8 +83,12 @@ export class SlashCommandBuilder extends DiscordJsSlashCommandBuilder implements
         if (data?.requiredMemberPermissions !== undefined) this.setRequiredMemberPermissions(data.requiredMemberPermissions);
         if (data?.halt !== undefined) this.setHalt(this.halt);
         if (data?.execute !== undefined) this.setExecute(data.execute);
-        
-        // TODO: finish this
+        if (data?.nameLocalizations !== undefined) this.setNameLocalizations(data.nameLocalizations);
+        if (data?.descriptionLocalizations !== undefined) this.setDescriptionLocalizations(data.descriptionLocalizations);
+        if (data?.defaultMemberPermissions !== undefined) this.setDefaultMemberPermissions(data.defaultMemberPermissions);
+        if (data?.dmPermission) this.setDMPermission(true);
+        if (data?.defaultPermission) this.setDefaultPermission(true);
+        if (data?.options) { /** TODO: Add options */ }
     }
 
     public setCooldown(cooldown: number): this {
