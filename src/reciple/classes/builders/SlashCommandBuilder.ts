@@ -1,4 +1,4 @@
-import { CommandBuilderType, CommandHaltFunction, CommandExecuteFunction, SharedCommandBuilderProperties, AnySlashCommandBuilder } from '../../types/builders';
+import { CommandBuilderType, CommandHaltFunction, CommandExecuteFunction, SharedCommandBuilderProperties, AnySlashCommandBuilder, SlashCommandData } from '../../types/builders';
 import { BaseCommandExecuteData, CommandHaltData } from '../../types/commands';
 
 import {
@@ -70,6 +70,11 @@ export class SlashCommandBuilder extends DiscordJsSlashCommandBuilder implements
     public requiredMemberPermissions: PermissionResolvable[] = [];
     public halt?: SlashCommandHaltFunction;
     public execute: SlashCommandExecuteFunction = () => { /* Execute */ };
+
+    constructor(data?: Partial<Omit<SlashCommandData, "type">>) {
+        super();
+        // TODO: resolve builder data
+    }
 
     public setCooldown(cooldown: number): this {
         this.cooldown = cooldown;

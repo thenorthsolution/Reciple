@@ -1,4 +1,4 @@
-import { CommandBuilderType, CommandHaltFunction, CommandExecuteFunction, SharedCommandBuilderProperties } from '../../types/builders';
+import { CommandBuilderType, CommandHaltFunction, CommandExecuteFunction, SharedCommandBuilderProperties, MessageCommandData } from '../../types/builders';
 import { Message, normalizeArray, PermissionResolvable, RestOrArray } from 'discord.js';
 import { BaseCommandExecuteData, CommandHaltData } from '../../types/commands';
 import { MessageCommandOptionManager } from '../MessageCommandOptionManager';
@@ -58,6 +58,10 @@ export class MessageCommandBuilder implements SharedCommandBuilderProperties {
     public allowExecuteByBots: boolean = false;
     public halt?: MessageCommandHaltFunction;
     public execute: MessageCommandExecuteFunction = () => { /* Execute */ };
+
+    constructor(data?: Partial<Omit<MessageCommandData, "type">>) {
+        // TODO: resolve builder data
+    }
 
     /**
      * Sets the command name

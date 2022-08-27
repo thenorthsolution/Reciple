@@ -1,6 +1,7 @@
 import { MessageCommandBuilder, MessageCommandExecuteData, MessageCommandExecuteFunction, MessageCommandHaltData, MessageCommandHaltFunction } from '../classes/builders/MessageCommandBuilder';
 import { SlashCommandBuilder, SlashCommandExecuteData, SlashCommandExecuteFunction, SlashCommandHaltData, SlashCommandHaltFunction, SlashCommandOptionsOnlyBuilder, SlashCommandSubcommandsOnlyBuilder } from '../classes/builders/SlashCommandBuilder';
-import { Awaitable, PermissionResolvable, RestOrArray } from 'discord.js';
+import { ApplicationCommandOptionAllowedChannelTypes, ApplicationCommandOptionType, Awaitable, LocalizationMap, PermissionResolvable, RestOrArray, SlashCommandAttachmentOption, SlashCommandBooleanOption, SlashCommandChannelOption, SlashCommandIntegerOption, SlashCommandMentionableOption, SlashCommandNumberOption, SlashCommandRoleOption, SlashCommandStringOption, SlashCommandSubcommandBuilder, SlashCommandSubcommandGroupBuilder, SlashCommandUserOption } from 'discord.js';
+import { MessageCommandOptionBuilder } from '../classes/builders/MessageCommandOptionBuilder';
 
 /**
  * Any command builders
@@ -23,14 +24,35 @@ export type AnyCommandHaltFunction = SlashCommandHaltFunction|MessageCommandHalt
 export type AnyCommandExecuteFunction = SlashCommandExecuteFunction|MessageCommandExecuteFunction;
 
 /**
- * command halt function
+ * Command halt function
  */
 export type CommandHaltFunction<T extends CommandBuilderType> = (haltData: T extends CommandBuilderType.SlashCommand ? SlashCommandHaltData : MessageCommandHaltData) => Awaitable<boolean|null|undefined|void>;
 
 /**
- * command execute function
+ * Command execute function
  */
 export type CommandExecuteFunction<T extends CommandBuilderType> = (executeData: T extends CommandBuilderType.SlashCommand ? SlashCommandExecuteData : MessageCommandExecuteData) => Awaitable<void>;
+
+/**
+ * Message command options resolvable
+ */
+export type MessageCommandOptionResolvable = MessageCommandOptionBuilder|MessageCommandOptionData;
+
+/**
+ * Slash command options
+ */
+export type SlashCommandOptionData = SlashCommandStringOptionData|SlashCommandNumberOptionData|SlashCommandIntegerOptionData|
+    SlashCommandBooleanOptionData|SlashCommandMentionableOptionData|SlashCommandRoleOptionData|
+    SlashCommandUserOptionData|SlashCommandAttachmentOptionData|SlashCommandChannelOptionData|
+    SlashCommandSubCommandGroupData|SlashCommandSubCommandData;
+
+/**
+ * Slash command option resolvable
+ */
+export type SlashCommandOptionResolvable = SlashCommandOptionData|SlashCommandStringOption|SlashCommandNumberOption|SlashCommandIntegerOption|
+    SlashCommandBooleanOption|SlashCommandMentionableOption|SlashCommandRoleOption|
+    SlashCommandUserOption|SlashCommandAttachmentOption|SlashCommandChannelOption|
+    SlashCommandSubcommandBuilder|SlashCommandSubcommandGroupBuilder;
 
 /**
  * Types of command builders
@@ -42,7 +64,7 @@ export enum CommandBuilderType {
 
 
 /**
- * Shared command builder methods
+ * Shared command builder methods and properties
  */
 export interface SharedCommandBuilderProperties {
     readonly type: CommandBuilderType;
@@ -82,4 +104,136 @@ export interface SharedCommandBuilderProperties {
      * @param execute Function to execute when the command is called 
      */
     setExecute(execute: this["execute"]): this;
+}
+
+/**
+ * Shared command name and description properties
+ */
+export interface SharedCommandDataProperties {
+    name: string;
+    description: string;
+}
+
+/**
+ * Slash command object data interface
+ */
+export interface SlashCommandData extends SharedCommandDataProperties,Omit<SharedCommandBuilderProperties, "setCooldown"|"setRequiredBotPermissions"|"setRequiredMemberPermissions"|"setHalt"|"setExecute"> {
+    /**
+     * Command type
+     */
+    type: CommandBuilderType.SlashCommand;
+    
+    /**
+     * Name localizations
+     */
+    nameLocalizations?: LocalizationMap;
+    
+    /**
+     * Description localizations
+     */
+    descriptionLocalizations?: LocalizationMap;
+
+    /**
+     * Command options
+     */
+    options: SlashCommandOptionData[];
+    /**
+     * @deprecated This property is deprecated and will be removed in the future.
+     */
+    defaultPermission?: boolean;
+
+    /**
+     * Default guild member permissions
+     */
+    defaultMemberPermissions?: string|null;
+
+    /**
+     * `true` if allowed in dms
+     */
+    dmPermission?: boolean;
+}
+
+export interface SharedSlashCommandOptionData<V = string|number> extends SharedCommandDataProperties {
+    /**
+     * Option choices
+     */
+    choices?: {
+        name: string;
+        nameLocalizations?: LocalizationMap;
+        value: V;
+    }[];
+    /**
+     * Enable autocomplete
+     */
+    autocomplete?: boolean;
+    /**
+     * Is required
+     * @default false
+     */
+    required: boolean;
+}
+
+export interface SlashCommandStringOptionData extends SharedSlashCommandOptionData<string> {
+    type: ApplicationCommandOptionType.String;
+    minLength?: number;
+    maxLength?: number;
+}
+
+export interface SlashCommandNumberOptionData extends SharedSlashCommandOptionData<number> {
+    type: ApplicationCommandOptionType.Number;
+    minValue?: number;
+    maxValue?: number;
+}
+
+export interface SlashCommandIntegerOptionData extends SharedSlashCommandOptionData<number> {
+    type: ApplicationCommandOptionType.Integer;
+    minValue?: number;
+    maxValue?: number;
+}
+
+export interface SlashCommandBooleanOptionData extends Omit<SharedSlashCommandOptionData, "choices"|"autocomplete"> {
+    type: ApplicationCommandOptionType.Boolean;
+}
+
+export interface SlashCommandMentionableOptionData extends Omit<SharedSlashCommandOptionData, "choices"|"autocomplete"> {
+    type: ApplicationCommandOptionType.Mentionable;
+}
+
+export interface SlashCommandRoleOptionData extends Omit<SharedSlashCommandOptionData, "choices"|"autocomplete"> {
+    type: ApplicationCommandOptionType.Role;
+}
+
+export interface SlashCommandUserOptionData extends Omit<SharedSlashCommandOptionData, "choices"|"autocomplete"> {
+    type: ApplicationCommandOptionType.User;
+}
+
+export interface SlashCommandAttachmentOptionData extends Omit<SharedSlashCommandOptionData, "choices"|"autocomplete"> {
+    type: ApplicationCommandOptionType.Attachment;
+}
+
+export interface SlashCommandChannelOptionData extends Omit<SharedSlashCommandOptionData, "choices"|"autocomplete"> {
+    type: ApplicationCommandOptionType.Channel;
+    channelTypes?: ApplicationCommandOptionAllowedChannelTypes[];
+}
+
+export interface SlashCommandSubCommandGroupData extends SharedCommandDataProperties {
+    options: (SlashCommandSubCommandData|SlashCommandSubcommandBuilder)[];
+}
+
+export interface SlashCommandSubCommandData extends SharedCommandDataProperties {
+    options: SlashCommandOptionResolvable[];
+}
+
+export interface MessageCommandData extends SharedCommandDataProperties,Omit<SharedCommandBuilderProperties, "setCooldown"|"setRequiredBotPermissions"|"setRequiredMemberPermissions"|"setHalt"|"setExecute"> {
+    type: CommandBuilderType.MessageCommand;
+    aliases: string[];
+    validateOptions: boolean;
+    options: MessageCommandOptionResolvable[];
+}
+
+export interface MessageCommandOptionData extends SharedCommandDataProperties {
+    name: string;
+    description: string;
+    required: boolean;
+    validator: (value: string) => Awaitable<boolean>;
 }

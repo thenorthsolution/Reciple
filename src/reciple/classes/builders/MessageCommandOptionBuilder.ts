@@ -1,4 +1,5 @@
 import { Awaitable } from 'discord.js';
+import { MessageCommandOptionData } from '../../types/builders';
 
 /**
  * Option builder for MessageCommandBuilder
@@ -8,6 +9,10 @@ export class MessageCommandOptionBuilder {
     public description: string = '';
     public required: boolean = false;
     public validator: (value: string) => Awaitable<boolean> = () => true;
+
+    constructor(data?: Partial<MessageCommandOptionData>) {
+        // TODO: resolve builder data
+    }
 
     /**
      * Set command option name 
