@@ -46,18 +46,36 @@ export type MessageCommandOptionResolvable = MessageCommandOptionBuilder|Message
 /**
  * Slash command options
  */
-export type SlashCommandOptionData = SlashCommandStringOptionData|SlashCommandNumberOptionData|SlashCommandIntegerOptionData|
+export type AnySlashCommandOptionData = AnySlashCommandOptionsOnlyOptionData|SlashCommandSubCommandGroupData|SlashCommandSubCommandData;
+
+/**
+ * Slash command options builders
+ */
+export type AnySlashCommandOptionBuilder = AnySlashCommandOptionsOnlyOptionBuilder|SlashCommandSubcommandGroupBuilder|SlashCommandSubcommandBuilder;
+
+/**
+ * Slash command options without sub commands
+ */
+export type AnySlashCommandOptionsOnlyOptionData = SlashCommandStringOptionData|SlashCommandNumberOptionData|SlashCommandIntegerOptionData|
     SlashCommandBooleanOptionData|SlashCommandMentionableOptionData|SlashCommandRoleOptionData|
-    SlashCommandUserOptionData|SlashCommandAttachmentOptionData|SlashCommandChannelOptionData|
-    SlashCommandSubCommandGroupData|SlashCommandSubCommandData;
+    SlashCommandUserOptionData|SlashCommandAttachmentOptionData|SlashCommandChannelOptionData;
+
+/**
+ * Slash command option builder without sub commands
+ */
+ export type AnySlashCommandOptionsOnlyOptionBuilder = SlashCommandStringOption|SlashCommandNumberOption|SlashCommandIntegerOption|
+    SlashCommandBooleanOption|SlashCommandMentionableOption|SlashCommandRoleOption|
+    SlashCommandUserOption|SlashCommandAttachmentOption|SlashCommandChannelOption;
 
 /**
  * Slash command option resolvable
  */
-export type SlashCommandOptionResolvable = SlashCommandOptionData|SlashCommandStringOption|SlashCommandNumberOption|SlashCommandIntegerOption|
-    SlashCommandBooleanOption|SlashCommandMentionableOption|SlashCommandRoleOption|
-    SlashCommandUserOption|SlashCommandAttachmentOption|SlashCommandChannelOption|
-    SlashCommandSubcommandBuilder|SlashCommandSubcommandGroupBuilder;
+export type SlashCommandOptionResolvable = AnySlashCommandOptionData|AnySlashCommandOptionBuilder;
+
+/**
+ * Slash command option resolvable without sub commands
+ */
+export type SlashCommandOptionsOnlyResolvable = AnySlashCommandOptionsOnlyOptionData|AnySlashCommandOptionsOnlyOptionBuilder;
 
 /**
  * Types of command builders
@@ -126,7 +144,7 @@ export interface SlashCommandData extends SharedCommandDataProperties,Omit<Share
     type: CommandBuilderType.SlashCommand;
     nameLocalizations?: LocalizationMap;
     descriptionLocalizations?: LocalizationMap;
-    options: SlashCommandOptionData[];
+    options: AnySlashCommandOptionData[];
     /**
      * @deprecated This property is deprecated and will be removed in the future.
      */
@@ -137,7 +155,7 @@ export interface SlashCommandData extends SharedCommandDataProperties,Omit<Share
     execute: SlashCommandExecuteFunction;
 }
 
-export interface SharedSlashCommandOptionData<V = string|number> extends SharedCommandDataProperties {
+export interface SharedSlashCommandOptionData<V = string|number> extends SharedCommandDataProperties,Pick<SlashCommandData, "nameLocalizations"|"descriptionLocalizations"> {
     /**
      * Option choices
      */
@@ -154,7 +172,7 @@ export interface SharedSlashCommandOptionData<V = string|number> extends SharedC
      * Is required
      * @default false
      */
-    required: boolean;
+    required?: boolean;
 }
 
 export interface SlashCommandStringOptionData extends SharedSlashCommandOptionData<string> {
@@ -200,12 +218,14 @@ export interface SlashCommandChannelOptionData extends Omit<SharedSlashCommandOp
     channelTypes?: ApplicationCommandOptionAllowedChannelTypes[];
 }
 
-export interface SlashCommandSubCommandGroupData extends SharedCommandDataProperties {
+export interface SlashCommandSubCommandGroupData extends SharedCommandDataProperties, Pick<SlashCommandData, "nameLocalizations"|"descriptionLocalizations"> {
+    type: ApplicationCommandOptionType.SubcommandGroup;
     options: (SlashCommandSubCommandData|SlashCommandSubcommandBuilder)[];
 }
 
-export interface SlashCommandSubCommandData extends SharedCommandDataProperties {
-    options: SlashCommandOptionResolvable[];
+export interface SlashCommandSubCommandData extends SharedCommandDataProperties, Pick<SlashCommandData, "nameLocalizations"|"descriptionLocalizations"> {
+    type: ApplicationCommandOptionType.Subcommand;
+    options: SlashCommandOptionsOnlyResolvable[];
 }
 
 export interface MessageCommandData extends SharedCommandDataProperties,Omit<SharedCommandBuilderProperties, "setCooldown"|"setRequiredBotPermissions"|"setRequiredMemberPermissions"|"setHalt"|"setExecute"|"halt"|"execute"> {
