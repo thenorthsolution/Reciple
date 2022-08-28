@@ -248,6 +248,10 @@ export class SlashCommandBuilder extends DiscordJsSlashCommandBuilder implements
             .setDescriptionLocalizations(option.descriptionLocalizations ?? null) as T;
     }
 
+    public static resolveSlashCommand(commandData: SlashCommandData|AnySlashCommandBuilder): AnySlashCommandBuilder {
+        return this.isSlashCommandBuilder(commandData) ? commandData : new SlashCommandBuilder(commandData);
+    }
+
     /**
      * Is a slash command builder
      */

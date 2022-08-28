@@ -66,9 +66,9 @@ export async function getModules(client: RecipleClient, folder?: string): Promis
             if (module_.commands) {
                 for (const command of module_.commands) {
                     if (command.type === CommandBuilderType.MessageCommand) {
-                        commands.push(MessageCommandBuilder.isMessageCommandBuilder(command) ? command : new MessageCommandBuilder(command));
+                        commands.push(MessageCommandBuilder.resolveMessageCommand(command));
                     } else if (command.type === CommandBuilderType.SlashCommand) {
-                        commands.push(SlashCommandBuilder.isSlashCommandBuilder(command) ? command : new SlashCommandBuilder(command as SlashCommandData));
+                        commands.push(SlashCommandBuilder.resolveSlashCommand(command));
                     }
                 }
             }

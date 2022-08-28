@@ -199,9 +199,9 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
      */
     public addCommand(command: AnyCommandData|AnyCommandBuilder): RecipleClient<Ready> {
         if (command.type === CommandBuilderType.SlashCommand) {
-            this.commands.slashCommands[command.name] = isClass<AnySlashCommandBuilder>(command) ? command : new SlashCommandBuilder(command);
+            this.commands.slashCommands[command.name] = SlashCommandBuilder.resolveSlashCommand(command);
         } else if (command.type === CommandBuilderType.MessageCommand) {
-            this.commands.messageCommands[command.name] = isClass<MessageCommandBuilder>(command) ? command : new MessageCommandBuilder(command);
+            this.commands.messageCommands[command.name] = MessageCommandBuilder.resolveMessageCommand(command);
         } else if (this.isClientLogsEnabled()) {
             this.logger.error(`Unknow command "${typeof command ?? 'unknown'}".`);
         }

@@ -202,6 +202,10 @@ export class MessageCommandBuilder implements SharedCommandBuilderProperties {
         }
     }
 
+    public static resolveMessageCommand(commandData: MessageCommandData|MessageCommandBuilder): MessageCommandBuilder {
+        return this.isMessageCommandBuilder(commandData) ? commandData : new MessageCommandBuilder(commandData);
+    }
+
     /**
      * Is a message command builder 
      */
