@@ -91,8 +91,6 @@ export class SlashCommandBuilder extends DiscordJsSlashCommandBuilder implements
         if (data?.defaultPermission) this.setDefaultPermission(true);
         if (data?.options) {
             for (const option of data.options) {
-                // Loop of hell
-
                 SlashCommandBuilder.addOption(this, SlashCommandBuilder.resolveOption(option));
             }
         }
@@ -124,6 +122,9 @@ export class SlashCommandBuilder extends DiscordJsSlashCommandBuilder implements
         return this;
     }
 
+    /**
+     * Add option builder to command builder
+     */
     public static addOption(builder: SharedSlashCommandOptions|SlashCommandBuilder, option: AnySlashCommandOptionBuilder): SharedSlashCommandOptions {
         if (option instanceof SlashCommandStringOption) {
             builder.addStringOption(option);
@@ -154,6 +155,9 @@ export class SlashCommandBuilder extends DiscordJsSlashCommandBuilder implements
         return builder;
     }
 
+    /**
+     * Resolve option data
+     */
     public static resolveOption<T extends AnySlashCommandOptionBuilder>(option: AnySlashCommandOptionData): T {
         let builder: AnySlashCommandOptionBuilder;
 
