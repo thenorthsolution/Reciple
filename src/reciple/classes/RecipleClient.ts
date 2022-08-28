@@ -1,7 +1,7 @@
 import { MessageCommandBuilder, MessageCommandExecuteData, MessageCommandHaltData, validateMessageCommandOptions } from './builders/MessageCommandBuilder';
 import { SlashCommandBuilder, SlashCommandExecuteData, SlashCommandHaltData } from './builders/SlashCommandBuilder';
-import { ApplicationCommandBuilder, registerApplicationCommands } from '../registerApplicationCommands';
 import { AnyCommandBuilder, AnyCommandData, AnySlashCommandBuilder, CommandBuilderType } from '../types/builders';
+import { ApplicationCommandBuilder, registerApplicationCommands } from '../registerApplicationCommands';
 import { AnyCommandExecuteData, AnyCommandHaltData, CommandHaltReason } from '../types/commands';
 import { botHasExecutePermissions, userHasCommandPermissions } from '../permissions';
 import { CommandCooldownManager, CooledDownUser } from './CommandCooldownManager';
@@ -12,6 +12,8 @@ import { Config, RecipleConfig } from './RecipleConfig';
 import { getModules, RecipleModule } from '../modules';
 import { createLogger } from '../logger';
 import { version } from '../version';
+import { cwd } from '../flags';
+import path from 'path';
 
 import {
     ApplicationCommandData,
@@ -26,9 +28,6 @@ import {
     normalizeArray,
     RestOrArray
 } from 'discord.js';
-import path from 'path';
-import { cwd } from '../flags';
-import { isClass } from '../util';
 
 /**
  * Options for Reciple client
