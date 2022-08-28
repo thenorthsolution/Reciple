@@ -68,16 +68,6 @@ export type AnySlashCommandOptionsOnlyOptionData = SlashCommandStringOptionData|
     SlashCommandUserOption|SlashCommandAttachmentOption|SlashCommandChannelOption;
 
 /**
- * Slash command option resolvable
- */
-export type SlashCommandOptionResolvable = AnySlashCommandOptionData|AnySlashCommandOptionBuilder;
-
-/**
- * Slash command option resolvable without sub commands
- */
-export type SlashCommandOptionsOnlyResolvable = AnySlashCommandOptionsOnlyOptionData|AnySlashCommandOptionsOnlyOptionBuilder;
-
-/**
  * Types of command builders
  */
 export enum CommandBuilderType {
@@ -144,7 +134,7 @@ export interface SlashCommandData extends SharedCommandDataProperties,Omit<Share
     type: CommandBuilderType.SlashCommand;
     nameLocalizations?: LocalizationMap;
     descriptionLocalizations?: LocalizationMap;
-    options: AnySlashCommandOptionData[];
+    options: (AnySlashCommandOptionData|AnySlashCommandOptionBuilder)[];
     /**
      * @deprecated This property is deprecated and will be removed in the future.
      */
@@ -225,7 +215,7 @@ export interface SlashCommandSubCommandGroupData extends SharedCommandDataProper
 
 export interface SlashCommandSubCommandData extends SharedCommandDataProperties, Pick<SlashCommandData, "nameLocalizations"|"descriptionLocalizations"> {
     type: ApplicationCommandOptionType.Subcommand;
-    options: SlashCommandOptionsOnlyResolvable[];
+    options: (AnySlashCommandOptionsOnlyOptionData|AnySlashCommandOptionsOnlyOptionBuilder)[];
 }
 
 export interface MessageCommandData extends SharedCommandDataProperties,Omit<SharedCommandBuilderProperties, "setCooldown"|"setRequiredBotPermissions"|"setRequiredMemberPermissions"|"setHalt"|"setExecute"|"halt"|"execute"> {

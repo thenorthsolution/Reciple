@@ -22,6 +22,7 @@ import {
     SharedSlashCommandOptions
 } from 'discord.js';
 import { isNumber } from 'fallout-utility';
+import { isClass } from '../../util';
 
 /**
  * Execute data for slash command
@@ -91,7 +92,7 @@ export class SlashCommandBuilder extends DiscordJsSlashCommandBuilder implements
         if (data?.defaultPermission) this.setDefaultPermission(true);
         if (data?.options) {
             for (const option of data.options) {
-                SlashCommandBuilder.addOption(this, SlashCommandBuilder.resolveOption(option));
+                SlashCommandBuilder.addOption(this, isClass<AnySlashCommandOptionBuilder>(option) ? option : SlashCommandBuilder.resolveOption(option as AnySlashCommandOptionData));
             }
         }
     }

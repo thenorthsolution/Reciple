@@ -13,4 +13,5 @@ export * from './reciple/logger';
 export * from './reciple/modules';
 export * from './reciple/permissions';
 export * from './reciple/registerApplicationCommands';
+export * from './reciple/util';
 export * from './reciple/version';
