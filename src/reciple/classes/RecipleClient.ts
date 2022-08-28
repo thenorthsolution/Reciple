@@ -1,7 +1,7 @@
 import { MessageCommandBuilder, MessageCommandExecuteData, MessageCommandHaltData, validateMessageCommandOptions } from './builders/MessageCommandBuilder';
 import { SlashCommandBuilder, SlashCommandExecuteData, SlashCommandHaltData } from './builders/SlashCommandBuilder';
+import { AnyCommandBuilder, AnyCommandData, AnySlashCommandBuilder, CommandBuilderType } from '../types/builders';
 import { ApplicationCommandBuilder, registerApplicationCommands } from '../registerApplicationCommands';
-import { AnyCommandBuilder, AnySlashCommandBuilder, CommandBuilderType } from '../types/builders';
 import { AnyCommandExecuteData, AnyCommandHaltData, CommandHaltReason } from '../types/commands';
 import { botHasExecutePermissions, userHasCommandPermissions } from '../permissions';
 import { CommandCooldownManager, CooledDownUser } from './CommandCooldownManager';
@@ -12,6 +12,8 @@ import { Config, RecipleConfig } from './RecipleConfig';
 import { getModules, RecipleModule } from '../modules';
 import { createLogger } from '../logger';
 import { version } from '../version';
+import { cwd } from '../flags';
+import path from 'path';
 
 import {
     ApplicationCommandData,
@@ -26,8 +28,6 @@ import {
     normalizeArray,
     RestOrArray
 } from 'discord.js';
-import path from 'path';
-import { cwd } from '../flags';
 
 /**
  * Options for Reciple client
@@ -196,11 +196,11 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
      * Add slash or message command to client
      * @param command Slash/Message command builder
      */
-    public addCommand(command: AnyCommandBuilder): RecipleClient<Ready> {
-        if (command.type === CommandBuilderType.MessageCommand) {
-            this.commands.messageCommands[command.name] = command;
-        } else if (command.type === CommandBuilderType.SlashCommand) {
-            this.commands.slashCommands[command.name] = command;
+    public addCommand(command: AnyCommandData|AnyCommandBuilder): RecipleClient<Ready> {
+        if (command.type === CommandBuilderType.SlashCommand) {
+            this.commands.slashCommands[command.name] = SlashCommandBuilder.resolveSlashCommand(command);
+        } else if (command.type === CommandBuilderType.MessageCommand) {
+            this.commands.messageCommands[command.name] = MessageCommandBuilder.resolveMessageCommand(command);
         } else if (this.isClientLogsEnabled()) {
             this.logger.error(`Unknow command "${typeof command ?? 'unknown'}".`);
         }

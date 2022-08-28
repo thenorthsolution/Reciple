@@ -1,5 +1,6 @@
-import { CommandBuilderType, CommandHaltFunction, CommandExecuteFunction, SharedCommandBuilderProperties, AnySlashCommandBuilder } from '../../types/builders';
+import { CommandBuilderType, CommandHaltFunction, CommandExecuteFunction, SharedCommandBuilderProperties, AnySlashCommandBuilder, SlashCommandData, AnySlashCommandOptionData, AnySlashCommandOptionBuilder, AnySlashCommandOptionsOnlyOptionBuilder } from '../../types/builders';
 import { BaseCommandExecuteData, CommandHaltData } from '../../types/commands';
+import { isClass } from '../../util';
 
 import {
     ChatInputCommandInteraction,
@@ -17,7 +18,9 @@ import {
     SlashCommandMentionableOption,
     SlashCommandStringOption,
     SlashCommandIntegerOption,
-    SlashCommandNumberOption
+    SlashCommandNumberOption,
+    ApplicationCommandOptionType,
+    SharedSlashCommandOptions
 } from 'discord.js';
 
 /**
@@ -71,6 +74,28 @@ export class SlashCommandBuilder extends DiscordJsSlashCommandBuilder implements
     public halt?: SlashCommandHaltFunction;
     public execute: SlashCommandExecuteFunction = () => { /* Execute */ };
 
+    constructor(data?: Partial<Omit<SlashCommandData, "type">>) {
+        super();
+        
+        if (data?.name !== undefined) this.setName(data.name);
+        if (data?.description !== undefined) this.setDescription(data.description);
+        if (data?.cooldown !== undefined) this.setCooldown(Number(data?.cooldown));
+        if (data?.requiredBotPermissions !== undefined) this.setRequiredBotPermissions(data.requiredBotPermissions);
+        if (data?.requiredMemberPermissions !== undefined) this.setRequiredMemberPermissions(data.requiredMemberPermissions);
+        if (data?.halt !== undefined) this.setHalt(this.halt);
+        if (data?.execute !== undefined) this.setExecute(data.execute);
+        if (data?.nameLocalizations !== undefined) this.setNameLocalizations(data.nameLocalizations);
+        if (data?.descriptionLocalizations !== undefined) this.setDescriptionLocalizations(data.descriptionLocalizations);
+        if (data?.defaultMemberPermissions !== undefined) this.setDefaultMemberPermissions(data.defaultMemberPermissions);
+        if (data?.dmPermission) this.setDMPermission(true);
+        if (data?.defaultPermission) this.setDefaultPermission(true);
+        if (data?.options) {
+            for (const option of data.options) {
+                SlashCommandBuilder.addOption(this, isClass<AnySlashCommandOptionBuilder>(option) ? option : SlashCommandBuilder.resolveOption(option as AnySlashCommandOptionData));
+            }
+        }
+    }
+
     public setCooldown(cooldown: number): this {
         this.cooldown = cooldown;
         return this;
@@ -98,9 +123,138 @@ export class SlashCommandBuilder extends DiscordJsSlashCommandBuilder implements
     }
 
     /**
+     * Add option builder to command builder
+     */
+    public static addOption(builder: SharedSlashCommandOptions|SlashCommandBuilder, option: AnySlashCommandOptionBuilder): SharedSlashCommandOptions {
+        if (option instanceof SlashCommandAttachmentOption) {
+            builder.addAttachmentOption(option);
+        } else if (option instanceof SlashCommandBooleanOption) {
+            builder.addBooleanOption(option);
+        } else if (option instanceof SlashCommandChannelOption) {
+            builder.addChannelOption(option);
+        } else if (option instanceof SlashCommandIntegerOption) {
+            builder.addIntegerOption(option);
+        } else if (option instanceof SlashCommandMentionableOption) {
+            builder.addMentionableOption(option);
+        } else if (option instanceof SlashCommandNumberOption) {
+            builder.addNumberOption(option);
+        } else if (option instanceof SlashCommandRoleOption) {
+            builder.addRoleOption(option);
+        } else if (option instanceof SlashCommandStringOption) {
+            builder.addStringOption(option);
+        } else if (option instanceof SlashCommandUserOption) {
+            builder.addUserOption(option);
+        } else if (builder instanceof SlashCommandBuilder) {
+            if (option instanceof SlashCommandSubcommandBuilder) {
+                builder.addSubcommand(option);
+            } else if (option instanceof SlashCommandSubcommandGroupBuilder) {
+                builder.addSubcommandGroup(option);
+            }
+        }
+        
+        return builder;
+    }
+
+    /**
+     * Resolve option data
+     */
+    public static resolveOption<T extends AnySlashCommandOptionBuilder>(option: AnySlashCommandOptionData): T {
+        let builder: AnySlashCommandOptionBuilder;
+
+        switch (option.type) {
+            case ApplicationCommandOptionType.Attachment:
+                builder = new SlashCommandAttachmentOption();
+                break;
+            case ApplicationCommandOptionType.Boolean:
+                builder = new SlashCommandBooleanOption();
+                break;
+            case ApplicationCommandOptionType.Channel:
+                builder = new SlashCommandChannelOption()
+                    .addChannelTypes(...(option.channelTypes ?? []));
+                break;
+            case ApplicationCommandOptionType.Integer:
+                builder = new SlashCommandIntegerOption()
+                    .addChoices(...(option.choices ?? []))
+                    .setAutocomplete(!!option.autocomplete);
+
+                if (option.maxValue) builder.setMaxValue(option.maxValue);
+                if (option.minValue) builder.setMinValue(option.minValue);
+
+                break;
+            case ApplicationCommandOptionType.Mentionable:
+                builder = new SlashCommandMentionableOption();
+                break;
+            case ApplicationCommandOptionType.Number:
+                builder = new SlashCommandNumberOption()
+                    .addChoices(...(option.choices ?? []))
+                    .setAutocomplete(!!option.autocomplete);
+
+                if (option.maxValue) builder.setMaxValue(option.maxValue);
+                if (option.minValue) builder.setMinValue(option.minValue);
+
+                break;
+            case ApplicationCommandOptionType.Role:
+                builder = new SlashCommandRoleOption();
+                break;
+            case ApplicationCommandOptionType.String:
+                builder = new SlashCommandStringOption()
+                    .addChoices(...(option.choices ?? []))
+                    .setAutocomplete(!!option.autocomplete);
+
+                if (option.maxLength) builder.setMaxLength(option.maxLength);
+                if (option.minLength) builder.setMinLength(option.minLength);
+
+                break;
+            case ApplicationCommandOptionType.User:
+                builder = new SlashCommandUserOption();
+                break;
+            case ApplicationCommandOptionType.Subcommand:
+                builder = new SlashCommandSubcommandBuilder();
+
+                for (const optionData of option.options) {
+                    this.addOption(builder, this.resolveOption<AnySlashCommandOptionsOnlyOptionBuilder>(optionData));
+                }
+
+                break;
+            case ApplicationCommandOptionType.SubcommandGroup:
+                builder = new SlashCommandSubcommandGroupBuilder();
+
+                for (const subCommandData of option.options) {
+                    builder.addSubcommand(
+                        subCommandData instanceof SlashCommandSubcommandBuilder
+                            ? subCommandData
+                            : this.resolveOption<SlashCommandSubcommandBuilder>(subCommandData)
+                    );
+                }
+
+                break;
+            default:
+                throw new TypeError("Unknown option data");
+        }
+
+        if (
+            !(builder instanceof SlashCommandSubcommandBuilder) && !(builder instanceof SlashCommandSubcommandGroupBuilder)
+            &&
+            option.type !== ApplicationCommandOptionType.Subcommand && option.type !== ApplicationCommandOptionType.SubcommandGroup
+        ) {
+            builder.setRequired(option.required ?? false);
+        }
+
+        return builder
+            .setName(option.name)
+            .setDescription(option.description)
+            .setNameLocalizations(option.nameLocalizations ?? null)
+            .setDescriptionLocalizations(option.descriptionLocalizations ?? null) as T;
+    }
+
+    public static resolveSlashCommand(commandData: SlashCommandData|AnySlashCommandBuilder): AnySlashCommandBuilder {
+        return this.isSlashCommandBuilder(commandData) ? commandData : new SlashCommandBuilder(commandData);
+    }
+
+    /**
      * Is a slash command builder
      */
-    public static isSlashCommandBuilder(builder: unknown): builder is SlashCommandBuilder {
+    public static isSlashCommandBuilder(builder: unknown): builder is AnySlashCommandBuilder {
         return builder instanceof SlashCommandBuilder;
     }
 
