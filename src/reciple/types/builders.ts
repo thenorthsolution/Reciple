@@ -146,35 +146,26 @@ export interface SlashCommandData extends SharedCommandDataProperties,Partial<Om
 }
 
 export interface SharedSlashCommandOptionData<V = string|number> extends SharedCommandDataProperties,Pick<SlashCommandData, "nameLocalizations"|"descriptionLocalizations"> {
-    /**
-     * Option choices
-     */
     choices?: {
         name: string;
         nameLocalizations?: LocalizationMap;
         value: V;
     }[];
-    /**
-     * Enable autocomplete
-     */
     autocomplete?: boolean;
-    /**
-     * Is required
-     * @default false
-     */
     required?: boolean;
 }
 
-export interface SlashCommandStringOptionData extends SharedSlashCommandOptionData<string> {
-    type: ApplicationCommandOptionType.String;
-    minLength?: number;
-    maxLength?: number;
+export interface SlashCommandAttachmentOptionData extends Omit<SharedSlashCommandOptionData, "choices"|"autocomplete"> {
+    type: ApplicationCommandOptionType.Attachment;
 }
 
-export interface SlashCommandNumberOptionData extends SharedSlashCommandOptionData<number> {
-    type: ApplicationCommandOptionType.Number;
-    minValue?: number;
-    maxValue?: number;
+export interface SlashCommandBooleanOptionData extends Omit<SharedSlashCommandOptionData, "choices"|"autocomplete"> {
+    type: ApplicationCommandOptionType.Boolean;
+}
+
+export interface SlashCommandChannelOptionData extends Omit<SharedSlashCommandOptionData, "choices"|"autocomplete"> {
+    type: ApplicationCommandOptionType.Channel;
+    channelTypes?: ApplicationCommandOptionAllowedChannelTypes[];
 }
 
 export interface SlashCommandIntegerOptionData extends SharedSlashCommandOptionData<number> {
@@ -183,34 +174,28 @@ export interface SlashCommandIntegerOptionData extends SharedSlashCommandOptionD
     maxValue?: number;
 }
 
-export interface SlashCommandBooleanOptionData extends Omit<SharedSlashCommandOptionData, "choices"|"autocomplete"> {
-    type: ApplicationCommandOptionType.Boolean;
-}
-
 export interface SlashCommandMentionableOptionData extends Omit<SharedSlashCommandOptionData, "choices"|"autocomplete"> {
     type: ApplicationCommandOptionType.Mentionable;
+}
+
+export interface SlashCommandNumberOptionData extends SharedSlashCommandOptionData<number> {
+    type: ApplicationCommandOptionType.Number;
+    minValue?: number;
+    maxValue?: number;
 }
 
 export interface SlashCommandRoleOptionData extends Omit<SharedSlashCommandOptionData, "choices"|"autocomplete"> {
     type: ApplicationCommandOptionType.Role;
 }
 
+export interface SlashCommandStringOptionData extends SharedSlashCommandOptionData<string> {
+    type: ApplicationCommandOptionType.String;
+    minLength?: number;
+    maxLength?: number;
+}
+
 export interface SlashCommandUserOptionData extends Omit<SharedSlashCommandOptionData, "choices"|"autocomplete"> {
     type: ApplicationCommandOptionType.User;
-}
-
-export interface SlashCommandAttachmentOptionData extends Omit<SharedSlashCommandOptionData, "choices"|"autocomplete"> {
-    type: ApplicationCommandOptionType.Attachment;
-}
-
-export interface SlashCommandChannelOptionData extends Omit<SharedSlashCommandOptionData, "choices"|"autocomplete"> {
-    type: ApplicationCommandOptionType.Channel;
-    channelTypes?: ApplicationCommandOptionAllowedChannelTypes[];
-}
-
-export interface SlashCommandSubCommandGroupData extends SharedCommandDataProperties, Pick<SlashCommandData, "nameLocalizations"|"descriptionLocalizations"> {
-    type: ApplicationCommandOptionType.SubcommandGroup;
-    options: (SlashCommandSubCommandData|SlashCommandSubcommandBuilder)[];
 }
 
 export interface SlashCommandSubCommandData extends SharedCommandDataProperties, Pick<SlashCommandData, "nameLocalizations"|"descriptionLocalizations"> {
@@ -218,6 +203,14 @@ export interface SlashCommandSubCommandData extends SharedCommandDataProperties,
     options: (AnySlashCommandOptionsOnlyOptionData|AnySlashCommandOptionsOnlyOptionBuilder)[];
 }
 
+export interface SlashCommandSubCommandGroupData extends SharedCommandDataProperties, Pick<SlashCommandData, "nameLocalizations"|"descriptionLocalizations"> {
+    type: ApplicationCommandOptionType.SubcommandGroup;
+    options: (SlashCommandSubCommandData|SlashCommandSubcommandBuilder)[];
+}
+
+/**
+ * Message command object data interface
+ */
 export interface MessageCommandData extends SharedCommandDataProperties,Partial<Omit<SharedCommandBuilderProperties, "setCooldown"|"setRequiredBotPermissions"|"setRequiredMemberPermissions"|"setHalt"|"setExecute"|"halt"|"execute">> {
     type: CommandBuilderType.MessageCommand;
     aliases?: string[];
@@ -229,6 +222,9 @@ export interface MessageCommandData extends SharedCommandDataProperties,Partial<
     options: MessageCommandOptionResolvable[];
 }
 
+/**
+ * Message command option object data interface
+ */
 export interface MessageCommandOptionData extends SharedCommandDataProperties {
     name: string;
     description: string;

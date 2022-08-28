@@ -1,5 +1,6 @@
 import { CommandBuilderType, CommandHaltFunction, CommandExecuteFunction, SharedCommandBuilderProperties, AnySlashCommandBuilder, SlashCommandData, AnySlashCommandOptionData, AnySlashCommandOptionBuilder, AnySlashCommandOptionsOnlyOptionBuilder } from '../../types/builders';
 import { BaseCommandExecuteData, CommandHaltData } from '../../types/commands';
+import { isClass } from '../../util';
 
 import {
     ChatInputCommandInteraction,
@@ -21,8 +22,6 @@ import {
     ApplicationCommandOptionType,
     SharedSlashCommandOptions
 } from 'discord.js';
-import { isNumber } from 'fallout-utility';
-import { isClass } from '../../util';
 
 /**
  * Execute data for slash command
@@ -127,24 +126,24 @@ export class SlashCommandBuilder extends DiscordJsSlashCommandBuilder implements
      * Add option builder to command builder
      */
     public static addOption(builder: SharedSlashCommandOptions|SlashCommandBuilder, option: AnySlashCommandOptionBuilder): SharedSlashCommandOptions {
-        if (option instanceof SlashCommandStringOption) {
-            builder.addStringOption(option);
-        } else if (option instanceof SlashCommandNumberOption) {
-            builder.addNumberOption(option);
-        } else if (option instanceof SlashCommandIntegerOption) {
-            builder.addIntegerOption(option);
+        if (option instanceof SlashCommandAttachmentOption) {
+            builder.addAttachmentOption(option);
         } else if (option instanceof SlashCommandBooleanOption) {
             builder.addBooleanOption(option);
         } else if (option instanceof SlashCommandChannelOption) {
             builder.addChannelOption(option);
+        } else if (option instanceof SlashCommandIntegerOption) {
+            builder.addIntegerOption(option);
         } else if (option instanceof SlashCommandMentionableOption) {
             builder.addMentionableOption(option);
-        } else if (option instanceof SlashCommandUserOption) {
-            builder.addUserOption(option);
+        } else if (option instanceof SlashCommandNumberOption) {
+            builder.addNumberOption(option);
         } else if (option instanceof SlashCommandRoleOption) {
             builder.addRoleOption(option);
-        } else if (option instanceof SlashCommandAttachmentOption) {
-            builder.addAttachmentOption(option);
+        } else if (option instanceof SlashCommandStringOption) {
+            builder.addStringOption(option);
+        } else if (option instanceof SlashCommandUserOption) {
+            builder.addUserOption(option);
         } else if (builder instanceof SlashCommandBuilder) {
             if (option instanceof SlashCommandSubcommandBuilder) {
                 builder.addSubcommand(option);
