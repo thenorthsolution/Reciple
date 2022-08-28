@@ -80,7 +80,7 @@ export class SlashCommandBuilder extends DiscordJsSlashCommandBuilder implements
         
         if (data?.name !== undefined) this.setName(data.name);
         if (data?.description !== undefined) this.setDescription(data.description);
-        if (isNumber(data?.cooldown)) this.setCooldown(data?.cooldown!);
+        if (data?.cooldown !== undefined) this.setCooldown(Number(data?.cooldown));
         if (data?.requiredBotPermissions !== undefined) this.setRequiredBotPermissions(data.requiredBotPermissions);
         if (data?.requiredMemberPermissions !== undefined) this.setRequiredMemberPermissions(data.requiredMemberPermissions);
         if (data?.halt !== undefined) this.setHalt(this.halt);

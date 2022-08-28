@@ -1,4 +1,6 @@
-import { AnyCommandBuilder, AnyCommandData, CommandBuilderType, SlashCommandData } from './types/builders';
+import { AnyCommandBuilder, AnyCommandData, CommandBuilderType } from './types/builders';
+import { MessageCommandBuilder } from './classes/builders/MessageCommandBuilder';
+import { SlashCommandBuilder } from './classes/builders/SlashCommandBuilder';
 import { normalizeArray, RestOrArray } from 'discord.js';
 import { RecipleClient } from './classes/RecipleClient';
 import { isSupportedVersion, version } from './version';
@@ -6,8 +8,6 @@ import { existsSync, mkdirSync, readdirSync } from 'fs';
 import wildcard from 'wildcard-match';
 import { cwd } from './flags';
 import path from 'path';
-import { MessageCommandBuilder } from './classes/builders/MessageCommandBuilder';
-import { SlashCommandBuilder } from './classes/builders/SlashCommandBuilder';
 
 export type LoadedModules = { commands: AnyCommandBuilder[], modules: RecipleModule[] };
 

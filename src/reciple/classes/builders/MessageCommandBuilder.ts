@@ -1,4 +1,4 @@
-import { CommandBuilderType, CommandHaltFunction, CommandExecuteFunction, SharedCommandBuilderProperties, MessageCommandData, AnyCommandData } from '../../types/builders';
+import { CommandBuilderType, CommandHaltFunction, CommandExecuteFunction, SharedCommandBuilderProperties, MessageCommandData } from '../../types/builders';
 import { Message, normalizeArray, PermissionResolvable, RestOrArray } from 'discord.js';
 import { BaseCommandExecuteData, CommandHaltData } from '../../types/commands';
 import { MessageCommandOptionManager } from '../MessageCommandOptionManager';
@@ -62,7 +62,7 @@ export class MessageCommandBuilder implements SharedCommandBuilderProperties {
     constructor(data?: Partial<Omit<MessageCommandData, "type">>) {
         if (data?.name !== undefined) this.setName(data.name);
         if (data?.description !== undefined) this.setDescription(data.description);
-        if (isNumber(data?.cooldown)) this.setCooldown(data?.cooldown!);
+        if (data?.cooldown !== undefined) this.setCooldown(Number(data?.cooldown));
         if (data?.requiredBotPermissions !== undefined) this.setRequiredBotPermissions(data.requiredBotPermissions);
         if (data?.requiredMemberPermissions !== undefined) this.setRequiredMemberPermissions(data.requiredMemberPermissions);
         if (data?.halt !== undefined) this.setHalt(this.halt);
