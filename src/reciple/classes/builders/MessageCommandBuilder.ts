@@ -3,7 +3,7 @@ import { Message, normalizeArray, PermissionResolvable, RestOrArray } from 'disc
 import { BaseCommandExecuteData, CommandHaltData } from '../../types/commands';
 import { MessageCommandOptionManager } from '../MessageCommandOptionManager';
 import { MessageCommandOptionBuilder } from './MessageCommandOptionBuilder';
-import { Command as CommandMessage, isNumber } from 'fallout-utility';
+import { Command as CommandMessage } from 'fallout-utility';
 
 /**
  * Execute data for message command
