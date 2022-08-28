@@ -251,7 +251,7 @@ export class SlashCommandBuilder extends DiscordJsSlashCommandBuilder implements
     /**
      * Is a slash command builder
      */
-    public static isSlashCommandBuilder(builder: unknown): builder is SlashCommandBuilder {
+    public static isSlashCommandBuilder(builder: unknown): builder is AnySlashCommandBuilder {
         return builder instanceof SlashCommandBuilder;
     }
 

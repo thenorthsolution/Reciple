@@ -130,7 +130,7 @@ export interface SharedCommandDataProperties {
 /**
  * Slash command object data interface
  */
-export interface SlashCommandData extends SharedCommandDataProperties,Omit<SharedCommandBuilderProperties, "setCooldown"|"setRequiredBotPermissions"|"setRequiredMemberPermissions"|"setHalt"|"setExecute"|"halt"|"execute"> {
+export interface SlashCommandData extends SharedCommandDataProperties,Partial<Omit<SharedCommandBuilderProperties, "setCooldown"|"setRequiredBotPermissions"|"setRequiredMemberPermissions"|"setHalt"|"setExecute"|"halt"|"execute">> {
     type: CommandBuilderType.SlashCommand;
     nameLocalizations?: LocalizationMap;
     descriptionLocalizations?: LocalizationMap;
@@ -218,12 +218,12 @@ export interface SlashCommandSubCommandData extends SharedCommandDataProperties,
     options: (AnySlashCommandOptionsOnlyOptionData|AnySlashCommandOptionsOnlyOptionBuilder)[];
 }
 
-export interface MessageCommandData extends SharedCommandDataProperties,Omit<SharedCommandBuilderProperties, "setCooldown"|"setRequiredBotPermissions"|"setRequiredMemberPermissions"|"setHalt"|"setExecute"|"halt"|"execute"> {
+export interface MessageCommandData extends SharedCommandDataProperties,Partial<Omit<SharedCommandBuilderProperties, "setCooldown"|"setRequiredBotPermissions"|"setRequiredMemberPermissions"|"setHalt"|"setExecute"|"halt"|"execute">> {
     type: CommandBuilderType.MessageCommand;
-    aliases: string[];
-    validateOptions: boolean;
-    allowExecuteInDM: boolean;
-    allowExecuteByBots: boolean;
+    aliases?: string[];
+    validateOptions?: boolean;
+    allowExecuteInDM?: boolean;
+    allowExecuteByBots?: boolean;
     halt?: MessageCommandHaltFunction;
     execute: MessageCommandExecuteFunction;
     options: MessageCommandOptionResolvable[];
