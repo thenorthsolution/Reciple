@@ -57,15 +57,15 @@
     "yaml": "^2.1.1"
   },
   "devDependencies": {
-    "@types/node": "^18.7.9",
+    "@types/node": "^18.7.13",
     "@types/semver": "^7.3.12",
     "discord.js": "^14.3.0",
     "rimraf": "^3.0.2",
-    "typedoc": "^0.23.10",
+    "typedoc": "^0.23.11",
     "typedoc-plugin-discord-types": "^1.0.2",
     "typedoc-plugin-djs-links": "^1.2.0",
     "typedoc-plugin-mdn-links": "^2.0.0",
-    "typescript": "^4.7.4"
+    "typescript": "^4.8.2"
   },
   "peerDependencies": {
     "discord.js": "^14.2.0"
