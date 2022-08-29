@@ -20,8 +20,8 @@ function fixImports(dir) {
 
         const contents = fs.readFileSync(file, 'utf-8');
         
-        let newContents = contents.replace(/(import .* from\s+['"])(.?.\/.*)(?=['"])/g, '$1$2.js');
-            newContents = newContents.replace(/(export .* from\s+['"])(.?.\/.*)(?=['"])/g, '$1$2.js');
+        let newContents = contents.replace(/(import .* from\s+['"])(.*)(?=['"])/g, '$1$2.js');
+            newContents = newContents.replace(/(export .* from\s+['"])(.*)(?=['"])/g, '$1$2.js');
 
         fs.writeFileSync(file, newContents);
         console.log(file);
