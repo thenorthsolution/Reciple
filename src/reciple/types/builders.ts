@@ -219,7 +219,7 @@ export interface MessageCommandData extends SharedCommandDataProperties,Partial<
     allowExecuteByBots?: boolean;
     halt?: MessageCommandHaltFunction;
     execute: MessageCommandExecuteFunction;
-    options: MessageCommandOptionResolvable[];
+    options?: MessageCommandOptionResolvable[];
 }
 
 /**
