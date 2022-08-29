@@ -8,9 +8,7 @@
   "homepage": "https://reciple.js.org",
   "main": "./bin/cjs/index.js",
   "module": "./bin/mjs/index.js",
-  "bin": {
-    "reciple": "./bin/cjs/bin.js"
-  },
+  "bin": "./bin/cjs/bin.js",
   "exports": {
     "import": "./bin/mjs/index.js",
     "require": "./bin/cjs/index.js"

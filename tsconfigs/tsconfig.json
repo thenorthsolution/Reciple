@@ -4,11 +4,14 @@
   ],
   "compilerOptions": {
     "rootDir": "../src",
+    "baseUrl": "src",
     "declaration": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true,
     "strict": true,
+    "allowJs": true,
+    "listFiles": true,
     "declarationDir": "../bin/types"
   }
 }
