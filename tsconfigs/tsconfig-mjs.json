@@ -4,8 +4,6 @@
     "outDir": "../bin/mjs",
     "target": "ESNext",
     "module": "ESNext",
-    "moduleResolution": "Node",
-    "declaration": false,
-    "declarationDir": null
+    "moduleResolution": "Node"
   }
 }
