@@ -2,7 +2,7 @@
   "name": "reciple",
   "version": "5.4.0",
   "license": "GPL-3.0",
-  "typings": "bin/index.d.ts",
+  "typings": "bin/types/index.d.ts",
   "author": "FalloutStudios",
   "description": "Handler for Discord.js",
   "homepage": "https://reciple.js.org",
@@ -26,7 +26,7 @@
   },
   "scripts": {
     "clean": "yarn exec rimraf bin",
-    "build": "yarn clean && yarn exec tsc -p ./tsconfigs/tsconfig-cjs.json && yarn exec tsc -p ./tsconfigs/tsconfig-mjs.json",
+    "build": "yarn clean && echo Building commonjs && yarn exec tsc -p ./tsconfigs/tsconfig-cjs.json && echo Building mjs && yarn exec tsc -p ./tsconfigs/tsconfig-mjs.json",
     "build:publish": "yarn build && yarn npm publish && yarn build:docs && yarn publish:docs",
     "build:publish-prerelease": "yarn build && yarn npm publish --tag pre",
     "build:docs": "yarn exec typedoc --tsconfig ./docs/typedoc.json",
