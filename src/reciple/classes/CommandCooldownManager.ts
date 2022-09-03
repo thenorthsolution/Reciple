@@ -88,11 +88,11 @@ export class CommandCooldownManager extends Array<CooledDownUser> {
      * @param data Cooled-down user data
      */
     public static checkOptions(options: Partial<Omit<CooledDownUser, 'expireTime'>>, data: CooledDownUser): boolean {
-        if (options?.user && options.user.id !== data.user.id) return false;
-        if (options?.guild && options.guild.id !== data.guild?.id) return false;
-        if (options?.channel && options.channel.id !== data.channel?.id) return false;
-        if (options?.command && options.command !== data.command) return false;
-        if (options?.type && options.type !== data.type) return false;
+        if (options?.user !== undefined && options.user.id !== data.user.id) return false;
+        if (options?.guild !== undefined && options.guild?.id !== data.guild?.id) return false;
+        if (options?.channel !== undefined && options.channel.id !== data.channel?.id) return false;
+        if (options?.command !== undefined && options.command !== data.command) return false;
+        if (options?.type !== undefined && options.type !== data.type) return false;
 
         return true;
     }

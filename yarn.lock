@@ -85,10 +85,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^18.7.13":
-  version: 18.7.13
-  resolution: "@types/node@npm:18.7.13"
-  checksum: 45431e7e89ecaf85c7d2c180d801c132a7c59e2f8ad578726b6d71cc74e3267c18f9ccdcad738bc0479790c078f0c79efb0e58da2c6be535c15995dbb19050c9
+"@types/node@npm:^18.7.14":
+  version: 18.7.14
+  resolution: "@types/node@npm:18.7.14"
+  checksum: 99cf28ff854100158de875cca23c7acc3cc01dfee526a52b90b7f36767c821bcbaf2be0a98a70f06f3b78f3c60639168ff949d725b61e2e124f9f71f1fb8043d
   languageName: node
   linkType: hard
 
@@ -229,10 +229,10 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"dotenv@npm:^16.0.1":
-  version: 16.0.1
-  resolution: "dotenv@npm:16.0.1"
-  checksum: f459ffce07b977b7f15d8cc4ee69cdff77d4dd8c5dc8c85d2d485ee84655352c2415f9dd09d42b5b5985ced3be186130871b34e2f3e2569ebc72fbc2e8096792
+"dotenv@npm:^16.0.2":
+  version: 16.0.2
+  resolution: "dotenv@npm:16.0.2"
+  checksum: ca8f9ca2d67929c7771069f4c31b4e46b9932621009e658e5afd655dde2d69b77642bf36dbc9e72bc170523dfd908a9ee41c26f034c1fdc605ace3b1b4b10faf
   languageName: node
   linkType: hard
 
@@ -437,16 +437,16 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "reciple@workspace:."
   dependencies:
-    "@types/node": ^18.7.13
+    "@types/node": ^18.7.14
     "@types/semver": ^7.3.12
     chalk: 4.1.2
     commander: ^9.4.0
     discord.js: ^14.3.0
-    dotenv: ^16.0.1
+    dotenv: ^16.0.2
     fallout-utility: ^1.4.6
     rimraf: ^3.0.2
     semver: ^7.3.7
-    typedoc: ^0.23.11
+    typedoc: ^0.23.14
     typedoc-plugin-discord-types: ^1.0.2
     typedoc-plugin-djs-links: ^1.2.0
     typedoc-plugin-mdn-links: ^2.0.0
@@ -597,9 +597,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typedoc@npm:^0.23.11":
-  version: 0.23.11
-  resolution: "typedoc@npm:0.23.11"
+"typedoc@npm:^0.23.14":
+  version: 0.23.14
+  resolution: "typedoc@npm:0.23.14"
   dependencies:
     lunr: ^2.3.9
     marked: ^4.0.19
@@ -609,7 +609,7 @@ __metadata:
     typescript: 4.6.x || 4.7.x || 4.8.x
   bin:
     typedoc: bin/typedoc
-  checksum: 02bc1e4c15ea064c0a35e049500b40f99ce8dec1d2778edd9dbc12c0ca348c630253ad17e1c2b901961fcd56e3eea31fd62f82eed4ff95864e9e1d2e5e7564d7
+  checksum: 4037dc0db4aa8b205ac505bdc191de404ea2da3eb8dabbf8172851c239b85a96fbfd81503dc2d4789066d6901d76c552abc73ee04a239763b69b90587d44527b
   languageName: node
   linkType: hard
 

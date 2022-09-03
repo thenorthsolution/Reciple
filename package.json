@@ -50,18 +50,18 @@
   "dependencies": {
     "chalk": "4.1.2",
     "commander": "^9.4.0",
-    "dotenv": "^16.0.1",
+    "dotenv": "^16.0.2",
     "fallout-utility": "^1.4.6",
     "semver": "^7.3.7",
     "wildcard-match": "^5.1.2",
     "yaml": "^2.1.1"
   },
   "devDependencies": {
-    "@types/node": "^18.7.13",
+    "@types/node": "^18.7.14",
     "@types/semver": "^7.3.12",
     "discord.js": "^14.3.0",
     "rimraf": "^3.0.2",
-    "typedoc": "^0.23.11",
+    "typedoc": "^0.23.14",
     "typedoc-plugin-discord-types": "^1.0.2",
     "typedoc-plugin-djs-links": "^1.2.0",
     "typedoc-plugin-mdn-links": "^2.0.0",
