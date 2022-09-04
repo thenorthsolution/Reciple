@@ -65,12 +65,12 @@ export class MessageCommandBuilder implements SharedCommandBuilderProperties {
         if (data?.cooldown !== undefined) this.setCooldown(Number(data?.cooldown));
         if (data?.requiredBotPermissions !== undefined) this.setRequiredBotPermissions(data.requiredBotPermissions);
         if (data?.requiredMemberPermissions !== undefined) this.setRequiredMemberPermissions(data.requiredMemberPermissions);
-        if (data?.halt !== undefined) this.setHalt(this.halt);
+        if (data?.halt !== undefined) this.setHalt(data.halt);
         if (data?.execute !== undefined) this.setExecute(data.execute);
         if (data?.aliases !== undefined) this.addAliases(data.aliases);
-        if (data?.allowExecuteByBots) this.setAllowExecuteByBots(true);
-        if (data?.allowExecuteInDM) this.setAllowExecuteInDM(true);
-        if (data?.validateOptions) this.setValidateOptions(true);
+        if (data?.allowExecuteByBots !== undefined) this.setAllowExecuteByBots(true);
+        if (data?.allowExecuteInDM !== undefined) this.setAllowExecuteInDM(true);
+        if (data?.validateOptions !== undefined) this.setValidateOptions(true);
         if (data?.options !== undefined) this.options = data.options.map(o => o instanceof MessageCommandOptionBuilder ? o : new MessageCommandOptionBuilder(o));
     }
 
