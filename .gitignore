@@ -129,5 +129,5 @@ dist
 # bin
 bin
 
-# test
-test
+# testing
+test/*.yml
