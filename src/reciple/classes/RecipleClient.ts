@@ -23,6 +23,7 @@ import {
     Client,
     ClientEvents,
     ClientOptions,
+    GuildTextBasedChannel,
     Interaction,
     Message,
     normalizeArray,
@@ -56,16 +57,16 @@ export interface RecipleClientEvents extends ClientEvents {
  */
 export interface RecipleClient<Ready extends boolean = boolean> extends Client<Ready> {
     on<E extends keyof RecipleClientEvents>(event: E, listener: (...args: RecipleClientEvents[E]) => Awaitable<void>): this;
-    on<E extends string|symbol>(event: Exclude<E, keyof RecipleClientEvents>, listener: (...args: any) => Awaitable<void>): this;
+    on<E extends string|symbol>(event: E, listener: (...args: any) => Awaitable<void>): this;
     
     once<E extends keyof RecipleClientEvents>(event: E, listener: (...args: RecipleClientEvents[E]) => Awaitable<void>): this;
-    once<E extends keyof string|symbol>(event: Exclude<E, keyof RecipleClientEvents>, listener: (...args: any) => Awaitable<void>): this;
+    once<E extends keyof string|symbol>(event: E, listener: (...args: any) => Awaitable<void>): this;
 
     emit<E extends keyof RecipleClientEvents>(event: E, ...args: RecipleClientEvents[E]): boolean;
-    emit<E extends string|symbol>(event: Exclude<E, keyof RecipleClientEvents>, ...args: any): boolean;
+    emit<E extends string|symbol>(event: E, ...args: any): boolean;
 
     off<E extends keyof RecipleClientEvents>(event: E, listener: (...args: RecipleClientEvents[E]) => Awaitable<void>): this;
-    off<E extends string|symbol>(event: Exclude<E, keyof RecipleClientEvents>, listener: (...args: any) => Awaitable<void>): this;
+    off<E extends string|symbol>(event: E, listener: (...args: any) => Awaitable<void>): this;
 
     removeAllListeners<E extends keyof RecipleClientEvents>(event?: E): this;
     removeAllListeners(event?: string|symbol): this;
@@ -92,7 +93,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
 
         if (!options.config) throw new Error('Config is not defined.');
         this.config = {...this.config, ...(options.config ?? {})};
-
+        
         if (this.config.fileLogging.enabled) this.logger.logFile(path.join(cwd, this.config.fileLogging.logFilePath ?? 'logs/latest.log'), false);
     }
 
@@ -240,7 +241,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
             commandPermissions: this.config.commands.slashCommand.permissions
         })) {
             if (!command) return;
-            if (interaction.guild && !botHasExecutePermissions(interaction.guild, command.requiredBotPermissions)) {
+            if (interaction.inCachedGuild() && !botHasExecutePermissions(interaction.channel! || interaction.guild, command.requiredBotPermissions)) {
                 if (!await this._haltCommand(command, { executeData, reason: CommandHaltReason.MissingBotPermissions })) {
                     await interaction.reply(this.getConfigMessage('insufficientBotPerms', 'Insufficient bot permissions.')).catch(er => this._replyError(er));
                 }
@@ -317,7 +318,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
                 }
             }
 
-            if (message.guild && !botHasExecutePermissions(message.guild, command.requiredBotPermissions)) {
+            if (message.inGuild() && !botHasExecutePermissions(message.channel || message.guild, command.requiredBotPermissions)) {
                 if (!await this._haltCommand(command, { executeData, reason: CommandHaltReason.MissingBotPermissions })) {
                     message.reply(this.getConfigMessage('insufficientBotPerms', 'Insufficient bot permissions.')).catch(er => this._replyError(er));
                 }
