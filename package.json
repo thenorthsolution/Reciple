@@ -1,6 +1,6 @@
 {
   "name": "reciple",
-  "version": "5.4.1",
+  "version": "5.4.2",
   "bin": "bin/bin.js",
   "license": "GPL-3.0",
   "main": "bin/index.js",
@@ -14,7 +14,7 @@
     "Reciple"
   ],
   "contributors": [
-    "GhexterCortes <cortesghexter@gmail.com>"
+    "GhexterCortes"
   ],
   "bugs": {
     "url": "https://github.com/FalloutStudios/reciple/issues"
