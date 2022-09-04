@@ -37,6 +37,7 @@
     "type": "git",
     "url": "git+https://github.com/FalloutStudios/reciple.git"
   },
+  "engineStrict": true,
   "engines": {
     "node": ">=16.9.0"
   },
