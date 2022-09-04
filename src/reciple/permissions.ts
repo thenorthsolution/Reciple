@@ -1,5 +1,5 @@
 import { UserHasCommandPermissionsOptions } from './types/paramOptions';
-import { Guild, PermissionResolvable } from 'discord.js';
+import { Guild, GuildTextBasedChannel, PermissionResolvable, PermissionsBitField, TextBasedChannel } from 'discord.js';
 
 /**
  * Check if the user has permissions to execute the given command name
@@ -19,11 +19,27 @@ export function userHasCommandPermissions(options: UserHasCommandPermissionsOpti
 
 /**
  * Check if the bot has the required permissions in a guild
- * @param guild Guild
+ * @param guild Check if the bot has the required permissions in a guild
  * @param requiredPermissions Required guild bot permissions
  */
-export function botHasExecutePermissions(guild?: Guild, requiredPermissions?: PermissionResolvable[]): boolean {
+export function botHasExecutePermissions(guild?: Guild, requiredPermissions?: PermissionResolvable[]): boolean;
+/**
+ * @param channel Check if the bot has the required permissions in a channel
+ */
+export function botHasExecutePermissions(channel?: GuildTextBasedChannel, requiredPermissions?: PermissionResolvable[]): boolean;
+/**
+ * @param guildOrChannel Check permission in a guild or channel
+ */
+export function botHasExecutePermissions(guildOrChannel?: Guild|GuildTextBasedChannel, requiredPermissions?: PermissionResolvable[]): boolean {
     if (!requiredPermissions?.length) return true;
 
-    return guild?.members.me ? guild.members.me.permissions.has(requiredPermissions) : false;
+    let permissions: PermissionsBitField|null = null;
+
+    if (guildOrChannel instanceof Guild) {
+        permissions = guildOrChannel.members.me?.permissions ?? null;
+    } else {
+        permissions = guildOrChannel?.permissionsFor(guildOrChannel.client.user!.id) ?? null;
+    }
+
+    return permissions ? permissions.has(requiredPermissions) : false;
 }
