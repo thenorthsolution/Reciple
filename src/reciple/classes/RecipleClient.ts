@@ -405,9 +405,11 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
         try {
             const haltResolved = (
                     command.halt
-                        ? command.type == CommandBuilderType.SlashCommand
-                            ? await Promise.resolve(command.halt(haltData as SlashCommandHaltData)).catch(err => { throw err; })
-                            : await Promise.resolve(command.halt(haltData as MessageCommandHaltData)).catch(err => { throw err; })
+                        ? await Promise.resolve(
+                            command.type == CommandBuilderType.SlashCommand
+                                ? command.halt(haltData as SlashCommandHaltData)
+                                : command.halt(haltData as MessageCommandHaltData)
+                        ).catch(err => { console.log(err); })
                         : false
                 ) || false;
             
@@ -437,7 +439,11 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
                     : command.execute(executeData as MessageCommandExecuteData)
             )
             .then(() => this.emit('recipleCommandExecute', executeData))
-            .catch(err => { throw err; });
+            .catch(async err => 
+                !await this._haltCommand(command as any, { executeData: executeData as any, reason: CommandHaltReason.Error, error: err })
+                    ? this._commandExecuteError(err as Error, executeData)
+                    : void 0
+            );
 
             return executeData;
         } catch (err) {
