@@ -54,12 +54,12 @@ export async function getModules(client: RecipleClient, folder?: string): Promis
         let module_: RecipleScript;
 
         try {
-            const reqMod = require(modulePath);
+            const reqMod = await import(modulePath);
             module_ = reqMod?.default !== undefined ? reqMod.default : reqMod;
 
             if (typeof module_ !== 'object') throw new Error(`Module ${modulePath} is not an object`);
             if (!client.config.disableVersionCheck && !module_?.versions.length) throw new Error(`${modulePath} does not have supported versions.`);
-            
+
             const versions = normalizeArray([module_.versions] as RestOrArray<string>);
 
             if (!client.config.disableVersionCheck && !versions.some(v => isSupportedVersion(v, version))) throw new Error(`${modulePath} is unsupported; current version: ${version}; module supported versions: ` + versions.join(', ') ?? 'none');

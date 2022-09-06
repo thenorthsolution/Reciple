@@ -134,7 +134,7 @@ export interface SlashCommandData extends SharedCommandDataProperties,Partial<Om
     type: CommandBuilderType.SlashCommand;
     nameLocalizations?: LocalizationMap;
     descriptionLocalizations?: LocalizationMap;
-    options: (AnySlashCommandOptionData|AnySlashCommandOptionBuilder)[];
+    options?: (AnySlashCommandOptionData|AnySlashCommandOptionBuilder)[];
     /**
      * @deprecated This property is deprecated and will be removed in the future.
      */
