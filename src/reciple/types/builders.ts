@@ -226,8 +226,6 @@ export interface MessageCommandData extends SharedCommandDataProperties,Partial<
  * Message command option object data interface
  */
 export interface MessageCommandOptionData extends SharedCommandDataProperties {
-    name: string;
-    description: string;
-    required: boolean;
-    validator: (value: string) => Awaitable<boolean>;
+    required?: boolean;
+    validator?: (value: string) => Awaitable<boolean>;
 }
