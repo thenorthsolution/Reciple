@@ -56,16 +56,16 @@ export type AnySlashCommandOptionBuilder = AnySlashCommandOptionsOnlyOptionBuild
 /**
  * Slash command options without sub commands
  */
-export type AnySlashCommandOptionsOnlyOptionData = SlashCommandStringOptionData|SlashCommandNumberOptionData|SlashCommandIntegerOptionData|
-    SlashCommandBooleanOptionData|SlashCommandMentionableOptionData|SlashCommandRoleOptionData|
-    SlashCommandUserOptionData|SlashCommandAttachmentOptionData|SlashCommandChannelOptionData;
+export type AnySlashCommandOptionsOnlyOptionData = SlashCommandAttachmentOptionData|SlashCommandBooleanOptionData|SlashCommandChannelOptionData|
+    SlashCommandIntegerOptionData|SlashCommandMentionableOptionData|SlashCommandNumberOptionData|
+    SlashCommandRoleOptionData|SlashCommandStringOptionData|SlashCommandUserOptionData;
 
 /**
  * Slash command option builder without sub commands
  */
- export type AnySlashCommandOptionsOnlyOptionBuilder = SlashCommandStringOption|SlashCommandNumberOption|SlashCommandIntegerOption|
-    SlashCommandBooleanOption|SlashCommandMentionableOption|SlashCommandRoleOption|
-    SlashCommandUserOption|SlashCommandAttachmentOption|SlashCommandChannelOption;
+ export type AnySlashCommandOptionsOnlyOptionBuilder = SlashCommandAttachmentOption|SlashCommandBooleanOption|SlashCommandChannelOption|
+    SlashCommandIntegerOption|SlashCommandMentionableOption|SlashCommandNumberOption|
+    SlashCommandRoleOption|SlashCommandStringOption|SlashCommandUserOption;
 
 /**
  * Types of command builders
