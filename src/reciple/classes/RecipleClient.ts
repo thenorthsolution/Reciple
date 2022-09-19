@@ -414,7 +414,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
                         ).catch(err => { console.log(err); })
                         : false
                 ) || false;
-            
+
             this.emit('recipleCommandHalt', haltData);
             return haltResolved;
         } catch (err) {
@@ -449,9 +449,8 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
 
             return executeData;
         } catch (err) {
-            if (!await this._haltCommand(command as any, { executeData: executeData as any, reason: CommandHaltReason.Error, error: err })) {
-                this._commandExecuteError(err as Error, executeData);
-            }
+            if (await this._haltCommand(command as any, { executeData: executeData as any, reason: CommandHaltReason.Error, error: err })) return;
+            await this._commandExecuteError(err as Error, executeData);
         }
     }
 
