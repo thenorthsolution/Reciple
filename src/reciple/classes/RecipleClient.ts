@@ -23,7 +23,6 @@ import {
     Client,
     ClientEvents,
     ClientOptions,
-    GuildTextBasedChannel,
     Interaction,
     Message,
     normalizeArray,

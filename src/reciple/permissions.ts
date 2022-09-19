@@ -1,5 +1,5 @@
+import { Guild, GuildTextBasedChannel, PermissionResolvable, PermissionsBitField } from 'discord.js';
 import { UserHasCommandPermissionsOptions } from './types/paramOptions';
-import { Guild, GuildTextBasedChannel, PermissionResolvable, PermissionsBitField, TextBasedChannel } from 'discord.js';
 
 /**
  * Check if the user has permissions to execute the given command name
