@@ -16,7 +16,7 @@ jobs:
         with:
           node-version: 16
 
-      - name: Install dependencies
+      - name: Install dependencidocses
         run: yarn install
 
       - name: Deploy docs
