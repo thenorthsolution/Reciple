@@ -28,8 +28,7 @@
     "update:docs": "yarn workspace docs update",
     "test": "yarn build && yarn test:start",
     "test:start": "cd test && yarn exec reciple -D",
-    "publish:docs": "yarn build:docs && yarn update:docs",
-    "watch": "yarn exec tsc --watch --noEmit"
+    "publish:docs": "yarn build:docs && yarn update:docs"
   },
   "workspaces": [
     "./docs/"
