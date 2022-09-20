@@ -76,7 +76,9 @@ export class SlashCommandBuilder extends DiscordJsSlashCommandBuilder implements
 
     constructor(data?: Partial<Omit<SlashCommandData, "type">>) {
         super();
-        
+
+        // TODO: WTH
+
         if (data?.name !== undefined) this.setName(data.name);
         if (data?.description !== undefined) this.setDescription(data.description);
         if (data?.cooldown !== undefined) this.setCooldown(Number(data?.cooldown));
@@ -151,7 +153,7 @@ export class SlashCommandBuilder extends DiscordJsSlashCommandBuilder implements
                 builder.addSubcommandGroup(option);
             }
         }
-        
+
         return builder;
     }
 
@@ -160,6 +162,8 @@ export class SlashCommandBuilder extends DiscordJsSlashCommandBuilder implements
      */
     public static resolveOption<T extends AnySlashCommandOptionBuilder>(option: AnySlashCommandOptionData): T {
         let builder: AnySlashCommandOptionBuilder;
+
+        // TODO: I can do better than this
 
         switch (option.type) {
             case ApplicationCommandOptionType.Attachment:

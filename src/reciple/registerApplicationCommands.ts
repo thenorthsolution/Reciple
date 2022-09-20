@@ -28,7 +28,7 @@ export async function registerApplicationCommands(options: RegisterApplicationCo
                 if (client.isClientLogsEnabled()) client.logger.debug(`Set required permissions for ${cmd.name}`);
             }
 
-            client.commands.slashCommands[cmd.name] = cmd;
+            client.commands.slashCommands.set(cmd.name, cmd);
         }
 
         return cmd.toJSON();
