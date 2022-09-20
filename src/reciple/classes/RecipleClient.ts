@@ -23,6 +23,7 @@ import {
     Client,
     ClientEvents,
     ClientOptions,
+    Collection,
     Interaction,
     Message,
     normalizeArray,
@@ -38,8 +39,8 @@ export interface RecipleClientOptions extends ClientOptions { config?: Config; }
  * Reciple client commands
  */
 export interface RecipleClientCommands {
-    slashCommands: { [commandName: string]: AnySlashCommandBuilder };
-    messageCommands: { [commandName: string]: MessageCommandBuilder };
+    slashCommands: Collection<string, AnySlashCommandBuilder>;
+    messageCommands: Collection<string, MessageCommandBuilder>;
 }
 
 /**
@@ -75,7 +76,7 @@ export interface RecipleClient<Ready extends boolean = boolean> extends Client<R
 
 export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready> {
     public config: Config = RecipleConfig.getDefaultConfig();
-    public commands: RecipleClientCommands = { slashCommands: {}, messageCommands: {} };
+    public commands: RecipleClientCommands = { slashCommands: new Collection(), messageCommands: new Collection() };
     public additionalApplicationCommands: (ApplicationCommandBuilder|ApplicationCommandData)[] = [];
     public cooldowns: CommandCooldownManager = new CommandCooldownManager();
     public modules: RecipleModule[] = [];
@@ -198,9 +199,9 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
      */
     public addCommand(command: AnyCommandData|AnyCommandBuilder): RecipleClient<Ready> {
         if (command.type === CommandBuilderType.SlashCommand) {
-            this.commands.slashCommands[command.name] = SlashCommandBuilder.resolveSlashCommand(command);
+            this.commands.slashCommands.set(command.name, SlashCommandBuilder.resolveSlashCommand(command));
         } else if (command.type === CommandBuilderType.MessageCommand) {
-            this.commands.messageCommands[command.name] = MessageCommandBuilder.resolveMessageCommand(command);
+            this.commands.messageCommands.set(command.name, MessageCommandBuilder.resolveMessageCommand(command));
         } else if (this.isClientLogsEnabled()) {
             this.logger.error(`Unknow command "${typeof command ?? 'unknown'}".`);
         }
@@ -368,11 +369,11 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
     public findCommand(command: string, type: CommandBuilderType): AnyCommandBuilder|undefined {
         switch (type) {
             case CommandBuilderType.SlashCommand:
-                return this.commands.slashCommands[command];
+                return this.commands.slashCommands.get(command);
             case CommandBuilderType.MessageCommand:
-                return this.commands.messageCommands[command.toLowerCase()]
+                return this.commands.messageCommands.get(command.toLowerCase())
                     ?? (this.config.commands.messageCommand.allowCommandAlias
-                        ? Object.values(this.commands.messageCommands).find(c => c.aliases.some(a => a == command?.toLowerCase()))
+                        ? this.commands.messageCommands.find(c => c.aliases.some(a => a == command?.toLowerCase()))
                         : undefined
                     );
             default:
