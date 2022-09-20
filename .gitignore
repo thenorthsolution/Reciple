@@ -131,3 +131,7 @@ bin
 
 # testing
 test/*.yml
+modules/
+
+# docs
+docs/docs.json

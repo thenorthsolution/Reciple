@@ -1,0 +1,25 @@
+name: Documentation
+on:
+  push:
+    branches:
+      - main
+jobs:
+  docs:
+    name: Deploy Documentation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@master
+
+      - name: Install Node v16
+        uses: actions/setup-node@master
+        with:
+          node-version: 16
+
+      - name: Install dependencidocses
+        run: yarn install
+
+      - name: Deploy docs
+        uses: discordjs/action-docs@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

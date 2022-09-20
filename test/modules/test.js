@@ -1,4 +1,4 @@
-const { CommandBuilderType, CommandHaltReason, MessageCommandBuilder, SlashCommandBuilder } = require('../../bin/index');
+const { CommandBuilderType, CommandHaltReason, MessageCommandBuilder, SlashCommandBuilder } = require('../../');
 
 module.exports = {
     versions: '^5.4.1',

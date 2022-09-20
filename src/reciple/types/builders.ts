@@ -6,17 +6,17 @@ import { MessageCommandOptionBuilder } from '../classes/builders/MessageCommandO
 /**
  * Any command builders
  */
-export type AnyCommandBuilder = AnySlashCommandBuilder|MessageCommandBuilder;
+export type AnyCommandBuilder<T extends unknown = any> = AnySlashCommandBuilder<T>|MessageCommandBuilder<T>;
 
 /**
  * Any command data
  */
-export type AnyCommandData = SlashCommandData|MessageCommandData;
+export type AnyCommandData<T extends unknown = any> = SlashCommandData<T>|MessageCommandData<T>;
 
 /**
  * Any slash command builders
  */
-export type AnySlashCommandBuilder = SlashCommandBuilder|SlashCommandOptionsOnlyBuilder|SlashCommandSubcommandsOnlyBuilder;
+export type AnySlashCommandBuilder<T extends unknown = any> = SlashCommandBuilder<T>|SlashCommandOptionsOnlyBuilder<T>|SlashCommandSubcommandsOnlyBuilder<T>;
 
 /**
  * Any command halt functions
@@ -56,16 +56,16 @@ export type AnySlashCommandOptionBuilder = AnySlashCommandOptionsOnlyOptionBuild
 /**
  * Slash command options without sub commands
  */
-export type AnySlashCommandOptionsOnlyOptionData = SlashCommandStringOptionData|SlashCommandNumberOptionData|SlashCommandIntegerOptionData|
-    SlashCommandBooleanOptionData|SlashCommandMentionableOptionData|SlashCommandRoleOptionData|
-    SlashCommandUserOptionData|SlashCommandAttachmentOptionData|SlashCommandChannelOptionData;
+export type AnySlashCommandOptionsOnlyOptionData = SlashCommandAttachmentOptionData|SlashCommandBooleanOptionData|SlashCommandChannelOptionData|
+    SlashCommandIntegerOptionData|SlashCommandMentionableOptionData|SlashCommandNumberOptionData|
+    SlashCommandRoleOptionData|SlashCommandStringOptionData|SlashCommandUserOptionData;
 
 /**
  * Slash command option builder without sub commands
  */
- export type AnySlashCommandOptionsOnlyOptionBuilder = SlashCommandStringOption|SlashCommandNumberOption|SlashCommandIntegerOption|
-    SlashCommandBooleanOption|SlashCommandMentionableOption|SlashCommandRoleOption|
-    SlashCommandUserOption|SlashCommandAttachmentOption|SlashCommandChannelOption;
+ export type AnySlashCommandOptionsOnlyOptionBuilder = SlashCommandAttachmentOption|SlashCommandBooleanOption|SlashCommandChannelOption|
+    SlashCommandIntegerOption|SlashCommandMentionableOption|SlashCommandNumberOption|
+    SlashCommandRoleOption|SlashCommandStringOption|SlashCommandUserOption;
 
 /**
  * Types of command builders
@@ -79,13 +79,14 @@ export enum CommandBuilderType {
 /**
  * Shared command builder methods and properties
  */
-export interface SharedCommandBuilderProperties {
+export interface SharedCommandBuilderProperties<T extends unknown> {
     readonly type: CommandBuilderType;
     cooldown: number;
     requiredBotPermissions: PermissionResolvable[];
     requiredMemberPermissions: PermissionResolvable[];
     halt?: AnyCommandHaltFunction;
     execute: AnyCommandExecuteFunction;
+    metadata?: T;
 
     /**
      * Sets the execute cooldown for this command.
@@ -117,6 +118,12 @@ export interface SharedCommandBuilderProperties {
      * @param execute Function to execute when the command is called 
      */
     setExecute(execute: this["execute"]): this;
+
+    /**
+     * Set a command metadata
+     * @param metadata Command metadata
+     */
+    setMetadata(metadata?: T): this;
 }
 
 /**
@@ -130,7 +137,7 @@ export interface SharedCommandDataProperties {
 /**
  * Slash command object data interface
  */
-export interface SlashCommandData extends SharedCommandDataProperties,Partial<Omit<SharedCommandBuilderProperties, "setCooldown"|"setRequiredBotPermissions"|"setRequiredMemberPermissions"|"setHalt"|"setExecute"|"halt"|"execute">> {
+export interface SlashCommandData<T extends unknown = any> extends SharedCommandDataProperties,Partial<Omit<SharedCommandBuilderProperties<T>, "setCooldown"|"setRequiredBotPermissions"|"setRequiredMemberPermissions"|"setHalt"|"setExecute"|"setMetadata"|"halt"|"execute">> {
     type: CommandBuilderType.SlashCommand;
     nameLocalizations?: LocalizationMap;
     descriptionLocalizations?: LocalizationMap;
@@ -211,7 +218,7 @@ export interface SlashCommandSubCommandGroupData extends SharedCommandDataProper
 /**
  * Message command object data interface
  */
-export interface MessageCommandData extends SharedCommandDataProperties,Partial<Omit<SharedCommandBuilderProperties, "setCooldown"|"setRequiredBotPermissions"|"setRequiredMemberPermissions"|"setHalt"|"setExecute"|"halt"|"execute">> {
+export interface MessageCommandData<T extends unknown = any> extends SharedCommandDataProperties,Partial<Omit<SharedCommandBuilderProperties<T>, "setCooldown"|"setRequiredBotPermissions"|"setRequiredMemberPermissions"|"setHalt"|"setExecute"|"setMetadata"|"halt"|"execute">> {
     type: CommandBuilderType.MessageCommand;
     aliases?: string[];
     validateOptions?: boolean;

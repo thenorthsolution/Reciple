@@ -26,9 +26,9 @@ import {
 /**
  * Execute data for slash command
  */
-export interface SlashCommandExecuteData extends BaseCommandExecuteData {
+export interface SlashCommandExecuteData<T extends unknown = any> extends BaseCommandExecuteData {
     interaction: ChatInputCommandInteraction;
-    builder: AnySlashCommandBuilder;
+    builder: AnySlashCommandBuilder<T>;
 }
 
 /**
@@ -46,12 +46,13 @@ export type SlashCommandHaltFunction = CommandHaltFunction<CommandBuilderType.Sl
  */
 export type SlashCommandExecuteFunction = CommandExecuteFunction<CommandBuilderType.SlashCommand>;
 
-export type SlashCommandSubcommandsOnlyBuilder = Omit<SlashCommandBuilder, "addBooleanOption" | "addUserOption" | "addChannelOption" | "addRoleOption" | "addAttachmentOption" | "addMentionableOption" | "addStringOption" | "addIntegerOption" | "addNumberOption">;
-export type SlashCommandOptionsOnlyBuilder = Omit<SlashCommandBuilder, "addSubcommand" | "addSubcommandGroup">;
-export interface SlashCommandBuilder extends DiscordJsSlashCommandBuilder {
+export type SlashCommandSubcommandsOnlyBuilder<T extends unknown = any> = Omit<SlashCommandBuilder<T>, "addBooleanOption" | "addUserOption" | "addChannelOption" | "addRoleOption" | "addAttachmentOption" | "addMentionableOption" | "addStringOption" | "addIntegerOption" | "addNumberOption">;
+export type SlashCommandOptionsOnlyBuilder<T extends unknown = any> = Omit<SlashCommandBuilder<T>, "addSubcommand" | "addSubcommandGroup">;
+
+export interface SlashCommandBuilder<T extends unknown = any> extends DiscordJsSlashCommandBuilder {
     addSubcommandGroup(input: SlashCommandSubcommandGroupBuilder | ((subcommandGroup: SlashCommandSubcommandGroupBuilder) => SlashCommandSubcommandGroupBuilder)): SlashCommandSubcommandsOnlyBuilder;
     addSubcommand(input: SlashCommandSubcommandBuilder | ((subcommandGroup: SlashCommandSubcommandBuilder) => SlashCommandSubcommandBuilder)): SlashCommandSubcommandsOnlyBuilder;
-    
+
     addBooleanOption(input: SlashCommandBooleanOption | ((builder: SlashCommandBooleanOption) => SlashCommandBooleanOption)): Omit<this, "addSubcommand" | "addSubcommandGroup">;
     addUserOption(input: SlashCommandUserOption | ((builder: SlashCommandUserOption) => SlashCommandUserOption)): Omit<this, "addSubcommand" | "addSubcommandGroup">;
     addChannelOption(input: SlashCommandChannelOption | ((builder: SlashCommandChannelOption) => SlashCommandChannelOption)): Omit<this, "addSubcommand" | "addSubcommandGroup">;
@@ -66,17 +67,20 @@ export interface SlashCommandBuilder extends DiscordJsSlashCommandBuilder {
 /**
  * Reciple builder for slash command
  */
-export class SlashCommandBuilder extends DiscordJsSlashCommandBuilder implements SharedCommandBuilderProperties {
+export class SlashCommandBuilder<T extends unknown = any> extends DiscordJsSlashCommandBuilder implements SharedCommandBuilderProperties<T> {
     public readonly type = CommandBuilderType.SlashCommand;
     public cooldown: number = 0;
     public requiredBotPermissions: PermissionResolvable[] = [];
     public requiredMemberPermissions: PermissionResolvable[] = [];
     public halt?: SlashCommandHaltFunction;
     public execute: SlashCommandExecuteFunction = () => { /* Execute */ };
+    public metadata?: T;
 
-    constructor(data?: Partial<Omit<SlashCommandData, "type">>) {
+    constructor(data?: Partial<Omit<SlashCommandData<T>, "type">>) {
         super();
-        
+
+        // TODO: WTH
+
         if (data?.name !== undefined) this.setName(data.name);
         if (data?.description !== undefined) this.setDescription(data.description);
         if (data?.cooldown !== undefined) this.setCooldown(Number(data?.cooldown));
@@ -84,6 +88,7 @@ export class SlashCommandBuilder extends DiscordJsSlashCommandBuilder implements
         if (data?.requiredMemberPermissions !== undefined) this.setRequiredMemberPermissions(data.requiredMemberPermissions);
         if (data?.halt !== undefined) this.setHalt(data.halt);
         if (data?.execute !== undefined) this.setExecute(data.execute);
+        if (data?.metadata !== undefined) this.setMetadata(data.metadata);
         if (data?.nameLocalizations !== undefined) this.setNameLocalizations(data.nameLocalizations);
         if (data?.descriptionLocalizations !== undefined) this.setDescriptionLocalizations(data.descriptionLocalizations);
         if (data?.defaultMemberPermissions !== undefined) this.setDefaultMemberPermissions(data.defaultMemberPermissions);
@@ -122,6 +127,11 @@ export class SlashCommandBuilder extends DiscordJsSlashCommandBuilder implements
         return this;
     }
 
+    public setMetadata(metadata?: T): this {
+        this.metadata = metadata;
+        return this;
+    }
+
     /**
      * Add option builder to command builder
      */
@@ -151,7 +161,7 @@ export class SlashCommandBuilder extends DiscordJsSlashCommandBuilder implements
                 builder.addSubcommandGroup(option);
             }
         }
-        
+
         return builder;
     }
 
@@ -160,6 +170,8 @@ export class SlashCommandBuilder extends DiscordJsSlashCommandBuilder implements
      */
     public static resolveOption<T extends AnySlashCommandOptionBuilder>(option: AnySlashCommandOptionData): T {
         let builder: AnySlashCommandOptionBuilder;
+
+        // TODO: I can do better than this
 
         switch (option.type) {
             case ApplicationCommandOptionType.Attachment:
@@ -247,14 +259,14 @@ export class SlashCommandBuilder extends DiscordJsSlashCommandBuilder implements
             .setDescriptionLocalizations(option.descriptionLocalizations ?? null) as T;
     }
 
-    public static resolveSlashCommand(commandData: SlashCommandData|AnySlashCommandBuilder): AnySlashCommandBuilder {
+    public static resolveSlashCommand<T extends unknown = any>(commandData: SlashCommandData<T>|AnySlashCommandBuilder<T>): AnySlashCommandBuilder {
         return this.isSlashCommandBuilder(commandData) ? commandData : new SlashCommandBuilder(commandData);
     }
 
     /**
      * Is a slash command builder
      */
-    public static isSlashCommandBuilder(builder: unknown): builder is AnySlashCommandBuilder {
+    public static isSlashCommandBuilder<T extends unknown = any>(builder: unknown): builder is AnySlashCommandBuilder<T> {
         return builder instanceof SlashCommandBuilder;
     }
 
