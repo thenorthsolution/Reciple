@@ -2,7 +2,11 @@ name: Documentation
 on:
   push:
     branches:
-      - main
+      - '*'
+      - '!docs'
+      - '!gh-pages'
+    tags:
+      - '*'
 jobs:
   docs:
     name: Deploy Documentation
