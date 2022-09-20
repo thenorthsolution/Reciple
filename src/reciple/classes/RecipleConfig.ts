@@ -26,7 +26,6 @@ export interface Config {
             registerCommands: boolean;
             enableCooldown: boolean;
             setRequiredPermissions: boolean;
-            acceptRepliedInteractions: boolean;
             guilds?: string[]|string;
             permissions: {
                 enabled: boolean;

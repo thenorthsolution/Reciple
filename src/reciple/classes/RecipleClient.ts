@@ -225,7 +225,6 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
      */
     public async slashCommandExecute(interaction: Interaction|ChatInputCommandInteraction): Promise<void|SlashCommandExecuteData> {
         if (!interaction || !interaction.isChatInputCommand() || !this.isReady()) return;
-        if (!this.config.commands.slashCommand.acceptRepliedInteractions && (interaction.replied || interaction.deferred)) return;
 
         const command = this.findCommand(interaction.commandName, CommandBuilderType.SlashCommand);
         if (!command) return;
@@ -287,7 +286,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
 
         const command = this.findCommand(parseCommand.command, CommandBuilderType.MessageCommand);
         if (!command) return;
-
+        
         const commandOptions = await validateMessageCommandOptions(command, parseCommand);
         const executeData: MessageCommandExecuteData = {
             message: message,
