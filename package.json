@@ -26,8 +26,7 @@
     "build:publish-prerelease": "yarn build && yarn npm publish --tag pre",
     "build:docs": "yarn exec typedoc --tsconfig ./docs/typedoc.json",
     "update:docs": "yarn workspace docs update",
-    "test": "yarn build && yarn test:start",
-    "test:start": "cd test && yarn exec reciple -D",
+    "test": "yarn build && yarn ./test/ install && yarn workspace test start",
     "publish:docs": "yarn build:docs && yarn update:docs",
     "watch": "yarn exec tsc --watch --noEmit"
   },

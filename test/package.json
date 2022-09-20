@@ -1,5 +1,11 @@
 {
   "name": "test",
   "private": true,
+  "scripts": {
+    "start": "yarn exec reciple -D -y --token env:TOKEN"
+  },
+  "dependencies": {
+    "reciple": "../"
+  },
   "packageManager": "yarn@3.2.2"
 }

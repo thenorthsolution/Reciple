@@ -433,6 +433,25 @@ __metadata:
   languageName: node
   linkType: hard
 
+"reciple@file:../::locator=test%40workspace%3Atest":
+  version: 5.4.4
+  resolution: "reciple@file:../#../::hash=2421e5&locator=test%40workspace%3Atest"
+  dependencies:
+    chalk: 4.1.2
+    commander: ^9.4.0
+    dotenv: ^16.0.2
+    fallout-utility: ^1.4.6
+    semver: ^7.3.7
+    wildcard-match: ^5.1.2
+    yaml: ^2.1.1
+  peerDependencies:
+    discord.js: ^14.1.0
+  bin:
+    reciple: dist/cjs/bin.js
+  checksum: 7227e93a10b5e0ba6b435f648dcfc8bcaa8ffb14c182849a0368c18fca36a4e55fcf942d9f71d7bf5b02e50e1df71ee5183e618fd4108046b08f058d8fc4b49e
+  languageName: node
+  linkType: hard
+
 "reciple@workspace:.":
   version: 0.0.0-use.local
   resolution: "reciple@workspace:."
@@ -545,6 +564,14 @@ __metadata:
   checksum: 3dda818de06ebbe5b9653e07842d9479f3555ebc77e9a0280caf5a14fb877ffee9ed57007c3b78f5a6324b8dbeec648d9e97a24e2ed9fdb81ddc69ea07100f4a
   languageName: node
   linkType: hard
+
+"test@workspace:test":
+  version: 0.0.0-use.local
+  resolution: "test@workspace:test"
+  dependencies:
+    reciple: ../
+  languageName: unknown
+  linkType: soft
 
 "token-types@npm:^5.0.0-alpha.2":
   version: 5.0.0-alpha.2
