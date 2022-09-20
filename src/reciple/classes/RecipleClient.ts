@@ -23,7 +23,7 @@ import {
     Client,
     ClientEvents,
     ClientOptions,
-    Collection,
+    GuildTextBasedChannel,
     Interaction,
     Message,
     normalizeArray,
@@ -39,8 +39,8 @@ export interface RecipleClientOptions extends ClientOptions { config?: Config; }
  * Reciple client commands
  */
 export interface RecipleClientCommands {
-    slashCommands: Collection<string, AnySlashCommandBuilder>;
-    messageCommands: Collection<string, MessageCommandBuilder>;
+    slashCommands: { [commandName: string]: AnySlashCommandBuilder };
+    messageCommands: { [commandName: string]: MessageCommandBuilder };
 }
 
 /**
@@ -76,7 +76,7 @@ export interface RecipleClient<Ready extends boolean = boolean> extends Client<R
 
 export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready> {
     public config: Config = RecipleConfig.getDefaultConfig();
-    public commands: RecipleClientCommands = { slashCommands: new Collection(), messageCommands: new Collection() };
+    public commands: RecipleClientCommands = { slashCommands: {}, messageCommands: {} };
     public additionalApplicationCommands: (ApplicationCommandBuilder|ApplicationCommandData)[] = [];
     public cooldowns: CommandCooldownManager = new CommandCooldownManager();
     public modules: RecipleModule[] = [];
@@ -199,9 +199,9 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
      */
     public addCommand(command: AnyCommandData|AnyCommandBuilder): RecipleClient<Ready> {
         if (command.type === CommandBuilderType.SlashCommand) {
-            this.commands.slashCommands.set(command.name, SlashCommandBuilder.resolveSlashCommand(command));
+            this.commands.slashCommands[command.name] = SlashCommandBuilder.resolveSlashCommand(command);
         } else if (command.type === CommandBuilderType.MessageCommand) {
-            this.commands.messageCommands.set(command.name, MessageCommandBuilder.resolveMessageCommand(command));
+            this.commands.messageCommands[command.name] = MessageCommandBuilder.resolveMessageCommand(command);
         } else if (this.isClientLogsEnabled()) {
             this.logger.error(`Unknow command "${typeof command ?? 'unknown'}".`);
         }
@@ -225,7 +225,6 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
      */
     public async slashCommandExecute(interaction: Interaction|ChatInputCommandInteraction): Promise<void|SlashCommandExecuteData> {
         if (!interaction || !interaction.isChatInputCommand() || !this.isReady()) return;
-        if (!this.config.commands.slashCommand.acceptRepliedInteractions && (interaction.replied || interaction.deferred)) return;
 
         const command = this.findCommand(interaction.commandName, CommandBuilderType.SlashCommand);
         if (!command) return;
@@ -287,7 +286,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
 
         const command = this.findCommand(parseCommand.command, CommandBuilderType.MessageCommand);
         if (!command) return;
-
+        
         const commandOptions = await validateMessageCommandOptions(command, parseCommand);
         const executeData: MessageCommandExecuteData = {
             message: message,
@@ -369,11 +368,11 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
     public findCommand(command: string, type: CommandBuilderType): AnyCommandBuilder|undefined {
         switch (type) {
             case CommandBuilderType.SlashCommand:
-                return this.commands.slashCommands.get(command);
+                return this.commands.slashCommands[command];
             case CommandBuilderType.MessageCommand:
-                return this.commands.messageCommands.get(command.toLowerCase())
+                return this.commands.messageCommands[command.toLowerCase()]
                     ?? (this.config.commands.messageCommand.allowCommandAlias
-                        ? this.commands.messageCommands.find(c => c.aliases.some(a => a == command?.toLowerCase()))
+                        ? Object.values(this.commands.messageCommands).find(c => c.aliases.some(a => a == command?.toLowerCase()))
                         : undefined
                     );
             default:
@@ -414,7 +413,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
                         ).catch(err => { console.log(err); })
                         : false
                 ) || false;
-
+            
             this.emit('recipleCommandHalt', haltData);
             return haltResolved;
         } catch (err) {
@@ -449,8 +448,9 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
 
             return executeData;
         } catch (err) {
-            if (await this._haltCommand(command as any, { executeData: executeData as any, reason: CommandHaltReason.Error, error: err })) return;
-            await this._commandExecuteError(err as Error, executeData);
+            if (!await this._haltCommand(command as any, { executeData: executeData as any, reason: CommandHaltReason.Error, error: err })) {
+                this._commandExecuteError(err as Error, executeData);
+            }
         }
     }
 
