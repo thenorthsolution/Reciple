@@ -44,7 +44,7 @@ export type MessageCommandExecuteFunction = CommandExecuteFunction<CommandBuilde
 /**
  * Reciple builder for message command
  */
-export class MessageCommandBuilder implements SharedCommandBuilderProperties {
+export class MessageCommandBuilder<T extends unknown = any> implements SharedCommandBuilderProperties<T> {
     public readonly type = CommandBuilderType.MessageCommand;
     public name: string = '';
     public description: string = '';
@@ -58,16 +58,18 @@ export class MessageCommandBuilder implements SharedCommandBuilderProperties {
     public allowExecuteByBots: boolean = false;
     public halt?: MessageCommandHaltFunction;
     public execute: MessageCommandExecuteFunction = () => { /* Execute */ };
+    public metadata?: T;
 
     constructor(data?: Partial<Omit<MessageCommandData, "type">>) {
         if (data?.name !== undefined) this.setName(data.name);
         if (data?.description !== undefined) this.setDescription(data.description);
+        if (data?.aliases !== undefined) this.addAliases(data.aliases);
         if (data?.cooldown !== undefined) this.setCooldown(Number(data?.cooldown));
         if (data?.requiredBotPermissions !== undefined) this.setRequiredBotPermissions(data.requiredBotPermissions);
         if (data?.requiredMemberPermissions !== undefined) this.setRequiredMemberPermissions(data.requiredMemberPermissions);
         if (data?.halt !== undefined) this.setHalt(data.halt);
         if (data?.execute !== undefined) this.setExecute(data.execute);
-        if (data?.aliases !== undefined) this.addAliases(data.aliases);
+        if (data?.metadata !== undefined) this.setMetadata(data.metadata);
         if (data?.allowExecuteByBots !== undefined) this.setAllowExecuteByBots(true);
         if (data?.allowExecuteInDM !== undefined) this.setAllowExecuteInDM(true);
         if (data?.validateOptions !== undefined) this.setValidateOptions(true);
@@ -178,6 +180,11 @@ export class MessageCommandBuilder implements SharedCommandBuilderProperties {
     public setExecute(execute: MessageCommandExecuteFunction): this {
         if (!execute || typeof execute !== 'function') throw new TypeError('execute must be a function.');
         this.execute = execute;
+        return this;
+    }
+
+    public setMetadata(metadata?: T): this {
+        this.metadata = metadata;
         return this;
     }
 

@@ -79,13 +79,14 @@ export enum CommandBuilderType {
 /**
  * Shared command builder methods and properties
  */
-export interface SharedCommandBuilderProperties {
+export interface SharedCommandBuilderProperties<T extends unknown> {
     readonly type: CommandBuilderType;
     cooldown: number;
     requiredBotPermissions: PermissionResolvable[];
     requiredMemberPermissions: PermissionResolvable[];
     halt?: AnyCommandHaltFunction;
     execute: AnyCommandExecuteFunction;
+    metadata?: T;
 
     /**
      * Sets the execute cooldown for this command.
@@ -117,6 +118,12 @@ export interface SharedCommandBuilderProperties {
      * @param execute Function to execute when the command is called 
      */
     setExecute(execute: this["execute"]): this;
+
+    /**
+     * Set a command metadata
+     * @param metadata Command metadata
+     */
+    setMetadata(metadata?: T): this;
 }
 
 /**
@@ -130,7 +137,7 @@ export interface SharedCommandDataProperties {
 /**
  * Slash command object data interface
  */
-export interface SlashCommandData extends SharedCommandDataProperties,Partial<Omit<SharedCommandBuilderProperties, "setCooldown"|"setRequiredBotPermissions"|"setRequiredMemberPermissions"|"setHalt"|"setExecute"|"halt"|"execute">> {
+export interface SlashCommandData<T extends unknown = any> extends SharedCommandDataProperties,Partial<Omit<SharedCommandBuilderProperties<T>, "setCooldown"|"setRequiredBotPermissions"|"setRequiredMemberPermissions"|"setHalt"|"setExecute"|"setMetadata"|"halt"|"execute">> {
     type: CommandBuilderType.SlashCommand;
     nameLocalizations?: LocalizationMap;
     descriptionLocalizations?: LocalizationMap;
@@ -211,7 +218,7 @@ export interface SlashCommandSubCommandGroupData extends SharedCommandDataProper
 /**
  * Message command object data interface
  */
-export interface MessageCommandData extends SharedCommandDataProperties,Partial<Omit<SharedCommandBuilderProperties, "setCooldown"|"setRequiredBotPermissions"|"setRequiredMemberPermissions"|"setHalt"|"setExecute"|"halt"|"execute">> {
+export interface MessageCommandData<T extends unknown = any> extends SharedCommandDataProperties,Partial<Omit<SharedCommandBuilderProperties<T>, "setCooldown"|"setRequiredBotPermissions"|"setRequiredMemberPermissions"|"setHalt"|"setExecute"|"setMetadata"|"halt"|"execute">> {
     type: CommandBuilderType.MessageCommand;
     aliases?: string[];
     validateOptions?: boolean;
