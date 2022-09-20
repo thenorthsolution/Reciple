@@ -6,17 +6,17 @@ import { MessageCommandOptionBuilder } from '../classes/builders/MessageCommandO
 /**
  * Any command builders
  */
-export type AnyCommandBuilder = AnySlashCommandBuilder|MessageCommandBuilder;
+export type AnyCommandBuilder<T extends unknown = any> = AnySlashCommandBuilder<T>|MessageCommandBuilder<T>;
 
 /**
  * Any command data
  */
-export type AnyCommandData = SlashCommandData|MessageCommandData;
+export type AnyCommandData<T extends unknown = any> = SlashCommandData<T>|MessageCommandData<T>;
 
 /**
  * Any slash command builders
  */
-export type AnySlashCommandBuilder = SlashCommandBuilder|SlashCommandOptionsOnlyBuilder|SlashCommandSubcommandsOnlyBuilder;
+export type AnySlashCommandBuilder<T extends unknown = any> = SlashCommandBuilder<T>|SlashCommandOptionsOnlyBuilder<T>|SlashCommandSubcommandsOnlyBuilder<T>;
 
 /**
  * Any command halt functions

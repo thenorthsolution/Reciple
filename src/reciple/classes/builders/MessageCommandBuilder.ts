@@ -8,11 +8,11 @@ import { Command as CommandMessage } from 'fallout-utility';
 /**
  * Execute data for message command
  */
-export interface MessageCommandExecuteData extends BaseCommandExecuteData {
+export interface MessageCommandExecuteData<T extends unknown = any> extends BaseCommandExecuteData {
     message: Message;
     options: MessageCommandOptionManager;
     command: CommandMessage;
-    builder: MessageCommandBuilder;
+    builder: MessageCommandBuilder<T>;
 }
 
 /**
@@ -60,7 +60,7 @@ export class MessageCommandBuilder<T extends unknown = any> implements SharedCom
     public execute: MessageCommandExecuteFunction = () => { /* Execute */ };
     public metadata?: T;
 
-    constructor(data?: Partial<Omit<MessageCommandData, "type">>) {
+    constructor(data?: Partial<Omit<MessageCommandData<T>, "type">>) {
         if (data?.name !== undefined) this.setName(data.name);
         if (data?.description !== undefined) this.setDescription(data.description);
         if (data?.aliases !== undefined) this.addAliases(data.aliases);
@@ -191,7 +191,7 @@ export class MessageCommandBuilder<T extends unknown = any> implements SharedCom
     /**
      * Returns JSON object of this builder
      */
-    public toJSON(): MessageCommandData {
+    public toJSON(): MessageCommandData<T> {
         return {
             type: this.type,
             name: this.name,
@@ -202,6 +202,7 @@ export class MessageCommandBuilder<T extends unknown = any> implements SharedCom
             requiredMemberPermissions: this.requiredMemberPermissions,
             halt: this.halt,
             execute: this.execute,
+            metadata: this.metadata,
             allowExecuteByBots: this.allowExecuteByBots,
             allowExecuteInDM: this.allowExecuteInDM,
             validateOptions: this.validateOptions,
@@ -209,14 +210,14 @@ export class MessageCommandBuilder<T extends unknown = any> implements SharedCom
         }
     }
 
-    public static resolveMessageCommand(commandData: MessageCommandData|MessageCommandBuilder): MessageCommandBuilder {
+    public static resolveMessageCommand<T extends unknown = any>(commandData: MessageCommandData<T>|MessageCommandBuilder<T>): MessageCommandBuilder<T> {
         return this.isMessageCommandBuilder(commandData) ? commandData : new MessageCommandBuilder(commandData);
     }
 
     /**
      * Is a message command builder 
      */
-    public static isMessageCommandBuilder(builder: unknown): builder is MessageCommandBuilder {
+    public static isMessageCommandBuilder<T>(builder: unknown): builder is MessageCommandBuilder<T> {
         return builder instanceof MessageCommandBuilder;
     }
 
