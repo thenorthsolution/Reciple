@@ -456,7 +456,7 @@ __metadata:
   peerDependencies:
     discord.js: ^14.1.0
   bin:
-    reciple: bin/bin.js
+    reciple: dist/cjs/bin.js
   languageName: unknown
   linkType: soft
 

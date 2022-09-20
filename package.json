@@ -31,9 +31,6 @@
     "publish:docs": "yarn build:docs && yarn update:docs",
     "watch": "yarn exec tsc --watch --noEmit"
   },
-  "workspaces": [
-    "./docs/"
-  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/FalloutStudios/reciple.git"
@@ -72,5 +69,9 @@
   "peerDependencies": {
     "discord.js": "^14.1.0"
   },
+  "workspaces": [
+    "./docs/",
+    "./test/"
+  ],
   "packageManager": "yarn@3.2.2"
 }
