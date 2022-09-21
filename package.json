@@ -24,7 +24,7 @@
     "build": "yarn clean && yarn exec tsc",
     "build:publish": "yarn build && yarn docs && yarn npm publish",
     "build:publish-prerelease": "yarn build && yarn npm publish --tag pre",
-    "test": "yarn build && yarn ./test/ install && yarn workspace test start",
+    "test": "yarn build && yarn workspace test start",
     "docs": "yarn exec docgen --typescript true -c ./docs/index.json -o ./docs/docs.json -i src/index.ts",
     "watch": "yarn exec tsc --watch --noEmit"
   },
