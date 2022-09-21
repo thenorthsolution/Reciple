@@ -136,7 +136,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
                 });
             }
 
-            if (typeof module_.script?.commands !== 'undefined') {
+            if (module_.script?.commands && Array.isArray(module_.script?.commands)) {
                 for (const command of module_.script.commands) {
                     this.addCommand(command);
                 }
@@ -145,8 +145,8 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
 
         if (this.isClientLogsEnabled()) {
             this.logger.info(`${this.modules.length} modules loaded.`);
-            this.logger.info(`${Object.keys(this.commands.messageCommands).length} message commands loaded.`);
-            this.logger.info(`${Object.keys(this.commands.slashCommands).length} slash commands loaded.`);
+            this.logger.info(`${this.commands.messageCommands.size} message commands loaded.`);
+            this.logger.info(`${this.commands.slashCommands.size} slash commands loaded.`);
         }
 
         if (this.config.commands.slashCommand.registerCommands) {
@@ -168,7 +168,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
         const { script } = options;
         const registerCommands = options.registerApplicationCommands;
         const info = options.moduleInfo;
-        
+
         this.modules.push({
             script,
             info: {
