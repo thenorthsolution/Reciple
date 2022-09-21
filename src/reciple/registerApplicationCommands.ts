@@ -13,10 +13,8 @@ export async function registerApplicationCommands(options: RegisterApplicationCo
     const client = options.client;
     const guilds = normalizeArray([options.guilds] as RestOrArray<string>);
 
-    const commands = Object.values(options.commands ?? client.commands.slashCommands).map(cmd => {
-        if (typeof (cmd as ApplicationCommandBuilder)?.toJSON == 'undefined') return cmd as ApplicationCommandData;
-
-        cmd = cmd as ApplicationCommandBuilder;
+    const commands = options.commands ?? client.commands.slashCommands.toJSON().map(cmd => {
+        if ((cmd as ApplicationCommandBuilder)?.toJSON === undefined) return <unknown>(cmd) as ApplicationCommandData;
 
         if (SlashCommandBuilder.isSlashCommandBuilder(cmd) && client.config.commands.slashCommand.setRequiredPermissions) {
             const permissions = client.config.commands.slashCommand.permissions.enabled
@@ -28,7 +26,7 @@ export async function registerApplicationCommands(options: RegisterApplicationCo
                 if (client.isClientLogsEnabled()) client.logger.debug(`Set required permissions for ${cmd.name}`);
             }
 
-            client.commands.slashCommands.set(cmd.name, cmd);
+            console.log(cmd);
         }
 
         return cmd.toJSON();
@@ -39,9 +37,9 @@ export async function registerApplicationCommands(options: RegisterApplicationCo
         client.application?.commands.set(commands).then(() => {
             if (client.isClientLogsEnabled()) client.logger.warn('No guilds were specified for application commands. Registered application commands globally.');
         });
-    } else {        
+    } else {
         if (client.isClientLogsEnabled()) client.logger.warn(`Registering ${commands.length} application commands to ${guilds.length} guild(s).`);
-        
+
         for (const guild of guilds) {
             if (!guild) continue;
 

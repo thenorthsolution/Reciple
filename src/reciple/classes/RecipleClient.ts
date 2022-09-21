@@ -93,7 +93,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
 
         if (!options.config) throw new Error('Config is not defined.');
         this.config = {...this.config, ...(options.config ?? {})};
-        
+
         if (this.config.fileLogging.enabled) this.logger.logFile(path.join(cwd, this.config.fileLogging.logFilePath ?? 'logs/latest.log'), false);
     }
 
@@ -152,7 +152,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
         if (this.config.commands.slashCommand.registerCommands) {
             await registerApplicationCommands({
                 client: this,
-                commands: [...Object.values(this.commands.slashCommands), ...this.additionalApplicationCommands],
+                commands: [...this.commands.slashCommands.toJSON(), ...this.additionalApplicationCommands],
                 guilds: this.config.commands.slashCommand.guilds
             });
         }
@@ -188,7 +188,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
 
         if (registerCommands) await registerApplicationCommands({
             client: this,
-            commands: [...Object.values(this.commands.slashCommands), ...this.additionalApplicationCommands],
+            commands: [...this.commands.slashCommands.toJSON(), ...this.additionalApplicationCommands],
             guilds: this.config.commands.slashCommand.guilds
         });
     }
