@@ -34,7 +34,7 @@ const client = new RecipleClient({ config: config, ...config.client });
 if (config.fileLogging.clientLogs) client.logger.info('Starting Reciple client v' + rawVersion);
 
 (async () => {
-    await client.startModules(normalizeArray(config.modulesFolder as RestOrArray<string>));
+    await client.startModules(normalizeArray([config.modulesFolder] as RestOrArray<string>));
 
     client.on('ready', async () => {
         if (client.isClientLogsEnabled()) client.logger.warn(`Logged in as ${client.user?.tag || 'Unknown'}!`);
