@@ -11,7 +11,7 @@ export type ApplicationCommandBuilder = AnySlashCommandBuilder|ContextMenuComman
  */
 export async function registerApplicationCommands(options: RegisterApplicationCommandsOptions): Promise<void> {
     const client = options.client;
-    const guilds = normalizeArray(options.guilds as RestOrArray<string>);
+    const guilds = normalizeArray([options.guilds] as RestOrArray<string>);
 
     const commands = Object.values(options.commands ?? client.commands.slashCommands).map(cmd => {
         if (typeof (cmd as ApplicationCommandBuilder)?.toJSON == 'undefined') return cmd as ApplicationCommandData;
