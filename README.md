@@ -107,7 +107,7 @@ npx reciple
 
 ## MessageCommandBuilder Example
 
-* Read docs for [`MessageCommandBuilder`](https://reciple.js.org/classes/MessageCommandBuilder.html)
+* Read docs for [MessageCommandBuilder](https://reciple.js.org/#/docs/reciple.js/main/class/MessageCommandBuilder)
 
 ```js
 new MessageCommandBuilder()
@@ -119,9 +119,7 @@ new MessageCommandBuilder()
 
 ## Built-in message command validation
 
-* Read docs for [`MessageCommandBuilder#setValidateOptions()`](https://reciple.js.org/classes/MessageCommandBuilder.html#setValidateOptions)
-* Read docs for [`MessageCommandOptionBuilder`](https://reciple.js.org/classes/MessageCommandOptionBuilder.html)
-* Read docs for [`MessageCommandOptionManager`](https://reciple.js.org/classes/MessageCommandOptionManager.html)
+* Read docs for [MessageCommandBuilder#setValidateOptions()](https://reciple.js.org/#/docs/reciple.js/main/class/MessageCommandBuilder?scrollTo=setValidateOptions), [MessageCommandOptionBuilder](https://reciple.js.org/#/docs/reciple.js/main/class/MessageCommandOptionBuilder), [MessageCommandOptionManager](https://reciple.js.org/#/docs/reciple.js/main/class/MessageCommandOptionManager)
 ```js
 new MessageCommandBuilder()
     .setName("command")
@@ -143,10 +141,7 @@ new MessageCommandBuilder()
 
 ## Command Cooldowns
 
-* Read docs for [`SlashCommandBuilder#setCooldown()`](https://reciple.js.org/classes/SlashCommandBuilder.html#setCooldown)
-* Read docs for [`MessageCommandBuilder#setCooldown()`](https://reciple.js.org/classes/MessageCommandBuilder.html#setCooldown)
-* Read docs for [`CommandHaltReason`](https://reciple.js.org/enums/CommandHaltReason.html)
-* Read docs for [`CommandCooldownData`](https://reciple.js.org/interfaces/CommandCooldownData.html)
+* Read docs for [SlashCommandBuilder#setCooldown()](https://reciple.js.org/#/docs/reciple.js/main/class/SlashCommandBuilder?scrollTo=setCooldown), [MessageCommandBuilder#setCooldown()](https://reciple.js.org/#/docs/reciple.js/main/class/MessageCommandBuilder?scrollTo=setCooldown), [CommandHaltReason](https://reciple.js.org/#/docs/reciple.js/main/typedef/CommandHaltReason), [CommandCooldownData](https://reciple.js.org/#/docs/reciple.js/main/typedef/CommandCooldownData)
 
 ```js
 // Slash command

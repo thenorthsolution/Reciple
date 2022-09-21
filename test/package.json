@@ -2,7 +2,7 @@
   "name": "test",
   "private": true,
   "scripts": {
-    "start": "yarn exec reciple -D -y --token env:TOKEN"
+    "start": "yarn exec reciple -D -y --token env:DISCORD_TOKEN"
   },
   "packageManager": "yarn@3.2.2"
 }
