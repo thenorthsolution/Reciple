@@ -2,29 +2,25 @@ const { CommandBuilderType, CommandHaltReason, MessageCommandBuilder, SlashComma
 
 module.exports = {
     versions: '^5.4.1',
+    commandHalt(e) {
+        if (e.reason == CommandHaltReason.Error) {
+            e.executeData.message.reply(String(e.error));
+            return true;
+        }
+    },
     commands: [
         new MessageCommandBuilder()
             .setName("ping")
             .setDescription("Pong!")
             .setCooldown(1000 * 10)
-            .setExecute(e => e.message.reply('pong'))
-            .setHalt(e => {
-                if (e.reason == CommandHaltReason.Error) {
-                    e.executeData.message.reply(String(e.error));
-                    return true;
-                }
-            }),
+            .setExecute(e => e.message.reply('Pong!'))
+            .setHalt(this.commandHalt),
         new SlashCommandBuilder()
-            .setName("ping")
-            .setDescription("Pong!")
+            .setName("pong")
+            .setDescription("Ping!")
             .setCooldown(1000 * 10)
-            .setExecute(e => e.interaction.reply(`Pong!`))
-            .setHalt(e => {
-                if (e.reason == CommandHaltReason.Error) {
-                    e.executeData.interaction.reply(String(e.error));
-                    return true;
-                }
-            })
+            .setExecute(e => e.interaction.reply(`Ping!`))
+            .setHalt(this.commandHalt)
     ],
     onStart(client) {
         client.logger.log("Module started");
