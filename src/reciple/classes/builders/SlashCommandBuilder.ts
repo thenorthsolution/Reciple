@@ -20,7 +20,8 @@ import {
     SlashCommandIntegerOption,
     SlashCommandNumberOption,
     ApplicationCommandOptionType,
-    SharedSlashCommandOptions
+    SharedSlashCommandOptions,
+    PermissionsBitField
 } from 'discord.js';
 
 /**
@@ -113,6 +114,7 @@ export class SlashCommandBuilder<T extends unknown = any> extends DiscordJsSlash
 
     public setRequiredMemberPermissions(...permissions: RestOrArray<PermissionResolvable>): this {
         this.requiredMemberPermissions = normalizeArray(permissions);
+        this.setDefaultMemberPermissions(new PermissionsBitField(this.requiredMemberPermissions).toArray().map(perm => PermissionsBitField.resolve(perm)).reduce((prev, curr) => prev | curr));
         return this;
     }
 
