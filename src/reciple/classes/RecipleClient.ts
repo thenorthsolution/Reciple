@@ -124,16 +124,27 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
      */
     public async loadModules(): Promise<RecipleClient<Ready>> {
         for (const m in this.modules) {
-            const module_ = this.modules[m];
-            if (typeof module_.script?.onLoad === 'function') {
-                await Promise.resolve(module_.script.onLoad(this)).catch(err => {
-                    if (this.isClientLogsEnabled()) {
-                        this.logger.error(`Error loading ${module_.info.filename ?? 'unknown module'}:`);
-                        this.logger.error(err);
-                    }
+            const index = <unknown>(m) as number;
+            const module_ = this.modules[index];
 
-                    this.modules = this.modules.filter((_r, i) => i.toString() !== m.toString());
-                });
+            try {
+                if (typeof module_.script?.onLoad === 'function') {
+                    await Promise.resolve(module_.script.onLoad(this)).catch(err => {
+                        if (this.isClientLogsEnabled()) {
+                            this.logger.error(`Error loading ${module_.info.filename ?? 'unknown module'}:`);
+                            this.logger.error(err);
+                        }
+
+                        this.modules.splice(index);
+                    });
+                }
+            } catch (err) {
+                if (this.isClientLogsEnabled()) {
+                    this.logger.error(`Error loading ${module_.info.filename ?? 'unknown module'}:`);
+                    this.logger.error(err);
+                }
+
+                this.modules.splice(index);
             }
 
             if (module_.script?.commands && Array.isArray(module_.script?.commands)) {
