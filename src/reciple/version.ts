@@ -1,17 +1,14 @@
-import { readFileSync } from 'fs';
 import semver from 'semver';
-import path from 'path';
-import url from 'url';
-
-/**
- * Current reciple version from package.json
- */
-export const rawVersion = JSON.parse(readFileSync(path.join(url.fileURLToPath(new URL('.', import.meta.url)), '../../../package.json'), 'utf-8')).version;
 
 /**
  * Current reciple version
  */
- export const version = `${semver.coerce(rawVersion)}`;
+export const version = `${semver.coerce(require('../../../package.json').version)}`;
+
+/**
+ * Current reciple version from package.json
+ */
+export const rawVersion = require('../../../package.json').version;
 
 /**
  * Check if the version is valid
