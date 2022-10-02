@@ -1,4 +1,4 @@
-import { MessageCommandOptionData } from '../../types/builders.js';
+import { MessageCommandOptionData } from '../../types/builders';
 import { Awaitable } from 'discord.js';
 
 /**

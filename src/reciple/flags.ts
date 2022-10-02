@@ -1,4 +1,4 @@
-import { rawVersion } from './version.js';
+import { rawVersion } from './version';
 import { Command } from 'commander';
 
 /**

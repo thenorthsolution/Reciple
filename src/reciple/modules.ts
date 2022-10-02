@@ -1,12 +1,12 @@
-import { AnyCommandBuilder, AnyCommandData, CommandBuilderType } from './types/builders.js';
-import { MessageCommandBuilder } from './classes/builders/MessageCommandBuilder.js';
-import { SlashCommandBuilder } from './classes/builders/SlashCommandBuilder.js';
+import { AnyCommandBuilder, AnyCommandData, CommandBuilderType } from './types/builders';
+import { MessageCommandBuilder } from './classes/builders/MessageCommandBuilder';
+import { SlashCommandBuilder } from './classes/builders/SlashCommandBuilder';
 import { normalizeArray, RestOrArray } from 'discord.js';
-import { RecipleClient } from './classes/RecipleClient.js';
-import { isSupportedVersion, version } from './version.js';
+import { RecipleClient } from './classes/RecipleClient';
+import { isSupportedVersion, version } from './version';
 import { existsSync, mkdirSync, readdirSync } from 'fs';
 import wildcard from 'wildcard-match';
-import { cwd } from './flags.js';
+import { cwd } from './flags';
 import path from 'path';
 
 export type LoadedModules = { commands: AnyCommandBuilder[], modules: RecipleModule[] };

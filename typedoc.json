@@ -14,7 +14,7 @@
   "name": "Reciple.js",
   "cname": "reciple.js.org",
   "json": "./docs/docs/docs.json",
-  "tsconfig": "../tsconfig/tsconfig.base.json",
+  "tsconfig": "./tsconfig.json",
   "includeVersion": true,
   "excludeExternals": true,
   "hideGenerator": true,

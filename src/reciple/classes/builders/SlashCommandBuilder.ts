@@ -1,17 +1,6 @@
-import { BaseCommandExecuteData, CommandHaltData } from '../../types/commands.js';
-import { isClass } from '../../util.js';
-
-import {
-    CommandBuilderType,
-    CommandHaltFunction,
-    CommandExecuteFunction,
-    SharedCommandBuilderProperties,
-    AnySlashCommandBuilder,
-    SlashCommandData,
-    AnySlashCommandOptionData,
-    AnySlashCommandOptionBuilder,
-    AnySlashCommandOptionsOnlyOptionBuilder
-} from '../../types/builders.js';
+import { CommandBuilderType, CommandHaltFunction, CommandExecuteFunction, SharedCommandBuilderProperties, AnySlashCommandBuilder, SlashCommandData, AnySlashCommandOptionData, AnySlashCommandOptionBuilder, AnySlashCommandOptionsOnlyOptionBuilder } from '../../types/builders';
+import { BaseCommandExecuteData, CommandHaltData } from '../../types/commands';
+import { isClass } from '../../util';
 
 import {
     ChatInputCommandInteraction,

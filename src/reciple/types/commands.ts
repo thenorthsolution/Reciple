@@ -1,9 +1,9 @@
-import { MessageCommandExecuteData, MessageCommandHaltData } from '../classes/builders/MessageCommandBuilder.js';
-import { SlashCommandExecuteData, SlashCommandHaltData } from '../classes/builders/SlashCommandBuilder.js';
-import { MessageCommandOptionManager } from '../classes/MessageCommandOptionManager.js';
-import { CooledDownUser } from '../classes/CommandCooldownManager.js';
-import { RecipleClient } from '../classes/RecipleClient.js';
-import { CommandBuilderType } from '../types/builders.js';
+import { MessageCommandExecuteData, MessageCommandHaltData } from '../classes/builders/MessageCommandBuilder';
+import { SlashCommandExecuteData, SlashCommandHaltData } from '../classes/builders/SlashCommandBuilder';
+import { MessageCommandOptionManager } from '../classes/MessageCommandOptionManager';
+import { CooledDownUser } from '../classes/CommandCooldownManager';
+import { RecipleClient } from '../classes/RecipleClient';
+import { CommandBuilderType } from '../types/builders';
 
 /**
  * Any command halt data
