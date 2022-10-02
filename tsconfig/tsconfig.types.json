@@ -1,0 +1,10 @@
+{
+    "extends": "./tsconfig.base.json",
+    "compilerOptions": {
+        "emitDeclarationOnly": true,
+        "declarationDir": "../dist/types",
+        "moduleResolution": "node",
+        "module": "CommonJS",
+        "declaration": true
+    }
+}

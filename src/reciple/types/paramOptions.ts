@@ -1,9 +1,9 @@
-import { ApplicationCommandBuilder } from '../registerApplicationCommands';
+import { ApplicationCommandBuilder } from '../registerApplicationCommands.js';
 import { ApplicationCommandData, PermissionsBitField } from 'discord.js';
-import { RecipleModule, RecipleScript } from '../modules';
-import { RecipleClient } from '../classes/RecipleClient';
-import { Config } from '../classes/RecipleConfig';
-import { AnyCommandBuilder } from './builders';
+import { RecipleModule, RecipleScript } from '../modules.js';
+import { RecipleClient } from '../classes/RecipleClient.js';
+import { Config } from '../classes/RecipleConfig.js';
+import { AnyCommandBuilder } from './builders.js';
 
 export interface RecipleClientAddModuleOptions {
     /**

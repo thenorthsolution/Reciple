@@ -1,8 +1,8 @@
 import { ClientOptions, PermissionResolvable } from 'discord.js';
 import { existsSync, readFileSync, writeFileSync } from 'fs';
-import { isSupportedVersion, version } from '../version';
+import { isSupportedVersion, version } from '../version.js';
 import { input, replaceAll } from 'fallout-utility';
-import { cwd, token as __token } from '../flags';
+import { cwd, token as __token } from '../flags.js';
 import path from 'path';
 import yaml from 'yaml';
 

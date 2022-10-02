@@ -1,5 +1,5 @@
 import { Logger, LogLevels } from 'fallout-utility';
-import { flags } from './flags'
+import { flags } from './flags.js';
 import chalk from 'chalk';
 
 /**

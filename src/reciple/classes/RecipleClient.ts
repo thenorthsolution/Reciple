@@ -1,18 +1,18 @@
-import { MessageCommandBuilder, MessageCommandExecuteData, MessageCommandHaltData, validateMessageCommandOptions } from './builders/MessageCommandBuilder';
-import { SlashCommandBuilder, SlashCommandExecuteData, SlashCommandHaltData } from './builders/SlashCommandBuilder';
-import { AnyCommandBuilder, AnyCommandData, AnySlashCommandBuilder, CommandBuilderType } from '../types/builders';
-import { ApplicationCommandBuilder, registerApplicationCommands } from '../registerApplicationCommands';
-import { AnyCommandExecuteData, AnyCommandHaltData, CommandHaltReason } from '../types/commands';
-import { botHasExecutePermissions, userHasCommandPermissions } from '../permissions';
-import { CommandCooldownManager, CooledDownUser } from './CommandCooldownManager';
-import { MessageCommandOptionManager } from './MessageCommandOptionManager';
-import { RecipleClientAddModuleOptions } from '../types/paramOptions';
+import { MessageCommandBuilder, MessageCommandExecuteData, MessageCommandHaltData, validateMessageCommandOptions } from './builders/MessageCommandBuilder.js';
+import { SlashCommandBuilder, SlashCommandExecuteData, SlashCommandHaltData } from './builders/SlashCommandBuilder.js';
+import { AnyCommandBuilder, AnyCommandData, AnySlashCommandBuilder, CommandBuilderType } from '../types/builders.js';
+import { ApplicationCommandBuilder, registerApplicationCommands } from '../registerApplicationCommands.js';
+import { AnyCommandExecuteData, AnyCommandHaltData, CommandHaltReason } from '../types/commands.js';
+import { botHasExecutePermissions, userHasCommandPermissions } from '../permissions.js';
+import { CommandCooldownManager, CooledDownUser } from './CommandCooldownManager.js';
+import { MessageCommandOptionManager } from './MessageCommandOptionManager.js';
+import { RecipleClientAddModuleOptions } from '../types/paramOptions.js';
 import { getCommand, Logger as ILogger } from 'fallout-utility';
-import { Config, RecipleConfig } from './RecipleConfig';
-import { getModules, RecipleModule } from '../modules';
-import { createLogger } from '../logger';
-import { version } from '../version';
-import { cwd } from '../flags';
+import { Config, RecipleConfig } from './RecipleConfig.js';
+import { getModules, RecipleModule } from '../modules.js';
+import { createLogger } from '../logger.js';
+import { version } from '../version.js';
+import { cwd } from '../flags.js';
 import path from 'path';
 
 import {

@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 
-import { RecipleClient } from './reciple/classes/RecipleClient';
-import { RecipleConfig } from './reciple/classes/RecipleConfig';
-import { rawVersion } from './reciple/version';
+import { RecipleClient } from './reciple/classes/RecipleClient.js';
+import { RecipleConfig } from './reciple/classes/RecipleConfig.js';
+import { rawVersion } from './reciple/version.js';
 import { existsSync, readdirSync } from 'fs';
-import { cwd, flags } from './reciple/flags';
+import { cwd, flags } from './reciple/flags.js';
 import { input } from 'fallout-utility';
 import chalk from 'chalk';
 import 'dotenv/config';
