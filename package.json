@@ -45,8 +45,8 @@
   ],
   "dependencies": {
     "chalk": "4.1.2",
-    "commander": "^9.4.0",
-    "dotenv": "^16.0.2",
+    "commander": "^9.4.1",
+    "dotenv": "^16.0.3",
     "fallout-utility": "^1.4.6",
     "semver": "^7.3.7",
     "wildcard-match": "^5.1.2",
@@ -54,14 +54,11 @@
   },
   "devDependencies": {
     "@discordjs/docgen": "^0.12.1",
-    "@types/node": "^18.7.18",
+    "@types/node": "^18.7.23",
     "@types/semver": "^7.3.12",
-    "discord.js": "^14.4.0",
+    "discord.js": "^14.5.0",
     "rimraf": "^3.0.2",
-    "typedoc-plugin-discord-types": "^1.0.2",
-    "typedoc-plugin-djs-links": "^1.2.0",
-    "typedoc-plugin-mdn-links": "^2.0.0",
-    "typescript": "^4.8.3"
+    "typescript": "^4.8.4"
   },
   "peerDependencies": {
     "discord.js": "^14.1.0"

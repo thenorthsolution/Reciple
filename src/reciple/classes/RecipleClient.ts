@@ -58,7 +58,7 @@ export interface RecipleClientEvents extends ClientEvents {
 export interface RecipleClient<Ready extends boolean = boolean> extends Client<Ready> {
     on<E extends keyof RecipleClientEvents>(event: E, listener: (...args: RecipleClientEvents[E]) => Awaitable<void>): this;
     on<E extends string|symbol>(event: E, listener: (...args: any) => Awaitable<void>): this;
-    
+
     once<E extends keyof RecipleClientEvents>(event: E, listener: (...args: RecipleClientEvents[E]) => Awaitable<void>): this;
     once<E extends keyof string|symbol>(event: E, listener: (...args: any) => Awaitable<void>): this;
 
