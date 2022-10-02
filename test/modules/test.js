@@ -1,4 +1,4 @@
-const { CommandBuilderType, CommandHaltReason, MessageCommandBuilder, SlashCommandBuilder } = require('../../');
+import { CommandBuilderType, CommandHaltReason, MessageCommandBuilder, SlashCommandBuilder } from 'reciple';
 
 module.exports = {
     versions: '^5.4.1',
