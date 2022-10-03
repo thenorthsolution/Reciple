@@ -116,7 +116,7 @@ export class SlashCommandBuilder<T extends unknown = any> extends DiscordJsSlash
         this.requiredMemberPermissions = normalizeArray(permissions);
         this.setDefaultMemberPermissions(
             this.requiredMemberPermissions.length
-                ? new PermissionsBitField(this.requiredMemberPermissions).toArray().map(perm => PermissionsBitField.resolve(perm)).reduce((prev, curr) => prev | curr)
+                ? new PermissionsBitField(this.requiredMemberPermissions).bitfield
                 : undefined
         );
         return this;

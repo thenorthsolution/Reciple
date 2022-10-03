@@ -19,6 +19,7 @@ module.exports = {
             .setName("pong")
             .setDescription("Ping!")
             .setCooldown(1000 * 10)
+            .setRequiredMemberPermissions(['AddReactions', 'ChangeNickname'])
             .setExecute(e => e.interaction.reply(`Ping!`))
             .setHalt(this.commandHalt)
     ],
