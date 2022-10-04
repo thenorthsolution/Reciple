@@ -25,8 +25,6 @@ export async function registerApplicationCommands(options: RegisterApplicationCo
                 cmd.setRequiredMemberPermissions(...permissions);
                 if (client.isClientLogsEnabled()) client.logger.debug(`Set required permissions for ${cmd.name}`);
             }
-
-            console.log(cmd);
         }
 
         return cmd.toJSON();
