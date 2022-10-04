@@ -502,14 +502,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fallout-utility@npm:^1.5.1":
-  version: 1.5.1
-  resolution: "fallout-utility@npm:1.5.1"
+"fallout-utility@npm:^1.5.2":
+  version: 1.5.2
+  resolution: "fallout-utility@npm:1.5.2"
   dependencies:
     chalk: ^4.1.2
     prompt-sync: ^4.2.0
     strip-ansi: ^6.0.1
-  checksum: c91d8476725e9592d10cde8c562a14df9f8ea3a40efbd322ac4e9004681d571ae683d13e30f33f22a0d6a85da143b80c80e1d64a767d742b553566ff3b46596a
+  checksum: c8da7c1ef3865eaf8ffb7e9cc4c83aed18772e32a7fca5481d5198b906e3777bdacf514e737bcd44a8a13efdb5f5f464323c3d0048284cee1b0479aafd018933
   languageName: node
   linkType: hard
 
@@ -981,7 +981,7 @@ __metadata:
     commander: ^9.4.1
     discord.js: ^14.5.0
     dotenv: ^16.0.3
-    fallout-utility: ^1.5.1
+    fallout-utility: ^1.5.2
     rimraf: ^3.0.2
     semver: ^7.3.7
     typescript: ^4.8.4
