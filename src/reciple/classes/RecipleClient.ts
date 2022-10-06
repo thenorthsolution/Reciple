@@ -90,8 +90,6 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
         super(options);
 
         this.logger = createLogger(!!options.config?.fileLogging.stringifyLoggedJSON, options.config?.fileLogging.debugmode);
-
-        if (!options.config) throw new Error('Config is not defined.');
         this.config = {...this.config, ...(options.config ?? {})};
 
         if (this.config.fileLogging.enabled) this.logger.logFile(path.join(cwd, this.config.fileLogging.logFilePath ?? 'logs/latest.log'), false);
