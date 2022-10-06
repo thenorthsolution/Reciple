@@ -3,12 +3,12 @@ import { Message, normalizeArray, PermissionResolvable, RestOrArray } from 'disc
 import { BaseCommandExecuteData, CommandHaltData } from '../../types/commands';
 import { MessageCommandOptionManager } from '../MessageCommandOptionManager';
 import { MessageCommandOptionBuilder } from './MessageCommandOptionBuilder';
-import { Command as CommandMessage } from 'fallout-utility';
+import { Command, Command as CommandMessage } from 'fallout-utility';
 
 /**
  * Execute data for message command
  */
-export interface MessageCommandExecuteData<T extends unknown = any> extends BaseCommandExecuteData {
+export interface MessageCommandExecuteData<T = unknown> extends BaseCommandExecuteData {
     message: Message;
     options: MessageCommandOptionManager;
     command: CommandMessage;
@@ -29,22 +29,22 @@ export interface MessageCommandValidatedOption {
 /**
  * Halt data for message command
  */
-export type MessageCommandHaltData<T extends unknown = any> = CommandHaltData<CommandBuilderType.MessageCommand, T>;
+export type MessageCommandHaltData<T = unknown> = CommandHaltData<CommandBuilderType.MessageCommand, T>;
 
 /**
  * Message command halt function
  */
-export type MessageCommandHaltFunction<T extends unknown = any> = CommandHaltFunction<CommandBuilderType.MessageCommand, T>;
+export type MessageCommandHaltFunction<T = unknown> = CommandHaltFunction<CommandBuilderType.MessageCommand, T>;
 
 /**
  * Message command execute function
  */
-export type MessageCommandExecuteFunction<T extends unknown = any> = CommandExecuteFunction<CommandBuilderType.MessageCommand, T>;
+export type MessageCommandExecuteFunction<T = unknown> = CommandExecuteFunction<CommandBuilderType.MessageCommand, T>;
 
 /**
  * Reciple builder for message command
  */
-export class MessageCommandBuilder<T extends unknown = any> implements SharedCommandBuilderProperties<T> {
+export class MessageCommandBuilder<T = unknown> implements SharedCommandBuilderProperties<T> {
     public readonly type = CommandBuilderType.MessageCommand;
     public name: string = '';
     public description: string = '';
@@ -172,12 +172,12 @@ export class MessageCommandBuilder<T extends unknown = any> implements SharedCom
         return this;
     }
 
-    public setHalt(halt?: MessageCommandHaltFunction|null): this {
+    public setHalt(halt?: MessageCommandHaltFunction<T>|null): this {
         this.halt = halt ?? undefined;
         return this;
     }
 
-    public setExecute(execute: MessageCommandExecuteFunction): this {
+    public setExecute(execute: MessageCommandExecuteFunction<T>): this {
         if (!execute || typeof execute !== 'function') throw new TypeError('execute must be a function.');
         this.execute = execute;
         return this;
@@ -210,7 +210,7 @@ export class MessageCommandBuilder<T extends unknown = any> implements SharedCom
         }
     }
 
-    public static resolveMessageCommand<T extends unknown = any>(commandData: MessageCommandData<T>|MessageCommandBuilder<T>): MessageCommandBuilder<T> {
+    public static resolveMessageCommand<T = unknown>(commandData: MessageCommandData<T>|MessageCommandBuilder<T>): MessageCommandBuilder<T> {
         return this.isMessageCommandBuilder<T>(commandData) ? commandData : new MessageCommandBuilder(commandData);
     }
 

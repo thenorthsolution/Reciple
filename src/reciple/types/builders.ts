@@ -6,37 +6,37 @@ import { MessageCommandOptionBuilder } from '../classes/builders/MessageCommandO
 /**
  * Any command builders
  */
-export type AnyCommandBuilder<T extends unknown = any> = AnySlashCommandBuilder<T>|MessageCommandBuilder<T>;
+export type AnyCommandBuilder<T = unknown> = AnySlashCommandBuilder<T>|MessageCommandBuilder<T>;
 
 /**
  * Any command data
  */
-export type AnyCommandData<T extends unknown = any> = SlashCommandData<T>|MessageCommandData<T>;
+export type AnyCommandData<T = unknown> = SlashCommandData<T>|MessageCommandData<T>;
 
 /**
  * Any slash command builders
  */
-export type AnySlashCommandBuilder<T extends unknown = any> = SlashCommandBuilder<T>|SlashCommandOptionsOnlyBuilder<T>|SlashCommandSubcommandsOnlyBuilder<T>;
+export type AnySlashCommandBuilder<T = unknown> = SlashCommandBuilder<T>|SlashCommandOptionsOnlyBuilder<T>|SlashCommandSubcommandsOnlyBuilder<T>;
 
 /**
  * Any command halt functions
  */
-export type AnyCommandHaltFunction = SlashCommandHaltFunction|MessageCommandHaltFunction;
+export type AnyCommandHaltFunction<T = unknown> = SlashCommandHaltFunction<T>|MessageCommandHaltFunction<T>;
 
 /**
  * Any command execute function
  */
-export type AnyCommandExecuteFunction = SlashCommandExecuteFunction|MessageCommandExecuteFunction;
+export type AnyCommandExecuteFunction<T = unknown> = SlashCommandExecuteFunction<T>|MessageCommandExecuteFunction<T>;
 
 /**
  * Command halt function
  */
-export type CommandHaltFunction<T extends CommandBuilderType, M extends unknown = any> = (haltData: T extends CommandBuilderType.SlashCommand ? SlashCommandHaltData<M> : T extends CommandBuilderType.MessageCommand ? MessageCommandHaltData<M> : SlashCommandHaltData<M>|MessageCommandHaltData<M>) => Awaitable<boolean|null|undefined|void>;
+export type CommandHaltFunction<T extends CommandBuilderType, M = unknown> = (haltData: T extends CommandBuilderType.SlashCommand ? SlashCommandHaltData<M> : T extends CommandBuilderType.MessageCommand ? MessageCommandHaltData<M> : SlashCommandHaltData<M>|MessageCommandHaltData<M>) => Awaitable<boolean|null|undefined|void>;
 
 /**
  * Command execute function
  */
-export type CommandExecuteFunction<T extends CommandBuilderType, M extends unknown = any> = (executeData: T extends CommandBuilderType.SlashCommand ? SlashCommandExecuteData<M> : T extends CommandBuilderType.MessageCommand ? MessageCommandExecuteData<M> : SlashCommandExecuteData<M>|MessageCommandExecuteData<M>) => Awaitable<void>;
+export type CommandExecuteFunction<T extends CommandBuilderType, M = unknown> = (executeData: T extends CommandBuilderType.SlashCommand ? SlashCommandExecuteData<M> : T extends CommandBuilderType.MessageCommand ? MessageCommandExecuteData<M> : SlashCommandExecuteData<M>|MessageCommandExecuteData<M>) => Awaitable<void>;
 
 /**
  * Message command options resolvable
@@ -79,13 +79,13 @@ export enum CommandBuilderType {
 /**
  * Shared command builder methods and properties
  */
-export interface SharedCommandBuilderProperties<T extends unknown> {
+export interface SharedCommandBuilderProperties<T = unknown> {
     readonly type: CommandBuilderType;
     cooldown: number;
     requiredBotPermissions: PermissionResolvable[];
     requiredMemberPermissions: PermissionResolvable[];
-    halt?: AnyCommandHaltFunction;
-    execute: AnyCommandExecuteFunction;
+    halt?: AnyCommandHaltFunction<T>;
+    execute: AnyCommandExecuteFunction<T>;
     metadata?: T;
 
     /**
@@ -137,7 +137,7 @@ export interface SharedCommandDataProperties {
 /**
  * Slash command object data interface
  */
-export interface SlashCommandData<T extends unknown = any> extends SharedCommandDataProperties,Partial<Omit<SharedCommandBuilderProperties<T>, "setCooldown"|"setRequiredBotPermissions"|"setRequiredMemberPermissions"|"setHalt"|"setExecute"|"setMetadata"|"halt"|"execute">> {
+export interface SlashCommandData<T = unknown> extends SharedCommandDataProperties,Partial<Omit<SharedCommandBuilderProperties<T>, "setCooldown"|"setRequiredBotPermissions"|"setRequiredMemberPermissions"|"setHalt"|"setExecute"|"setMetadata"|"halt"|"execute">> {
     type: CommandBuilderType.SlashCommand;
     nameLocalizations?: LocalizationMap;
     descriptionLocalizations?: LocalizationMap;
@@ -148,8 +148,8 @@ export interface SlashCommandData<T extends unknown = any> extends SharedCommand
     defaultPermission?: boolean;
     defaultMemberPermissions?: string|null;
     dmPermission?: boolean;
-    halt?: SlashCommandHaltFunction;
-    execute: SlashCommandExecuteFunction;
+    halt?: SlashCommandHaltFunction<T>;
+    execute: SlashCommandExecuteFunction<T>;
 }
 
 export interface SharedSlashCommandOptionData<V = string|number> extends SharedCommandDataProperties,Pick<SlashCommandData, "nameLocalizations"|"descriptionLocalizations"> {
@@ -218,14 +218,14 @@ export interface SlashCommandSubCommandGroupData extends SharedCommandDataProper
 /**
  * Message command object data interface
  */
-export interface MessageCommandData<T extends unknown = any> extends SharedCommandDataProperties,Partial<Omit<SharedCommandBuilderProperties<T>, "setCooldown"|"setRequiredBotPermissions"|"setRequiredMemberPermissions"|"setHalt"|"setExecute"|"setMetadata"|"halt"|"execute">> {
+export interface MessageCommandData<T = unknown> extends SharedCommandDataProperties,Partial<Omit<SharedCommandBuilderProperties<T>, "setCooldown"|"setRequiredBotPermissions"|"setRequiredMemberPermissions"|"setHalt"|"setExecute"|"setMetadata"|"halt"|"execute">> {
     type: CommandBuilderType.MessageCommand;
     aliases?: string[];
     validateOptions?: boolean;
     allowExecuteInDM?: boolean;
     allowExecuteByBots?: boolean;
-    halt?: MessageCommandHaltFunction;
-    execute: MessageCommandExecuteFunction;
+    halt?: MessageCommandHaltFunction<T>;
+    execute: MessageCommandExecuteFunction<T>;
     options?: MessageCommandOptionResolvable[];
 }
 
