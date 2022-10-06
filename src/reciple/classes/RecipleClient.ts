@@ -7,9 +7,9 @@ import { botHasExecutePermissions, userHasCommandPermissions } from '../permissi
 import { CommandCooldownManager, CooledDownUser } from './CommandCooldownManager';
 import { MessageCommandOptionManager } from './MessageCommandOptionManager';
 import { RecipleClientAddModuleOptions } from '../types/paramOptions';
-import { getCommand, Logger as ILogger } from 'fallout-utility';
 import { Config, RecipleConfig } from './RecipleConfig';
 import { getModules, RecipleModule } from '../modules';
+import { getCommand, Logger } from 'fallout-utility';
 import { createLogger } from '../logger';
 import { version } from '../version';
 import { cwd } from '../flags';
@@ -80,7 +80,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
     public additionalApplicationCommands: (ApplicationCommandBuilder|ApplicationCommandData)[] = [];
     public cooldowns: CommandCooldownManager = new CommandCooldownManager();
     public modules: RecipleModule[] = [];
-    public logger: ILogger;
+    public logger: Logger;
     public version: string = version;
 
     /**
