@@ -9,9 +9,21 @@ import { Command } from 'fallout-utility';
  * Execute data for message command
  */
 export interface MessageCommandExecuteData<T = unknown> extends BaseCommandExecuteData {
+    /**
+     * Command message
+     */
     message: Message;
+    /**
+     * Command option args
+     */
     options: MessageCommandOptionManager;
+    /**
+     * Command parsed args
+     */
     command: Command;
+    /**
+     * Command builder
+     */
     builder: MessageCommandBuilder<T>;
 }
 
@@ -19,10 +31,25 @@ export interface MessageCommandExecuteData<T = unknown> extends BaseCommandExecu
  * Validated message command option
  */
 export interface MessageCommandValidatedOption {
+    /**
+     * Option name
+     */
     name: string;
-    value: string|undefined;
+    /**
+     * Option value
+     */
+    value?: string;
+    /**
+     * Is the option required
+     */
     required: boolean;
+    /**
+     * Is the option invalid
+     */
     invalid: boolean;
+    /**
+     * Is the option missing
+     */
     missing: boolean;
 }
 
@@ -106,7 +133,7 @@ export class MessageCommandBuilder<T = unknown> implements SharedCommandBuilderP
         if (!aliases.length) throw new TypeError('Provide atleast one alias');
         if (aliases.some(a => !a || typeof a !== 'string' || a.match(/^\s+$/))) throw new TypeError('aliases must be strings and should not contain whitespaces');
         if (this.name && aliases.some(a => a == this.name)) throw new TypeError('alias cannot have same name to its real command name');
-        
+
         this.aliases = [...new Set(aliases.map(s => s.toLowerCase()))];
         return this;
     }
@@ -143,7 +170,7 @@ export class MessageCommandBuilder<T = unknown> implements SharedCommandBuilderP
         if (this.options.find(o => o.name === option.name)) throw new TypeError('option with name "' + option.name + '" already exists.');
         if (this.options.length > 0 && !this.options[this.options.length - 1 < 0 ? 0 : this.options.length - 1].required && option.required) throw new TypeError('All required options must be before optional options.');
 
-        this.options = [...this.options, option];
+        this.options.push(option);
         return this;
     }
 
@@ -210,12 +237,17 @@ export class MessageCommandBuilder<T = unknown> implements SharedCommandBuilderP
         }
     }
 
+    /**
+     * Resolve message command data/builder
+     * @param commandData Command data to resolve
+     */
     public static resolveMessageCommand<T = unknown>(commandData: MessageCommandData<T>|MessageCommandBuilder<T>): MessageCommandBuilder<T> {
         return this.isMessageCommandBuilder<T>(commandData) ? commandData : new MessageCommandBuilder(commandData);
     }
 
     /**
-     * Is a message command builder 
+     * Is a message command builder
+     * @param builder data to check
      */
     public static isMessageCommandBuilder<T>(builder: unknown): builder is MessageCommandBuilder<T> {
         return builder instanceof MessageCommandBuilder;
@@ -223,12 +255,18 @@ export class MessageCommandBuilder<T = unknown> implements SharedCommandBuilderP
 
     /**
      * Is a message command execute data
+     * @param executeData data to check
      */
     public static isMessageCommandExecuteData(executeData: unknown): executeData is MessageCommandExecuteData {
         return (executeData as MessageCommandExecuteData).builder !== undefined && this.isMessageCommandBuilder((executeData as MessageCommandExecuteData).builder);
     }
 }
 
+/**
+ * Validate message command options
+ * @param builder Command builder
+ * @param options Parsed command args
+ */
 export async function validateMessageCommandOptions(builder: MessageCommandBuilder, options: Command): Promise<MessageCommandOptionManager> {
     const args = options.args || [];
     const required = builder.options.filter(o => o.required);

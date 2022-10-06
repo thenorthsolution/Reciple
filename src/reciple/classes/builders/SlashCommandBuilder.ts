@@ -28,7 +28,13 @@ import {
  * Execute data for slash command
  */
 export interface SlashCommandExecuteData<T = unknown> extends BaseCommandExecuteData {
+    /**
+     * Command interaction
+     */
     interaction: ChatInputCommandInteraction;
+    /**
+     * Command Builder
+     */
     builder: AnySlashCommandBuilder<T>;
 }
 
@@ -140,6 +146,8 @@ export class SlashCommandBuilder<T = unknown> extends DiscordJsSlashCommandBuild
 
     /**
      * Add option builder to command builder
+     * @param builder Command/Subcommand builder
+     * @param option Option builder
      */
     public static addOption(builder: SharedSlashCommandOptions|SlashCommandBuilder, option: AnySlashCommandOptionBuilder): SharedSlashCommandOptions {
         if (option instanceof SlashCommandAttachmentOption) {
@@ -173,6 +181,7 @@ export class SlashCommandBuilder<T = unknown> extends DiscordJsSlashCommandBuild
 
     /**
      * Resolve option data
+     * @param option Option dara to resolve
      */
     public static resolveOption<T extends AnySlashCommandOptionBuilder>(option: AnySlashCommandOptionData): T {
         let builder: AnySlashCommandOptionBuilder;
@@ -265,12 +274,17 @@ export class SlashCommandBuilder<T = unknown> extends DiscordJsSlashCommandBuild
             .setDescriptionLocalizations(option.descriptionLocalizations ?? null) as T;
     }
 
+    /**
+     * Resolve slash command data/builder
+     * @param commandData Command data to resolve
+     */
     public static resolveSlashCommand<T = unknown>(commandData: SlashCommandData<T>|AnySlashCommandBuilder<T>): AnySlashCommandBuilder<T> {
         return this.isSlashCommandBuilder<T>(commandData) ? commandData : new SlashCommandBuilder<T>(commandData);
     }
 
     /**
      * Is a slash command builder
+     * @param builder data to check
      */
     public static isSlashCommandBuilder<T = unknown>(builder: unknown): builder is AnySlashCommandBuilder<T> {
         return builder instanceof SlashCommandBuilder;
@@ -278,6 +292,7 @@ export class SlashCommandBuilder<T = unknown> extends DiscordJsSlashCommandBuild
 
     /**
      * Is a slash command execute data 
+     * @param executeData data to check
      */
     public static isSlashCommandExecuteData(executeData: unknown): executeData is SlashCommandExecuteData {
         return (executeData as SlashCommandExecuteData).builder !== undefined && this.isSlashCommandBuilder((executeData as SlashCommandExecuteData).builder);

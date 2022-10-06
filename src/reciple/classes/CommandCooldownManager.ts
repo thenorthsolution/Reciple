@@ -5,11 +5,29 @@ import { CommandBuilderType } from '../types/builders';
  * cooled-down user object interface
  */
 export interface CooledDownUser {
+    /**
+     * Cooled-down user
+     */
     user: User;
+    /**
+     * Cooled-down command name
+     */
     command: string;
+    /**
+     * Command type
+     */
     type: CommandBuilderType;
+    /**
+     * In guild
+     */
     guild?: Guild|null;
+    /**
+     * Cooled-down channel
+     */
     channel?: TextBasedChannel;
+    /**
+     * Cooldown expiration
+     */
     expireTime: number;
 }
 

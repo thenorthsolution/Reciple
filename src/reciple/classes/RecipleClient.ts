@@ -1,6 +1,6 @@
 import { MessageCommandBuilder, MessageCommandExecuteData, MessageCommandHaltData, validateMessageCommandOptions } from './builders/MessageCommandBuilder';
+import { AnyCommandBuilder, AnyCommandData, AnySlashCommandBuilder, CommandBuilderType, SharedCommandBuilderProperties } from '../types/builders';
 import { SlashCommandBuilder, SlashCommandExecuteData, SlashCommandHaltData } from './builders/SlashCommandBuilder';
-import { AnyCommandBuilder, AnyCommandData, AnySlashCommandBuilder, CommandBuilderType } from '../types/builders';
 import { ApplicationCommandBuilder, registerApplicationCommands } from '../registerApplicationCommands';
 import { AnyCommandExecuteData, AnyCommandHaltData, CommandHaltReason } from '../types/commands';
 import { botHasExecutePermissions, userHasCommandPermissions } from '../permissions';
@@ -29,9 +29,10 @@ import {
     normalizeArray,
     RestOrArray
 } from 'discord.js';
+import { deprecationWarning } from '../util';
 
 /**
- * Options for Reciple client
+ * Options for {@link RecipleClient}
  */
 export interface RecipleClientOptions extends ClientOptions { config?: Config; }
 
@@ -39,7 +40,13 @@ export interface RecipleClientOptions extends ClientOptions { config?: Config; }
  * Reciple client commands
  */
 export interface RecipleClientCommands {
+    /**
+     * Collection of loaded slash commands
+     */
     slashCommands: Collection<string, AnySlashCommandBuilder>;
+    /**
+     * Collection of loaded message commands
+     */
     messageCommands: Collection<string, MessageCommandBuilder>;
 }
 
@@ -96,10 +103,10 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
     }
 
     /**
-     * Load modules from modules folder
-     * @param folders List of folders that contains the modules you want to load
+     * Load and start modules from given folders
+     * @param folders folders that contains the modules you want to load
      */
-    public async startModules(...folders: RestOrArray<string>): Promise<RecipleClient<Ready>> {
+    public async startModules(...folders: RestOrArray<string>): Promise<this> {
         folders = normalizeArray(folders).map(f => path.join(cwd, f));
 
         for (const folder of folders) {
@@ -118,9 +125,9 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
     }
 
     /**
-     * Execute `onLoad()` from client modules and register application commands if enabled
+     * Execute {@link RecipleModule['onLoad']} from client modules and register application commands if enabled
      */
-    public async loadModules(): Promise<RecipleClient<Ready>> {
+    public async loadModules(): Promise<this> {
         for (const m in this.modules) {
             const index = <unknown>(m) as number;
             const module_ = this.modules[index];
@@ -158,13 +165,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
             this.logger.info(`${this.commands.slashCommands.size} slash commands loaded.`);
         }
 
-        if (this.config.commands.slashCommand.registerCommands) {
-            await registerApplicationCommands({
-                client: this,
-                commands: [...this.commands.slashCommands.toJSON(), ...this.additionalApplicationCommands],
-                guilds: this.config.commands.slashCommand.guilds
-            });
-        }
+        if (this.config.commands.slashCommand.registerCommands) await this.registerClientApplicationCommands();
 
         return this;
     }
@@ -172,8 +173,12 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
     /**
      * Add module
      * @param options Module options
+     * @deprecated This is very stupid, Just add it manually
      */
     public async addModule(options: RecipleClientAddModuleOptions): Promise<void> {
+        deprecationWarning('Add modules manually It\'s not that hard');
+        // TODO: DEPRECATED!
+
         const { script } = options;
         const registerCommands = options.registerApplicationCommands;
         const info = options.moduleInfo;
@@ -187,6 +192,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
                 ...info
             }
         });
+
         if (typeof script?.onLoad === 'function') await Promise.resolve(script.onLoad(this));
 
         if (this.isClientLogsEnabled()) this.logger.info(`${this.modules.length} modules loaded.`);
@@ -195,11 +201,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
             this.addCommand(command);
         }
 
-        if (registerCommands) await registerApplicationCommands({
-            client: this,
-            commands: [...this.commands.slashCommands.toJSON(), ...this.additionalApplicationCommands],
-            guilds: this.config.commands.slashCommand.guilds
-        });
+        if (registerCommands) await this.registerClientApplicationCommands();
     }
 
     /**
@@ -222,14 +224,19 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
      * Listed to command executions
      */
     public addCommandListeners(): RecipleClient<Ready> {
-        if (this.config.commands.messageCommand.enabled) this.on('messageCreate', (message) => { this.messageCommandExecute(message) });
-        if (this.config.commands.slashCommand.enabled) this.on('interactionCreate', (interaction) => { this.slashCommandExecute(interaction) });
+        this.on('messageCreate', (message) => {
+            if (this.config.commands.messageCommand.enabled) this.messageCommandExecute(message);
+        });
+
+        this.on('interactionCreate', (interaction) => {
+            if (this.config.commands.slashCommand.enabled) this.slashCommandExecute(interaction);
+        });
 
         return this;
     }
 
     /**
-     * Execute a slash command 
+     * Execute a slash command
      * @param interaction Slash command interaction
      */
     public async slashCommandExecute(interaction: Interaction|ChatInputCommandInteraction): Promise<void|SlashCommandExecuteData> {
@@ -360,6 +367,17 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
     }
 
     /**
+     * Registers client slash commands and other application commands
+     */
+    public async registerClientApplicationCommands(): Promise<void> {
+        return registerApplicationCommands({
+            client: this,
+            commands: [...this.commands.slashCommands.toJSON(), ...this.additionalApplicationCommands],
+            guilds: this.config.commands.slashCommand.guilds
+        });
+    }
+
+    /**
      * Get a message from config 
      * @param messageKey Config messages key
      * @param defaultMessage Default message when the key does not exists
@@ -398,7 +416,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
     }
 
     /**
-     * Emits the "recipleReplyError" event
+     * Emits the {@link RecipleClientEvents["recipleReplyError"]} event
      * @param error Received Error
      */
     protected _replyError(error: unknown) {
@@ -436,7 +454,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
     }
 
     /**
-     * Executes a command through a commandBuilder#execute method
+     * Executes a command's {@link SharedCommandBuilderProperties["execute"]} method
      * @param command Command builder
      * @param executeData Command execute data
      */

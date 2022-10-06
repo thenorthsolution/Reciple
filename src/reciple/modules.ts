@@ -9,26 +9,61 @@ import wildcard from 'wildcard-match';
 import { cwd } from './flags';
 import path from 'path';
 
-export type LoadedModules = { commands: AnyCommandBuilder[], modules: RecipleModule[] };
+/**
+ * Loaded modules and commands
+ */
+export interface LoadedModules {
+    commands: AnyCommandBuilder[],
+    modules: RecipleModule[]
+};
 
 /**
  * Reciple script object
  */
 export interface RecipleScript {
+    /**
+     * Supported reciple versions
+     */
     versions: string | string[];
+    /**
+     * Module commands
+     */
     commands?: (AnyCommandBuilder|AnyCommandData)[];
-    onLoad?(client: RecipleClient): void|Promise<void>;
-    onStart(client: RecipleClient): boolean|Promise<boolean>;
+    /**
+     * Action on bot ready
+     * @param client Bot client
+     */
+    onLoad?(client: RecipleClient<true>): void|Promise<void>;
+    /**
+     * Action on module start
+     * @param client Bot client
+     */
+    onStart(client: RecipleClient<false>): boolean|Promise<boolean>;
 }
 
 /**
  * Reciple module object
  */
 export interface RecipleModule {
+    /**
+     * Module script
+     */
     script: RecipleScript;
+    /**
+     * Module local information
+     */
     info: {
+        /**
+         * Module file name
+         */
         filename?: string;
+        /**
+         * Supported reciple versions
+         */
         versions: string[];
+        /**
+         * Module local file path
+         */
         path?: string;
     }
 }

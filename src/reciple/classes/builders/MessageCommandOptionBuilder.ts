@@ -65,4 +65,20 @@ export class MessageCommandOptionBuilder {
             validator: this.validator,
         };
     }
+
+    /**
+     * Resolves message command option data/builder
+     * @param option Option data to resolve
+     */
+    public static resolveMessageCommandOption(option: MessageCommandOptionBuilder|MessageCommandOptionBuilder): MessageCommandOptionBuilder {
+        return this.isMessageCommandOption(option) ? option : new MessageCommandOptionBuilder(option);
+    }
+
+    /**
+     * Is a Message command option builder
+     * @param builder data to check
+     */
+    public static isMessageCommandOption(builder: unknown): builder is MessageCommandOptionBuilder {
+        return builder instanceof MessageCommandOptionBuilder;
+    }
 }

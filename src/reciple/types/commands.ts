@@ -24,6 +24,9 @@ export type AnyCommandExecuteData<T = unknown> = SlashCommandExecuteData<T>|Mess
  * Command execute data
  */
 export interface BaseCommandExecuteData {
+    /**
+     * Bot client
+     */
     client: RecipleClient<true>;
 }
 
@@ -31,6 +34,13 @@ export interface BaseCommandExecuteData {
  * Command halt reason base
  */
 export interface BaseCommandHaltData<T extends CommandBuilderType, M = unknown> {
+    /**
+     * Halt reason
+     */
+    reason: CommandHaltReason;
+    /**
+     * Command execute da6a
+     */
     executeData: T extends CommandBuilderType.SlashCommand
                     ? SlashCommandExecuteData<M>
                     : T extends CommandBuilderType.MessageCommand 
@@ -40,6 +50,9 @@ export interface BaseCommandHaltData<T extends CommandBuilderType, M = unknown> 
 
 export interface CommandErrorData<T extends CommandBuilderType, M = unknown> extends BaseCommandHaltData<T, M> {
     reason: CommandHaltReason.Error;
+    /**
+     * Caught error
+     */
     error: any;
 }
 export interface CommandCooldownData<T extends CommandBuilderType, M = unknown> extends BaseCommandHaltData<T, M>,CooledDownUser {
@@ -47,10 +60,16 @@ export interface CommandCooldownData<T extends CommandBuilderType, M = unknown> 
 }
 export interface CommandInvalidArguments<T extends CommandBuilderType, M = unknown> extends BaseCommandHaltData<T, M> {
     reason: CommandHaltReason.InvalidArguments;
+    /**
+     * Arguments that are invalid
+     */
     invalidArguments: MessageCommandOptionManager;
 }
 export interface CommandMissingArguments<T extends CommandBuilderType, M = unknown> extends BaseCommandHaltData<T, M> {
     reason: CommandHaltReason.MissingArguments;
+    /**
+     * Arguments that are missing
+     */
     missingArguments: MessageCommandOptionManager;
 }
 export interface CommandMissingMemberPermissions<T extends CommandBuilderType, M = unknown> extends BaseCommandHaltData<T, M> {

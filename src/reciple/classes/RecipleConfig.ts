@@ -10,7 +10,13 @@ import yaml from 'yaml';
  * Command permissions config object interface
  */
 export interface ConfigCommandPermissions {
+    /**
+     * Command name
+     */
     command: string;
+    /**
+     * Override command builder permissions
+     */
     permissions: PermissionResolvable[];
 }
 
