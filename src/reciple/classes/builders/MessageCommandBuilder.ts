@@ -3,7 +3,7 @@ import { Message, normalizeArray, PermissionResolvable, RestOrArray } from 'disc
 import { BaseCommandExecuteData, CommandHaltData } from '../../types/commands';
 import { MessageCommandOptionManager } from '../MessageCommandOptionManager';
 import { MessageCommandOptionBuilder } from './MessageCommandOptionBuilder';
-import { Command, Command as CommandMessage } from 'fallout-utility';
+import { Command } from 'fallout-utility';
 
 /**
  * Execute data for message command
@@ -11,7 +11,7 @@ import { Command, Command as CommandMessage } from 'fallout-utility';
 export interface MessageCommandExecuteData<T = unknown> extends BaseCommandExecuteData {
     message: Message;
     options: MessageCommandOptionManager;
-    command: CommandMessage;
+    command: Command;
     builder: MessageCommandBuilder<T>;
 }
 
@@ -229,7 +229,7 @@ export class MessageCommandBuilder<T = unknown> implements SharedCommandBuilderP
     }
 }
 
-export async function validateMessageCommandOptions(builder: MessageCommandBuilder, options: CommandMessage): Promise<MessageCommandOptionManager> {
+export async function validateMessageCommandOptions(builder: MessageCommandBuilder, options: Command): Promise<MessageCommandOptionManager> {
     const args = options.args || [];
     const required = builder.options.filter(o => o.required);
     const optional = builder.options.filter(o => !o.required);
