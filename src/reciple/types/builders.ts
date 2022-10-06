@@ -31,12 +31,12 @@ export type AnyCommandExecuteFunction = SlashCommandExecuteFunction|MessageComma
 /**
  * Command halt function
  */
-export type CommandHaltFunction<T extends CommandBuilderType> = (haltData: T extends CommandBuilderType.SlashCommand ? SlashCommandHaltData : T extends CommandBuilderType.MessageCommand ? MessageCommandHaltData : SlashCommandHaltData|MessageCommandHaltData) => Awaitable<boolean|null|undefined|void>;
+export type CommandHaltFunction<T extends CommandBuilderType, M extends unknown = any> = (haltData: T extends CommandBuilderType.SlashCommand ? SlashCommandHaltData<M> : T extends CommandBuilderType.MessageCommand ? MessageCommandHaltData<M> : SlashCommandHaltData<M>|MessageCommandHaltData<M>) => Awaitable<boolean|null|undefined|void>;
 
 /**
  * Command execute function
  */
-export type CommandExecuteFunction<T extends CommandBuilderType> = (executeData: T extends CommandBuilderType.SlashCommand ? SlashCommandExecuteData : T extends CommandBuilderType.MessageCommand ? MessageCommandExecuteData : SlashCommandExecuteData|MessageCommandExecuteData) => Awaitable<void>;
+export type CommandExecuteFunction<T extends CommandBuilderType, M extends unknown = any> = (executeData: T extends CommandBuilderType.SlashCommand ? SlashCommandExecuteData<M> : T extends CommandBuilderType.MessageCommand ? MessageCommandExecuteData<M> : SlashCommandExecuteData<M>|MessageCommandExecuteData<M>) => Awaitable<void>;
 
 /**
  * Message command options resolvable

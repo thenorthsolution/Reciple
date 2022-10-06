@@ -40,12 +40,12 @@ export type SlashCommandHaltData<T extends unknown = any> = CommandHaltData<Comm
 /**
  * Slash command halt function
  */
-export type SlashCommandHaltFunction = CommandHaltFunction<CommandBuilderType.SlashCommand>;
+export type SlashCommandHaltFunction<T extends unknown = any> = CommandHaltFunction<CommandBuilderType.SlashCommand, T>;
 
 /**
  * Slash command execute function
  */
-export type SlashCommandExecuteFunction = CommandExecuteFunction<CommandBuilderType.SlashCommand>;
+export type SlashCommandExecuteFunction<T extends unknown = any> = CommandExecuteFunction<CommandBuilderType.SlashCommand, T>;
 
 export type SlashCommandSubcommandsOnlyBuilder<T extends unknown = any> = Omit<SlashCommandBuilder<T>, "addBooleanOption" | "addUserOption" | "addChannelOption" | "addRoleOption" | "addAttachmentOption" | "addMentionableOption" | "addStringOption" | "addIntegerOption" | "addNumberOption">;
 export type SlashCommandOptionsOnlyBuilder<T extends unknown = any> = Omit<SlashCommandBuilder<T>, "addSubcommand" | "addSubcommandGroup">;
@@ -73,8 +73,8 @@ export class SlashCommandBuilder<T extends unknown = any> extends DiscordJsSlash
     public cooldown: number = 0;
     public requiredBotPermissions: PermissionResolvable[] = [];
     public requiredMemberPermissions: PermissionResolvable[] = [];
-    public halt?: SlashCommandHaltFunction;
-    public execute: SlashCommandExecuteFunction = () => { /* Execute */ };
+    public halt?: SlashCommandHaltFunction<T>;
+    public execute: SlashCommandExecuteFunction<T> = () => { /* Execute */ };
     public metadata?: T;
 
     constructor(data?: Partial<Omit<SlashCommandData<T>, "type">>) {
@@ -265,8 +265,8 @@ export class SlashCommandBuilder<T extends unknown = any> extends DiscordJsSlash
             .setDescriptionLocalizations(option.descriptionLocalizations ?? null) as T;
     }
 
-    public static resolveSlashCommand<T extends unknown = any>(commandData: SlashCommandData<T>|AnySlashCommandBuilder<T>): AnySlashCommandBuilder {
-        return this.isSlashCommandBuilder(commandData) ? commandData : new SlashCommandBuilder(commandData);
+    public static resolveSlashCommand<T extends unknown = any>(commandData: SlashCommandData<T>|AnySlashCommandBuilder<T>): AnySlashCommandBuilder<T> {
+        return this.isSlashCommandBuilder<T>(commandData) ? commandData : new SlashCommandBuilder(commandData);
     }
 
     /**

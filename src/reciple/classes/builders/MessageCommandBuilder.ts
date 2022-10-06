@@ -34,12 +34,12 @@ export type MessageCommandHaltData<T extends unknown = any> = CommandHaltData<Co
 /**
  * Message command halt function
  */
-export type MessageCommandHaltFunction = CommandHaltFunction<CommandBuilderType.MessageCommand>;
+export type MessageCommandHaltFunction<T extends unknown = any> = CommandHaltFunction<CommandBuilderType.MessageCommand, T>;
 
 /**
  * Message command execute function
  */
-export type MessageCommandExecuteFunction = CommandExecuteFunction<CommandBuilderType.MessageCommand>;
+export type MessageCommandExecuteFunction<T extends unknown = any> = CommandExecuteFunction<CommandBuilderType.MessageCommand, T>;
 
 /**
  * Reciple builder for message command
@@ -56,8 +56,8 @@ export class MessageCommandBuilder<T extends unknown = any> implements SharedCom
     public requiredMemberPermissions: PermissionResolvable[] = [];
     public allowExecuteInDM: boolean = true;
     public allowExecuteByBots: boolean = false;
-    public halt?: MessageCommandHaltFunction;
-    public execute: MessageCommandExecuteFunction = () => { /* Execute */ };
+    public halt?: MessageCommandHaltFunction<T>;
+    public execute: MessageCommandExecuteFunction<T> = () => { /* Execute */ };
     public metadata?: T;
 
     constructor(data?: Partial<Omit<MessageCommandData<T>, "type">>) {
@@ -211,7 +211,7 @@ export class MessageCommandBuilder<T extends unknown = any> implements SharedCom
     }
 
     public static resolveMessageCommand<T extends unknown = any>(commandData: MessageCommandData<T>|MessageCommandBuilder<T>): MessageCommandBuilder<T> {
-        return this.isMessageCommandBuilder(commandData) ? commandData : new MessageCommandBuilder(commandData);
+        return this.isMessageCommandBuilder<T>(commandData) ? commandData : new MessageCommandBuilder(commandData);
     }
 
     /**
