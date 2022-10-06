@@ -35,7 +35,7 @@ export interface SlashCommandExecuteData<T extends unknown = any> extends BaseCo
 /**
  * Slash command halt data
  */
-export type SlashCommandHaltData = CommandHaltData<CommandBuilderType.SlashCommand>;
+export type SlashCommandHaltData<T extends unknown = any> = CommandHaltData<CommandBuilderType.SlashCommand, T>;
 
 /**
  * Slash command halt function
