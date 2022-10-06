@@ -128,6 +128,8 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
      * Execute {@link RecipleModule['onLoad']} from client modules and register application commands if enabled
      */
     public async loadModules(): Promise<this> {
+        if (!this.isReady()) throw new Error('Client is not ready');
+
         for (const m in this.modules) {
             const index = <unknown>(m) as number;
             const module_ = this.modules[index];
@@ -182,6 +184,8 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
         const { script } = options;
         const registerCommands = options.registerApplicationCommands;
         const info = options.moduleInfo;
+
+        if (!this.isReady()) throw new Error('Client is not ready');
 
         this.modules.push({
             script,
