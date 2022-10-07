@@ -15,7 +15,7 @@ import path from 'path';
 export interface LoadedModules {
     commands: AnyCommandBuilder[],
     modules: RecipleModule[]
-};
+}
 
 /**
  * Reciple script object

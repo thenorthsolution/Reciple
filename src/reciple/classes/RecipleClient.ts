@@ -1,6 +1,6 @@
 import { MessageCommandBuilder, MessageCommandExecuteData, MessageCommandHaltData, validateMessageCommandOptions } from './builders/MessageCommandBuilder';
-import { AnyCommandBuilder, AnyCommandData, AnySlashCommandBuilder, CommandBuilderType, SharedCommandBuilderProperties } from '../types/builders';
 import { SlashCommandBuilder, SlashCommandExecuteData, SlashCommandHaltData } from './builders/SlashCommandBuilder';
+import { AnyCommandBuilder, AnyCommandData, AnySlashCommandBuilder, CommandBuilderType } from '../types/builders';
 import { ApplicationCommandBuilder, registerApplicationCommands } from '../registerApplicationCommands';
 import { AnyCommandExecuteData, AnyCommandHaltData, CommandHaltReason } from '../types/commands';
 import { botHasExecutePermissions, userHasCommandPermissions } from '../permissions';

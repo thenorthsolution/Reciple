@@ -37,7 +37,7 @@ export function botHasExecutePermissions(guildOrChannel?: Guild|GuildTextBasedCh
     if (guildOrChannel instanceof Guild) {
         permissions = guildOrChannel.members.me?.permissions ?? null;
     } else {
-        permissions = guildOrChannel?.permissionsFor(guildOrChannel.client.user!.id) ?? null;
+        permissions = guildOrChannel?.permissionsFor(guildOrChannel.client.user.id) ?? null;
     }
 
     return permissions ? permissions.has(requiredPermissions) : false;
