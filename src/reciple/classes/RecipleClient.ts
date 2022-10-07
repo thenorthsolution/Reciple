@@ -56,6 +56,7 @@ export interface RecipleClientCommands {
 export interface RecipleClientEvents extends ClientEvents {
     recipleCommandExecute: [executeData: AnyCommandExecuteData];
     recipleCommandHalt: [haltData: AnyCommandHaltData];
+    recipleRegisterApplicationCommands: [];
     recipleReplyError: [error: unknown];
 }
 
@@ -374,11 +375,13 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
      * Registers client slash commands and other application commands
      */
     public async registerClientApplicationCommands(): Promise<void> {
-        return registerApplicationCommands({
+        await registerApplicationCommands({
             client: this,
             commands: [...this.commands.slashCommands.toJSON(), ...this.additionalApplicationCommands],
             guilds: this.config.commands.slashCommand.guilds
         });
+
+        this.emit('recipleRegisterApplicationCommands');
     }
 
     /**
