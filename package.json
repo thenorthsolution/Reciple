@@ -11,7 +11,9 @@
   "keywords": [
     "Discord",
     "Discord.js handler",
-    "Reciple"
+    "Reciple",
+    "Slash command handler",
+    "Message command handler"
   ],
   "contributors": [
     "GhexterCortes"
@@ -48,13 +50,13 @@
     "commander": "^9.4.1",
     "dotenv": "^16.0.3",
     "fallout-utility": "^1.5.2",
-    "semver": "^7.3.7",
+    "semver": "^7.3.8",
     "wildcard-match": "^5.1.2",
-    "yaml": "^2.1.1"
+    "yaml": "^2.1.3"
   },
   "devDependencies": {
     "@discordjs/docgen": "^0.12.1",
-    "@types/node": "^18.7.23",
+    "@types/node": "^18.8.3",
     "@types/semver": "^7.3.12",
     "discord.js": "^14.5.0",
     "rimraf": "^3.0.2",
