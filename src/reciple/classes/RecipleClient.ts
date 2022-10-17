@@ -1,7 +1,7 @@
 import { MessageCommandBuilder, MessageCommandExecuteData, MessageCommandHaltData, validateMessageCommandOptions } from './builders/MessageCommandBuilder';
 import { SlashCommandBuilder, SlashCommandExecuteData, SlashCommandHaltData } from './builders/SlashCommandBuilder';
 import { AnyCommandBuilder, AnyCommandData, AnySlashCommandBuilder, CommandBuilderType } from '../types/builders';
-import { ApplicationCommandBuilder, registerApplicationCommands } from '../registerApplicationCommands';
+import { ApplicationCommandBuilder, ApplicationCommandManager } from './ApplicationCommandManager';
 import { AnyCommandExecuteData, AnyCommandHaltData, CommandHaltReason } from '../types/commands';
 import { botHasExecutePermissions, userHasCommandPermissions } from '../permissions';
 import { CommandCooldownManager, CooledDownUser } from './CommandCooldownManager';
@@ -86,6 +86,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
     public config: Config = RecipleConfig.getDefaultConfig();
     public commands: RecipleClientCommands = { slashCommands: new Collection(), messageCommands: new Collection() };
     public additionalApplicationCommands: (ApplicationCommandBuilder|ApplicationCommandData)[] = [];
+    public applicationCommands: ApplicationCommandManager;
     public cooldowns: CommandCooldownManager = new CommandCooldownManager();
     public modules: RecipleModule[] = [];
     public logger: Logger;
@@ -101,6 +102,8 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
         this.config = {...this.config, ...(options.config ?? {})};
 
         if (this.config.fileLogging.enabled) this.logger.logFile(path.join(cwd, this.config.fileLogging.logFilePath ?? 'logs/latest.log'), false);
+
+        this.applicationCommands = new ApplicationCommandManager(this);
     }
 
     /**
@@ -375,13 +378,8 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
      * Registers client slash commands and other application commands
      */
     public async registerClientApplicationCommands(): Promise<void> {
-        await registerApplicationCommands({
-            client: this,
-            commands: [...this.commands.slashCommands.toJSON(), ...this.additionalApplicationCommands],
-            guilds: this.config.commands.slashCommand.guilds
-        });
-
-        this.emit('recipleRegisterApplicationCommands');
+        await this.applicationCommands.set([...this.commands.slashCommands.toJSON(), ...this.additionalApplicationCommands], normalizeArray([this.config.commands.slashCommand.guilds] as RestOrArray<string>));
+        this.emit('RegisterApplicationCommands');
     }
 
     /**

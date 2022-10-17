@@ -1,8 +1,6 @@
-import { ApplicationCommandBuilder } from '../registerApplicationCommands';
-import { ApplicationCommandData, PermissionsBitField } from 'discord.js';
 import { ConfigCommandPermissions } from '../classes/RecipleConfig';
 import { RecipleModule, RecipleScript } from '../modules';
-import { RecipleClient } from '../classes/RecipleClient';
+import { PermissionsBitField } from 'discord.js';
 import { AnyCommandBuilder } from './builders';
 
 export interface RecipleClientAddModuleOptions {
@@ -18,21 +16,6 @@ export interface RecipleClientAddModuleOptions {
      * Module optional info
      */
     moduleInfo?: RecipleModule["info"];
-}
-
-export interface RegisterApplicationCommandsOptions {
-    /**
-     * Bot client
-     */
-    client: RecipleClient;
-    /**
-     * Commands to register
-     */
-    commands: (ApplicationCommandData|ApplicationCommandBuilder)[];
-    /**
-     * Set guild to not register commands globally
-     */
-    guilds?: string|string[];
 }
 
 export interface UserHasCommandPermissionsOptions {
