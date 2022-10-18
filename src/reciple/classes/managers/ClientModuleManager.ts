@@ -230,13 +230,13 @@ export class ClientModuleManager {
         const modules: string[] = [];
 
         for (const dir of (normalizeArray(folders).length ? normalizeArray(folders) : normalizeArray([this.client.config.modulesFolder] as RestOrArray<string>))) {
-            if (!existsSync(dir)) mkdirSync(dir);
+            if (!existsSync(dir)) mkdirSync(dir, { recursive: true });
             if (!lstatSync(dir).isDirectory()) continue;
 
-            modules.push(...readdirSync(dir).filter(file => file.endsWith('.js') || file.endsWith('.cjs')));
+            modules.push(...readdirSync(dir).map(file => path.join(dir, file)).filter(file => file.endsWith('.js') || file.endsWith('.cjs')));
         }
 
-        return modules.filter(file => !this.client.config.ignoredFiles.some(ignored => wildcardMatch(ignored, file)));
+        return modules.filter(file => !this.client.config.ignoredFiles.some(ignored => wildcardMatch(ignored, path.basename(file))));
     }
 
     public static getModuleDisplayId(mod: RecipleModule): string {
