@@ -24,10 +24,15 @@ export class ApplicationCommandManager {
             return;
         }
 
-        const guild = guilds?.shift();
+        let guild = guilds?.shift();
+            guild = guild ? this.client.guilds.resolveId(guild) || undefined : undefined;
 
         if (!guild) {
             this.client.application.commands.set(commands);
+            if (this.client.isClientLogsEnabled()) this.client.logger.log(`Registered ${this.client.commands.applicationCommandsSize} application command(s) globally...`);
+        } else {
+            this.client.application.commands.set(commands, guild);
+            if (this.client.isClientLogsEnabled()) this.client.logger.log(`Registered ${this.client.commands.applicationCommandsSize} application command(s) to guild ${guild}...`);
         }
     }
 
@@ -42,10 +47,15 @@ export class ApplicationCommandManager {
             return;
         }
 
-        const guild = guilds?.shift();
+        let guild = guilds?.shift();
+            guild = guild ? this.client.guilds.resolveId(guild) || undefined : undefined;
 
         if (!guild) {
             this.client.application.commands.create(command);
+            if (this.client.isClientLogsEnabled()) this.client.logger.log(`Created application command '${command.name}' globally`);
+        } else {
+            this.client.application.commands.create(command, guild);
+            if (this.client.isClientLogsEnabled()) this.client.logger.log(`Created application command '${command.name}' to guild ${guild}`);
         }
     }
 
@@ -60,10 +70,38 @@ export class ApplicationCommandManager {
             return;
         }
 
-        const guild = guilds?.shift();
+        let guild = guilds?.shift();
+            guild = guild ? this.client.guilds.resolveId(guild) || undefined : undefined;
 
         if (!guild) {
             this.client.application.commands.delete(command);
+            if (this.client.isClientLogsEnabled()) this.client.logger.log(`Removed application command '${typeof command === 'string' ? command : command.name}' globally`);
+        } else {
+            this.client.application.commands.delete(command, guild);
+            if (this.client.isClientLogsEnabled()) this.client.logger.log(`Removed application command '${typeof command === 'string' ? command : command.name}' from guild ${guild}`);
+        }
+    }
+
+    public async edit(command: string|ApplicationCommand, newCommand: ApplicationCommandBuilder|ApplicationCommandData, guilds?: GuildResolvable[]): Promise<void> {
+        if (!this.client.isReady()) throw new Error('Client is not ready');
+        if (!command) throw new Error('Command is undefined');
+        if (guilds && guilds.length > 1) {
+            for (const guild of guilds) {
+                await this.edit(command, newCommand, [guild]);
+            }
+
+            return;
+        }
+
+        let guild = guilds?.shift();
+            guild = guild ? this.client.guilds.resolveId(guild) || undefined : undefined;
+
+        if (!guild) {
+            this.client.application.commands.edit(command, newCommand);
+            if (this.client.isClientLogsEnabled()) this.client.logger.log(`Removed application command '${typeof command === 'string' ? command : command.name}' globally`);
+        } else {
+            this.client.application.commands.edit(command, newCommand, guild);
+            if (this.client.isClientLogsEnabled()) this.client.logger.log(`Removed application command '${typeof command === 'string' ? command : command.name}' from guild ${guild}`);
         }
     }
 
