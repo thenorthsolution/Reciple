@@ -17,6 +17,8 @@ export class ClientCommandManager {
     readonly messageCommands: Collection<string, MessageCommandBuilder> = new Collection();
     readonly additionalApplicationCommands: (ApplicationCommandBuilder|ApplicationCommandData)[] = [];
 
+    get applicationCommandsSize() { return this.client.commands.slashCommands.size + this.client.commands.additionalApplicationCommands.length; }
+
     constructor(options: ClientCommandManagerOptions) {
         this.client = options.client;
 
@@ -70,7 +72,7 @@ export class ClientCommandManager {
     public async registerApplicationCommands(...guilds: RestOrArray<GuildResolvable>): Promise<this> {
         guilds = normalizeArray(guilds);
 
-        if (this.client.isClientLogsEnabled()) this.client.logger.log(`Regestering ${this.slashCommands.size + this.additionalApplicationCommands.length} application command(s) ${!guilds.length ? 'globaly' : 'to ' + guilds.length + ' guilds'}...`);
+        if (this.client.isClientLogsEnabled()) this.client.logger.log(`Regestering ${this.applicationCommandsSize} application command(s) ${!guilds.length ? 'globaly' : 'to ' + guilds.length + ' guilds'}...`);
 
         await this.client.applicationCommands.set([...this.slashCommands.toJSON(), ...this.additionalApplicationCommands], (
             guilds.length
