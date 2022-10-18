@@ -34,17 +34,18 @@ const client = new RecipleClient({ config: config, ...config.client });
 if (config.fileLogging.clientLogs) client.logger.info('Starting Reciple client v' + rawVersion);
 
 (async () => {
-    await client.startModules(normalizeArray([config.modulesFolder] as RestOrArray<string>));
+    client.addCommandListeners();
+
+    await client.modules.startModulesFromFiles({
+        files: await client.modules.getModuleFiles()
+    });
 
     client.on('ready', async () => {
+        await client.modules.loadAll(true);
+
         if (client.isClientLogsEnabled()) client.logger.warn(`Logged in as ${client.user?.tag || 'Unknown'}!`);
 
-        client.on('cacheSweep', () => {
-            client.cooldowns.clean();
-        });
-
-        await client.loadModules();
-        client.addCommandListeners();
+        client.on('cacheSweep', () => client.cooldowns.clean());
     });
 
     client.login(config.token).catch(err => {

@@ -1,24 +1,23 @@
 import { ApplicationCommandData, Collection, GuildResolvable, normalizeArray, RestOrArray } from 'discord.js';
-import { Logger } from 'fallout-utility';
 import { AnyCommandBuilder, AnyCommandData, AnySlashCommandBuilder, CommandBuilderType, MessageCommandData, SlashCommandData } from '../../types/builders';
 import { MessageCommandBuilder } from '../builders/MessageCommandBuilder';
 import { SlashCommandBuilder } from '../builders/SlashCommandBuilder';
 import { RecipleClient } from '../RecipleClient';
 import { ApplicationCommandBuilder } from './ApplicationCommandManager';
 
-export interface CommandManagerOptions {
+export interface ClientCommandManagerOptions {
     client: RecipleClient;
     messageCommands?: (MessageCommandBuilder|MessageCommandData)[];
     slashCommands?: (AnySlashCommandBuilder|SlashCommandData)[];
 }
 
-export class CommandManager {
+export class ClientCommandManager {
     readonly client: RecipleClient;
     readonly slashCommands: Collection<string, AnySlashCommandBuilder> = new Collection();
     readonly messageCommands: Collection<string, MessageCommandBuilder> = new Collection();
     readonly additionalApplicationCommands: (ApplicationCommandBuilder|ApplicationCommandData)[] = [];
 
-    constructor(options: CommandManagerOptions) {
+    constructor(options: ClientCommandManagerOptions) {
         this.client = options.client;
 
         options.slashCommands?.forEach(e => this.slashCommands.set(e.name, SlashCommandBuilder.resolveSlashCommand(e)));

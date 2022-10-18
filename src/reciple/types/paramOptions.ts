@@ -32,3 +32,9 @@ export interface UserHasCommandPermissionsOptions {
      */
     commandPermissions?: { enabled: boolean; commands: ConfigCommandPermissions[]; };
 }
+
+export interface ModuleManagerResolveFilesOptions {
+    files: string[];
+    disabeVersionCheck?: boolean;
+    dontSkipError?: boolean;
+}

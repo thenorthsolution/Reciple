@@ -1,3 +1,5 @@
+import { AnyCommandBuilder, CommandBuilderType } from './types/builders';
+
 /**
  * Check if an object is a class
  * @param object Object to identify
@@ -16,4 +18,11 @@ export function isClass<T = any>(object: any): object is T {
  */
 export function deprecationWarning(content: string|Error): void {
     process.emitWarning(content, 'DeprecationWarning');
+}
+
+export function validateCommandBuilder(command: AnyCommandBuilder): boolean {
+    if (!command.name) return false;
+    if (command.type === CommandBuilderType.MessageCommand && command.options.length && command.options.some(o => !o.name)) return false;
+
+    return true;
 }

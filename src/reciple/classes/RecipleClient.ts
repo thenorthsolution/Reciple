@@ -6,8 +6,8 @@ import { botHasExecutePermissions, userHasCommandPermissions } from '../permissi
 import { MessageCommandOptionManager } from './managers/MessageCommandOptionManager';
 import { ApplicationCommandManager } from './managers/ApplicationCommandManager';
 import { AnyCommandBuilder, CommandBuilderType } from '../types/builders';
+import { ClientCommandManager } from './managers/ClientCommandManager';
 import { RecipleClientAddModuleOptions } from '../types/paramOptions';
-import { CommandManager } from './managers/CommandManager';
 import { Config, RecipleConfig } from './RecipleConfig';
 import { getModules, RecipleModule } from '../modules';
 import { getCommand, Logger } from 'fallout-utility';
@@ -29,6 +29,7 @@ import {
     normalizeArray,
     RestOrArray
 } from 'discord.js';
+import { ClientModuleManager } from './managers/ClientModuleManager';
 
 /**
  * Options for {@link RecipleClient}
@@ -69,10 +70,10 @@ export interface RecipleClient<Ready extends boolean = boolean> extends Client<R
 
 export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready> {
     readonly config: Config = RecipleConfig.getDefaultConfig();
-    readonly commands: CommandManager = new CommandManager({ client: this });
+    readonly commands: ClientCommandManager = new ClientCommandManager({ client: this });
     readonly applicationCommands: ApplicationCommandManager;
     readonly cooldowns: CommandCooldownManager = new CommandCooldownManager();
-    readonly modules: RecipleModule[] = [];
+    readonly modules: ClientModuleManager = new ClientModuleManager({ client: this });
     readonly logger: Logger;
     readonly version: string = version;
 
@@ -88,115 +89,6 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
         if (this.config.fileLogging.enabled) this.logger.logFile(path.join(cwd, this.config.fileLogging.logFilePath ?? 'logs/latest.log'), false);
 
         this.applicationCommands = new ApplicationCommandManager(this);
-    }
-
-    /**
-     * Load and start modules from given folders
-     * @param folders folders that contains the modules you want to load
-     * TODO: Move to module manager
-     */
-    public async startModules(...folders: RestOrArray<string>): Promise<this> {
-        folders = normalizeArray(folders).map(f => path.join(cwd, f));
-
-        for (const folder of folders) {
-            if (this.isClientLogsEnabled()) this.logger.info(`Loading Modules from ${folder}`);
-
-            const modules = await getModules(this, folder).catch(() => null);
-            if (!modules) {
-                if (this.isClientLogsEnabled()) this.logger.error(`Failed to load modules from ${folder}`);
-                continue;
-            }
-
-            this.modules.push(...modules.modules);
-        }
-
-        return this;
-    }
-
-    /**
-     * Execute {@link RecipleModule['onLoad']} from client modules and register application commands if enabled
-     * TODO: Move to module manager
-     */
-    public async loadModules(): Promise<this> {
-        if (!this.isReady()) throw new Error('Client is not ready');
-
-        for (const m in this.modules) {
-            const index = <unknown>(m) as number;
-            const module_ = this.modules[index];
-
-            try {
-                if (typeof module_.script?.onLoad === 'function') {
-                    await Promise.resolve(module_.script.onLoad(this)).catch(err => {
-                        if (this.isClientLogsEnabled()) {
-                            this.logger.error(`Error loading ${module_.info.filename ?? 'unknown module'}:`);
-                            this.logger.error(err);
-                        }
-
-                        this.modules.splice(index);
-                    });
-                }
-            } catch (err) {
-                if (this.isClientLogsEnabled()) {
-                    this.logger.error(`Error loading ${module_.info.filename ?? 'unknown module'}:`);
-                    this.logger.error(err);
-                }
-
-                this.modules.splice(index);
-            }
-
-            if (module_.script?.commands && Array.isArray(module_.script?.commands)) {
-                for (const command of module_.script.commands) {
-                    this.commands.add(command);
-                }
-            }
-        }
-
-        if (this.isClientLogsEnabled()) {
-            this.logger.info(`${this.modules.length} modules loaded.`);
-            this.logger.info(`${this.commands.messageCommands.size} message commands loaded.`);
-            this.logger.info(`${this.commands.slashCommands.size} slash commands loaded.`);
-        }
-
-        if (this.config.commands.slashCommand.registerCommands) await this.commands.registerApplicationCommands();
-
-        return this;
-    }
-
-    /**
-     * Add module
-     * @param options Module options
-     * @deprecated This is very stupid, Just add it manually
-     * TODO: Move to module manager
-     */
-    public async addModule(options: RecipleClientAddModuleOptions): Promise<void> {
-        deprecationWarning('Add modules manually It\'s not that hard');
-        // TODO: DEPRECATED!
-
-        const { script } = options;
-        const registerCommands = options.registerApplicationCommands;
-        const info = options.moduleInfo;
-
-        if (!this.isReady()) throw new Error('Client is not ready');
-
-        this.modules.push({
-            script,
-            info: {
-                filename: undefined,
-                versions: typeof script.versions == 'string' ? [script.versions] : script.versions,
-                path: undefined,
-                ...info
-            }
-        });
-
-        if (typeof script?.onLoad === 'function') await Promise.resolve(script.onLoad(this));
-
-        if (this.isClientLogsEnabled()) this.logger.info(`${this.modules.length} modules loaded.`);
-        for (const command of script.commands ?? []) {
-            if (!command.name) continue;
-            this.commands.add(command);
-        }
-
-        if (registerCommands) await this.commands.registerApplicationCommands();
     }
 
     /**

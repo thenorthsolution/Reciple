@@ -3,7 +3,7 @@ export * from './reciple/classes/builders/MessageCommandOptionBuilder';
 export * from './reciple/classes/builders/SlashCommandBuilder';
 export * from './reciple/classes/managers/ApplicationCommandManager';
 export * from './reciple/classes/managers/CommandCooldownManager';
-export * from './reciple/classes/managers/CommandManager';
+export * from './reciple/classes/managers/ClientCommandManager';
 export * from './reciple/classes/managers/MessageCommandOptionManager';
 export * from './reciple/classes/RecipleClient';
 export * from './reciple/classes/RecipleConfig';
