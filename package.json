@@ -1,6 +1,6 @@
 {
   "name": "reciple",
-  "version": "6.0.0",
+  "version": "6.0.0-dev.1",
   "bin": "./dist/cjs/bin.js",
   "license": "GPL-3.0",
   "main": "./dist/cjs/index.js",
@@ -28,7 +28,7 @@
     "clean": "yarn exec rimraf dist",
     "build": "yarn clean && yarn exec tsc",
     "build:publish": "yarn build && yarn docs && yarn npm publish",
-    "build:publish-prerelease": "yarn build && yarn npm publish --tag pre",
+    "build:publish-dev": "yarn build && yarn npm publish --tag dev",
     "test": "yarn build && yarn workspace test start",
     "docs": "yarn exec docgen --typescript true -c ./docs/index.json -o ./docs/docs.json -i src/index.ts",
     "watch": "yarn exec tsc --watch --noEmit"
@@ -44,7 +44,6 @@
   "files": [
     "dist",
     "resource",
-    "package.json",
     "LICENSE",
     "README.md"
   ],
