@@ -26,10 +26,7 @@
   },
   "scripts": {
     "clean": "yarn exec rimraf dist",
-    "build": "yarn clean && yarn build:types && yarn build:cjs && yarn build:mjs",
-    "build:types": "npx tsc -p ./tsconfig/tsconfig.types.json",
-    "build:cjs": "npx tsc -p ./tsconfig/tsconfig.cjs.json",
-    "build:mjs": "npx tsc -p ./tsconfig/tsconfig.mjs.json && echo '{ \"type\": \"module\" }' >> ./dist/mjs/package.json",
+    "build": "yarn clean && yarn exec tsc",
     "build:publish": "yarn build && yarn docs && yarn npm publish",
     "build:publish-prerelease": "yarn build && yarn npm publish --tag pre",
     "test": "yarn build && yarn workspace test start",

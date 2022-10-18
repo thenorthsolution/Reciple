@@ -229,7 +229,7 @@ export class ClientModuleManager {
     public async getModuleFiles(...folders: RestOrArray<string>): Promise<string[]> {
         const modules: string[] = [];
 
-        for (const dir of (normalizeArray(folders).length ? normalizeArray(folders) : this.client.config.modulesFolder)) {
+        for (const dir of (normalizeArray(folders).length ? normalizeArray(folders) : normalizeArray([this.client.config.modulesFolder] as RestOrArray<string>))) {
             if (!existsSync(dir)) mkdirSync(dir);
             if (!lstatSync(dir).isDirectory()) continue;
 
