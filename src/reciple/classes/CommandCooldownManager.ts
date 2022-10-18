@@ -51,20 +51,24 @@ export class CommandCooldownManager extends Array<CooledDownUser> {
      * Remove cooldown from specific user, channel or guild
      * @param options Remove cooldown data options
      * @param limit Remove cooldown data limit
+     * @returns Returns the removed values
      */
-    public remove(options: Partial<CooledDownUser>, limit: number = 0) {
+    public remove(options: Partial<CooledDownUser>, limit: number = 0): CooledDownUser[] {
         if (!Object.keys(options).length) throw new TypeError('Provide atleast one option to remove cooldown data.');
 
+        const removed: CooledDownUser[] = [];
         let i = 0;
 
-        for (const index in this) {
-            if (!CommandCooldownManager.checkOptions(options, this[index])) continue;
-            if (options.expireTime && this[index].expireTime > Date.now()) continue;
+        for (let i=0; i < this.length; i++) {
+            if (!CommandCooldownManager.checkOptions(options, this[i])) continue;
+            if (options.expireTime && this[i].expireTime > Date.now()) continue;
             if (limit && i >= limit) continue;
 
-            this.splice(Number(index));
-            i++;
+            removed.push(this[i]);
+            this.splice(Number(i));
         }
+
+        return removed;
     }
 
     /**
