@@ -1,5 +1,5 @@
+import { RecipleModule, RecipleScript } from '../classes/managers/ClientModuleManager';
 import { ConfigCommandPermissions } from '../classes/RecipleConfig';
-import { RecipleModule, RecipleScript } from '../modules';
 import { PermissionsBitField } from 'discord.js';
 import { AnyCommandBuilder } from './builders';
 

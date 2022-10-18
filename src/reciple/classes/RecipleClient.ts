@@ -7,11 +7,8 @@ import { MessageCommandOptionManager } from './managers/MessageCommandOptionMana
 import { ApplicationCommandManager } from './managers/ApplicationCommandManager';
 import { AnyCommandBuilder, CommandBuilderType } from '../types/builders';
 import { ClientCommandManager } from './managers/ClientCommandManager';
-import { RecipleClientAddModuleOptions } from '../types/paramOptions';
 import { Config, RecipleConfig } from './RecipleConfig';
-import { getModules, RecipleModule } from '../modules';
 import { getCommand, Logger } from 'fallout-utility';
-import { deprecationWarning } from '../util';
 import { createLogger } from '../logger';
 import { version } from '../version';
 import { cwd } from '../flags';
