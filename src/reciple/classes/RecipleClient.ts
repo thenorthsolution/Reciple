@@ -7,6 +7,7 @@ import { MessageCommandOptionManager } from './managers/MessageCommandOptionMana
 import { ApplicationCommandManager } from './managers/ApplicationCommandManager';
 import { AnyCommandBuilder, CommandBuilderType } from '../types/builders';
 import { ClientCommandManager } from './managers/ClientCommandManager';
+import { ClientModuleManager } from './managers/ClientModuleManager';
 import { Config, RecipleConfig } from './RecipleConfig';
 import { getCommand, Logger } from 'fallout-utility';
 import { createLogger } from '../logger';
@@ -23,10 +24,7 @@ import {
     ClientOptions,
     Interaction,
     Message,
-    normalizeArray,
-    RestOrArray
 } from 'discord.js';
-import { ClientModuleManager } from './managers/ClientModuleManager';
 
 /**
  * Options for {@link RecipleClient}
