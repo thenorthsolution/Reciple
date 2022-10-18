@@ -1,7 +1,7 @@
 const { CommandBuilderType, CommandHaltReason, MessageCommandBuilder, SlashCommandBuilder } = require('../../');
 
 module.exports = {
-    versions: '^6.4.1',
+    versions: '^6',
     commandHalt(e) {
         if (e.reason == CommandHaltReason.Error) {
             e.executeData.message.reply(String(e.error));

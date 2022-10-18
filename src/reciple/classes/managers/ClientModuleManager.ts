@@ -3,6 +3,7 @@ import { Collection, GuildResolvable, normalizeArray, RestOrArray } from 'discor
 import { existsSync, lstatSync, mkdirSync, readdirSync } from 'fs';
 import path from 'path';
 import wildcardMatch from 'wildcard-match';
+import { cwd } from '../../flags';
 import { AnyCommandBuilder, AnyCommandData, CommandBuilderType } from '../../types/builders';
 import { ModuleManagerResolveFilesOptions } from '../../types/paramOptions';
 import {  validateCommandBuilder } from '../../util';
@@ -233,7 +234,7 @@ export class ClientModuleManager {
             if (!existsSync(dir)) mkdirSync(dir, { recursive: true });
             if (!lstatSync(dir).isDirectory()) continue;
 
-            modules.push(...readdirSync(dir).map(file => path.join(dir, file)).filter(file => file.endsWith('.js') || file.endsWith('.cjs')));
+            modules.push(...readdirSync(dir).map(file => path.join(cwd, dir, file)).filter(file => file.endsWith('.js') || file.endsWith('.cjs')));
         }
 
         return modules.filter(file => !this.client.config.ignoredFiles.some(ignored => wildcardMatch(ignored, path.basename(file))));
