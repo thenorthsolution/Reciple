@@ -1,5 +1,5 @@
 import { Guild, normalizeArray, RestOrArray, TextBasedChannel, User } from 'discord.js';
-import { CommandBuilderType } from '../types/builders';
+import { CommandBuilderType } from '../../types/builders';
 
 /**
  * cooled-down user object interface

@@ -1,4 +1,4 @@
-import { MessageCommandValidatedOption } from './builders/MessageCommandBuilder';
+import { MessageCommandValidatedOption } from '../builders/MessageCommandBuilder';
 import { normalizeArray, RestOrArray } from 'discord.js';
 
 /**

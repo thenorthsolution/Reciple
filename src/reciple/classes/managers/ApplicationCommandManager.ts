@@ -1,7 +1,7 @@
 import { ApplicationCommand, ApplicationCommandData, ContextMenuCommandBuilder, Guild, GuildResolvable, RESTPostAPIApplicationCommandsJSONBody, SlashCommandBuilder as DiscordJsSlashCommandBuilder } from 'discord.js';
-import { SlashCommandBuilder } from './builders/SlashCommandBuilder';
-import { AnySlashCommandBuilder } from '../types/builders';
-import { RecipleClient } from './RecipleClient';
+import { SlashCommandBuilder } from '../builders/SlashCommandBuilder';
+import { AnySlashCommandBuilder } from '../../types/builders';
+import { RecipleClient } from '../RecipleClient';
 
 export type ApplicationCommandBuilder = AnySlashCommandBuilder|ContextMenuCommandBuilder|DiscordJsSlashCommandBuilder;
 

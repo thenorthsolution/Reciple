@@ -1,54 +1,39 @@
 import { MessageCommandBuilder, MessageCommandExecuteData, MessageCommandHaltData, validateMessageCommandOptions } from './builders/MessageCommandBuilder';
 import { SlashCommandBuilder, SlashCommandExecuteData, SlashCommandHaltData } from './builders/SlashCommandBuilder';
-import { AnyCommandBuilder, AnyCommandData, AnySlashCommandBuilder, CommandBuilderType } from '../types/builders';
-import { ApplicationCommandBuilder, ApplicationCommandManager } from './ApplicationCommandManager';
 import { AnyCommandExecuteData, AnyCommandHaltData, CommandHaltReason } from '../types/commands';
+import { CommandCooldownManager, CooledDownUser } from './managers/CommandCooldownManager';
 import { botHasExecutePermissions, userHasCommandPermissions } from '../permissions';
-import { CommandCooldownManager, CooledDownUser } from './CommandCooldownManager';
-import { MessageCommandOptionManager } from './MessageCommandOptionManager';
+import { MessageCommandOptionManager } from './managers/MessageCommandOptionManager';
+import { ApplicationCommandManager } from './managers/ApplicationCommandManager';
+import { AnyCommandBuilder, CommandBuilderType } from '../types/builders';
 import { RecipleClientAddModuleOptions } from '../types/paramOptions';
+import { CommandManager } from './managers/CommandManager';
 import { Config, RecipleConfig } from './RecipleConfig';
 import { getModules, RecipleModule } from '../modules';
 import { getCommand, Logger } from 'fallout-utility';
+import { deprecationWarning } from '../util';
 import { createLogger } from '../logger';
 import { version } from '../version';
 import { cwd } from '../flags';
 import path from 'path';
 
 import {
-    ApplicationCommandData,
     Awaitable,
     ChannelType,
     ChatInputCommandInteraction,
     Client,
     ClientEvents,
     ClientOptions,
-    Collection,
     Interaction,
     Message,
     normalizeArray,
     RestOrArray
 } from 'discord.js';
-import { deprecationWarning } from '../util';
 
 /**
  * Options for {@link RecipleClient}
  */
 export interface RecipleClientOptions extends ClientOptions { config?: Config; }
-
-/**
- * Reciple client commands
- */
-export interface RecipleClientCommands {
-    /**
-     * Collection of loaded slash commands
-     */
-    slashCommands: Collection<string, AnySlashCommandBuilder>;
-    /**
-     * Collection of loaded message commands
-     */
-    messageCommands: Collection<string, MessageCommandBuilder>;
-}
 
 /**
  * Reciple client events
@@ -83,14 +68,13 @@ export interface RecipleClient<Ready extends boolean = boolean> extends Client<R
 }
 
 export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready> {
-    public config: Config = RecipleConfig.getDefaultConfig();
-    public commands: RecipleClientCommands = { slashCommands: new Collection(), messageCommands: new Collection() };
-    public additionalApplicationCommands: (ApplicationCommandBuilder|ApplicationCommandData)[] = [];
-    public applicationCommands: ApplicationCommandManager;
-    public cooldowns: CommandCooldownManager = new CommandCooldownManager();
-    public modules: RecipleModule[] = [];
-    public logger: Logger;
-    public version: string = version;
+    readonly config: Config = RecipleConfig.getDefaultConfig();
+    readonly commands: CommandManager = new CommandManager({ client: this });
+    readonly applicationCommands: ApplicationCommandManager;
+    readonly cooldowns: CommandCooldownManager = new CommandCooldownManager();
+    readonly modules: RecipleModule[] = [];
+    readonly logger: Logger;
+    readonly version: string = version;
 
     /**
      * @param options Client options
@@ -109,6 +93,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
     /**
      * Load and start modules from given folders
      * @param folders folders that contains the modules you want to load
+     * TODO: Move to module manager
      */
     public async startModules(...folders: RestOrArray<string>): Promise<this> {
         folders = normalizeArray(folders).map(f => path.join(cwd, f));
@@ -130,6 +115,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
 
     /**
      * Execute {@link RecipleModule['onLoad']} from client modules and register application commands if enabled
+     * TODO: Move to module manager
      */
     public async loadModules(): Promise<this> {
         if (!this.isReady()) throw new Error('Client is not ready');
@@ -160,7 +146,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
 
             if (module_.script?.commands && Array.isArray(module_.script?.commands)) {
                 for (const command of module_.script.commands) {
-                    this.addCommand(command);
+                    this.commands.add(command);
                 }
             }
         }
@@ -171,7 +157,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
             this.logger.info(`${this.commands.slashCommands.size} slash commands loaded.`);
         }
 
-        if (this.config.commands.slashCommand.registerCommands) await this.registerClientApplicationCommands();
+        if (this.config.commands.slashCommand.registerCommands) await this.commands.registerApplicationCommands();
 
         return this;
     }
@@ -180,6 +166,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
      * Add module
      * @param options Module options
      * @deprecated This is very stupid, Just add it manually
+     * TODO: Move to module manager
      */
     public async addModule(options: RecipleClientAddModuleOptions): Promise<void> {
         deprecationWarning('Add modules manually It\'s not that hard');
@@ -206,26 +193,10 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
         if (this.isClientLogsEnabled()) this.logger.info(`${this.modules.length} modules loaded.`);
         for (const command of script.commands ?? []) {
             if (!command.name) continue;
-            this.addCommand(command);
+            this.commands.add(command);
         }
 
-        if (registerCommands) await this.registerClientApplicationCommands();
-    }
-
-    /**
-     * Add slash or message command to client
-     * @param command Slash/Message command builder
-     */
-    public addCommand(command: AnyCommandData|AnyCommandBuilder): RecipleClient<Ready> {
-        if (command.type === CommandBuilderType.SlashCommand) {
-            this.commands.slashCommands.set(command.name, SlashCommandBuilder.resolveSlashCommand(command));
-        } else if (command.type === CommandBuilderType.MessageCommand) {
-            this.commands.messageCommands.set(command.name, MessageCommandBuilder.resolveMessageCommand(command));
-        } else if (this.isClientLogsEnabled()) {
-            this.logger.error(`Unknow command "${typeof command ?? 'unknown'}".`);
-        }
-
-        return this;
+        if (registerCommands) await this.commands.registerApplicationCommands();
     }
 
     /**
@@ -247,11 +218,11 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
      * Execute a slash command
      * @param interaction Slash command interaction
      */
-    public async slashCommandExecute(interaction: Interaction|ChatInputCommandInteraction): Promise<void|SlashCommandExecuteData> {
+    public async slashCommandExecute(interaction: Interaction|ChatInputCommandInteraction): Promise<undefined|SlashCommandExecuteData> {
         if (!interaction || !interaction.isChatInputCommand() || !this.isReady()) return;
         if (!this.config.commands.slashCommand.acceptRepliedInteractions && (interaction.replied || interaction.deferred)) return;
 
-        const command = this.findCommand(interaction.commandName, CommandBuilderType.SlashCommand);
+        const command = this.commands.get(interaction.commandName, CommandBuilderType.SlashCommand);
         if (!command) return;
 
         const executeData: SlashCommandExecuteData = {
@@ -303,13 +274,13 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
      * @param message Message command executor
      * @param prefix Message command prefix
      */
-    public async messageCommandExecute(message: Message, prefix?: string): Promise<void|MessageCommandExecuteData> {
+    public async messageCommandExecute(message: Message, prefix?: string): Promise<undefined|MessageCommandExecuteData> {
         if (!message.content || !this.isReady()) return;
 
         const parseCommand = getCommand(message.content, prefix || this.config.commands.messageCommand.prefix || '!', this.config.commands.messageCommand.commandArgumentSeparator || ' ');
         if (!parseCommand || !parseCommand?.command) return; 
 
-        const command = this.findCommand(parseCommand.command, CommandBuilderType.MessageCommand);
+        const command = this.commands.get(parseCommand.command, CommandBuilderType.MessageCommand);
         if (!command) return;
 
         const commandOptions = await validateMessageCommandOptions(command, parseCommand);
@@ -375,42 +346,12 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
     }
 
     /**
-     * Registers client slash commands and other application commands
-     */
-    public async registerClientApplicationCommands(): Promise<void> {
-        await this.applicationCommands.set([...this.commands.slashCommands.toJSON(), ...this.additionalApplicationCommands], normalizeArray([this.config.commands.slashCommand.guilds] as RestOrArray<string>));
-        this.emit('RegisterApplicationCommands');
-    }
-
-    /**
      * Get a message from config 
      * @param messageKey Config messages key
      * @param defaultMessage Default message when the key does not exists
      */
     public getConfigMessage<T = unknown>(messageKey: string, defaultMessage?: T): T {
         return this.config.messages[messageKey] ?? defaultMessage ?? messageKey;
-    }
-
-    /**
-     * Get command builder by name or alias if it's a message command 
-     * @param command Command name
-     * @param type Command type
-     */
-    public findCommand(command: string, type: CommandBuilderType.MessageCommand): MessageCommandBuilder|undefined;
-    public findCommand(command: string, type: CommandBuilderType.SlashCommand): SlashCommandBuilder|undefined;
-    public findCommand(command: string, type: CommandBuilderType): AnyCommandBuilder|undefined {
-        switch (type) {
-            case CommandBuilderType.SlashCommand:
-                return this.commands.slashCommands.get(command);
-            case CommandBuilderType.MessageCommand:
-                return this.commands.messageCommands.get(command.toLowerCase())
-                    ?? (this.config.commands.messageCommand.allowCommandAlias
-                        ? this.commands.messageCommands.find(c => c.aliases.some(a => a == command?.toLowerCase()))
-                        : undefined
-                    );
-            default:
-                throw new TypeError('Unknown command type');
-        }
     }
 
     /**
@@ -463,9 +404,9 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
      * @param command Command builder
      * @param executeData Command execute data
      */
-    protected async _executeCommand(command: SlashCommandBuilder, executeData: SlashCommandExecuteData): Promise<SlashCommandExecuteData|void>;
-    protected async _executeCommand(command: MessageCommandBuilder, executeData: MessageCommandExecuteData): Promise<MessageCommandExecuteData|void>;
-    protected async _executeCommand(command: AnyCommandBuilder, executeData: AnyCommandExecuteData): Promise<AnyCommandExecuteData|void> {
+    protected async _executeCommand(command: SlashCommandBuilder, executeData: SlashCommandExecuteData): Promise<SlashCommandExecuteData|undefined>;
+    protected async _executeCommand(command: MessageCommandBuilder, executeData: MessageCommandExecuteData): Promise<MessageCommandExecuteData|undefined>;
+    protected async _executeCommand(command: AnyCommandBuilder, executeData: AnyCommandExecuteData): Promise<AnyCommandExecuteData|undefined> {
         try {
             await Promise.resolve(
                 command.type === CommandBuilderType.SlashCommand

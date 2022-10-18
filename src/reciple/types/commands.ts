@@ -1,7 +1,7 @@
 import { MessageCommandExecuteData, MessageCommandHaltData } from '../classes/builders/MessageCommandBuilder';
 import { SlashCommandExecuteData, SlashCommandHaltData } from '../classes/builders/SlashCommandBuilder';
-import { MessageCommandOptionManager } from '../classes/MessageCommandOptionManager';
-import { CooledDownUser } from '../classes/CommandCooldownManager';
+import { MessageCommandOptionManager } from '../classes/managers/MessageCommandOptionManager';
+import { CooledDownUser } from '../classes/managers/CommandCooldownManager';
 import { RecipleClient } from '../classes/RecipleClient';
 import { CommandBuilderType } from '../types/builders';
 
