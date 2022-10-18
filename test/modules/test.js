@@ -23,8 +23,25 @@ module.exports = {
             .setExecute(e => e.interaction.reply(`Ping!`))
             .setHalt(this.commandHalt)
     ],
+    /**
+     * 
+     * @param {import('../../').RecipleClient} client 
+     * @returns 
+     */
     onStart(client) {
         client.logger.log("Module started");
+
+        client.on('recipleRegisterApplicationCommands', () => {
+            client.logger.log(`Commands registered`);
+        });
+
+        client.on('recipleCommandExecute', data => {
+            client.logger.log(`Command executed: ${data.builder.name}`);
+        });
+
+        client.on('recipleCommandHalt', data => {
+            client.logger.log(`Command halted: ${data.executeData.builder.name}`);
+        });
 
         return true;
     },

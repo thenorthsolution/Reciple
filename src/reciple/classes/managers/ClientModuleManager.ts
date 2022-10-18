@@ -132,7 +132,7 @@ export class ClientModuleManager {
 
                 modules.push(module_);
 
-                if (this.client.isClientLogsEnabled()) this.client.logger.log(`Loaded module ${file}`);
+                if (this.client.isClientLogsEnabled()) this.client.logger.log(`Resolved ${file}`);
             } catch(err) {
                 if (options.dontSkipError) throw err;
                 if (this.client.isClientLogsEnabled()) this.client.logger.err(`Cannot resolve module file ${file}:`, err);
@@ -195,13 +195,16 @@ export class ClientModuleManager {
             this.client.logger.info(`${this.client.commands.slashCommands.size} slash commands loaded.`);
         }
 
-        if (!registerApplicationCommands) this.client.commands.registerApplicationCommands(normalizeArray(registerApplicationCommandsGuilds));
+        if (registerApplicationCommands) this.client.commands.registerApplicationCommands(normalizeArray(registerApplicationCommandsGuilds));
     }
 
     public async startModule(mod: ResolvedModule): Promise<void> {
         let err;
 
         const identifier = ClientModuleManager.getModuleDisplayId(mod);
+
+        if (this.client.isClientLogsEnabled()) this.client.logger.log(`Starting Module: ${identifier}`);
+
         const start = await Promise.resolve(mod.script.onStart(this.client)).catch(e => err = e);
 
         if (err) throw err;
