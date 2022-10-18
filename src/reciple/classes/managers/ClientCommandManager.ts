@@ -71,14 +71,13 @@ export class ClientCommandManager {
      */
     public async registerApplicationCommands(...guilds: RestOrArray<GuildResolvable>): Promise<this> {
         guilds = normalizeArray(guilds);
+        guilds = guilds.length
+            ? guilds
+            : normalizeArray([this.client.config.commands.slashCommand.guilds] as RestOrArray<string>);
 
         if (this.client.isClientLogsEnabled()) this.client.logger.log(`Regestering ${this.applicationCommandsSize} application command(s) ${!guilds.length ? 'globaly' : 'to ' + guilds.length + ' guilds'}...`);
 
-        await this.client.applicationCommands.set([...this.slashCommands.toJSON(), ...this.additionalApplicationCommands], (
-            guilds.length
-                ? guilds
-                : normalizeArray([this.client.config.commands.slashCommand.guilds] as RestOrArray<string>)
-        ));
+        await this.client.applicationCommands.set([...this.slashCommands.toJSON(), ...this.additionalApplicationCommands], guilds);
 
         this.client.emit('RegisterApplicationCommands');
         return this;
