@@ -79,7 +79,7 @@ export class ClientCommandManager {
 
         await this.client.applicationCommands.set([...this.slashCommands.toJSON(), ...this.additionalApplicationCommands], guilds);
 
-        this.client.emit('RegisterApplicationCommands');
+        this.client.emit('recipleRegisterApplicationCommands');
         return this;
     }
 }
