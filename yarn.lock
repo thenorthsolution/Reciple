@@ -953,6 +953,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"prettier@npm:2.7.1":
+  version: 2.7.1
+  resolution: "prettier@npm:2.7.1"
+  bin:
+    prettier: bin-prettier.js
+  checksum: 55a4409182260866ab31284d929b3cb961e5fdb91fe0d2e099dac92eaecec890f36e524b4c19e6ceae839c99c6d7195817579cdffc8e2c80da0cb794463a748b
+  languageName: node
+  linkType: hard
+
 "prompt-sync@npm:^4.2.0":
   version: 4.2.0
   resolution: "prompt-sync@npm:4.2.0"
@@ -994,6 +1003,7 @@ __metadata:
     discord.js: ^14.6.0
     dotenv: ^16.0.3
     fallout-utility: ^1.5.4
+    prettier: 2.7.1
     rimraf: ^3.0.2
     semver: ^7.3.7
     typescript: ^4.8.4
