@@ -38,6 +38,8 @@ export class ClientCommandManager {
                 this.slashCommands.set(command.name, SlashCommandBuilder.resolveSlashCommand(command));
             } else if (command.type === CommandBuilderType.MessageCommand) {
                 this.messageCommands.set(command.name, MessageCommandBuilder.resolveMessageCommand(command));
+            } else {
+                throw new Error(`Unknown reciple command type`);
             }
         }
 

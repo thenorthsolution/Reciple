@@ -41,7 +41,7 @@ if (!client.isClientLogsSilent) client.logger.info('Starting Reciple client v' +
     });
 
     client.on('ready', async () => {
-        await client.modules.loadAll(true);
+        await client.modules.loadAll(client.config.commands.slashCommand.registerCommands);
 
         if (!client.isClientLogsSilent) client.logger.warn(`Logged in as ${client.user?.tag || 'Unknown'}!`);
 
