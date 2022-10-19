@@ -2,7 +2,6 @@ import {
     ApplicationCommand,
     ApplicationCommandData,
     ContextMenuCommandBuilder,
-    Guild,
     GuildResolvable,
     RESTPostAPIApplicationCommandsJSONBody,
     SlashCommandBuilder as DiscordJsSlashCommandBuilder,
@@ -15,10 +14,6 @@ export type ApplicationCommandBuilder = AnySlashCommandBuilder | ContextMenuComm
 
 export class ApplicationCommandManager {
     readonly client: RecipleClient;
-
-    get commands() {
-        return this.client.application?.commands;
-    }
 
     constructor(client: RecipleClient) {
         this.client = client;
