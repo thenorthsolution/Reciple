@@ -28,9 +28,9 @@
   "scripts": {
     "format": "yarn prettier --write src",
     "clean": "yarn exec rimraf dist",
-    "build": "yarn clean && yarn format && yarn exec tsc",
-    "build:publish": "yarn build && yarn docs && yarn npm publish",
-    "build:publish-dev": "yarn build && yarn npm publish --tag dev",
+    "build": "yarn clean && yarn exec tsc",
+    "build:publish": "yarn format && yarn build && yarn docs && yarn npm publish",
+    "build:publish-dev": "yarn format && yarn build && yarn npm publish --tag dev",
     "test": "yarn build && yarn workspace test start",
     "docs": "yarn exec docgen --typescript true -c ./docs/index.json -o ./docs/docs.json -i src/index.ts",
     "watch": "yarn exec tsc --watch --noEmit"
