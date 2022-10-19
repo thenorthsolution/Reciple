@@ -1,6 +1,6 @@
 {
   "name": "reciple",
-  "version": "6.0.0-dev.5",
+  "version": "6.0.0-dev.6",
   "bin": "./dist/cjs/bin.js",
   "license": "GPL-3.0",
   "main": "./dist/cjs/index.js",
