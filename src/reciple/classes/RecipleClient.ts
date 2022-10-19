@@ -72,6 +72,8 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
     readonly logger: Logger;
     readonly version: string = version;
 
+    get isClientLogsSilent() { return !!this.config.fileLogging.clientLogs; }
+
     /**
      * @param options Client options
      */
@@ -242,13 +244,6 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
     }
 
     /**
-     * Returns true if client logs is enabled
-     */
-    public isClientLogsEnabled(): boolean {
-        return !!this.config.fileLogging.clientLogs;
-    }
-
-    /**
      * Emits the {@link RecipleClientEvents["recipleReplyError"]} event
      * @param error Received Error
      */
@@ -278,7 +273,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
             this.emit('recipleCommandHalt', haltData);
             return haltResolved;
         } catch (err) {
-            if (this.isClientLogsEnabled()) {
+            if (!this.isClientLogsSilent) {
                 this.logger.error(`An error occured executing command halt for "${command.name}"`);
                 this.logger.error(err);
             }
@@ -320,7 +315,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
      * @param command Slash/Message command execute data
      */
     protected async _commandExecuteError(err: Error, command: AnyCommandExecuteData): Promise<void> {
-        if (this.isClientLogsEnabled()) {
+        if (!this.isClientLogsSilent) {
             this.logger.error(`An error occured executing ${command.builder.type == CommandBuilderType.MessageCommand ? 'message' : 'slash'} command "${command.builder.name}"`);
             this.logger.error(err);
         }

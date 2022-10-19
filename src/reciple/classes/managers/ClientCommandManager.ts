@@ -75,7 +75,7 @@ export class ClientCommandManager {
             ? guilds
             : normalizeArray([this.client.config.commands.slashCommand.guilds] as RestOrArray<string>);
 
-        if (this.client.isClientLogsEnabled()) this.client.logger.log(`Regestering ${this.applicationCommandsSize} application command(s) ${!guilds.length ? 'globaly' : 'to ' + guilds.length + ' guilds'}...`);
+        if (!this.client.isClientLogsSilent) this.client.logger.log(`Regestering ${this.applicationCommandsSize} application command(s) ${!guilds.length ? 'globaly' : 'to ' + guilds.length + ' guilds'}...`);
 
         await this.client.applicationCommands.set([...this.slashCommands.toJSON(), ...this.additionalApplicationCommands], guilds);
 

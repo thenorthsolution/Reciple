@@ -29,10 +29,10 @@ export class ApplicationCommandManager {
 
         if (!guild) {
             this.client.application.commands.set(commands);
-            if (this.client.isClientLogsEnabled()) this.client.logger.log(`Registered ${this.client.commands.applicationCommandsSize} application command(s) globally...`);
+            if (!this.client.isClientLogsSilent) this.client.logger.log(`Registered ${this.client.commands.applicationCommandsSize} application command(s) globally...`);
         } else {
             this.client.application.commands.set(commands, guild);
-            if (this.client.isClientLogsEnabled()) this.client.logger.log(`Registered ${this.client.commands.applicationCommandsSize} application command(s) to guild ${guild}...`);
+            if (!this.client.isClientLogsSilent) this.client.logger.log(`Registered ${this.client.commands.applicationCommandsSize} application command(s) to guild ${guild}...`);
         }
     }
 
@@ -52,10 +52,10 @@ export class ApplicationCommandManager {
 
         if (!guild) {
             this.client.application.commands.create(command);
-            if (this.client.isClientLogsEnabled()) this.client.logger.log(`Created application command '${command.name}' globally`);
+            if (!this.client.isClientLogsSilent) this.client.logger.log(`Created application command '${command.name}' globally`);
         } else {
             this.client.application.commands.create(command, guild);
-            if (this.client.isClientLogsEnabled()) this.client.logger.log(`Created application command '${command.name}' to guild ${guild}`);
+            if (!this.client.isClientLogsSilent) this.client.logger.log(`Created application command '${command.name}' to guild ${guild}`);
         }
     }
 
@@ -75,10 +75,10 @@ export class ApplicationCommandManager {
 
         if (!guild) {
             this.client.application.commands.delete(command);
-            if (this.client.isClientLogsEnabled()) this.client.logger.log(`Removed application command '${typeof command === 'string' ? command : command.name}' globally`);
+            if (!this.client.isClientLogsSilent) this.client.logger.log(`Removed application command '${typeof command === 'string' ? command : command.name}' globally`);
         } else {
             this.client.application.commands.delete(command, guild);
-            if (this.client.isClientLogsEnabled()) this.client.logger.log(`Removed application command '${typeof command === 'string' ? command : command.name}' from guild ${guild}`);
+            if (!this.client.isClientLogsSilent) this.client.logger.log(`Removed application command '${typeof command === 'string' ? command : command.name}' from guild ${guild}`);
         }
     }
 
@@ -98,10 +98,10 @@ export class ApplicationCommandManager {
 
         if (!guild) {
             this.client.application.commands.edit(command, newCommand);
-            if (this.client.isClientLogsEnabled()) this.client.logger.log(`Removed application command '${typeof command === 'string' ? command : command.name}' globally`);
+            if (!this.client.isClientLogsSilent) this.client.logger.log(`Removed application command '${typeof command === 'string' ? command : command.name}' globally`);
         } else {
             this.client.application.commands.edit(command, newCommand, guild);
-            if (this.client.isClientLogsEnabled()) this.client.logger.log(`Removed application command '${typeof command === 'string' ? command : command.name}' from guild ${guild}`);
+            if (!this.client.isClientLogsSilent) this.client.logger.log(`Removed application command '${typeof command === 'string' ? command : command.name}' from guild ${guild}`);
         }
     }
 
@@ -133,7 +133,7 @@ export class ApplicationCommandManager {
 
                 if (permissions) {
                     cmd.setRequiredMemberPermissions(...permissions);
-                    if (this.client.isClientLogsEnabled()) this.client.logger.debug(`Set required permissions for ${cmd.name}`);
+                    if (!this.client.isClientLogsSilent) this.client.logger.debug(`Set required permissions for ${cmd.name}`);
                 }
             }
 

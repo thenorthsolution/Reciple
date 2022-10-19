@@ -98,7 +98,7 @@ export class ClientModuleManager {
                 await this.startModule(module_);
             } catch (err) {
                 if (options.dontSkipError) throw err;
-                if (this.client.isClientLogsEnabled()) this.client.logger.err(`Cannot start module ${ClientModuleManager.getModuleDisplayId(module_)}:`, err);
+                if (!this.client.isClientLogsSilent) this.client.logger.err(`Cannot start module ${ClientModuleManager.getModuleDisplayId(module_)}:`, err);
             }
         }
 
@@ -132,10 +132,10 @@ export class ClientModuleManager {
 
                 modules.push(module_);
 
-                if (this.client.isClientLogsEnabled()) this.client.logger.log(`Resolved ${file}`);
+                if (!this.client.isClientLogsSilent) this.client.logger.log(`Resolved ${file}`);
             } catch(err) {
                 if (options.dontSkipError) throw err;
-                if (this.client.isClientLogsEnabled()) this.client.logger.err(`Cannot resolve module file ${file}:`, err);
+                if (!this.client.isClientLogsSilent) this.client.logger.err(`Cannot resolve module file ${file}:`, err);
             }
         }
 
@@ -179,17 +179,17 @@ export class ClientModuleManager {
                 } catch (err) {
                     this.modules.delete(m.id);
 
-                    if (this.client.isClientLogsEnabled()) this.client.logger.error(`Error loading ${m.info.filename ?? 'unknown module'}:`, err);
+                    if (!this.client.isClientLogsSilent) this.client.logger.error(`Error loading ${m.info.filename ?? 'unknown module'}:`, err);
                     return;
                 }
             }
 
             this.client.commands.add(m.commands);
 
-            if (this.client.isClientLogsEnabled()) this.client.logger.log(`Loaded module: ${ClientModuleManager.getModuleDisplayId(m)}`);
+            if (!this.client.isClientLogsSilent) this.client.logger.log(`Loaded module: ${ClientModuleManager.getModuleDisplayId(m)}`);
         }));
 
-        if (this.client.isClientLogsEnabled()) {
+        if (!this.client.isClientLogsSilent) {
             this.client.logger.info(`${this.modules.size} modules loaded.`);
             this.client.logger.info(`${this.client.commands.messageCommands.size} message commands loaded.`);
             this.client.logger.info(`${this.client.commands.slashCommands.size} slash commands loaded.`);
@@ -203,7 +203,7 @@ export class ClientModuleManager {
 
         const identifier = ClientModuleManager.getModuleDisplayId(mod);
 
-        if (this.client.isClientLogsEnabled()) this.client.logger.log(`Starting Module: ${identifier}`);
+        if (!this.client.isClientLogsSilent) this.client.logger.log(`Starting Module: ${identifier}`);
 
         const start = await Promise.resolve(mod.script.onStart(this.client)).catch(e => err = e);
 

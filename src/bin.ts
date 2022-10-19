@@ -43,12 +43,12 @@ if (config.fileLogging.clientLogs) client.logger.info('Starting Reciple client v
     client.on('ready', async () => {
         await client.modules.loadAll(true);
 
-        if (client.isClientLogsEnabled()) client.logger.warn(`Logged in as ${client.user?.tag || 'Unknown'}!`);
+        if (!client.isClientLogsSilent) client.logger.warn(`Logged in as ${client.user?.tag || 'Unknown'}!`);
 
         client.on('cacheSweep', () => client.cooldowns.clean());
     });
 
     client.login(config.token).catch(err => {
-        if (client.isClientLogsEnabled()) client.logger.error(err);
+        if (!client.isClientLogsSilent) client.logger.error(err);
     });
 })();
