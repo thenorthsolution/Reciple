@@ -38,10 +38,10 @@ export class ApplicationCommandManager {
         guild = guild ? this.client.guilds.resolveId(guild) || undefined : undefined;
 
         if (!guild) {
-            this.client.application.commands.set(commands);
+            await this.client.application.commands.set(commands);
             if (!this.client.isClientLogsSilent) this.client.logger.log(`Registered ${this.client.commands.applicationCommandsSize} application command(s) globally...`);
         } else {
-            this.client.application.commands.set(commands, guild);
+            await this.client.application.commands.set(commands, guild);
             if (!this.client.isClientLogsSilent) this.client.logger.log(`Registered ${this.client.commands.applicationCommandsSize} application command(s) to guild ${guild}...`);
         }
     }
@@ -61,10 +61,10 @@ export class ApplicationCommandManager {
         guild = guild ? this.client.guilds.resolveId(guild) || undefined : undefined;
 
         if (!guild) {
-            this.client.application.commands.create(command);
+            await this.client.application.commands.create(command);
             if (!this.client.isClientLogsSilent) this.client.logger.log(`Created application command '${command.name}' globally`);
         } else {
-            this.client.application.commands.create(command, guild);
+            await this.client.application.commands.create(command, guild);
             if (!this.client.isClientLogsSilent) this.client.logger.log(`Created application command '${command.name}' to guild ${guild}`);
         }
     }
@@ -84,10 +84,10 @@ export class ApplicationCommandManager {
         guild = guild ? this.client.guilds.resolveId(guild) || undefined : undefined;
 
         if (!guild) {
-            this.client.application.commands.delete(command);
+            await this.client.application.commands.delete(command);
             if (!this.client.isClientLogsSilent) this.client.logger.log(`Removed application command '${typeof command === 'string' ? command : command.name}' globally`);
         } else {
-            this.client.application.commands.delete(command, guild);
+            await this.client.application.commands.delete(command, guild);
             if (!this.client.isClientLogsSilent) this.client.logger.log(`Removed application command '${typeof command === 'string' ? command : command.name}' from guild ${guild}`);
         }
     }
@@ -107,10 +107,10 @@ export class ApplicationCommandManager {
         guild = guild ? this.client.guilds.resolveId(guild) || undefined : undefined;
 
         if (!guild) {
-            this.client.application.commands.edit(command, newCommand);
+            await this.client.application.commands.edit(command, newCommand);
             if (!this.client.isClientLogsSilent) this.client.logger.log(`Removed application command '${typeof command === 'string' ? command : command.name}' globally`);
         } else {
-            this.client.application.commands.edit(command, newCommand, guild);
+            await this.client.application.commands.edit(command, newCommand, guild);
             if (!this.client.isClientLogsSilent) this.client.logger.log(`Removed application command '${typeof command === 'string' ? command : command.name}' from guild ${guild}`);
         }
     }
