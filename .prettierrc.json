@@ -2,5 +2,7 @@
   "editorconfig": true,
   "endOfLine": "lf",
   "tabWidth": 4,
-  "trailingComma": "es5"
+  "trailingComma": "es5",
+  "arrowParens": "avoid",
+  "singleQuote": true
 }
