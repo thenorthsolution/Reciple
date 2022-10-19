@@ -1,17 +1,18 @@
 {
   "name": "reciple",
-  "version": "6.0.0-dev.1",
+  "version": "6.0.0-dev.2",
   "bin": "./dist/cjs/bin.js",
   "license": "GPL-3.0",
   "main": "./dist/cjs/index.js",
-  "typings": "./dist/types/index.d.ts",
+  "types": "./dist/types/index.d.ts",
   "module": "./dist/mjs/index.js",
   "author": "FalloutStudios",
   "description": "Handler for Discord.js",
   "homepage": "https://reciple.js.org",
   "exports": {
     "require": "./dist/cjs/index.js",
-    "import": "./dist/mjs/index.js"
+    "import": "./dist/mjs/index.js",
+    "types": "./dist/types/index.d.ts"
   },
   "keywords": [
     "Discord",
