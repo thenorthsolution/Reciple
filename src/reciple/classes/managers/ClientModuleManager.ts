@@ -251,7 +251,7 @@ export class ClientModuleManager {
             );
         }
 
-        return modules.filter(file => !this.client.config.ignoredFiles.some(ignored => wildcardMatch(ignored, path.basename(file))));
+        return modules.filter(file => !this.client.config.ignoredFiles.some(ignored => wildcardMatch(ignored)(path.basename(file))));
     }
 
     public static getModuleDisplayId(mod: RecipleModule): string {
