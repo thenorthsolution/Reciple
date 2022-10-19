@@ -6,7 +6,7 @@ import wildcardMatch from 'wildcard-match';
 import { cwd } from '../../flags';
 import { AnyCommandBuilder, AnyCommandData, CommandBuilderType } from '../../types/builders';
 import { ModuleManagerResolveFilesOptions } from '../../types/paramOptions';
-import {  validateCommandBuilder } from '../../util';
+import { validateCommandBuilder } from '../../util';
 import { isSupportedVersion, rawVersion, version } from '../../version';
 import { MessageCommandBuilder } from '../builders/MessageCommandBuilder';
 import { SlashCommandBuilder } from '../builders/SlashCommandBuilder';
@@ -15,7 +15,7 @@ import { RecipleClient } from '../RecipleClient';
 /**
  * Reciple script object
  */
- export interface RecipleScript {
+export interface RecipleScript {
     /**
      * Supported reciple versions
      */
@@ -23,17 +23,17 @@ import { RecipleClient } from '../RecipleClient';
     /**
      * Module commands
      */
-    commands?: (AnyCommandBuilder|AnyCommandData)[];
+    commands?: (AnyCommandBuilder | AnyCommandData)[];
     /**
      * Action on module start
      * @param client Bot client
      */
-    onStart(client: RecipleClient<false>): boolean|Promise<boolean>;
+    onStart(client: RecipleClient<false>): boolean | Promise<boolean>;
     /**
      * Action on bot ready
      * @param client Bot client
      */
-    onLoad?(client: RecipleClient<true>): void|Promise<void>;
+    onLoad?(client: RecipleClient<true>): void | Promise<void>;
 }
 
 /**
@@ -60,7 +60,7 @@ export interface RecipleModule {
          * Module local file path
          */
         path?: string;
-    }
+    };
 }
 
 export interface ResolvedModule extends RecipleModule {
@@ -107,7 +107,7 @@ export class ClientModuleManager {
 
     public async resolveModulesFromFiles(options: ModuleManagerResolveFilesOptions): Promise<ResolvedModule[]> {
         const modules: ResolvedModule[] = [];
-        const isVersionCheckDisabled = (options.disabeVersionCheck || this.client.config.disableVersionCheck);
+        const isVersionCheckDisabled = options.disabeVersionCheck || this.client.config.disableVersionCheck;
 
         for (const file of options.files) {
             const moduleFileName = path.basename(file);
@@ -121,19 +121,22 @@ export class ClientModuleManager {
 
                 script = resolveModuleFile?.default ?? resolveModuleFile;
 
-                const module_ = this.resolveModule({
-                    id,
-                    script,
-                    info: {
-                        filename: moduleFileName,
-                        path: moduleDirPath
-                    }
-                }, isVersionCheckDisabled);
+                const module_ = this.resolveModule(
+                    {
+                        id,
+                        script,
+                        info: {
+                            filename: moduleFileName,
+                            path: moduleDirPath,
+                        },
+                    },
+                    isVersionCheckDisabled
+                );
 
                 modules.push(module_);
 
                 if (!this.client.isClientLogsSilent) this.client.logger.log(`Resolved ${file}`);
-            } catch(err) {
+            } catch (err) {
                 if (options.dontSkipError) throw err;
                 if (!this.client.isClientLogsSilent) this.client.logger.err(`Cannot resolve module file ${file}:`, err);
             }
@@ -164,7 +167,7 @@ export class ClientModuleManager {
 
             resolvedCommands.push({
                 script,
-                commands
+                commands,
             });
         }
 
@@ -172,22 +175,26 @@ export class ClientModuleManager {
     }
 
     public async loadAll(registerApplicationCommands?: boolean, ...registerApplicationCommandsGuilds: RestOrArray<GuildResolvable>): Promise<void> {
-        await Promise.all(this.modules.map(async m => {
-            if (typeof m.script?.onLoad === 'function') {
-                try {
-                    await Promise.resolve(m.script.onLoad(this.client)).catch(err => { throw err; });
-                } catch (err) {
-                    this.modules.delete(m.id);
+        await Promise.all(
+            this.modules.map(async m => {
+                if (typeof m.script?.onLoad === 'function') {
+                    try {
+                        await Promise.resolve(m.script.onLoad(this.client)).catch(err => {
+                            throw err;
+                        });
+                    } catch (err) {
+                        this.modules.delete(m.id);
 
-                    if (!this.client.isClientLogsSilent) this.client.logger.error(`Error loading ${m.info.filename ?? 'unknown module'}:`, err);
-                    return;
+                        if (!this.client.isClientLogsSilent) this.client.logger.error(`Error loading ${m.info.filename ?? 'unknown module'}:`, err);
+                        return;
+                    }
                 }
-            }
 
-            this.client.commands.add(m.commands);
+                this.client.commands.add(m.commands);
 
-            if (!this.client.isClientLogsSilent) this.client.logger.log(`Loaded module: ${ClientModuleManager.getModuleDisplayId(m)}`);
-        }));
+                if (!this.client.isClientLogsSilent) this.client.logger.log(`Loaded module: ${ClientModuleManager.getModuleDisplayId(m)}`);
+            })
+        );
 
         if (!this.client.isClientLogsSilent) {
             this.client.logger.info(`${this.modules.size} modules loaded.`);
@@ -205,7 +212,7 @@ export class ClientModuleManager {
 
         if (!this.client.isClientLogsSilent) this.client.logger.log(`Starting Module: ${identifier}`);
 
-        const start = await Promise.resolve(mod.script.onStart(this.client)).catch(e => err = e);
+        const start = await Promise.resolve(mod.script.onStart(this.client)).catch(e => (err = e));
 
         if (err) throw err;
         if (!start) throw new Error(`Module ${identifier} returned 'false' on start`);
@@ -227,17 +234,21 @@ export class ClientModuleManager {
         return {
             ...mod,
             commands,
-        }
+        };
     }
 
     public async getModuleFiles(...folders: RestOrArray<string>): Promise<string[]> {
         const modules: string[] = [];
 
-        for (const dir of (normalizeArray(folders).length ? normalizeArray(folders) : normalizeArray([this.client.config.modulesFolder] as RestOrArray<string>))) {
+        for (const dir of normalizeArray(folders).length ? normalizeArray(folders) : normalizeArray([this.client.config.modulesFolder] as RestOrArray<string>)) {
             if (!existsSync(dir)) mkdirSync(dir, { recursive: true });
             if (!lstatSync(dir).isDirectory()) continue;
 
-            modules.push(...readdirSync(dir).map(file => path.join(cwd, dir, file)).filter(file => file.endsWith('.js') || file.endsWith('.cjs')));
+            modules.push(
+                ...readdirSync(dir)
+                    .map(file => path.join(cwd, dir, file))
+                    .filter(file => file.endsWith('.js') || file.endsWith('.cjs'))
+            );
         }
 
         return modules.filter(file => !this.client.config.ignoredFiles.some(ignored => wildcardMatch(ignored, path.basename(file))));

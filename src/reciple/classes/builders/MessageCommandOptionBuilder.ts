@@ -18,7 +18,7 @@ export class MessageCommandOptionBuilder {
     }
 
     /**
-     * Set command option name 
+     * Set command option name
      * @param name Option name
      */
     public setName(name: string): this {
@@ -38,7 +38,7 @@ export class MessageCommandOptionBuilder {
     }
 
     /**
-     * Set if this option is required 
+     * Set if this option is required
      * @param required `true` if this option is required
      */
     public setRequired(required: boolean): this {
@@ -70,7 +70,7 @@ export class MessageCommandOptionBuilder {
      * Resolves message command option data/builder
      * @param option Option data to resolve
      */
-    public static resolveMessageCommandOption(option: MessageCommandOptionBuilder|MessageCommandOptionBuilder): MessageCommandOptionBuilder {
+    public static resolveMessageCommandOption(option: MessageCommandOptionBuilder | MessageCommandOptionBuilder): MessageCommandOptionBuilder {
         return this.isMessageCommandOption(option) ? option : new MessageCommandOptionBuilder(option);
     }
 

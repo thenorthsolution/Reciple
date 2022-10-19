@@ -6,12 +6,9 @@ import { UserHasCommandPermissionsOptions } from './types/paramOptions';
  * @param options options
  */
 export function userHasCommandPermissions(options: UserHasCommandPermissionsOptions): boolean {
-    const command = (
-                options.commandPermissions?.enabled
-                ? options.commandPermissions?.commands.find(c => c.command.toLowerCase() === options.builder.name.toLowerCase())
-                : null
-            )
-            ?? { permissions: options.builder.requiredMemberPermissions };
+    const command = (options.commandPermissions?.enabled ? options.commandPermissions?.commands.find(c => c.command.toLowerCase() === options.builder.name.toLowerCase()) : null) ?? {
+        permissions: options.builder.requiredMemberPermissions,
+    };
     if (!command.permissions.length) return true;
 
     return options.memberPermissions ? options.memberPermissions.has(command.permissions) : false;
@@ -29,10 +26,10 @@ export function botHasExecutePermissions(guild?: Guild, requiredPermissions?: Pe
  * @param requiredPermissions Required guild bot permissions
  */
 export function botHasExecutePermissions(channel?: GuildTextBasedChannel, requiredPermissions?: PermissionResolvable[]): boolean;
-export function botHasExecutePermissions(guildOrChannel?: Guild|GuildTextBasedChannel, requiredPermissions?: PermissionResolvable[]): boolean {
+export function botHasExecutePermissions(guildOrChannel?: Guild | GuildTextBasedChannel, requiredPermissions?: PermissionResolvable[]): boolean {
     if (!requiredPermissions?.length) return true;
 
-    let permissions: PermissionsBitField|null = null;
+    let permissions: PermissionsBitField | null = null;
 
     if (guildOrChannel instanceof Guild) {
         permissions = guildOrChannel.members.me?.permissions ?? null;

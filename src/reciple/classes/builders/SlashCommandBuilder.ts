@@ -1,4 +1,14 @@
-import { CommandBuilderType, CommandHaltFunction, CommandExecuteFunction, SharedCommandBuilderProperties, AnySlashCommandBuilder, SlashCommandData, AnySlashCommandOptionData, AnySlashCommandOptionBuilder, AnySlashCommandOptionsOnlyOptionBuilder } from '../../types/builders';
+import {
+    CommandBuilderType,
+    CommandHaltFunction,
+    CommandExecuteFunction,
+    SharedCommandBuilderProperties,
+    AnySlashCommandBuilder,
+    SlashCommandData,
+    AnySlashCommandOptionData,
+    AnySlashCommandOptionBuilder,
+    AnySlashCommandOptionsOnlyOptionBuilder,
+} from '../../types/builders';
 import { BaseCommandExecuteData, CommandHaltData } from '../../types/commands';
 import { isClass } from '../../util';
 
@@ -21,7 +31,7 @@ import {
     SlashCommandNumberOption,
     ApplicationCommandOptionType,
     SharedSlashCommandOptions,
-    PermissionsBitField
+    PermissionsBitField,
 } from 'discord.js';
 
 /**
@@ -53,22 +63,43 @@ export type SlashCommandHaltFunction<T = unknown> = CommandHaltFunction<CommandB
  */
 export type SlashCommandExecuteFunction<T = unknown> = CommandExecuteFunction<CommandBuilderType.SlashCommand, T>;
 
-export type SlashCommandSubcommandsOnlyBuilder<T = unknown> = Omit<SlashCommandBuilder<T>, "addBooleanOption" | "addUserOption" | "addChannelOption" | "addRoleOption" | "addAttachmentOption" | "addMentionableOption" | "addStringOption" | "addIntegerOption" | "addNumberOption">;
-export type SlashCommandOptionsOnlyBuilder<T = unknown> = Omit<SlashCommandBuilder<T>, "addSubcommand" | "addSubcommandGroup">;
+export type SlashCommandSubcommandsOnlyBuilder<T = unknown> = Omit<
+    SlashCommandBuilder<T>,
+    'addBooleanOption' | 'addUserOption' | 'addChannelOption' | 'addRoleOption' | 'addAttachmentOption' | 'addMentionableOption' | 'addStringOption' | 'addIntegerOption' | 'addNumberOption'
+>;
+export type SlashCommandOptionsOnlyBuilder<T = unknown> = Omit<SlashCommandBuilder<T>, 'addSubcommand' | 'addSubcommandGroup'>;
 
 export interface SlashCommandBuilder<T = unknown> extends DiscordJsSlashCommandBuilder {
     addSubcommandGroup(input: SlashCommandSubcommandGroupBuilder | ((subcommandGroup: SlashCommandSubcommandGroupBuilder) => SlashCommandSubcommandGroupBuilder)): SlashCommandSubcommandsOnlyBuilder;
     addSubcommand(input: SlashCommandSubcommandBuilder | ((subcommandGroup: SlashCommandSubcommandBuilder) => SlashCommandSubcommandBuilder)): SlashCommandSubcommandsOnlyBuilder;
 
-    addBooleanOption(input: SlashCommandBooleanOption | ((builder: SlashCommandBooleanOption) => SlashCommandBooleanOption)): Omit<this, "addSubcommand" | "addSubcommandGroup">;
-    addUserOption(input: SlashCommandUserOption | ((builder: SlashCommandUserOption) => SlashCommandUserOption)): Omit<this, "addSubcommand" | "addSubcommandGroup">;
-    addChannelOption(input: SlashCommandChannelOption | ((builder: SlashCommandChannelOption) => SlashCommandChannelOption)): Omit<this, "addSubcommand" | "addSubcommandGroup">;
-    addRoleOption(input: SlashCommandRoleOption | ((builder: SlashCommandRoleOption) => SlashCommandRoleOption)): Omit<this, "addSubcommand" | "addSubcommandGroup">;
-    addAttachmentOption(input: SlashCommandAttachmentOption | ((builder: SlashCommandAttachmentOption) => SlashCommandAttachmentOption)): Omit<this, "addSubcommand" | "addSubcommandGroup">;
-    addMentionableOption(input: SlashCommandMentionableOption | ((builder: SlashCommandMentionableOption) => SlashCommandMentionableOption)): Omit<this, "addSubcommand" | "addSubcommandGroup">;
-    addStringOption(input: SlashCommandStringOption | Omit<SlashCommandStringOption, 'setAutocomplete'> | Omit<SlashCommandStringOption, 'addChoices'> | ((builder: SlashCommandStringOption) => SlashCommandStringOption | Omit<SlashCommandStringOption, 'setAutocomplete'> | Omit<SlashCommandStringOption, 'addChoices'>)): Omit<this, "addSubcommand" | "addSubcommandGroup">;
-    addIntegerOption(input: SlashCommandIntegerOption | Omit<SlashCommandIntegerOption, 'setAutocomplete'> | Omit<SlashCommandIntegerOption, 'addChoices'> | ((builder: SlashCommandIntegerOption) => SlashCommandIntegerOption | Omit<SlashCommandIntegerOption, 'setAutocomplete'> | Omit<SlashCommandIntegerOption, 'addChoices'>)): Omit<this, "addSubcommand" | "addSubcommandGroup">;
-    addNumberOption(input: SlashCommandNumberOption | Omit<SlashCommandNumberOption, 'setAutocomplete'> | Omit<SlashCommandNumberOption, 'addChoices'> | ((builder: SlashCommandNumberOption) => SlashCommandNumberOption | Omit<SlashCommandNumberOption, 'setAutocomplete'> | Omit<SlashCommandNumberOption, 'addChoices'>)): Omit<this, "addSubcommand" | "addSubcommandGroup">;
+    addBooleanOption(input: SlashCommandBooleanOption | ((builder: SlashCommandBooleanOption) => SlashCommandBooleanOption)): Omit<this, 'addSubcommand' | 'addSubcommandGroup'>;
+    addUserOption(input: SlashCommandUserOption | ((builder: SlashCommandUserOption) => SlashCommandUserOption)): Omit<this, 'addSubcommand' | 'addSubcommandGroup'>;
+    addChannelOption(input: SlashCommandChannelOption | ((builder: SlashCommandChannelOption) => SlashCommandChannelOption)): Omit<this, 'addSubcommand' | 'addSubcommandGroup'>;
+    addRoleOption(input: SlashCommandRoleOption | ((builder: SlashCommandRoleOption) => SlashCommandRoleOption)): Omit<this, 'addSubcommand' | 'addSubcommandGroup'>;
+    addAttachmentOption(input: SlashCommandAttachmentOption | ((builder: SlashCommandAttachmentOption) => SlashCommandAttachmentOption)): Omit<this, 'addSubcommand' | 'addSubcommandGroup'>;
+    addMentionableOption(input: SlashCommandMentionableOption | ((builder: SlashCommandMentionableOption) => SlashCommandMentionableOption)): Omit<this, 'addSubcommand' | 'addSubcommandGroup'>;
+    addStringOption(
+        input:
+            | SlashCommandStringOption
+            | Omit<SlashCommandStringOption, 'setAutocomplete'>
+            | Omit<SlashCommandStringOption, 'addChoices'>
+            | ((builder: SlashCommandStringOption) => SlashCommandStringOption | Omit<SlashCommandStringOption, 'setAutocomplete'> | Omit<SlashCommandStringOption, 'addChoices'>)
+    ): Omit<this, 'addSubcommand' | 'addSubcommandGroup'>;
+    addIntegerOption(
+        input:
+            | SlashCommandIntegerOption
+            | Omit<SlashCommandIntegerOption, 'setAutocomplete'>
+            | Omit<SlashCommandIntegerOption, 'addChoices'>
+            | ((builder: SlashCommandIntegerOption) => SlashCommandIntegerOption | Omit<SlashCommandIntegerOption, 'setAutocomplete'> | Omit<SlashCommandIntegerOption, 'addChoices'>)
+    ): Omit<this, 'addSubcommand' | 'addSubcommandGroup'>;
+    addNumberOption(
+        input:
+            | SlashCommandNumberOption
+            | Omit<SlashCommandNumberOption, 'setAutocomplete'>
+            | Omit<SlashCommandNumberOption, 'addChoices'>
+            | ((builder: SlashCommandNumberOption) => SlashCommandNumberOption | Omit<SlashCommandNumberOption, 'setAutocomplete'> | Omit<SlashCommandNumberOption, 'addChoices'>)
+    ): Omit<this, 'addSubcommand' | 'addSubcommandGroup'>;
 }
 
 /**
@@ -80,10 +111,12 @@ export class SlashCommandBuilder<T = unknown> extends DiscordJsSlashCommandBuild
     public requiredBotPermissions: PermissionResolvable[] = [];
     public requiredMemberPermissions: PermissionResolvable[] = [];
     public halt?: SlashCommandHaltFunction<T>;
-    public execute: SlashCommandExecuteFunction<T> = () => { /* Execute */ };
+    public execute: SlashCommandExecuteFunction<T> = () => {
+        /* Execute */
+    };
     public metadata?: T;
 
-    constructor(data?: Partial<Omit<SlashCommandData<T>, "type">>) {
+    constructor(data?: Partial<Omit<SlashCommandData<T>, 'type'>>) {
         super();
 
         // TODO: WTH
@@ -120,15 +153,11 @@ export class SlashCommandBuilder<T = unknown> extends DiscordJsSlashCommandBuild
 
     public setRequiredMemberPermissions(...permissions: RestOrArray<PermissionResolvable>): this {
         this.requiredMemberPermissions = normalizeArray(permissions);
-        this.setDefaultMemberPermissions(
-            this.requiredMemberPermissions.length
-                ? new PermissionsBitField(this.requiredMemberPermissions).bitfield
-                : undefined
-        );
+        this.setDefaultMemberPermissions(this.requiredMemberPermissions.length ? new PermissionsBitField(this.requiredMemberPermissions).bitfield : undefined);
         return this;
     }
 
-    public setHalt(halt?: SlashCommandHaltFunction<T>|null): this {
+    public setHalt(halt?: SlashCommandHaltFunction<T> | null): this {
         this.halt = halt ?? undefined;
         return this;
     }
@@ -149,7 +178,7 @@ export class SlashCommandBuilder<T = unknown> extends DiscordJsSlashCommandBuild
      * @param builder Command/Subcommand builder
      * @param option Option builder
      */
-    public static addOption(builder: SharedSlashCommandOptions|SlashCommandBuilder, option: AnySlashCommandOptionBuilder): SharedSlashCommandOptions {
+    public static addOption(builder: SharedSlashCommandOptions | SlashCommandBuilder, option: AnySlashCommandOptionBuilder): SharedSlashCommandOptions {
         if (option instanceof SlashCommandAttachmentOption) {
             builder.addAttachmentOption(option);
         } else if (option instanceof SlashCommandBooleanOption) {
@@ -196,13 +225,10 @@ export class SlashCommandBuilder<T = unknown> extends DiscordJsSlashCommandBuild
                 builder = new SlashCommandBooleanOption();
                 break;
             case ApplicationCommandOptionType.Channel:
-                builder = new SlashCommandChannelOption()
-                    .addChannelTypes(...(option.channelTypes ?? []));
+                builder = new SlashCommandChannelOption().addChannelTypes(...(option.channelTypes ?? []));
                 break;
             case ApplicationCommandOptionType.Integer:
-                builder = new SlashCommandIntegerOption()
-                    .addChoices(...(option.choices ?? []))
-                    .setAutocomplete(!!option.autocomplete);
+                builder = new SlashCommandIntegerOption().addChoices(...(option.choices ?? [])).setAutocomplete(!!option.autocomplete);
 
                 if (option.maxValue) builder.setMaxValue(option.maxValue);
                 if (option.minValue) builder.setMinValue(option.minValue);
@@ -212,9 +238,7 @@ export class SlashCommandBuilder<T = unknown> extends DiscordJsSlashCommandBuild
                 builder = new SlashCommandMentionableOption();
                 break;
             case ApplicationCommandOptionType.Number:
-                builder = new SlashCommandNumberOption()
-                    .addChoices(...(option.choices ?? []))
-                    .setAutocomplete(!!option.autocomplete);
+                builder = new SlashCommandNumberOption().addChoices(...(option.choices ?? [])).setAutocomplete(!!option.autocomplete);
 
                 if (option.maxValue) builder.setMaxValue(option.maxValue);
                 if (option.minValue) builder.setMinValue(option.minValue);
@@ -224,9 +248,7 @@ export class SlashCommandBuilder<T = unknown> extends DiscordJsSlashCommandBuild
                 builder = new SlashCommandRoleOption();
                 break;
             case ApplicationCommandOptionType.String:
-                builder = new SlashCommandStringOption()
-                    .addChoices(...(option.choices ?? []))
-                    .setAutocomplete(!!option.autocomplete);
+                builder = new SlashCommandStringOption().addChoices(...(option.choices ?? [])).setAutocomplete(!!option.autocomplete);
 
                 if (option.maxLength) builder.setMaxLength(option.maxLength);
                 if (option.minLength) builder.setMinLength(option.minLength);
@@ -247,22 +269,19 @@ export class SlashCommandBuilder<T = unknown> extends DiscordJsSlashCommandBuild
                 builder = new SlashCommandSubcommandGroupBuilder();
 
                 for (const subCommandData of option.options) {
-                    builder.addSubcommand(
-                        subCommandData instanceof SlashCommandSubcommandBuilder
-                            ? subCommandData
-                            : this.resolveOption<SlashCommandSubcommandBuilder>(subCommandData)
-                    );
+                    builder.addSubcommand(subCommandData instanceof SlashCommandSubcommandBuilder ? subCommandData : this.resolveOption<SlashCommandSubcommandBuilder>(subCommandData));
                 }
 
                 break;
             default:
-                throw new TypeError("Unknown option data");
+                throw new TypeError('Unknown option data');
         }
 
         if (
-            !(builder instanceof SlashCommandSubcommandBuilder) && !(builder instanceof SlashCommandSubcommandGroupBuilder)
-            &&
-            option.type !== ApplicationCommandOptionType.Subcommand && option.type !== ApplicationCommandOptionType.SubcommandGroup
+            !(builder instanceof SlashCommandSubcommandBuilder) &&
+            !(builder instanceof SlashCommandSubcommandGroupBuilder) &&
+            option.type !== ApplicationCommandOptionType.Subcommand &&
+            option.type !== ApplicationCommandOptionType.SubcommandGroup
         ) {
             builder.setRequired(option.required ?? false);
         }
@@ -278,7 +297,7 @@ export class SlashCommandBuilder<T = unknown> extends DiscordJsSlashCommandBuild
      * Resolve slash command data/builder
      * @param commandData Command data to resolve
      */
-    public static resolveSlashCommand<T = unknown>(commandData: SlashCommandData<T>|AnySlashCommandBuilder<T>): AnySlashCommandBuilder<T> {
+    public static resolveSlashCommand<T = unknown>(commandData: SlashCommandData<T> | AnySlashCommandBuilder<T>): AnySlashCommandBuilder<T> {
         return this.isSlashCommandBuilder<T>(commandData) ? commandData : new SlashCommandBuilder<T>(commandData);
     }
 
@@ -291,7 +310,7 @@ export class SlashCommandBuilder<T = unknown> extends DiscordJsSlashCommandBuild
     }
 
     /**
-     * Is a slash command execute data 
+     * Is a slash command execute data
      * @param executeData data to check
      */
     public static isSlashCommandExecuteData(executeData: unknown): executeData is SlashCommandExecuteData {

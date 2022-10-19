@@ -37,7 +37,7 @@ if (config.fileLogging.clientLogs) client.logger.info('Starting Reciple client v
     client.addCommandListeners();
 
     await client.modules.startModulesFromFiles({
-        files: await client.modules.getModuleFiles()
+        files: await client.modules.getModuleFiles(),
     });
 
     client.on('ready', async () => {

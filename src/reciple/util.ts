@@ -6,7 +6,7 @@ import { AnyCommandBuilder, CommandBuilderType } from './types/builders';
  */
 export function isClass<T = any>(object: any): object is T {
     const isClassConstructor = object.constructor && object.constructor.toString().substring(0, 5) === 'class';
-    if(object.prototype === undefined) return isClassConstructor;
+    if (object.prototype === undefined) return isClassConstructor;
 
     const isPrototypeClassConstructor = object.prototype.constructor && object.prototype.constructor.toString && object.prototype.constructor.toString().substring(0, 5) === 'class';
     return isClassConstructor || isPrototypeClassConstructor;
@@ -16,7 +16,7 @@ export function isClass<T = any>(object: any): object is T {
  * Emit process warning about deprecated method/function
  * @param content Warning content
  */
-export function deprecationWarning(content: string|Error): void {
+export function deprecationWarning(content: string | Error): void {
     process.emitWarning(content, 'DeprecationWarning');
 }
 

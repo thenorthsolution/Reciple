@@ -20,7 +20,7 @@ export interface CooledDownUser {
     /**
      * In guild
      */
-    guild?: Guild|null;
+    guild?: Guild | null;
     /**
      * Cooled-down channel
      */
@@ -43,7 +43,7 @@ export class CommandCooldownManager extends Array<CooledDownUser> {
      * Alias for `CommandCooldownManager#push()`
      * @param options Cooled-down user data
      */
-    public add(...options: CooledDownUser[]) { 
+    public add(...options: CooledDownUser[]) {
         return this.push(...options);
     }
 
@@ -59,7 +59,7 @@ export class CommandCooldownManager extends Array<CooledDownUser> {
         const removed: CooledDownUser[] = [];
         let i = 0;
 
-        for (let i=0; i < this.length; i++) {
+        for (let i = 0; i < this.length; i++) {
             if (!CommandCooldownManager.checkOptions(options, this[i])) continue;
             if (options.expireTime && this[i].expireTime > Date.now()) continue;
             if (limit && i >= limit) continue;
@@ -72,20 +72,26 @@ export class CommandCooldownManager extends Array<CooledDownUser> {
     }
 
     /**
-     * Check if the given user is cooled-down 
+     * Check if the given user is cooled-down
      * @param options Options to identify if user is on cooldown
      */
     public isCooledDown(options: Partial<Omit<CooledDownUser, 'expireTime'>>): boolean {
         const data = this.get(options);
         if (!data) return false;
 
-        this.remove({ ...data, channel: undefined, guild: undefined, type: undefined, command: undefined });
+        this.remove({
+            ...data,
+            channel: undefined,
+            guild: undefined,
+            type: undefined,
+            command: undefined,
+        });
         if (data.expireTime < Date.now()) return false;
         return true;
     }
 
     /**
-     * Purge non cooled-down users from this array 
+     * Purge non cooled-down users from this array
      * @param options Clean cooldown options
      */
     public clean(options?: Partial<Omit<CooledDownUser, 'expireTime'>>): void {
@@ -97,10 +103,10 @@ export class CommandCooldownManager extends Array<CooledDownUser> {
     }
 
     /**
-     * Get someone's cooldown data 
+     * Get someone's cooldown data
      * @param options Get cooldown data options
      */
-    public get(options: Partial<Omit<CooledDownUser, 'expireTime'>>): CooledDownUser|undefined {
+    public get(options: Partial<Omit<CooledDownUser, 'expireTime'>>): CooledDownUser | undefined {
         return this.find(data => CommandCooldownManager.checkOptions(options, data));
     }
 

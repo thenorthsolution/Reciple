@@ -84,10 +84,12 @@ export class MessageCommandBuilder<T = unknown> implements SharedCommandBuilderP
     public allowExecuteInDM: boolean = true;
     public allowExecuteByBots: boolean = false;
     public halt?: MessageCommandHaltFunction<T>;
-    public execute: MessageCommandExecuteFunction<T> = () => { /* Execute */ };
+    public execute: MessageCommandExecuteFunction<T> = () => {
+        /* Execute */
+    };
     public metadata?: T;
 
-    constructor(data?: Partial<Omit<MessageCommandData<T>, "type">>) {
+    constructor(data?: Partial<Omit<MessageCommandData<T>, 'type'>>) {
         if (data?.name !== undefined) this.setName(data.name);
         if (data?.description !== undefined) this.setDescription(data.description);
         if (data?.aliases !== undefined) this.addAliases(data.aliases);
@@ -100,7 +102,7 @@ export class MessageCommandBuilder<T = unknown> implements SharedCommandBuilderP
         if (data?.allowExecuteByBots !== undefined) this.setAllowExecuteByBots(true);
         if (data?.allowExecuteInDM !== undefined) this.setAllowExecuteInDM(true);
         if (data?.validateOptions !== undefined) this.setValidateOptions(true);
-        if (data?.options !== undefined) this.options = data.options.map(o => o instanceof MessageCommandOptionBuilder ? o : new MessageCommandOptionBuilder(o));
+        if (data?.options !== undefined) this.options = data.options.map(o => (o instanceof MessageCommandOptionBuilder ? o : new MessageCommandOptionBuilder(o)));
     }
 
     /**
@@ -112,7 +114,7 @@ export class MessageCommandBuilder<T = unknown> implements SharedCommandBuilderP
         this.name = name;
         return this;
     }
-    
+
     /**
      * Sets the command description
      * @param description Command description
@@ -162,13 +164,14 @@ export class MessageCommandBuilder<T = unknown> implements SharedCommandBuilderP
      * Add option to the command
      * @param option Message option builder
      */
-    public addOption(option: MessageCommandOptionBuilder|((constructor: MessageCommandOptionBuilder) => MessageCommandOptionBuilder)): this {
+    public addOption(option: MessageCommandOptionBuilder | ((constructor: MessageCommandOptionBuilder) => MessageCommandOptionBuilder)): this {
         if (!option) throw new TypeError('option must be a MessageOption.');
 
         option = typeof option === 'function' ? option(new MessageCommandOptionBuilder()) : option;
 
         if (this.options.find(o => o.name === option.name)) throw new TypeError('option with name "' + option.name + '" already exists.');
-        if (this.options.length > 0 && !this.options[this.options.length - 1 < 0 ? 0 : this.options.length - 1].required && option.required) throw new TypeError('All required options must be before optional options.');
+        if (this.options.length > 0 && !this.options[this.options.length - 1 < 0 ? 0 : this.options.length - 1].required && option.required)
+            throw new TypeError('All required options must be before optional options.');
 
         this.options.push(option);
         return this;
@@ -199,7 +202,7 @@ export class MessageCommandBuilder<T = unknown> implements SharedCommandBuilderP
         return this;
     }
 
-    public setHalt(halt?: MessageCommandHaltFunction<T>|null): this {
+    public setHalt(halt?: MessageCommandHaltFunction<T> | null): this {
         this.halt = halt ?? undefined;
         return this;
     }
@@ -234,14 +237,14 @@ export class MessageCommandBuilder<T = unknown> implements SharedCommandBuilderP
             allowExecuteInDM: this.allowExecuteInDM,
             validateOptions: this.validateOptions,
             options: this.options.map(o => o.toJSON()),
-        }
+        };
     }
 
     /**
      * Resolve message command data/builder
      * @param commandData Command data to resolve
      */
-    public static resolveMessageCommand<T = unknown>(commandData: MessageCommandData<T>|MessageCommandBuilder<T>): MessageCommandBuilder<T> {
+    public static resolveMessageCommand<T = unknown>(commandData: MessageCommandData<T> | MessageCommandBuilder<T>): MessageCommandBuilder<T> {
         return this.isMessageCommandBuilder<T>(commandData) ? commandData : new MessageCommandBuilder(commandData);
     }
 
@@ -282,7 +285,7 @@ export async function validateMessageCommandOptions(builder: MessageCommandBuild
             value: arg ?? undefined,
             required: option.required,
             invalid: false,
-            missing: false
+            missing: false,
         };
 
         if (arg == undefined && option.required) {

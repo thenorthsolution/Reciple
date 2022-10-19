@@ -7,17 +7,19 @@ import { ApplicationCommandBuilder } from './ApplicationCommandManager';
 
 export interface ClientCommandManagerOptions {
     client: RecipleClient;
-    messageCommands?: (MessageCommandBuilder|MessageCommandData)[];
-    slashCommands?: (AnySlashCommandBuilder|SlashCommandData)[];
+    messageCommands?: (MessageCommandBuilder | MessageCommandData)[];
+    slashCommands?: (AnySlashCommandBuilder | SlashCommandData)[];
 }
 
 export class ClientCommandManager {
     readonly client: RecipleClient;
     readonly slashCommands: Collection<string, AnySlashCommandBuilder> = new Collection();
     readonly messageCommands: Collection<string, MessageCommandBuilder> = new Collection();
-    readonly additionalApplicationCommands: (ApplicationCommandBuilder|ApplicationCommandData)[] = [];
+    readonly additionalApplicationCommands: (ApplicationCommandBuilder | ApplicationCommandData)[] = [];
 
-    get applicationCommandsSize() { return this.client.commands.slashCommands.size + this.client.commands.additionalApplicationCommands.length; }
+    get applicationCommandsSize() {
+        return this.client.commands.slashCommands.size + this.client.commands.additionalApplicationCommands.length;
+    }
 
     constructor(options: ClientCommandManagerOptions) {
         this.client = options.client;
@@ -30,7 +32,7 @@ export class ClientCommandManager {
      * Add command to command manager
      * @param commands Any command data or builder
      */
-    public add(...commands: RestOrArray<AnyCommandBuilder|AnyCommandData>): this {
+    public add(...commands: RestOrArray<AnyCommandBuilder | AnyCommandData>): this {
         for (const command of normalizeArray(commands)) {
             if (command.type === CommandBuilderType.SlashCommand) {
                 this.slashCommands.set(command.name, SlashCommandBuilder.resolveSlashCommand(command));
@@ -43,23 +45,22 @@ export class ClientCommandManager {
     }
 
     /**
-     * Get command builder by name or alias if it's a message command 
+     * Get command builder by name or alias if it's a message command
      * @param command Command name
      * @param type Command type
      */
-    public get(command: string, type?: undefined): AnyCommandBuilder|undefined;
-    public get(command: string, type?: CommandBuilderType.MessageCommand): MessageCommandBuilder|undefined;
-    public get(command: string, type?: CommandBuilderType.SlashCommand): SlashCommandBuilder|undefined;
-    public get(command: string, type?: CommandBuilderType): AnyCommandBuilder|undefined {
+    public get(command: string, type?: undefined): AnyCommandBuilder | undefined;
+    public get(command: string, type?: CommandBuilderType.MessageCommand): MessageCommandBuilder | undefined;
+    public get(command: string, type?: CommandBuilderType.SlashCommand): SlashCommandBuilder | undefined;
+    public get(command: string, type?: CommandBuilderType): AnyCommandBuilder | undefined {
         switch (type) {
             case CommandBuilderType.SlashCommand:
                 return this.slashCommands.get(command);
             case CommandBuilderType.MessageCommand:
-                return this.messageCommands.get(command.toLowerCase())
-                    ?? (this.client.config.commands.messageCommand.allowCommandAlias
-                        ? this.messageCommands.find(c => c.aliases.some(a => a == command?.toLowerCase()))
-                        : undefined
-                    );
+                return (
+                    this.messageCommands.get(command.toLowerCase()) ??
+                    (this.client.config.commands.messageCommand.allowCommandAlias ? this.messageCommands.find(c => c.aliases.some(a => a == command?.toLowerCase())) : undefined)
+                );
             default:
                 throw new TypeError('Unknown command type');
         }
@@ -71,11 +72,10 @@ export class ClientCommandManager {
      */
     public async registerApplicationCommands(...guilds: RestOrArray<GuildResolvable>): Promise<this> {
         guilds = normalizeArray(guilds);
-        guilds = guilds.length
-            ? guilds
-            : normalizeArray([this.client.config.commands.slashCommand.guilds] as RestOrArray<string>);
+        guilds = guilds.length ? guilds : normalizeArray([this.client.config.commands.slashCommand.guilds] as RestOrArray<string>);
 
-        if (!this.client.isClientLogsSilent) this.client.logger.log(`Regestering ${this.applicationCommandsSize} application command(s) ${!guilds.length ? 'globaly' : 'to ' + guilds.length + ' guilds'}...`);
+        if (!this.client.isClientLogsSilent)
+            this.client.logger.log(`Regestering ${this.applicationCommandsSize} application command(s) ${!guilds.length ? 'globaly' : 'to ' + guilds.length + ' guilds'}...`);
 
         await this.client.applicationCommands.set([...this.slashCommands.toJSON(), ...this.additionalApplicationCommands], guilds);
 

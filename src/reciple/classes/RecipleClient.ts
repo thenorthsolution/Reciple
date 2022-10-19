@@ -1,4 +1,5 @@
 import { MessageCommandBuilder, MessageCommandExecuteData, MessageCommandHaltData, validateMessageCommandOptions } from './builders/MessageCommandBuilder';
+import { Awaitable, ChannelType, ChatInputCommandInteraction, Client, ClientEvents, ClientOptions, Interaction, Message } from 'discord.js';
 import { SlashCommandBuilder, SlashCommandExecuteData, SlashCommandHaltData } from './builders/SlashCommandBuilder';
 import { AnyCommandExecuteData, AnyCommandHaltData, CommandHaltReason } from '../types/commands';
 import { CommandCooldownManager, CooledDownUser } from './managers/CommandCooldownManager';
@@ -15,21 +16,12 @@ import { version } from '../version';
 import { cwd } from '../flags';
 import path from 'path';
 
-import {
-    Awaitable,
-    ChannelType,
-    ChatInputCommandInteraction,
-    Client,
-    ClientEvents,
-    ClientOptions,
-    Interaction,
-    Message,
-} from 'discord.js';
-
 /**
  * Options for {@link RecipleClient}
  */
-export interface RecipleClientOptions extends ClientOptions { config?: Config; }
+export interface RecipleClientOptions extends ClientOptions {
+    config?: Config;
+}
 
 /**
  * Reciple client events
@@ -46,33 +38,39 @@ export interface RecipleClientEvents extends ClientEvents {
  */
 export interface RecipleClient<Ready extends boolean = boolean> extends Client<Ready> {
     on<E extends keyof RecipleClientEvents>(event: E, listener: (...args: RecipleClientEvents[E]) => Awaitable<void>): this;
-    on<E extends string|symbol>(event: E, listener: (...args: any) => Awaitable<void>): this;
+    on<E extends string | symbol>(event: E, listener: (...args: any) => Awaitable<void>): this;
 
     once<E extends keyof RecipleClientEvents>(event: E, listener: (...args: RecipleClientEvents[E]) => Awaitable<void>): this;
-    once<E extends keyof string|symbol>(event: E, listener: (...args: any) => Awaitable<void>): this;
+    once<E extends keyof string | symbol>(event: E, listener: (...args: any) => Awaitable<void>): this;
 
     emit<E extends keyof RecipleClientEvents>(event: E, ...args: RecipleClientEvents[E]): boolean;
-    emit<E extends string|symbol>(event: E, ...args: any): boolean;
+    emit<E extends string | symbol>(event: E, ...args: any): boolean;
 
     off<E extends keyof RecipleClientEvents>(event: E, listener: (...args: RecipleClientEvents[E]) => Awaitable<void>): this;
-    off<E extends string|symbol>(event: E, listener: (...args: any) => Awaitable<void>): this;
+    off<E extends string | symbol>(event: E, listener: (...args: any) => Awaitable<void>): this;
 
     removeAllListeners<E extends keyof RecipleClientEvents>(event?: E): this;
-    removeAllListeners(event?: string|symbol): this;
+    removeAllListeners(event?: string | symbol): this;
 
     isReady(): this is RecipleClient<true>;
 }
 
 export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready> {
     readonly config: Config = RecipleConfig.getDefaultConfig();
-    readonly commands: ClientCommandManager = new ClientCommandManager({ client: this });
+    readonly commands: ClientCommandManager = new ClientCommandManager({
+        client: this,
+    });
     readonly applicationCommands: ApplicationCommandManager;
     readonly cooldowns: CommandCooldownManager = new CommandCooldownManager();
-    readonly modules: ClientModuleManager = new ClientModuleManager({ client: this });
+    readonly modules: ClientModuleManager = new ClientModuleManager({
+        client: this,
+    });
     readonly logger: Logger;
     readonly version: string = version;
 
-    get isClientLogsSilent() { return !!this.config.fileLogging.clientLogs; }
+    get isClientLogsSilent() {
+        return !!this.config.fileLogging.clientLogs;
+    }
 
     /**
      * @param options Client options
@@ -81,7 +79,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
         super(options);
 
         this.logger = createLogger(!!options.config?.fileLogging.stringifyLoggedJSON, options.config?.fileLogging.debugmode);
-        this.config = {...this.config, ...(options.config ?? {})};
+        this.config = { ...this.config, ...(options.config ?? {}) };
 
         if (this.config.fileLogging.enabled) this.logger.logFile(path.join(cwd, this.config.fileLogging.logFilePath ?? 'logs/latest.log'), false);
 
@@ -92,11 +90,11 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
      * Listed to command executions
      */
     public addCommandListeners(): RecipleClient<Ready> {
-        this.on('messageCreate', (message) => {
+        this.on('messageCreate', message => {
             if (this.config.commands.messageCommand.enabled) this.messageCommandExecute(message);
         });
 
-        this.on('interactionCreate', (interaction) => {
+        this.on('interactionCreate', interaction => {
             if (this.config.commands.slashCommand.enabled) this.slashCommandExecute(interaction);
         });
 
@@ -107,7 +105,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
      * Execute a slash command
      * @param interaction Slash command interaction
      */
-    public async slashCommandExecute(interaction: Interaction|ChatInputCommandInteraction): Promise<undefined|SlashCommandExecuteData> {
+    public async slashCommandExecute(interaction: Interaction | ChatInputCommandInteraction): Promise<undefined | SlashCommandExecuteData> {
         if (!interaction || !interaction.isChatInputCommand() || !this.isReady()) return;
         if (!this.config.commands.slashCommand.acceptRepliedInteractions && (interaction.replied || interaction.deferred)) return;
 
@@ -117,17 +115,24 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
         const executeData: SlashCommandExecuteData = {
             interaction,
             builder: command,
-            client: this
+            client: this,
         };
 
-        if (userHasCommandPermissions({
-            builder: command,
-            memberPermissions: interaction.memberPermissions ?? undefined,
-            commandPermissions: this.config.commands.slashCommand.permissions
-        })) {
+        if (
+            userHasCommandPermissions({
+                builder: command,
+                memberPermissions: interaction.memberPermissions ?? undefined,
+                commandPermissions: this.config.commands.slashCommand.permissions,
+            })
+        ) {
             if (!command) return;
             if (interaction.inCachedGuild() && !botHasExecutePermissions(interaction.channel! || interaction.guild, command.requiredBotPermissions)) {
-                if (!await this._haltCommand(command, { executeData, reason: CommandHaltReason.MissingBotPermissions })) {
+                if (
+                    !(await this._haltCommand(command, {
+                        executeData,
+                        reason: CommandHaltReason.MissingBotPermissions,
+                    }))
+                ) {
                     await interaction.reply(this.getConfigMessage('insufficientBotPerms', 'Insufficient bot permissions.')).catch(er => this._replyError(er));
                 }
 
@@ -139,21 +144,35 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
                 command: command.name,
                 channel: interaction.channel ?? undefined,
                 guild: interaction.guild,
-                type: CommandBuilderType.SlashCommand
+                type: CommandBuilderType.SlashCommand,
             };
 
             if (this.config.commands.slashCommand.enableCooldown && command.cooldown && !this.cooldowns.isCooledDown(userCooldown)) {
-                this.cooldowns.add({ ...userCooldown, expireTime: Date.now() + command.cooldown });
+                this.cooldowns.add({
+                    ...userCooldown,
+                    expireTime: Date.now() + command.cooldown,
+                });
             } else if (this.config.commands.slashCommand.enableCooldown && command.cooldown) {
-                if (!await this._haltCommand(command, { executeData, reason: CommandHaltReason.Cooldown, ...this.cooldowns.get(userCooldown)! })) {
+                if (
+                    !(await this._haltCommand(command, {
+                        executeData,
+                        reason: CommandHaltReason.Cooldown,
+                        ...this.cooldowns.get(userCooldown)!,
+                    }))
+                ) {
                     await interaction.reply(this.getConfigMessage('cooldown', 'You cannot execute this command right now due to the cooldown.')).catch(er => this._replyError(er));
                 }
 
                 return;
             }
 
-           return this._executeCommand(command, executeData);
-        } else if (!await this._haltCommand(command, { executeData, reason: CommandHaltReason.MissingMemberPermissions })) {
+            return this._executeCommand(command, executeData);
+        } else if (
+            !(await this._haltCommand(command, {
+                executeData,
+                reason: CommandHaltReason.MissingMemberPermissions,
+            }))
+        ) {
             await interaction.reply(this.getConfigMessage('noPermissions', 'You do not have permission to use this command.')).catch(er => this._replyError(er));
         }
     }
@@ -163,11 +182,11 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
      * @param message Message command executor
      * @param prefix Message command prefix
      */
-    public async messageCommandExecute(message: Message, prefix?: string): Promise<undefined|MessageCommandExecuteData> {
+    public async messageCommandExecute(message: Message, prefix?: string): Promise<undefined | MessageCommandExecuteData> {
         if (!message.content || !this.isReady()) return;
 
         const parseCommand = getCommand(message.content, prefix || this.config.commands.messageCommand.prefix || '!', this.config.commands.messageCommand.commandArgumentSeparator || ' ');
-        if (!parseCommand || !parseCommand?.command) return; 
+        if (!parseCommand || !parseCommand?.command) return;
 
         const command = this.commands.get(parseCommand.command, CommandBuilderType.MessageCommand);
         if (!command) return;
@@ -178,25 +197,39 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
             options: commandOptions,
             command: parseCommand,
             builder: command,
-            client: this
+            client: this,
         };
 
-        if (userHasCommandPermissions({
-            builder: command,
-            memberPermissions: message.member?.permissions,
-            commandPermissions: this.config.commands.messageCommand.permissions
-        })) {
-            if (!command.allowExecuteInDM && message.channel.type === ChannelType.DM || !command.allowExecuteByBots && (message.author.bot ||message.author.system)) return;
+        if (
+            userHasCommandPermissions({
+                builder: command,
+                memberPermissions: message.member?.permissions,
+                commandPermissions: this.config.commands.messageCommand.permissions,
+            })
+        ) {
+            if ((!command.allowExecuteInDM && message.channel.type === ChannelType.DM) || (!command.allowExecuteByBots && (message.author.bot || message.author.system))) return;
             if (command.validateOptions) {
                 if (commandOptions.some(o => o.invalid)) {
-                    if (!await this._haltCommand(command, { executeData, reason: CommandHaltReason.InvalidArguments, invalidArguments: new MessageCommandOptionManager(...executeData.options.filter(o => o.invalid)) })) {
+                    if (
+                        !(await this._haltCommand(command, {
+                            executeData,
+                            reason: CommandHaltReason.InvalidArguments,
+                            invalidArguments: new MessageCommandOptionManager(...executeData.options.filter(o => o.invalid)),
+                        }))
+                    ) {
                         message.reply(this.getConfigMessage('invalidArguments', 'Invalid argument(s) given.')).catch(er => this._replyError(er));
                     }
                     return;
                 }
 
                 if (commandOptions.some(o => o.missing)) {
-                    if (!await this._haltCommand(command, { executeData, reason: CommandHaltReason.MissingArguments, missingArguments: new MessageCommandOptionManager(...executeData.options.filter(o => o.missing)) })) {
+                    if (
+                        !(await this._haltCommand(command, {
+                            executeData,
+                            reason: CommandHaltReason.MissingArguments,
+                            missingArguments: new MessageCommandOptionManager(...executeData.options.filter(o => o.missing)),
+                        }))
+                    ) {
                         message.reply(this.getConfigMessage('missingArguments', 'Not enough arguments.')).catch(er => this._replyError(er));
                     }
                     return;
@@ -204,24 +237,38 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
             }
 
             if (message.inGuild() && !botHasExecutePermissions(message.channel || message.guild, command.requiredBotPermissions)) {
-                if (!await this._haltCommand(command, { executeData, reason: CommandHaltReason.MissingBotPermissions })) {
+                if (
+                    !(await this._haltCommand(command, {
+                        executeData,
+                        reason: CommandHaltReason.MissingBotPermissions,
+                    }))
+                ) {
                     message.reply(this.getConfigMessage('insufficientBotPerms', 'Insufficient bot permissions.')).catch(er => this._replyError(er));
                 }
                 return;
             }
 
-            const userCooldown: Omit<CooledDownUser, "expireTime"> = {
+            const userCooldown: Omit<CooledDownUser, 'expireTime'> = {
                 user: message.author,
                 command: command.name,
                 channel: message.channel,
                 guild: message.guild,
-                type: CommandBuilderType.MessageCommand
+                type: CommandBuilderType.MessageCommand,
             };
 
             if (this.config.commands.messageCommand.enableCooldown && command.cooldown && !this.cooldowns.isCooledDown(userCooldown)) {
-                this.cooldowns.add({ ...userCooldown, expireTime: Date.now() + command.cooldown });
+                this.cooldowns.add({
+                    ...userCooldown,
+                    expireTime: Date.now() + command.cooldown,
+                });
             } else if (this.config.commands.messageCommand.enableCooldown && command.cooldown) {
-                if (!await this._haltCommand(command, { executeData, reason: CommandHaltReason.Cooldown, ...this.cooldowns.get(userCooldown)! })) {
+                if (
+                    !(await this._haltCommand(command, {
+                        executeData,
+                        reason: CommandHaltReason.Cooldown,
+                        ...this.cooldowns.get(userCooldown)!,
+                    }))
+                ) {
                     await message.reply(this.getConfigMessage('cooldown', 'You cannot execute this command right now due to the cooldown.')).catch(er => this._replyError(er));
                 }
 
@@ -229,13 +276,18 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
             }
 
             return this._executeCommand(command, executeData);
-        } else if (!await this._haltCommand(command, { executeData, reason: CommandHaltReason.MissingMemberPermissions })) {
+        } else if (
+            !(await this._haltCommand(command, {
+                executeData,
+                reason: CommandHaltReason.MissingMemberPermissions,
+            }))
+        ) {
             message.reply(this.getConfigMessage('noPermissions', 'You do not have permission to use this command.')).catch(er => this._replyError(er));
         }
     }
 
     /**
-     * Get a message from config 
+     * Get a message from config
      * @param messageKey Config messages key
      * @param defaultMessage Default message when the key does not exists
      */
@@ -260,15 +312,14 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
     protected async _haltCommand(command: MessageCommandBuilder, haltData: MessageCommandHaltData): Promise<boolean>;
     protected async _haltCommand(command: AnyCommandBuilder, haltData: AnyCommandHaltData): Promise<boolean> {
         try {
-            const haltResolved = (
-                    command.halt
-                        ? await Promise.resolve(
-                            command.type == CommandBuilderType.SlashCommand
-                                ? command.halt(haltData as SlashCommandHaltData)
-                                : command.halt(haltData as MessageCommandHaltData)
-                        ).catch(err => { console.log(err); })
-                        : false
-                ) || false;
+            const haltResolved =
+                (command.halt
+                    ? await Promise.resolve(command.type == CommandBuilderType.SlashCommand ? command.halt(haltData as SlashCommandHaltData) : command.halt(haltData as MessageCommandHaltData)).catch(
+                          err => {
+                              console.log(err);
+                          }
+                      )
+                    : false) || false;
 
             this.emit('recipleCommandHalt', haltData);
             return haltResolved;
@@ -286,25 +337,34 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
      * @param command Command builder
      * @param executeData Command execute data
      */
-    protected async _executeCommand(command: SlashCommandBuilder, executeData: SlashCommandExecuteData): Promise<SlashCommandExecuteData|undefined>;
-    protected async _executeCommand(command: MessageCommandBuilder, executeData: MessageCommandExecuteData): Promise<MessageCommandExecuteData|undefined>;
-    protected async _executeCommand(command: AnyCommandBuilder, executeData: AnyCommandExecuteData): Promise<AnyCommandExecuteData|undefined> {
+    protected async _executeCommand(command: SlashCommandBuilder, executeData: SlashCommandExecuteData): Promise<SlashCommandExecuteData | undefined>;
+    protected async _executeCommand(command: MessageCommandBuilder, executeData: MessageCommandExecuteData): Promise<MessageCommandExecuteData | undefined>;
+    protected async _executeCommand(command: AnyCommandBuilder, executeData: AnyCommandExecuteData): Promise<AnyCommandExecuteData | undefined> {
         try {
             await Promise.resolve(
-                command.type === CommandBuilderType.SlashCommand
-                    ? command.execute(executeData as SlashCommandExecuteData)
-                    : command.execute(executeData as MessageCommandExecuteData)
+                command.type === CommandBuilderType.SlashCommand ? command.execute(executeData as SlashCommandExecuteData) : command.execute(executeData as MessageCommandExecuteData)
             )
-            .then(() => this.emit('recipleCommandExecute', executeData))
-            .catch(async err => 
-                !await this._haltCommand(command as any, { executeData: executeData as any, reason: CommandHaltReason.Error, error: err })
-                    ? this._commandExecuteError(err as Error, executeData)
-                    : void 0
-            );
+                .then(() => this.emit('recipleCommandExecute', executeData))
+                .catch(async err =>
+                    !(await this._haltCommand(command as any, {
+                        executeData: executeData as any,
+                        reason: CommandHaltReason.Error,
+                        error: err,
+                    }))
+                        ? this._commandExecuteError(err as Error, executeData)
+                        : void 0
+                );
 
             return executeData;
         } catch (err) {
-            if (await this._haltCommand(command as any, { executeData: executeData as any, reason: CommandHaltReason.Error, error: err })) return;
+            if (
+                await this._haltCommand(command as any, {
+                    executeData: executeData as any,
+                    reason: CommandHaltReason.Error,
+                    error: err,
+                })
+            )
+                return;
             await this._commandExecuteError(err as Error, executeData);
         }
     }

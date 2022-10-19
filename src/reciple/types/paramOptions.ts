@@ -15,7 +15,7 @@ export interface RecipleClientAddModuleOptions {
     /**
      * Module optional info
      */
-    moduleInfo?: RecipleModule["info"];
+    moduleInfo?: RecipleModule['info'];
 }
 
 export interface UserHasCommandPermissionsOptions {
@@ -30,7 +30,10 @@ export interface UserHasCommandPermissionsOptions {
     /***
      * Required command config permissions
      */
-    commandPermissions?: { enabled: boolean; commands: ConfigCommandPermissions[]; };
+    commandPermissions?: {
+        enabled: boolean;
+        commands: ConfigCommandPermissions[];
+    };
 }
 
 export interface ModuleManagerResolveFilesOptions {
