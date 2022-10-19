@@ -69,7 +69,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
     readonly version: string = version;
 
     get isClientLogsSilent() {
-        return !!this.config.fileLogging.clientLogs;
+        return !this.config.fileLogging.clientLogs;
     }
 
     /**

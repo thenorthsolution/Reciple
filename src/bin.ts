@@ -31,7 +31,7 @@ try {
 const config = configParser.getConfig();
 const client = new RecipleClient({ config: config, ...config.client });
 
-if (config.fileLogging.clientLogs) client.logger.info('Starting Reciple client v' + rawVersion);
+if (!client.isClientLogsSilent) client.logger.info('Starting Reciple client v' + rawVersion);
 
 (async () => {
     client.addCommandListeners();
