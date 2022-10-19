@@ -202,7 +202,7 @@ export class ClientModuleManager {
             this.client.logger.info(`${this.client.commands.slashCommands.size} slash commands loaded.`);
         }
 
-        if (registerApplicationCommands) this.client.commands.registerApplicationCommands(normalizeArray(registerApplicationCommandsGuilds));
+        if (registerApplicationCommands) await this.client.commands.registerApplicationCommands(normalizeArray(registerApplicationCommandsGuilds));
     }
 
     public async startModule(mod: ResolvedModule): Promise<void> {
