@@ -46,7 +46,7 @@ export interface RecipleModuleOptions<M = unknown> {
 export class RecipleModule<M = unknown> {
     public readonly id: string;
     public readonly client: RecipleClient;
-    public readonly commands: Collection<string, AnyCommandBuilder> = new Collection();
+    public readonly commands: AnyCommandBuilder[] = [];
     public readonly script: RecipleScript;
     public readonly filePath?: string;
     public metadata?: M;
@@ -77,7 +77,7 @@ export class RecipleModule<M = unknown> {
     }
 
     public async registerSlashCommands(...guilds: RestOrArray<GuildResolvable>): Promise<void> {
-        for (const command of this.commands.toJSON()) {
+        for (const command of this.commands) {
             if (command.type !== CommandType.SlashCommand) continue;
 
             await this.client.applicationCommands.add(command, normalizeArray(guilds));
@@ -85,7 +85,7 @@ export class RecipleModule<M = unknown> {
     }
 
     public async unregisterSlashCommands(...guilds: RestOrArray<GuildResolvable>): Promise<void> {
-        for (const builder of this.commands.toJSON()) {
+        for (const builder of this.commands) {
             if (builder.type !== CommandType.SlashCommand) continue;
 
             if (normalizeArray(guilds).length) {
@@ -104,7 +104,7 @@ export class RecipleModule<M = unknown> {
     }
 
     public async updateSlashCommands(...guilds: RestOrArray<GuildResolvable>): Promise<void> {
-        for (const builder of this.commands.toJSON()) {
+        for (const builder of this.commands) {
             if (builder.type !== CommandType.SlashCommand) continue;
 
             if (normalizeArray(guilds).length) {
@@ -122,7 +122,7 @@ export class RecipleModule<M = unknown> {
         }
     }
 
-    public resolveCommands(): Collection<string, AnyCommandBuilder> {
+    public resolveCommands(): AnyCommandBuilder[] {
         if (!Array.isArray(this.script?.commands)) return this.commands;
 
         for (const command of this.script.commands) {
@@ -131,10 +131,10 @@ export class RecipleModule<M = unknown> {
             const builder = command.type === CommandType.SlashCommand ? SlashCommandBuilder.resolveSlashCommand(command) : MessageCommandBuilder.resolveMessageCommand(command);
 
             if (!validateCommandBuilder(builder)) throw new Error('Invalid command builder, no name or contains option(s) without name');
-            this.commands.set(command.name, builder);
+            this.commands.push(builder);
         }
 
-        this.client.commands.add(this.commands.toJSON());
+        this.client.commands.add(this.commands);
         return this.commands;
     }
 

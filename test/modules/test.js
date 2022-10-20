@@ -8,12 +8,25 @@ module.exports = {
             return true;
         }
     },
-    commands: [
+    commands: [],
+    /**
+     * 
+     * @param {import('../../').RecipleClient} client 
+     * @returns 
+     */
+    onStart(client) {
+        this.commands = [
         new MessageCommandBuilder()
             .setName("ping")
             .setDescription("Pong!")
             .setCooldown(1000 * 10)
             .setExecute(e => e.message.reply('Pong!'))
+            .setHalt(this.commandHalt),
+        new MessageCommandBuilder()
+            .setName("pong")
+            .setDescription("Ping!")
+            .setCooldown(1000 * 10)
+            .setExecute(e => e.message.reply('Ping!'))
             .setHalt(this.commandHalt),
         new SlashCommandBuilder()
             .setName("pong")
@@ -21,14 +34,16 @@ module.exports = {
             .setCooldown(1000 * 10)
             .setRequiredMemberPermissions(['AddReactions', 'ChangeNickname'])
             .setExecute(e => e.interaction.reply(`Ping!`))
+            .setHalt(this.commandHalt),
+        new SlashCommandBuilder()
+            .setName("ping")
+            .setDescription("pong!")
+            .setCooldown(1000 * 10)
+            .setRequiredMemberPermissions(['AddReactions', 'ChangeNickname'])
+            .setExecute(e => e.interaction.reply(`pong!`))
             .setHalt(this.commandHalt)
-    ],
-    /**
-     * 
-     * @param {import('../../').RecipleClient} client 
-     * @returns 
-     */
-    onStart(client) {
+        ];
+
         client.logger.log("Module started");
 
         client.on('recipleRegisterApplicationCommands', () => {
