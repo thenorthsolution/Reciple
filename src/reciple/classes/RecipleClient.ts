@@ -11,7 +11,7 @@ import { ClientCommandManager } from './managers/ClientCommandManager';
 import { ClientModuleManager } from './managers/ClientModuleManager';
 import { Config, RecipleConfig } from './RecipleConfig';
 import { getCommand, Logger } from 'fallout-utility';
-import { createLogger } from '../logger';
+import { createLogger } from '../util';
 import { version } from '../version';
 import { cwd } from '../flags';
 import path from 'path';

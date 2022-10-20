@@ -3,6 +3,8 @@ import {
     ApplicationCommandData,
     ContextMenuCommandBuilder,
     GuildResolvable,
+    normalizeArray,
+    RestOrArray,
     RESTPostAPIApplicationCommandsJSONBody,
     SlashCommandBuilder as DiscordJsSlashCommandBuilder,
 } from 'discord.js';
@@ -19,11 +21,13 @@ export class ApplicationCommandManager {
         this.client = client;
     }
 
-    public async set(commands: (ApplicationCommandBuilder | ApplicationCommandData)[], guilds?: GuildResolvable[]): Promise<void> {
+    public async set(commands: (ApplicationCommandBuilder | ApplicationCommandData)[], ...guilds: RestOrArray<GuildResolvable>): Promise<void> {
+        guilds = normalizeArray(guilds);
+
         if (!this.client.isReady()) throw new Error('Client is not ready');
         if (guilds && guilds.length > 1) {
             for (const guild of guilds) {
-                await this.set(commands, [guild]);
+                await this.set(commands, guild);
             }
 
             return;
@@ -41,12 +45,14 @@ export class ApplicationCommandManager {
         }
     }
 
-    public async add(command: ApplicationCommandBuilder | ApplicationCommandData, guilds?: GuildResolvable[]): Promise<void> {
+    public async add(command: ApplicationCommandBuilder | ApplicationCommandData, ...guilds: RestOrArray<GuildResolvable>): Promise<void> {
+        guilds = normalizeArray(guilds);
+
         if (!this.client.isReady()) throw new Error('Client is not ready');
         if (!command) throw new Error('Command is undefined');
         if (guilds && guilds.length > 1) {
             for (const guild of guilds) {
-                await this.add(command, [guild]);
+                await this.add(command, guild);
             }
 
             return;
@@ -64,12 +70,14 @@ export class ApplicationCommandManager {
         }
     }
 
-    public async remove(command: string | ApplicationCommand, guilds?: GuildResolvable[]): Promise<void> {
+    public async remove(command: string | ApplicationCommand, ...guilds: RestOrArray<GuildResolvable>): Promise<void> {
+        guilds = normalizeArray(guilds);
+
         if (!this.client.isReady()) throw new Error('Client is not ready');
         if (!command) throw new Error('Command is undefined');
         if (guilds && guilds.length > 1) {
             for (const guild of guilds) {
-                await this.remove(command, [guild]);
+                await this.remove(command, guild);
             }
 
             return;
@@ -87,12 +95,14 @@ export class ApplicationCommandManager {
         }
     }
 
-    public async edit(command: string | ApplicationCommand, newCommand: ApplicationCommandBuilder | ApplicationCommandData, guilds?: GuildResolvable[]): Promise<void> {
+    public async edit(command: string | ApplicationCommand, newCommand: ApplicationCommandBuilder | ApplicationCommandData, ...guilds: RestOrArray<GuildResolvable>): Promise<void> {
+        guilds = normalizeArray(guilds);
+
         if (!this.client.isReady()) throw new Error('Client is not ready');
         if (!command) throw new Error('Command is undefined');
         if (guilds && guilds.length > 1) {
             for (const guild of guilds) {
-                await this.edit(command, newCommand, [guild]);
+                await this.edit(command, newCommand, guild);
             }
 
             return;

@@ -1,240 +1,128 @@
-import { randomUUID } from 'crypto';
-import { Collection, GuildResolvable, normalizeArray, RestOrArray } from 'discord.js';
+import { Collection, normalizeArray, RestOrArray } from 'discord.js';
 import { existsSync, lstatSync, mkdirSync, readdirSync } from 'fs';
 import path from 'path';
+import { inspect } from 'util';
 import wildcardMatch from 'wildcard-match';
 import { cwd } from '../../flags';
-import { AnyCommandBuilder, AnyCommandData, CommandBuilderType } from '../../types/builders';
-import { ModuleManagerResolveFilesOptions } from '../../types/paramOptions';
-import { validateCommandBuilder } from '../../util';
-import { isSupportedVersion, rawVersion, version } from '../../version';
-import { MessageCommandBuilder } from '../builders/MessageCommandBuilder';
-import { SlashCommandBuilder } from '../builders/SlashCommandBuilder';
+import { ClientModuleManagerGetModulesFromFilesOptions } from '../../types/paramOptions';
 import { RecipleClient } from '../RecipleClient';
-
-/**
- * Reciple script object
- */
-export interface RecipleScript {
-    /**
-     * Supported reciple versions
-     */
-    versions: string | string[];
-    /**
-     * Module commands
-     */
-    commands?: (AnyCommandBuilder | AnyCommandData)[];
-    /**
-     * Action on module start
-     * @param client Bot client
-     */
-    onStart(client: RecipleClient<false>): boolean | Promise<boolean>;
-    /**
-     * Action on bot ready
-     * @param client Bot client
-     */
-    onLoad?(client: RecipleClient<true>): void | Promise<void>;
-}
-
-/**
- * Reciple module object
- */
-export interface RecipleModule {
-    /**
-     * Module Id
-     */
-    id: string;
-    /**
-     * Module script
-     */
-    script: RecipleScript;
-    /**
-     * Module local information
-     */
-    info: {
-        /**
-         * Module file name
-         */
-        filename?: string;
-        /**
-         * Module local file path
-         */
-        path?: string;
-    };
-}
-
-export interface ResolvedModule extends RecipleModule {
-    commands: AnyCommandBuilder[];
-}
-
-export interface ResolvedScriptCommands {
-    script: RecipleScript;
-    commands: AnyCommandBuilder[];
-}
+import { RecipleModule, RecipleScript } from '../RecipleModule';
 
 export interface ClientModuleManagerOptions {
     client: RecipleClient;
-    modules?: (RecipleModule & { id?: string })[];
+    modules?: (RecipleModule|RecipleScript)[];
 }
 
 export class ClientModuleManager {
     readonly client: RecipleClient;
-    readonly modules: Collection<string, ResolvedModule> = new Collection();
+    readonly modules: Collection<string, RecipleModule> = new Collection();
 
     constructor(options: ClientModuleManagerOptions) {
         this.client = options.client;
 
-        options.modules?.forEach(m => {
-            if (!m.id) m.id = randomUUID();
-            this.modules.set(m.id, this.resolveModule(m));
-        });
+        options.modules?.forEach(m => m instanceof RecipleModule ? m : new RecipleModule({ client: this.client, script: m }));
     }
 
-    public async startModulesFromFiles(options: ModuleManagerResolveFilesOptions): Promise<ResolvedModule[]> {
-        const modules = await this.resolveModulesFromFiles(options);
-
+    public async startModules(modules: RecipleModule[], addModuleCommandsToClient: boolean = true, ignoreErrors: boolean = true): Promise<RecipleModule[]> {
         for (const module_ of modules) {
+            if (!this.client.isClientLogsSilent) this.client.logger.log(`Starting module '${module_}'`);
+
             try {
-                await this.startModule(module_);
+                let error: unknown;
+
+                const start = await module_.start(true).catch(err => { error = err; return false; });
+
+                if (error) throw new Error(`An error occured while loading module '${module_}': \n${inspect(error)}`);
+                if (!start) {
+                    if (!this.client.isClientLogsSilent) this.client.logger.error(`Module '${module_}' returned false onStart`);
+                    continue;
+                }
+
+                this.modules.set(module_.id, module_);
+
+                if (addModuleCommandsToClient) {
+                    this.client.commands.add(module_.commands.toJSON());
+                }
             } catch (err) {
-                if (options.dontSkipError) throw err;
-                if (!this.client.isClientLogsSilent) this.client.logger.err(`Cannot start module ${ClientModuleManager.getModuleDisplayId(module_)}:`, err);
+                if (!ignoreErrors) throw err;
+                if (!this.client.isClientLogsSilent) this.client.logger.error(`Failed to start module '${module_}': `, err);
             }
         }
 
         return modules;
     }
 
-    public async resolveModulesFromFiles(options: ModuleManagerResolveFilesOptions): Promise<ResolvedModule[]> {
-        const modules: ResolvedModule[] = [];
-        const isVersionCheckDisabled = options.disabeVersionCheck || this.client.config.disableVersionCheck;
+    public async loadModules(modules: RecipleModule[], ignoreErrors: boolean = true): Promise<RecipleModule[]> {
+        for (const module_ of this.modules.toJSON()) {
+            try {
+                await module_.load().catch(err => { throw err; });
+
+                if (!this.client.isClientLogsSilent) this.client.logger.log(`Loaded module '${module_}'`);
+            } catch (err) {
+                if (!ignoreErrors) throw err;
+                if (!this.client.isClientLogsSilent) this.client.logger.error(`Failed to load module '${module_}': `, err);
+            }
+        }
+
+        return modules;
+    }
+
+    public async unLoadModules(modules: RecipleModule[], removeUnloadedModules: boolean = true, ignoreErrors: boolean = true): Promise<RecipleModule[]> {
+        for (const module_ of this.modules.toJSON()) {
+            try {
+                await module_.unLoad().catch(err => { throw err; });
+
+                if (removeUnloadedModules) this.modules.delete(module_.id);
+                if (!this.client.isClientLogsSilent) this.client.logger.log(`Unloaded module '${module_}'`);
+            } catch (err) {
+                if (!ignoreErrors) throw err;
+                if (!this.client.isClientLogsSilent) this.client.logger.error(`Failed to unLoad module '${module_}': `, err);
+            }
+        }
+
+        return modules;
+    }
+
+    public async getModulesFromFiles(options: ClientModuleManagerGetModulesFromFilesOptions): Promise<RecipleModule[]> {
+        const modules: RecipleModule[] = [];
 
         for (const file of options.files) {
-            const moduleFileName = path.basename(file);
-            const moduleDirPath = path.dirname(file);
-            const id = randomUUID();
-
-            let script: RecipleScript;
-
             try {
-                const resolveModuleFile = await import(file);
+                const resolveFile = await import(file);
 
-                script = resolveModuleFile?.default ?? resolveModuleFile;
+                let script: RecipleScript|RecipleModule|undefined = resolveFile?.default ?? resolveFile;
 
-                const module_ = this.resolveModule(
-                    {
-                        id,
-                        script,
-                        info: {
-                            filename: moduleFileName,
-                            path: moduleDirPath,
-                        },
-                    },
-                    isVersionCheckDisabled
-                );
+                if (script instanceof RecipleModule) {
+                    modules.push(script);
+                    continue;
+                }
 
-                modules.push(module_);
+                if (!ClientModuleManager.validateScript(script)) throw new Error(`Invalid module script: ${file}`);
 
-                if (!this.client.isClientLogsSilent) this.client.logger.log(`Resolved ${file}`);
+                modules.push(new RecipleModule({
+                    client: this.client,
+                    script,
+                    filePath: file
+                }));
             } catch (err) {
                 if (options.dontSkipError) throw err;
-                if (!this.client.isClientLogsSilent) this.client.logger.err(`Cannot resolve module file ${file}:`, err);
+                if (!this.client.isClientLogsSilent) this.client.logger.error(`Can't resolve module from: ${file}`, err);
             }
         }
 
         return modules;
     }
 
-    public resolveScriptCommands(...modules: RestOrArray<RecipleScript>): ResolvedScriptCommands[] {
-        const resolvedCommands: ResolvedScriptCommands[] = [];
+    public static validateScript(script: unknown): script is RecipleScript {
+        const s = script as Partial<RecipleScript>;
 
-        for (const script of normalizeArray(modules)) {
-            const commands: AnyCommandBuilder[] = [];
+        if (typeof s !== 'object') return false;
+        if (typeof s.versions !== 'string' && !Array.isArray(s.versions)) return false;
+        if (typeof s.onStart !== 'function') return false;
+        if (s.onLoad && typeof s.onLoad !== 'function') return false;
+        if (s.onUnLoad && typeof s.onUnLoad !== 'function') return false;
 
-            if (Array.isArray(script?.commands)) {
-                for (const command of script.commands) {
-                    if (command.type === CommandBuilderType.MessageCommand) {
-                        commands.push(MessageCommandBuilder.resolveMessageCommand(command));
-                    } else if (command.type === CommandBuilderType.SlashCommand) {
-                        commands.push(SlashCommandBuilder.resolveSlashCommand(command));
-                    }
-                }
-            }
-
-            const invalidBuilders = commands.some(c => !validateCommandBuilder(c));
-
-            if (invalidBuilders) throw new Error(`Module script commands contains a command builder without name or option name`);
-
-            resolvedCommands.push({
-                script,
-                commands,
-            });
-        }
-
-        return resolvedCommands;
-    }
-
-    public async loadAll(registerApplicationCommands?: boolean, ...registerApplicationCommandsGuilds: RestOrArray<GuildResolvable>): Promise<void> {
-        await Promise.all(
-            this.modules.map(async m => {
-                if (typeof m.script?.onLoad === 'function') {
-                    try {
-                        await Promise.resolve(m.script.onLoad(this.client)).catch(err => {
-                            throw err;
-                        });
-                    } catch (err) {
-                        this.modules.delete(m.id);
-
-                        if (!this.client.isClientLogsSilent) this.client.logger.error(`Error loading ${m.info.filename ?? 'unknown module'}:`, err);
-                        return;
-                    }
-                }
-
-                this.client.commands.add(m.commands);
-
-                if (!this.client.isClientLogsSilent) this.client.logger.log(`Loaded module: ${ClientModuleManager.getModuleDisplayId(m)}`);
-            })
-        );
-
-        if (!this.client.isClientLogsSilent) {
-            this.client.logger.info(`${this.modules.size} modules loaded.`);
-            this.client.logger.info(`${this.client.commands.messageCommands.size} message commands loaded.`);
-            this.client.logger.info(`${this.client.commands.slashCommands.size} slash commands loaded.`);
-        }
-
-        if (registerApplicationCommands) await this.client.commands.registerApplicationCommands(normalizeArray(registerApplicationCommandsGuilds));
-    }
-
-    public async startModule(mod: ResolvedModule): Promise<void> {
-        let err;
-
-        const identifier = ClientModuleManager.getModuleDisplayId(mod);
-
-        if (!this.client.isClientLogsSilent) this.client.logger.log(`Starting Module: ${identifier}`);
-
-        const start = await Promise.resolve(mod.script.onStart(this.client)).catch(e => (err = e));
-
-        if (err) throw err;
-        if (!start) throw new Error(`Module ${identifier} returned 'false' on start`);
-
-        this.modules.set(mod.id, mod);
-    }
-
-    public resolveModule(mod: RecipleModule, disabeVersionCheck?: boolean): ResolvedModule {
-        const identifier = ClientModuleManager.getModuleDisplayId(mod);
-
-        if (!disabeVersionCheck && !mod?.script?.versions?.length) throw new Error(`Module ${identifier} does not contain supported versions`);
-        if (typeof mod.script?.onStart !== 'function') throw new Error(`Module ${identifier} does not have a valid 'onStart' method`);
-
-        const versions: string[] = normalizeArray([mod.script.versions] as RestOrArray<string>);
-        const commands: AnyCommandBuilder[] = this.resolveScriptCommands(mod.script)[0].commands;
-
-        if (!disabeVersionCheck && !versions.some(v => isSupportedVersion(v, version))) throw new Error(`Module ${identifier} does not support 'reciple@${rawVersion}'`);
-
-        return {
-            ...mod,
-            commands,
-        };
+        return true;
     }
 
     public async getModuleFiles(...folders: RestOrArray<string>): Promise<string[]> {
@@ -252,9 +140,5 @@ export class ClientModuleManager {
         }
 
         return modules.filter(file => !this.client.config.ignoredFiles.some(ignored => wildcardMatch(ignored)(path.basename(file))));
-    }
-
-    public static getModuleDisplayId(mod: RecipleModule): string {
-        return mod.info.path && mod.info.filename ? path.join(mod.info.path, mod.info.filename) : mod.id;
     }
 }
