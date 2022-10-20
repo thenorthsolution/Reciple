@@ -60,7 +60,7 @@ export class ClientModuleManager {
 
                 if (!this.client.isClientLogsSilent) this.client.logger.log(`Loaded module '${module_}'`);
                 if (addModuleCommandsToClient) {
-                    this.client.commands.add(module_.commands.toJSON());
+                    this.client.commands.add(module_.commands);
                 }
             } catch (err) {
                 if (!ignoreErrors) throw err;
