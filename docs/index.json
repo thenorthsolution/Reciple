@@ -10,7 +10,7 @@
       {
         "name": "Moving to v6",
         "id": "moving-to-v6",
-        "path": "./pages/MovingToV6.md"
+        "path": "../pages/MovingToV6.md"
       }
     ]
   }
