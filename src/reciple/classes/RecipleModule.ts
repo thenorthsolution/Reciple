@@ -63,17 +63,17 @@ export class RecipleModule<M = unknown> {
         this.metadata = options.metadata;
     }
 
-    public async start(resolveCommands: boolean = true): Promise<boolean> {
-        if (resolveCommands) this.resolveCommands();
+    public async start(): Promise<boolean> {
         return Promise.resolve(this.script.onStart(this.client));
     }
 
-    public async load(): Promise<void> {
-        if (typeof this.script.onLoad === 'function') this.script.onLoad(this.client);
+    public async load(resolveCommands: boolean = true): Promise<void> {
+        if (typeof this.script.onLoad === 'function') await this.script.onLoad(this.client);
+        if (resolveCommands) this.resolveCommands();
     }
 
     public async unLoad(reason?: any): Promise<void> {
-        if (typeof this.script.onUnLoad === 'function') this.script.onUnLoad(reason, this.client);
+        if (typeof this.script.onUnLoad === 'function') await this.script.onUnLoad(reason, this.client);
     }
 
     public async registerSlashCommands(...guilds: RestOrArray<GuildResolvable>): Promise<void> {

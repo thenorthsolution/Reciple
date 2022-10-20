@@ -39,15 +39,13 @@ if (!client.isClientLogsSilent) client.logger.info('Starting Reciple client v' +
     await client.modules.startModules(
         await client.modules.getModulesFromFiles({
             files: await client.modules.getModuleFiles(),
-        }),
-        true,
-        true
+        })
     );
 
     client.on('ready', async () => {
-        await client.modules.loadModules(client.modules.modules.toJSON());
+        await client.modules.loadModules(client.modules.modules.toJSON(), true);
 
-        if (client.config.commands.slashCommand.registerCommands) client.commands.registerApplicationCommands();
+        if (client.config.commands.slashCommand.registerCommands) await client.commands.registerApplicationCommands();
         if (!client.isClientLogsSilent) client.logger.warn(`Logged in as ${client.user?.tag || 'Unknown'}!`);
 
         client.on('cacheSweep', () => client.cooldowns.clean());

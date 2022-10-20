@@ -23,14 +23,14 @@ export class ClientModuleManager {
         options.modules?.forEach(m => (m instanceof RecipleModule ? m : new RecipleModule({ client: this.client, script: m })));
     }
 
-    public async startModules(modules: RecipleModule[], addModuleCommandsToClient: boolean = true, ignoreErrors: boolean = true): Promise<RecipleModule[]> {
+    public async startModules(modules: RecipleModule[], ignoreErrors: boolean = true): Promise<RecipleModule[]> {
         for (const module_ of modules) {
             if (!this.client.isClientLogsSilent) this.client.logger.log(`Starting module '${module_}'`);
 
             try {
                 let error: unknown;
 
-                const start = await module_.start(true).catch(err => {
+                const start = await module_.start().catch(err => {
                     error = err;
                     return false;
                 });
@@ -42,10 +42,6 @@ export class ClientModuleManager {
                 }
 
                 this.modules.set(module_.id, module_);
-
-                if (addModuleCommandsToClient) {
-                    this.client.commands.add(module_.commands.toJSON());
-                }
             } catch (err) {
                 if (!ignoreErrors) throw err;
                 if (!this.client.isClientLogsSilent) this.client.logger.error(`Failed to start module '${module_}': `, err);
@@ -55,7 +51,7 @@ export class ClientModuleManager {
         return modules;
     }
 
-    public async loadModules(modules: RecipleModule[], ignoreErrors: boolean = true): Promise<RecipleModule[]> {
+    public async loadModules(modules: RecipleModule[], addModuleCommandsToClient: boolean = true, ignoreErrors: boolean = true): Promise<RecipleModule[]> {
         for (const module_ of this.modules.toJSON()) {
             try {
                 await module_.load().catch(err => {
@@ -63,6 +59,9 @@ export class ClientModuleManager {
                 });
 
                 if (!this.client.isClientLogsSilent) this.client.logger.log(`Loaded module '${module_}'`);
+                if (addModuleCommandsToClient) {
+                    this.client.commands.add(module_.commands.toJSON());
+                }
             } catch (err) {
                 if (!ignoreErrors) throw err;
                 if (!this.client.isClientLogsSilent) this.client.logger.error(`Failed to load module '${module_}': `, err);
