@@ -33,7 +33,8 @@
     "build:publish-dev": "yarn format && yarn build && yarn npm publish --tag dev",
     "test": "yarn build && yarn workspace test start",
     "docs": "yarn exec docgen --typescript true -c ./docs/index.json -o ./docs/docs.json -i src/index.ts",
-    "watch": "yarn exec tsc --watch --noEmit"
+    "watch": "yarn exec tsc --watch --noEmit",
+    "husky:install": "husky install"
   },
   "repository": {
     "type": "git",
@@ -63,6 +64,7 @@
     "@types/node": "^18.11.0",
     "@types/semver": "^7.3.12",
     "discord.js": "^14.6.0",
+    "husky": "^8.0.1",
     "prettier": "2.7.1",
     "rimraf": "^3.0.2",
     "typescript": "^4.8.4"
