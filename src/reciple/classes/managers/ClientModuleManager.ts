@@ -10,7 +10,7 @@ import { RecipleModule, RecipleScript } from '../RecipleModule';
 
 export interface ClientModuleManagerOptions {
     client: RecipleClient;
-    modules?: (RecipleModule|RecipleScript)[];
+    modules?: (RecipleModule | RecipleScript)[];
 }
 
 export class ClientModuleManager {
@@ -20,7 +20,7 @@ export class ClientModuleManager {
     constructor(options: ClientModuleManagerOptions) {
         this.client = options.client;
 
-        options.modules?.forEach(m => m instanceof RecipleModule ? m : new RecipleModule({ client: this.client, script: m }));
+        options.modules?.forEach(m => (m instanceof RecipleModule ? m : new RecipleModule({ client: this.client, script: m })));
     }
 
     public async startModules(modules: RecipleModule[], addModuleCommandsToClient: boolean = true, ignoreErrors: boolean = true): Promise<RecipleModule[]> {
@@ -30,7 +30,10 @@ export class ClientModuleManager {
             try {
                 let error: unknown;
 
-                const start = await module_.start(true).catch(err => { error = err; return false; });
+                const start = await module_.start(true).catch(err => {
+                    error = err;
+                    return false;
+                });
 
                 if (error) throw new Error(`An error occured while loading module '${module_}': \n${inspect(error)}`);
                 if (!start) {
@@ -55,7 +58,9 @@ export class ClientModuleManager {
     public async loadModules(modules: RecipleModule[], ignoreErrors: boolean = true): Promise<RecipleModule[]> {
         for (const module_ of this.modules.toJSON()) {
             try {
-                await module_.load().catch(err => { throw err; });
+                await module_.load().catch(err => {
+                    throw err;
+                });
 
                 if (!this.client.isClientLogsSilent) this.client.logger.log(`Loaded module '${module_}'`);
             } catch (err) {
@@ -70,7 +75,9 @@ export class ClientModuleManager {
     public async unLoadModules(modules: RecipleModule[], removeUnloadedModules: boolean = true, ignoreErrors: boolean = true): Promise<RecipleModule[]> {
         for (const module_ of this.modules.toJSON()) {
             try {
-                await module_.unLoad().catch(err => { throw err; });
+                await module_.unLoad().catch(err => {
+                    throw err;
+                });
 
                 if (removeUnloadedModules) this.modules.delete(module_.id);
                 if (!this.client.isClientLogsSilent) this.client.logger.log(`Unloaded module '${module_}'`);
@@ -90,7 +97,7 @@ export class ClientModuleManager {
             try {
                 const resolveFile = await import(file);
 
-                let script: RecipleScript|RecipleModule|undefined = resolveFile?.default ?? resolveFile;
+                let script: RecipleScript | RecipleModule | undefined = resolveFile?.default ?? resolveFile;
 
                 if (script instanceof RecipleModule) {
                     modules.push(script);
@@ -99,11 +106,13 @@ export class ClientModuleManager {
 
                 if (!ClientModuleManager.validateScript(script)) throw new Error(`Invalid module script: ${file}`);
 
-                modules.push(new RecipleModule({
-                    client: this.client,
-                    script,
-                    filePath: file
-                }));
+                modules.push(
+                    new RecipleModule({
+                        client: this.client,
+                        script,
+                        filePath: file,
+                    })
+                );
             } catch (err) {
                 if (options.dontSkipError) throw err;
                 if (!this.client.isClientLogsSilent) this.client.logger.error(`Can't resolve module from: ${file}`, err);

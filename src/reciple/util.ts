@@ -36,7 +36,7 @@ export function validateCommandBuilder(command: AnyCommandBuilder): boolean {
  * @param debugmode display debug messages
  * @param colorizeMessage add logger colours to messages
  */
- export function createLogger(stringifyJSON: boolean, debugmode: boolean = false, colorizeMessage: boolean = true) {
+export function createLogger(stringifyJSON: boolean, debugmode: boolean = false, colorizeMessage: boolean = true) {
     return new Logger({
         stringifyJSON: stringifyJSON,
         enableDebugMode: (flags.debugmode as boolean | undefined) ?? debugmode,

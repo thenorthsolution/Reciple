@@ -9,7 +9,7 @@ import { RecipleClient } from './RecipleClient';
 /**
  * Reciple script object
  */
- export interface RecipleScript {
+export interface RecipleScript {
     /**
      * Supported reciple versions
      */
@@ -51,7 +51,9 @@ export class RecipleModule<M = unknown> {
     public readonly filePath?: string;
     public metadata?: M;
 
-    get displayName() { return this.filePath ?? this.id; }
+    get displayName() {
+        return this.filePath ?? this.id;
+    }
 
     constructor(options: RecipleModuleOptions<M>) {
         this.id = randomUUID();
@@ -126,9 +128,7 @@ export class RecipleModule<M = unknown> {
         for (const command of this.script.commands) {
             if (command?.type !== CommandBuilderType.SlashCommand && command?.type !== CommandBuilderType.MessageCommand) continue;
 
-            const builder = command.type === CommandBuilderType.SlashCommand
-                ? SlashCommandBuilder.resolveSlashCommand(command)
-                : MessageCommandBuilder.resolveMessageCommand(command);
+            const builder = command.type === CommandBuilderType.SlashCommand ? SlashCommandBuilder.resolveSlashCommand(command) : MessageCommandBuilder.resolveMessageCommand(command);
 
             if (!validateCommandBuilder(builder)) throw new Error('Invalid command builder, no name or contains option(s) without name');
             this.commands.set(command.name, builder);
