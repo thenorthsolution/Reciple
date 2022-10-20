@@ -3,5 +3,8 @@
   "private": true,
   "scripts": {
     "start": "npx reciple -D -y --token env:DISCORD_TOKEN"
+  },
+  "devDependencies": {
+    "reciple": "file:../"
   }
 }

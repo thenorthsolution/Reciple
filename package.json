@@ -31,7 +31,7 @@
     "build": "npm run clean && npx tsc",
     "build:publish": "npm run format && npm run build && npx docs && npm publish",
     "build:publish-dev": "npm run format && npm run build && npm publish --tag dev",
-    "test": "npm run build && npm run start -w test",
+    "test": "npm run build && npm i && npm run start -w test",
     "docs": "npx docgen --typescript true -c ./docs/index.json -o ./docs/docs.json -i src/index.ts",
     "watch": "npx tsc --watch --noEmit",
     "husky:install": "npx husky install"
