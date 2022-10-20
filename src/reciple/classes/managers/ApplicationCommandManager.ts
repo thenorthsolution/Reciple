@@ -1,13 +1,4 @@
-import {
-    ApplicationCommand,
-    ApplicationCommandData,
-    ContextMenuCommandBuilder,
-    GuildResolvable,
-    normalizeArray,
-    RestOrArray,
-    RESTPostAPIApplicationCommandsJSONBody,
-    SlashCommandBuilder as DiscordJsSlashCommandBuilder,
-} from 'discord.js';
+import { ApplicationCommand, ApplicationCommandData, ContextMenuCommandBuilder, GuildResolvable, normalizeArray, RestOrArray, RESTPostAPIApplicationCommandsJSONBody, SlashCommandBuilder as DiscordJsSlashCommandBuilder } from 'discord.js';
 import { SlashCommandBuilder } from '../builders/SlashCommandBuilder';
 import { AnySlashCommandBuilder } from '../../types/builders';
 import { RecipleClient } from '../RecipleClient';
@@ -124,9 +115,7 @@ export class ApplicationCommandManager {
         const commands = guild ? this.client.guilds.resolve(guild)?.commands.cache : this.client.application?.commands.cache;
         if (!commands) throw new Error('Guild not found in cache');
 
-        return commands.find(cmd =>
-            typeof command === 'string' ? cmd.id === command || cmd.name === command : cmd.name === command.name || (command instanceof ApplicationCommand && cmd.id === command.id)
-        );
+        return commands.find(cmd => (typeof command === 'string' ? cmd.id === command || cmd.name === command : cmd.name === command.name || (command instanceof ApplicationCommand && cmd.id === command.id)));
     }
 
     public async fetch(commandId: string, guild?: GuildResolvable): Promise<ApplicationCommand> {
@@ -136,18 +125,12 @@ export class ApplicationCommandManager {
         return manager.fetch(commandId);
     }
 
-    protected parseCommands(
-        commands: (ApplicationCommandData | ApplicationCommandBuilder | RESTPostAPIApplicationCommandsJSONBody)[],
-        setPermissions: boolean = true
-    ): (ApplicationCommandData | RESTPostAPIApplicationCommandsJSONBody)[] {
+    protected parseCommands(commands: (ApplicationCommandData | ApplicationCommandBuilder | RESTPostAPIApplicationCommandsJSONBody)[], setPermissions: boolean = true): (ApplicationCommandData | RESTPostAPIApplicationCommandsJSONBody)[] {
         return commands.map(cmd => {
             if ((cmd as ApplicationCommandBuilder)?.toJSON === undefined) return (<unknown>cmd) as ApplicationCommandData;
 
             if (SlashCommandBuilder.isSlashCommandBuilder(cmd) && this.client.config.commands.slashCommand.setRequiredPermissions) {
-                const permissions =
-                    setPermissions || this.client.config.commands.slashCommand.permissions.enabled
-                        ? this.client.config.commands.slashCommand.permissions.commands.find(cmd_ => cmd_.command.toLowerCase() === cmd.name.toLowerCase())?.permissions
-                        : undefined;
+                const permissions = setPermissions || this.client.config.commands.slashCommand.permissions.enabled ? this.client.config.commands.slashCommand.permissions.commands.find(cmd_ => cmd_.command.toLowerCase() === cmd.name.toLowerCase())?.permissions : undefined;
 
                 if (permissions) {
                     cmd.setRequiredMemberPermissions(...permissions);

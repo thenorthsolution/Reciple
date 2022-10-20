@@ -1,5 +1,5 @@
 import { Guild, normalizeArray, RestOrArray, TextBasedChannel, User } from 'discord.js';
-import { CommandBuilderType } from '../../types/builders';
+import { CommandType } from '../../types/builders';
 
 /**
  * cooled-down user object interface
@@ -16,7 +16,7 @@ export interface CooledDownUser {
     /**
      * Command type
      */
-    type: CommandBuilderType;
+    type: CommandType;
     /**
      * In guild
      */

@@ -1,7 +1,7 @@
 import chalk from 'chalk';
 import { Logger, LogLevels } from 'fallout-utility';
 import { flags } from './flags';
-import { AnyCommandBuilder, CommandBuilderType } from './types/builders';
+import { AnyCommandBuilder, CommandType } from './types/builders';
 
 /**
  * Check if an object is a class
@@ -25,7 +25,7 @@ export function deprecationWarning(content: string | Error): void {
 
 export function validateCommandBuilder(command: AnyCommandBuilder): boolean {
     if (!command.name) return false;
-    if (command.type === CommandBuilderType.MessageCommand && command.options.length && command.options.some(o => !o.name)) return false;
+    if (command.type === CommandType.MessageCommand && command.options.length && command.options.some(o => !o.name)) return false;
 
     return true;
 }

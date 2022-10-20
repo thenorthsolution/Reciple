@@ -1,6 +1,6 @@
 import { randomUUID } from 'crypto';
 import { Collection, GuildResolvable, normalizeArray, RestOrArray } from 'discord.js';
-import { AnyCommandBuilder, AnyCommandData, CommandBuilderType } from '../types/builders';
+import { AnyCommandBuilder, AnyCommandData, CommandType } from '../types/builders';
 import { validateCommandBuilder } from '../util';
 import { MessageCommandBuilder } from './builders/MessageCommandBuilder';
 import { SlashCommandBuilder } from './builders/SlashCommandBuilder';
@@ -78,7 +78,7 @@ export class RecipleModule<M = unknown> {
 
     public async registerSlashCommands(...guilds: RestOrArray<GuildResolvable>): Promise<void> {
         for (const command of this.commands.toJSON()) {
-            if (command.type !== CommandBuilderType.SlashCommand) continue;
+            if (command.type !== CommandType.SlashCommand) continue;
 
             await this.client.applicationCommands.add(command, normalizeArray(guilds));
         }
@@ -86,7 +86,7 @@ export class RecipleModule<M = unknown> {
 
     public async unregisterSlashCommands(...guilds: RestOrArray<GuildResolvable>): Promise<void> {
         for (const builder of this.commands.toJSON()) {
-            if (builder.type !== CommandBuilderType.SlashCommand) continue;
+            if (builder.type !== CommandType.SlashCommand) continue;
 
             if (normalizeArray(guilds).length) {
                 for (const guild of normalizeArray(guilds)) {
@@ -105,7 +105,7 @@ export class RecipleModule<M = unknown> {
 
     public async updateSlashCommands(...guilds: RestOrArray<GuildResolvable>): Promise<void> {
         for (const builder of this.commands.toJSON()) {
-            if (builder.type !== CommandBuilderType.SlashCommand) continue;
+            if (builder.type !== CommandType.SlashCommand) continue;
 
             if (normalizeArray(guilds).length) {
                 for (const guild of normalizeArray(guilds)) {
@@ -126,9 +126,9 @@ export class RecipleModule<M = unknown> {
         if (!Array.isArray(this.script?.commands)) return this.commands;
 
         for (const command of this.script.commands) {
-            if (command?.type !== CommandBuilderType.SlashCommand && command?.type !== CommandBuilderType.MessageCommand) continue;
+            if (command?.type !== CommandType.SlashCommand && command?.type !== CommandType.MessageCommand) continue;
 
-            const builder = command.type === CommandBuilderType.SlashCommand ? SlashCommandBuilder.resolveSlashCommand(command) : MessageCommandBuilder.resolveMessageCommand(command);
+            const builder = command.type === CommandType.SlashCommand ? SlashCommandBuilder.resolveSlashCommand(command) : MessageCommandBuilder.resolveMessageCommand(command);
 
             if (!validateCommandBuilder(builder)) throw new Error('Invalid command builder, no name or contains option(s) without name');
             this.commands.set(command.name, builder);

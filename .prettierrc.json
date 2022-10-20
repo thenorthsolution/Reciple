@@ -4,7 +4,7 @@
   "trailingComma": "es5",
   "arrowParens": "avoid",
   "singleQuote": true,
-  "printWidth": 200,
+  "printWidth": 500,
   "bracketSpacing": true,
   "parser": "typescript"
 }

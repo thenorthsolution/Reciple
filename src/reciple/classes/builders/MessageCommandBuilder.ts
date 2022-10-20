@@ -1,4 +1,4 @@
-import { CommandBuilderType, CommandHaltFunction, CommandExecuteFunction, SharedCommandBuilderProperties, MessageCommandData } from '../../types/builders';
+import { CommandType, CommandHaltFunction, CommandExecuteFunction, SharedCommandBuilderProperties, MessageCommandData } from '../../types/builders';
 import { Message, normalizeArray, PermissionResolvable, RestOrArray } from 'discord.js';
 import { BaseCommandExecuteData, CommandHaltData } from '../../types/commands';
 import { MessageCommandOptionManager } from '../managers/MessageCommandOptionManager';
@@ -56,23 +56,23 @@ export interface MessageCommandValidatedOption {
 /**
  * Halt data for message command
  */
-export type MessageCommandHaltData<T = unknown> = CommandHaltData<CommandBuilderType.MessageCommand, T>;
+export type MessageCommandHaltData<T = unknown> = CommandHaltData<CommandType.MessageCommand, T>;
 
 /**
  * Message command halt function
  */
-export type MessageCommandHaltFunction<T = unknown> = CommandHaltFunction<CommandBuilderType.MessageCommand, T>;
+export type MessageCommandHaltFunction<T = unknown> = CommandHaltFunction<CommandType.MessageCommand, T>;
 
 /**
  * Message command execute function
  */
-export type MessageCommandExecuteFunction<T = unknown> = CommandExecuteFunction<CommandBuilderType.MessageCommand, T>;
+export type MessageCommandExecuteFunction<T = unknown> = CommandExecuteFunction<CommandType.MessageCommand, T>;
 
 /**
  * Reciple builder for message command
  */
 export class MessageCommandBuilder<T = unknown> implements SharedCommandBuilderProperties<T> {
-    public readonly type = CommandBuilderType.MessageCommand;
+    public readonly type = CommandType.MessageCommand;
     public name: string = '';
     public description: string = '';
     public cooldown: number = 0;
@@ -170,8 +170,7 @@ export class MessageCommandBuilder<T = unknown> implements SharedCommandBuilderP
         option = typeof option === 'function' ? option(new MessageCommandOptionBuilder()) : option;
 
         if (this.options.find(o => o.name === option.name)) throw new TypeError('option with name "' + option.name + '" already exists.');
-        if (this.options.length > 0 && !this.options[this.options.length - 1 < 0 ? 0 : this.options.length - 1].required && option.required)
-            throw new TypeError('All required options must be before optional options.');
+        if (this.options.length > 0 && !this.options[this.options.length - 1 < 0 ? 0 : this.options.length - 1].required && option.required) throw new TypeError('All required options must be before optional options.');
 
         this.options.push(option);
         return this;

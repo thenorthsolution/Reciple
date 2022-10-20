@@ -6,9 +6,9 @@ import { CommandCooldownManager, CooledDownUser } from './managers/CommandCooldo
 import { botHasExecutePermissions, userHasCommandPermissions } from '../permissions';
 import { MessageCommandOptionManager } from './managers/MessageCommandOptionManager';
 import { ApplicationCommandManager } from './managers/ApplicationCommandManager';
-import { AnyCommandBuilder, CommandBuilderType } from '../types/builders';
 import { ClientCommandManager } from './managers/ClientCommandManager';
 import { ClientModuleManager } from './managers/ClientModuleManager';
+import { AnyCommandBuilder, CommandType } from '../types/builders';
 import { Config, RecipleConfig } from './RecipleConfig';
 import { getCommand, Logger } from 'fallout-utility';
 import { createLogger } from '../util';
@@ -109,7 +109,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
         if (!interaction || !interaction.isChatInputCommand() || !this.isReady()) return;
         if (!this.config.commands.slashCommand.acceptRepliedInteractions && (interaction.replied || interaction.deferred)) return;
 
-        const command = this.commands.get(interaction.commandName, CommandBuilderType.SlashCommand);
+        const command = this.commands.get(interaction.commandName, CommandType.SlashCommand);
         if (!command) return;
 
         const executeData: SlashCommandExecuteData = {
@@ -144,7 +144,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
                 command: command.name,
                 channel: interaction.channel ?? undefined,
                 guild: interaction.guild,
-                type: CommandBuilderType.SlashCommand,
+                type: CommandType.SlashCommand,
             };
 
             if (this.config.commands.slashCommand.enableCooldown && command.cooldown && !this.cooldowns.isCooledDown(userCooldown)) {
@@ -188,7 +188,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
         const parseCommand = getCommand(message.content, prefix || this.config.commands.messageCommand.prefix || '!', this.config.commands.messageCommand.commandArgumentSeparator || ' ');
         if (!parseCommand || !parseCommand?.command) return;
 
-        const command = this.commands.get(parseCommand.command, CommandBuilderType.MessageCommand);
+        const command = this.commands.get(parseCommand.command, CommandType.MessageCommand);
         if (!command) return;
 
         const commandOptions = await validateMessageCommandOptions(command, parseCommand);
@@ -253,7 +253,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
                 command: command.name,
                 channel: message.channel,
                 guild: message.guild,
-                type: CommandBuilderType.MessageCommand,
+                type: CommandType.MessageCommand,
             };
 
             if (this.config.commands.messageCommand.enableCooldown && command.cooldown && !this.cooldowns.isCooledDown(userCooldown)) {
@@ -314,11 +314,9 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
         try {
             const haltResolved =
                 (command.halt
-                    ? await Promise.resolve(command.type == CommandBuilderType.SlashCommand ? command.halt(haltData as SlashCommandHaltData) : command.halt(haltData as MessageCommandHaltData)).catch(
-                          err => {
-                              console.log(err);
-                          }
-                      )
+                    ? await Promise.resolve(command.type == CommandType.SlashCommand ? command.halt(haltData as SlashCommandHaltData) : command.halt(haltData as MessageCommandHaltData)).catch(err => {
+                          console.log(err);
+                      })
                     : false) || false;
 
             this.emit('recipleCommandHalt', haltData);
@@ -341,9 +339,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
     protected async _executeCommand(command: MessageCommandBuilder, executeData: MessageCommandExecuteData): Promise<MessageCommandExecuteData | undefined>;
     protected async _executeCommand(command: AnyCommandBuilder, executeData: AnyCommandExecuteData): Promise<AnyCommandExecuteData | undefined> {
         try {
-            await Promise.resolve(
-                command.type === CommandBuilderType.SlashCommand ? command.execute(executeData as SlashCommandExecuteData) : command.execute(executeData as MessageCommandExecuteData)
-            )
+            await Promise.resolve(command.type === CommandType.SlashCommand ? command.execute(executeData as SlashCommandExecuteData) : command.execute(executeData as MessageCommandExecuteData))
                 .then(() => this.emit('recipleCommandExecute', executeData))
                 .catch(async err =>
                     !(await this._haltCommand(command as any, {
@@ -376,7 +372,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
      */
     protected async _commandExecuteError(err: Error, command: AnyCommandExecuteData): Promise<void> {
         if (!this.isClientLogsSilent) {
-            this.logger.error(`An error occured executing ${command.builder.type == CommandBuilderType.MessageCommand ? 'message' : 'slash'} command "${command.builder.name}"`);
+            this.logger.error(`An error occured executing ${command.builder.type == CommandType.MessageCommand ? 'message' : 'slash'} command "${command.builder.name}"`);
             this.logger.error(err);
         }
 

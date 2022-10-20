@@ -1,5 +1,5 @@
 import { ApplicationCommandData, Collection, GuildResolvable, normalizeArray, RestOrArray } from 'discord.js';
-import { AnyCommandBuilder, AnyCommandData, AnySlashCommandBuilder, CommandBuilderType, MessageCommandData, SlashCommandData } from '../../types/builders';
+import { AnyCommandBuilder, AnyCommandData, AnySlashCommandBuilder, CommandType, MessageCommandData, SlashCommandData } from '../../types/builders';
 import { MessageCommandBuilder } from '../builders/MessageCommandBuilder';
 import { SlashCommandBuilder } from '../builders/SlashCommandBuilder';
 import { RecipleClient } from '../RecipleClient';
@@ -34,9 +34,9 @@ export class ClientCommandManager {
      */
     public add(...commands: RestOrArray<AnyCommandBuilder | AnyCommandData>): this {
         for (const command of normalizeArray(commands)) {
-            if (command.type === CommandBuilderType.SlashCommand) {
+            if (command.type === CommandType.SlashCommand) {
                 this.slashCommands.set(command.name, SlashCommandBuilder.resolveSlashCommand(command));
-            } else if (command.type === CommandBuilderType.MessageCommand) {
+            } else if (command.type === CommandType.MessageCommand) {
                 this.messageCommands.set(command.name, MessageCommandBuilder.resolveMessageCommand(command));
             } else {
                 throw new Error(`Unknown reciple command type`);
@@ -52,17 +52,14 @@ export class ClientCommandManager {
      * @param type Command type
      */
     public get(command: string, type?: undefined): AnyCommandBuilder | undefined;
-    public get(command: string, type?: CommandBuilderType.MessageCommand): MessageCommandBuilder | undefined;
-    public get(command: string, type?: CommandBuilderType.SlashCommand): SlashCommandBuilder | undefined;
-    public get(command: string, type?: CommandBuilderType): AnyCommandBuilder | undefined {
+    public get(command: string, type?: CommandType.MessageCommand): MessageCommandBuilder | undefined;
+    public get(command: string, type?: CommandType.SlashCommand): SlashCommandBuilder | undefined;
+    public get(command: string, type?: CommandType): AnyCommandBuilder | undefined {
         switch (type) {
-            case CommandBuilderType.SlashCommand:
+            case CommandType.SlashCommand:
                 return this.slashCommands.get(command);
-            case CommandBuilderType.MessageCommand:
-                return (
-                    this.messageCommands.get(command.toLowerCase()) ??
-                    (this.client.config.commands.messageCommand.allowCommandAlias ? this.messageCommands.find(c => c.aliases.some(a => a == command?.toLowerCase())) : undefined)
-                );
+            case CommandType.MessageCommand:
+                return this.messageCommands.get(command.toLowerCase()) ?? (this.client.config.commands.messageCommand.allowCommandAlias ? this.messageCommands.find(c => c.aliases.some(a => a == command?.toLowerCase())) : undefined);
             default:
                 throw new TypeError('Unknown command type');
         }
@@ -76,8 +73,7 @@ export class ClientCommandManager {
         guilds = normalizeArray(guilds);
         guilds = guilds.length ? guilds : normalizeArray([this.client.config.commands.slashCommand.guilds] as RestOrArray<string>);
 
-        if (!this.client.isClientLogsSilent)
-            this.client.logger.log(`Regestering ${this.applicationCommandsSize} application command(s) ${!guilds.length ? 'globaly' : 'to ' + guilds.length + ' guilds'}...`);
+        if (!this.client.isClientLogsSilent) this.client.logger.log(`Regestering ${this.applicationCommandsSize} application command(s) ${!guilds.length ? 'globaly' : 'to ' + guilds.length + ' guilds'}...`);
 
         await this.client.applicationCommands.set([...this.slashCommands.toJSON(), ...this.additionalApplicationCommands], guilds);
 
