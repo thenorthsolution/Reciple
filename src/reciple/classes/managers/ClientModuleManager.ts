@@ -4,7 +4,7 @@ import path from 'path';
 import { inspect } from 'util';
 import wildcardMatch from 'wildcard-match';
 import { cwd } from '../../flags';
-import { ClientModuleManagerGetModulesFromFilesOptions } from '../../types/paramOptions';
+import { ClientModuleManagerGetModulePathsOptions, ClientModuleManagerGetModulesFromFilesOptions } from '../../types/paramOptions';
 import { RecipleClient } from '../RecipleClient';
 import { RecipleModule, RecipleScript } from '../RecipleModule';
 
@@ -133,20 +133,20 @@ export class ClientModuleManager {
         return true;
     }
 
-    public async getModuleFiles(...folders: RestOrArray<string>): Promise<string[]> {
+    public async getModulePaths(options?: ClientModuleManagerGetModulePathsOptions): Promise<string[]> {
         const modules: string[] = [];
 
-        for (const dir of normalizeArray(folders).length ? normalizeArray(folders) : normalizeArray([this.client.config.modulesFolder] as RestOrArray<string>)) {
+        for (const dir of (options?.folders ?? normalizeArray([this.client.config.modulesFolder] as RestOrArray<string>))) {
             if (!existsSync(dir)) mkdirSync(dir, { recursive: true });
             if (!lstatSync(dir).isDirectory()) continue;
 
             modules.push(
                 ...readdirSync(dir)
                     .map(file => path.join(cwd, dir, file))
-                    .filter(file => file.endsWith('.js') || file.endsWith('.cjs'))
+                    .filter(file => options?.filter ? options.filter(file) : file.endsWith('.js'))
             );
         }
 
-        return modules.filter(file => !this.client.config.ignoredFiles.some(ignored => wildcardMatch(ignored)(path.basename(file))));
+        return modules.filter(file => !(options?.ignoredFiles ?? this.client.config.ignoredFiles).some(ignored => wildcardMatch(ignored)(path.basename(file))));
     }
 }
