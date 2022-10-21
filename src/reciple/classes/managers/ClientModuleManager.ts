@@ -136,14 +136,14 @@ export class ClientModuleManager {
     public async getModulePaths(options?: ClientModuleManagerGetModulePathsOptions): Promise<string[]> {
         const modules: string[] = [];
 
-        for (const dir of (options?.folders ?? normalizeArray([this.client.config.modulesFolder] as RestOrArray<string>))) {
+        for (const dir of options?.folders ?? normalizeArray([this.client.config.modulesFolder] as RestOrArray<string>)) {
             if (!existsSync(dir)) mkdirSync(dir, { recursive: true });
             if (!lstatSync(dir).isDirectory()) continue;
 
             modules.push(
                 ...readdirSync(dir)
                     .map(file => path.join(cwd, dir, file))
-                    .filter(file => options?.filter ? options.filter(file) : file.endsWith('.js'))
+                    .filter(file => (options?.filter ? options.filter(file) : file.endsWith('.js')))
             );
         }
 

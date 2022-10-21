@@ -1,7 +1,5 @@
 import semver from 'semver';
 
-// TODO: ESM support
-
 /**
  * Current reciple version
  */

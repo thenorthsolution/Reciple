@@ -1,18 +1,26 @@
 {
   "name": "reciple",
   "version": "6.0.0-dev.10",
-  "bin": "./dist/cjs/bin.js",
+  "bin": "./dist/bin/bin.mjs",
   "license": "GPL-3.0",
-  "main": "./dist/cjs/index.js",
+  "type": "commonjs",
+  "main": "./dist/lib/index.cjs",
   "types": "./dist/types/index.d.ts",
-  "module": "./dist/mjs/index.js",
+  "module": "./esm.mjs",
   "author": "FalloutStudios",
   "description": "Handler for Discord.js",
   "homepage": "https://reciple.js.org",
   "exports": {
-    "require": "./dist/cjs/index.js",
-    "import": "./dist/mjs/index.js",
-    "types": "./dist/types/index.d.ts"
+    ".": {
+      "import": {
+        "types": "./dist/types/index.d.ts",
+        "default": "./esm.mjs"
+      },
+      "require": {
+        "types": "./dist/types/index.d.ts",
+        "default": "./dist/lib/index.cjs"
+      }
+    }
   },
   "keywords": [
     "Discord",
@@ -31,7 +39,7 @@
     "build": "npm run clean && npx tsc",
     "build:publish": "npm run format && npm run build && npx docs && npm publish",
     "build:publish-dev": "npm run format && npm run build && npm publish --tag dev",
-    "test": "npm run build && npm run start -w test",
+    "test": "npm run build && npm install && npm run start -w test",
     "docs": "npx docgen --typescript true -c ./docs/index.json -o ./docs/docs.json -i src/index.ts",
     "watch": "npx tsc --watch --noEmit",
     "husky:install": "npx husky install"
@@ -54,7 +62,7 @@
     "chalk": "4.1.2",
     "commander": "^9.4.1",
     "dotenv": "^16.0.3",
-    "fallout-utility": "^1.5.4",
+    "fallout-utility": "^1.5.13",
     "semver": "^7.3.7",
     "wildcard-match": "^5.1.2",
     "yaml": "^2.1.1"

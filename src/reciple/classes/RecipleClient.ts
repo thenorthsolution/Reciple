@@ -12,7 +12,7 @@ import { AnyCommandBuilder, CommandType } from '../types/builders';
 import { Config, RecipleConfig } from './RecipleConfig';
 import { getCommand, Logger } from 'fallout-utility';
 import { createLogger } from '../util';
-import { version } from '../version';
+import { version } from '../version.js';
 import { cwd } from '../flags';
 import path from 'path';
 
