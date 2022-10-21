@@ -1,7 +1,7 @@
 {
   "name": "reciple",
   "version": "6.0.0-dev.11",
-  "bin": "./dist/bin/bin.mjs",
+  "bin": "./dist/lib/bin.mjs",
   "license": "GPL-3.0",
   "type": "commonjs",
   "main": "./dist/lib/index.cjs",
@@ -14,7 +14,7 @@
     ".": {
       "import": {
         "types": "./dist/types/index.d.ts",
-        "default": "./esm.mjs"
+        "default": "./dist/lib/esm.mjs"
       },
       "require": {
         "types": "./dist/types/index.d.ts",
@@ -41,8 +41,7 @@
     "build:publish-dev": "npm run format && npm run build && npm publish --tag dev",
     "test": "npm run build && npm install && npm run start -w test",
     "docs": "npx docgen --typescript true -c ./docs/index.json -o ./docs/docs.json -i src/index.ts",
-    "watch": "npx tsc --watch --noEmit",
-    "husky:install": "npx husky install"
+    "watch": "npx tsc --watch --noEmit"
   },
   "repository": {
     "type": "git",
@@ -53,9 +52,7 @@
     "node": ">=16.9.0"
   },
   "files": [
-    "bin",
     "dist",
-    "esm.mjs",
     "resource",
     "LICENSE",
     "README.md"
@@ -74,7 +71,6 @@
     "@types/node": "^18.11.0",
     "@types/semver": "^7.3.12",
     "discord.js": "^14.6.0",
-    "husky": "^8.0.1",
     "prettier": "2.7.1",
     "rimraf": "^3.0.2",
     "typescript": "^4.8.4"
