@@ -32,7 +32,7 @@ export class ApplicationCommandManager {
             if (!this.client.isClientLogsSilent) this.client.logger.log(`Registered ${this.client.commands.applicationCommandsSize} application command(s) globally...`);
         } else {
             await this.client.application.commands.set(commands, guild);
-            if (!this.client.isClientLogsSilent) this.client.logger.log(`Registered ${this.client.commands.applicationCommandsSize} application command(s) to guild ${guild}...`);
+            if (!this.client.isClientLogsSilent) this.client.logger.log(`Registered ${this.client.commands.applicationCommandsSize} application command(s) to guild ${guild}`);
         }
     }
 
