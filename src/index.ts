@@ -13,6 +13,7 @@ export * from './reciple/types/builders.js';
 export * from './reciple/types/commands.js';
 export * from './reciple/types/builders.js';
 export * from './reciple/types/builders.js';
+export * from './reciple/flags';
 export * from './reciple/permissions.js';
 export * from './reciple/util.js';
 export * from './reciple/version.js';
