@@ -39,7 +39,9 @@ Guide for bots moving from reciple v5 to v6
   - await RecipleClient.startModules('modules')
   + await RecipleClient.modules.startModules(
   +   await RecipleClient.modules.getModulesFromFiles(
-  +     await RecipleClient.modules.getModuleFiles('modules')
+  +     await RecipleClient.modules.getModulePaths({
+  +       folders: ['modules']
+  +     })
   +   )
   + )
   ```
