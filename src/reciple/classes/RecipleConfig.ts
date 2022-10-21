@@ -30,6 +30,7 @@ export interface Config {
             enabled: boolean;
             replyOnError: boolean;
             registerCommands: boolean;
+            allowRegisterEmptyCommandList: boolean;
             enableCooldown: boolean;
             setRequiredPermissions: boolean;
             acceptRepliedInteractions: boolean;

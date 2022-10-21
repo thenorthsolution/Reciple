@@ -1,7 +1,7 @@
 {
   "name": "test",
   "private": true,
-  "type": "module",
+  "type": "commonjs",
   "scripts": {
     "start": "node ../dist/lib/bin.mjs -D -y --token env:DISCORD_TOKEN"
   },

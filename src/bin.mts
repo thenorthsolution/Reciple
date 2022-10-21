@@ -51,8 +51,10 @@ client.on('ready', async () => {
     await client.modules.loadModules(client.modules.modules.toJSON(), true);
 
     if (!client.isClientLogsSilent) client.logger.log(`Loaded ${client.commands.slashCommands.size} slash commands`, `Loaded ${client.commands.messageCommands.size} message commands`);
+    if (client.config.commands.slashCommand.registerCommands && (client.config.commands.slashCommand.allowRegisterEmptyCommandList || client.commands.applicationCommandsSize)) {
+        await client.commands.registerApplicationCommands();
+    }
 
-    if (client.config.commands.slashCommand.registerCommands) await client.commands.registerApplicationCommands();
     if (!client.isClientLogsSilent) client.logger.warn(`Logged in as ${client.user?.tag || 'Unknown'}!`);
 
     client.on('cacheSweep', () => client.cooldowns.clean());

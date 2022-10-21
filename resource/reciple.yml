@@ -4,6 +4,33 @@ token: TOKEN
 
 # Commands options
 commands:
+  # Interaction command options
+  slashCommand:
+    # enable interaction commands
+    enabled: true
+    # reply when an error occured
+    replyOnError: false
+    # enable the use of command cooldowns
+    enableCooldown: true
+    # register interaction commands on bot ready
+    registerCommands: true
+    # allow register empty list of application commands
+    allowRegisterEmptyCommandList: true
+    # set required permissions for interaction commands
+    setRequiredPermissions: true
+    # accept replied or deffered command interaction
+    acceptRepliedInteractions: false
+    # register commands to specific guild(s) empty to make it global
+    guilds: []
+    # overwrite command permissions
+    permissions:
+      # enable overwriten command permissions
+      enabled: false
+      commands:
+        - command: example-command
+          permissions:
+            - Administrator
+
   # message command options
   messageCommand:
     # enable message commands
@@ -26,32 +53,6 @@ commands:
         - command: example-command
           permissions:
             - Administrator
-
-  # Interaction command options
-  slashCommand:
-    # enable interaction commands
-    enabled: true
-    # reply when an error occured
-    replyOnError: false
-    # enable the use of command cooldowns
-    enableCooldown: true
-    # register interaction commands on bot ready
-    registerCommands: true
-    # set required permissions for interaction commands
-    setRequiredPermissions: true
-    # accept replied or deffered command interaction
-    acceptRepliedInteractions: false
-    # register commands to specific guild(s) empty to make it global
-    guilds: []
-    # overwrite command permissions
-    permissions:
-      # enable overwriten command permissions
-      enabled: false
-      commands:
-        - command: example-command
-          permissions:
-            - Administrator
-
 
 # Logger options
 fileLogging:
