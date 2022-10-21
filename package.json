@@ -1,6 +1,6 @@
 {
   "name": "reciple",
-  "version": "6.0.0-dev.11",
+  "version": "6.0.0-dev.12",
   "bin": "./dist/lib/bin.mjs",
   "license": "GPL-3.0",
   "type": "commonjs",
