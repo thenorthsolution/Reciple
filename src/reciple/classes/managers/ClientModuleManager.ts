@@ -96,7 +96,11 @@ export class ClientModuleManager {
             try {
                 const resolveFile = await import(file);
 
-                let script: RecipleScript | RecipleModule | undefined = resolveFile?.default ?? resolveFile;
+                let script: RecipleScript | RecipleModule | undefined = resolveFile instanceof RecipleModule || ClientModuleManager.validateScript(resolveFile)
+                    ? resolveFile
+                    : resolveFile?.default?.default instanceof RecipleModule || ClientModuleManager.validateScript(resolveFile?.default?.default)
+                        ? resolveFile.default.default
+                        : resolveFile?.default;
 
                 if (script instanceof RecipleModule) {
                     modules.push(script);
