@@ -13,7 +13,7 @@ export type AnyCommandHaltData<T = unknown> = SlashCommandHaltData<T> | MessageC
 /**
  * command halt data
  */
-export type CommandHaltData<T extends CommandType, M = unknown> = CommandErrorData<T, M> | CommandCooldownData<T, M> | (T extends CommandType.SlashCommand ? never : CommandInvalidArguments<T, M> | CommandMissingArguments<T, M>) | CommandMissingMemberPermissions<T, M> | CommandMissingBotPermissions<T, M>;
+export type CommandHaltData<T extends CommandType, M = unknown> = CommandErrorHaltData<T, M> | CommandCooldownHaltData<T, M> | (T extends CommandType.SlashCommand ? never : CommandInvalidArgumentsHaltData<T, M> | CommandMissingArgumentsHaltData<T, M>) | CommandMissingMemberPermissionsHaltData<T, M> | CommandMissingBotPermissionsHaltData<T, M>;
 
 /**
  * Any command execute data
@@ -44,34 +44,34 @@ export interface BaseCommandHaltData<T extends CommandType, M = unknown> {
     executeData: T extends CommandType.SlashCommand ? SlashCommandExecuteData<M> : T extends CommandType.MessageCommand ? MessageCommandExecuteData<M> : AnyCommandExecuteData<M>;
 }
 
-export interface CommandErrorData<T extends CommandType, M = unknown> extends BaseCommandHaltData<T, M> {
+export interface CommandErrorHaltData<T extends CommandType, M = unknown> extends BaseCommandHaltData<T, M> {
     reason: CommandHaltReason.Error;
     /**
      * Caught error
      */
     error: any;
 }
-export interface CommandCooldownData<T extends CommandType, M = unknown> extends BaseCommandHaltData<T, M>, CooledDownUser {
+export interface CommandCooldownHaltData<T extends CommandType, M = unknown> extends BaseCommandHaltData<T, M>, CooledDownUser {
     reason: CommandHaltReason.Cooldown;
 }
-export interface CommandInvalidArguments<T extends CommandType, M = unknown> extends BaseCommandHaltData<T, M> {
+export interface CommandInvalidArgumentsHaltData<T extends CommandType, M = unknown> extends BaseCommandHaltData<T, M> {
     reason: CommandHaltReason.InvalidArguments;
     /**
      * Arguments that are invalid
      */
     invalidArguments: MessageCommandOptionManager;
 }
-export interface CommandMissingArguments<T extends CommandType, M = unknown> extends BaseCommandHaltData<T, M> {
+export interface CommandMissingArgumentsHaltData<T extends CommandType, M = unknown> extends BaseCommandHaltData<T, M> {
     reason: CommandHaltReason.MissingArguments;
     /**
      * Arguments that are missing
      */
     missingArguments: MessageCommandOptionManager;
 }
-export interface CommandMissingMemberPermissions<T extends CommandType, M = unknown> extends BaseCommandHaltData<T, M> {
+export interface CommandMissingMemberPermissionsHaltData<T extends CommandType, M = unknown> extends BaseCommandHaltData<T, M> {
     reason: CommandHaltReason.MissingMemberPermissions;
 }
-export interface CommandMissingBotPermissions<T extends CommandType, M = unknown> extends BaseCommandHaltData<T, M> {
+export interface CommandMissingBotPermissionsHaltData<T extends CommandType, M = unknown> extends BaseCommandHaltData<T, M> {
     reason: CommandHaltReason.MissingBotPermissions;
 }
 
@@ -79,7 +79,7 @@ export interface CommandMissingBotPermissions<T extends CommandType, M = unknown
  * Command halt reasons
  */
 export enum CommandHaltReason {
-    Error,
+    Error = 1,
     Cooldown,
     InvalidArguments,
     MissingArguments,

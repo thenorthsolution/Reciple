@@ -67,7 +67,7 @@ export type AnySlashCommandOptionsOnlyOptionBuilder = SlashCommandAttachmentOpti
  * Types of command builders
  */
 export enum CommandType {
-    SlashCommand,
+    SlashCommand = 1,
     MessageCommand,
 }
 
