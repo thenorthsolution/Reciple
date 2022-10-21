@@ -4,7 +4,7 @@
   "bin": "./dist/lib/bin.mjs",
   "license": "GPL-3.0",
   "type": "commonjs",
-  "main": "./dist/lib/index.cjs",
+  "main": "./dist/lib/index.js",
   "types": "./dist/types/index.d.ts",
   "module": "./esm.mjs",
   "author": "FalloutStudios",
@@ -18,7 +18,7 @@
       },
       "require": {
         "types": "./dist/types/index.d.ts",
-        "default": "./dist/lib/index.cjs"
+        "default": "./dist/lib/index.js"
       }
     }
   },
@@ -37,7 +37,7 @@
     "format": "npx prettier --write src",
     "clean": "npx rimraf dist",
     "build": "npm run clean && npx tsc",
-    "build:publish": "npm run format && npm run build && npx docs && npm publish",
+    "build:publish": "npm run format && npm run build && npm run docs && npm publish",
     "build:publish-dev": "npm run format && npm run build && npm publish --tag dev",
     "test": "npm run build && npm install && npm run start -w test",
     "docs": "npx docgen --typescript true -c ./docs/index.json -o ./docs/docs.json -i src/index.ts",
