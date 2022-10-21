@@ -1,4 +1,22 @@
-import { ApplicationCommandOptionAllowedChannelTypes, ApplicationCommandOptionType, Awaitable, LocalizationMap, PermissionResolvable, RestOrArray, SlashCommandAttachmentOption, SlashCommandBooleanOption, SlashCommandChannelOption, SlashCommandIntegerOption, SlashCommandMentionableOption, SlashCommandNumberOption, SlashCommandRoleOption, SlashCommandStringOption, SlashCommandSubcommandBuilder, SlashCommandSubcommandGroupBuilder, SlashCommandUserOption } from 'discord.js';
+import {
+    ApplicationCommandOptionAllowedChannelTypes,
+    ApplicationCommandOptionType,
+    Awaitable,
+    LocalizationMap,
+    PermissionResolvable,
+    RestOrArray,
+    SlashCommandAttachmentOption,
+    SlashCommandBooleanOption,
+    SlashCommandChannelOption,
+    SlashCommandIntegerOption,
+    SlashCommandMentionableOption,
+    SlashCommandNumberOption,
+    SlashCommandRoleOption,
+    SlashCommandStringOption,
+    SlashCommandSubcommandBuilder,
+    SlashCommandSubcommandGroupBuilder,
+    SlashCommandUserOption,
+} from 'discord.js';
 import { SlashCommandBuilder, SlashCommandExecuteData, SlashCommandExecuteFunction, SlashCommandHaltData, SlashCommandHaltFunction, SlashCommandOptionsOnlyBuilder, SlashCommandSubcommandsOnlyBuilder } from '../classes/builders/SlashCommandBuilder';
 import { MessageCommandBuilder, MessageCommandExecuteData, MessageCommandExecuteFunction, MessageCommandHaltData, MessageCommandHaltFunction } from '../classes/builders/MessageCommandBuilder';
 import { MessageCommandOptionBuilder } from '../classes/builders/MessageCommandOptionBuilder';
@@ -31,12 +49,16 @@ export type AnyCommandExecuteFunction<T = unknown> = SlashCommandExecuteFunction
 /**
  * Command halt function
  */
-export type CommandHaltFunction<T extends CommandType, M = unknown> = (haltData: T extends CommandType.SlashCommand ? SlashCommandHaltData<M> : T extends CommandType.MessageCommand ? MessageCommandHaltData<M> : SlashCommandHaltData<M> | MessageCommandHaltData<M>) => Awaitable<boolean | null | undefined | void>;
+export type CommandHaltFunction<T extends CommandType, M = unknown> = (
+    haltData: T extends CommandType.SlashCommand ? SlashCommandHaltData<M> : T extends CommandType.MessageCommand ? MessageCommandHaltData<M> : SlashCommandHaltData<M> | MessageCommandHaltData<M>
+) => Awaitable<boolean | null | undefined | void>;
 
 /**
  * Command execute function
  */
-export type CommandExecuteFunction<T extends CommandType, M = unknown> = (executeData: T extends CommandType.SlashCommand ? SlashCommandExecuteData<M> : T extends CommandType.MessageCommand ? MessageCommandExecuteData<M> : SlashCommandExecuteData<M> | MessageCommandExecuteData<M>) => Awaitable<void>;
+export type CommandExecuteFunction<T extends CommandType, M = unknown> = (
+    executeData: T extends CommandType.SlashCommand ? SlashCommandExecuteData<M> : T extends CommandType.MessageCommand ? MessageCommandExecuteData<M> : SlashCommandExecuteData<M> | MessageCommandExecuteData<M>
+) => Awaitable<void>;
 
 /**
  * Message command options resolvable
@@ -56,12 +78,30 @@ export type AnySlashCommandOptionBuilder = AnySlashCommandOptionsOnlyOptionBuild
 /**
  * Slash command options without sub commands
  */
-export type AnySlashCommandOptionsOnlyOptionData = SlashCommandAttachmentOptionData | SlashCommandBooleanOptionData | SlashCommandChannelOptionData | SlashCommandIntegerOptionData | SlashCommandMentionableOptionData | SlashCommandNumberOptionData | SlashCommandRoleOptionData | SlashCommandStringOptionData | SlashCommandUserOptionData;
+export type AnySlashCommandOptionsOnlyOptionData =
+    | SlashCommandAttachmentOptionData
+    | SlashCommandBooleanOptionData
+    | SlashCommandChannelOptionData
+    | SlashCommandIntegerOptionData
+    | SlashCommandMentionableOptionData
+    | SlashCommandNumberOptionData
+    | SlashCommandRoleOptionData
+    | SlashCommandStringOptionData
+    | SlashCommandUserOptionData;
 
 /**
  * Slash command option builder without sub commands
  */
-export type AnySlashCommandOptionsOnlyOptionBuilder = SlashCommandAttachmentOption | SlashCommandBooleanOption | SlashCommandChannelOption | SlashCommandIntegerOption | SlashCommandMentionableOption | SlashCommandNumberOption | SlashCommandRoleOption | SlashCommandStringOption | SlashCommandUserOption;
+export type AnySlashCommandOptionsOnlyOptionBuilder =
+    | SlashCommandAttachmentOption
+    | SlashCommandBooleanOption
+    | SlashCommandChannelOption
+    | SlashCommandIntegerOption
+    | SlashCommandMentionableOption
+    | SlashCommandNumberOption
+    | SlashCommandRoleOption
+    | SlashCommandStringOption
+    | SlashCommandUserOption;
 
 /**
  * Types of command builders

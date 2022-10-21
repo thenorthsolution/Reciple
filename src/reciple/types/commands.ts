@@ -13,7 +13,12 @@ export type AnyCommandHaltData<T = unknown> = SlashCommandHaltData<T> | MessageC
 /**
  * command halt data
  */
-export type CommandHaltData<T extends CommandType, M = unknown> = CommandErrorHaltData<T, M> | CommandCooldownHaltData<T, M> | (T extends CommandType.SlashCommand ? never : CommandInvalidArgumentsHaltData<T, M> | CommandMissingArgumentsHaltData<T, M>) | CommandMissingMemberPermissionsHaltData<T, M> | CommandMissingBotPermissionsHaltData<T, M>;
+export type CommandHaltData<T extends CommandType, M = unknown> =
+    | CommandErrorHaltData<T, M>
+    | CommandCooldownHaltData<T, M>
+    | (T extends CommandType.SlashCommand ? never : CommandInvalidArgumentsHaltData<T, M> | CommandMissingArgumentsHaltData<T, M>)
+    | CommandMissingMemberPermissionsHaltData<T, M>
+    | CommandMissingBotPermissionsHaltData<T, M>;
 
 /**
  * Any command execute data

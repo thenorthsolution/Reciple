@@ -66,9 +66,27 @@ export interface SlashCommandBuilder<T = unknown> extends DiscordJsSlashCommandB
     addRoleOption(input: SlashCommandRoleOption | ((builder: SlashCommandRoleOption) => SlashCommandRoleOption)): Omit<this, 'addSubcommand' | 'addSubcommandGroup'>;
     addAttachmentOption(input: SlashCommandAttachmentOption | ((builder: SlashCommandAttachmentOption) => SlashCommandAttachmentOption)): Omit<this, 'addSubcommand' | 'addSubcommandGroup'>;
     addMentionableOption(input: SlashCommandMentionableOption | ((builder: SlashCommandMentionableOption) => SlashCommandMentionableOption)): Omit<this, 'addSubcommand' | 'addSubcommandGroup'>;
-    addStringOption(input: SlashCommandStringOption | Omit<SlashCommandStringOption, 'setAutocomplete'> | Omit<SlashCommandStringOption, 'addChoices'> | ((builder: SlashCommandStringOption) => SlashCommandStringOption | Omit<SlashCommandStringOption, 'setAutocomplete'> | Omit<SlashCommandStringOption, 'addChoices'>)): Omit<this, 'addSubcommand' | 'addSubcommandGroup'>;
-    addIntegerOption(input: SlashCommandIntegerOption | Omit<SlashCommandIntegerOption, 'setAutocomplete'> | Omit<SlashCommandIntegerOption, 'addChoices'> | ((builder: SlashCommandIntegerOption) => SlashCommandIntegerOption | Omit<SlashCommandIntegerOption, 'setAutocomplete'> | Omit<SlashCommandIntegerOption, 'addChoices'>)): Omit<this, 'addSubcommand' | 'addSubcommandGroup'>;
-    addNumberOption(input: SlashCommandNumberOption | Omit<SlashCommandNumberOption, 'setAutocomplete'> | Omit<SlashCommandNumberOption, 'addChoices'> | ((builder: SlashCommandNumberOption) => SlashCommandNumberOption | Omit<SlashCommandNumberOption, 'setAutocomplete'> | Omit<SlashCommandNumberOption, 'addChoices'>)): Omit<this, 'addSubcommand' | 'addSubcommandGroup'>;
+    addStringOption(
+        input:
+            | SlashCommandStringOption
+            | Omit<SlashCommandStringOption, 'setAutocomplete'>
+            | Omit<SlashCommandStringOption, 'addChoices'>
+            | ((builder: SlashCommandStringOption) => SlashCommandStringOption | Omit<SlashCommandStringOption, 'setAutocomplete'> | Omit<SlashCommandStringOption, 'addChoices'>)
+    ): Omit<this, 'addSubcommand' | 'addSubcommandGroup'>;
+    addIntegerOption(
+        input:
+            | SlashCommandIntegerOption
+            | Omit<SlashCommandIntegerOption, 'setAutocomplete'>
+            | Omit<SlashCommandIntegerOption, 'addChoices'>
+            | ((builder: SlashCommandIntegerOption) => SlashCommandIntegerOption | Omit<SlashCommandIntegerOption, 'setAutocomplete'> | Omit<SlashCommandIntegerOption, 'addChoices'>)
+    ): Omit<this, 'addSubcommand' | 'addSubcommandGroup'>;
+    addNumberOption(
+        input:
+            | SlashCommandNumberOption
+            | Omit<SlashCommandNumberOption, 'setAutocomplete'>
+            | Omit<SlashCommandNumberOption, 'addChoices'>
+            | ((builder: SlashCommandNumberOption) => SlashCommandNumberOption | Omit<SlashCommandNumberOption, 'setAutocomplete'> | Omit<SlashCommandNumberOption, 'addChoices'>)
+    ): Omit<this, 'addSubcommand' | 'addSubcommandGroup'>;
 }
 
 /**
