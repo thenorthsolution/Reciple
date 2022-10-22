@@ -53,7 +53,7 @@ client.on('ready', async () => {
     const unloadModulesAndStopProcess = async (signal: NodeJS.Signals) => {
         await client.modules.unLoadModules(client.modules.modules.toJSON(), true);
 
-        client.logger.warn(`Exitting process${signal === 'SIGINT' ? ': keyboard interrupt' : signal === 'SIGTERM' ? ': terminate' : '...'}`)
+        client.logger.warn(`Exitting process${signal === 'SIGINT' ? ': keyboard interrupt' : signal === 'SIGTERM' ? ': terminate' : signal}`)
         process.exit();
     }
 
