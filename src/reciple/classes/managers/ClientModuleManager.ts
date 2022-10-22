@@ -4,7 +4,7 @@ import path from 'path';
 import { inspect } from 'util';
 import wildcardMatch from 'wildcard-match';
 import { cwd } from '../../flags';
-import { ClientModuleManagerGetModulePathsOptions, ClientModuleManagerGetModulesFromFilesOptions, ClientModuleManagerLoadModulesOptions, ClientModuleManagerStartModulesOptions, ClientModuleManagerUnloadModulesOptions } from '../../types/paramOptions';
+import { ClientModuleManagerGetModulePathsOptions, ClientModuleManagerLoadModulesOptions, ClientModuleManagerResolveModuleFilesOptions, ClientModuleManagerStartModulesOptions, ClientModuleManagerUnloadModulesOptions } from '../../types/paramOptions';
 import { RecipleClient } from '../RecipleClient';
 import { RecipleModule, RecipleScript } from '../RecipleModule';
 
@@ -23,6 +23,11 @@ export class ClientModuleManager {
         options.modules?.forEach(m => (m instanceof RecipleModule ? m : new RecipleModule({ client: this.client, script: m })));
     }
 
+    /**
+     * Start modules
+     * @param options start modules options
+     * @returns started modules
+     */
     public async startModules(options: ClientModuleManagerStartModulesOptions): Promise<RecipleModule[]> {
         const startedModules: RecipleModule[] = []
 
@@ -55,6 +60,11 @@ export class ClientModuleManager {
         return startedModules;
     }
 
+    /**
+     * Load modules
+     * @param options load modules options
+     * @returns loaded modules
+     */
     public async loadModules(options?: ClientModuleManagerLoadModulesOptions): Promise<RecipleModule[]> {
         const loadedModules: RecipleModule[] = [];
 
@@ -81,6 +91,11 @@ export class ClientModuleManager {
         return loadedModules;
     }
 
+    /**
+     * Unload modules
+     * @param options unload modules options
+     * @returns unloaded modules
+     */
     public async unloadModules(options?: ClientModuleManagerUnloadModulesOptions): Promise<RecipleModule[]> {
         const unloadedModules: RecipleModule[] = [];
 
@@ -102,7 +117,12 @@ export class ClientModuleManager {
         return unloadedModules;
     }
 
-    public async getModulesFromFiles(options: ClientModuleManagerGetModulesFromFilesOptions): Promise<RecipleModule[]> {
+    /**
+     * Resolve modules from file paths
+     * @param options resolve module files options
+     * @returns resolved modules
+     */
+    public async resolveModuleFiles(options: ClientModuleManagerResolveModuleFilesOptions): Promise<RecipleModule[]> {
         const modules: RecipleModule[] = [];
 
         for (const file of options.files) {
@@ -139,6 +159,11 @@ export class ClientModuleManager {
         return modules;
     }
 
+    /**
+     * Validate module script
+     * @param script module script
+     * @returns `true` if script is valid
+     */
     public static validateScript(script: unknown): script is RecipleScript {
         const s = script as Partial<RecipleScript>;
 
@@ -151,6 +176,11 @@ export class ClientModuleManager {
         return true;
     }
 
+    /**
+     * Get module file paths from folders
+     * @param options get module paths options
+     * @returns module paths
+     */
     public async getModulePaths(options?: ClientModuleManagerGetModulePathsOptions): Promise<string[]> {
         const modules: string[] = [];
 

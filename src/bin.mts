@@ -40,7 +40,7 @@ if (!client.isClientLogsSilent) client.logger.info('Starting Reciple client v' +
 client.addCommandListeners();
 
 await client.modules.startModules({
-    modules: await client.modules.getModulesFromFiles({
+    modules: await client.modules.resolveModuleFiles({
         files: await client.modules.getModulePaths({
             filter: file => file.endsWith('.js') || file.endsWith('.cjs') || file.endsWith('.mjs'),
         }),

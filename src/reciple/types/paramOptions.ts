@@ -21,17 +21,19 @@ export interface UserHasCommandPermissionsOptions {
     };
 }
 
-export interface ClientModuleManagerGetModulesFromFilesOptions {
+export interface ClientModuleManagerResolveModuleFilesOptions {
     /**
      * valid reciple module (ESM or CJS) Javascript file paths
      */
     files: string[];
     /**
      * Allow loading unsupported module versions
+     * @default false
      */
     disabeVersionCheck?: boolean;
     /**
      * Ignore errors
+     * @dafault true
      */
     ignoreErrors?: boolean;
 }
@@ -61,10 +63,12 @@ export interface ClientModuleManagerStartModulesOptions {
     modules: RecipleModule[];
     /**
      * Add modules to Client modules collection
+     * @default true
      */
     addToModulesCollection?: boolean;
     /**
      * Ignore errors
+     * @default true
      */
     ignoreErrors?: boolean;
 }
@@ -76,10 +80,12 @@ export interface ClientModuleManagerLoadModulesOptions {
     modules?: RecipleModule[];
     /**
      * Add commands to client
+     * @default true
      */
     resolveCommands?: boolean;
     /**
      * Ignore errors
+     * @default true
      */
     ignoreErrors?: boolean;
 }
@@ -94,7 +100,8 @@ export interface ClientModuleManagerUnloadModulesOptions {
      */
     reason?: string;
     /**
-     * Ignore erros
+     * Ignore errors
+     * @default true
      */
     ignoreErrors?: boolean;
 }

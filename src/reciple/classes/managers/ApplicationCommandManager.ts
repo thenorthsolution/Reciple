@@ -12,6 +12,11 @@ export class ApplicationCommandManager {
         this.client = client;
     }
 
+    /**
+     * Sets application commands globally or in guilds
+     * @param commands Application commands
+     * @param guilds set only to guilds
+     */
     public async set(commands: (ApplicationCommandBuilder | ApplicationCommandData)[], ...guilds: RestOrArray<GuildResolvable>): Promise<void> {
         guilds = normalizeArray(guilds);
 
@@ -36,6 +41,11 @@ export class ApplicationCommandManager {
         }
     }
 
+    /**
+     * Add command globally or in guilds
+     * @param command Application command
+     * @param guilds add only in guilds
+     */
     public async add(command: ApplicationCommandBuilder | ApplicationCommandData, ...guilds: RestOrArray<GuildResolvable>): Promise<void> {
         guilds = normalizeArray(guilds);
 
@@ -61,6 +71,11 @@ export class ApplicationCommandManager {
         }
     }
 
+    /**
+     * Remove application command globally or in guilds
+     * @param command id of application commmand or ApplicationCommand class
+     * @param guilds Remove from guilds
+     */
     public async remove(command: string | ApplicationCommand, ...guilds: RestOrArray<GuildResolvable>): Promise<void> {
         guilds = normalizeArray(guilds);
 
@@ -86,6 +101,12 @@ export class ApplicationCommandManager {
         }
     }
 
+    /**
+     * Edit application command globally or in guilds
+     * @param command id of application command or ApplicationCommand class
+     * @param newCommand new application command data
+     * @param guilds Edit only from guilds
+     */
     public async edit(command: string | ApplicationCommand, newCommand: ApplicationCommandBuilder | ApplicationCommandData, ...guilds: RestOrArray<GuildResolvable>): Promise<void> {
         guilds = normalizeArray(guilds);
 
@@ -111,6 +132,11 @@ export class ApplicationCommandManager {
         }
     }
 
+    /**
+     * Get application command from cache by application command data, builder, id, or name globally or from guid
+     * @param command application command data, builder, id, or name
+     * @param guild get command from guild
+     */
     public get(command: ApplicationCommandData | ApplicationCommandBuilder | string, guild?: GuildResolvable): ApplicationCommand | undefined {
         const commands = guild ? this.client.guilds.resolve(guild)?.commands.cache : this.client.application?.commands.cache;
         if (!commands) throw new Error('Guild not found in cache');
@@ -118,6 +144,11 @@ export class ApplicationCommandManager {
         return commands.find(cmd => (typeof command === 'string' ? cmd.id === command || cmd.name === command : cmd.name === command.name || (command instanceof ApplicationCommand && cmd.id === command.id)));
     }
 
+    /**
+     * Fetch application command by id globally or from guild
+     * @param commandId command id
+     * @param guild fetch from guild
+     */
     public async fetch(commandId: string, guild?: GuildResolvable): Promise<ApplicationCommand> {
         const manager = guild ? this.client.guilds.resolve(guild)?.commands : this.client.application?.commands;
         if (!manager) throw new Error('Guild not found in cache');
@@ -125,6 +156,11 @@ export class ApplicationCommandManager {
         return manager.fetch(commandId);
     }
 
+    /**
+     * Parse application command builders to command data
+     * @param commands Application command builders
+     * @param setPermissions set slash commands permissions
+     */
     protected parseCommands(commands: (ApplicationCommandData | ApplicationCommandBuilder | RESTPostAPIApplicationCommandsJSONBody)[], setPermissions: boolean = true): (ApplicationCommandData | RESTPostAPIApplicationCommandsJSONBody)[] {
         return commands.map(cmd => {
             if ((cmd as ApplicationCommandBuilder)?.toJSON === undefined) return (<unknown>cmd) as ApplicationCommandData;
