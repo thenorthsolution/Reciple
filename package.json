@@ -6,7 +6,7 @@
   "type": "commonjs",
   "main": "./dist/lib/index.js",
   "types": "./dist/types/index.d.ts",
-  "module": "./esm.mjs",
+  "module": "./dist/lib/esm.mjs",
   "author": "FalloutStudios",
   "description": "Handler for Discord.js",
   "homepage": "https://reciple.js.org",
