@@ -50,6 +50,16 @@ await client.modules.startModules(
 client.on('ready', async () => {
     await client.modules.loadModules(client.modules.modules.toJSON(), true);
 
+    const unloadModulesAndStopProcess = async (signal: NodeJS.Signals) => {
+        await client.modules.unLoadModules(client.modules.modules.toJSON(), true);
+
+        client.logger.warn(`Exitting process${signal === 'SIGINT' ? ': keyboard interrupt' : signal === 'SIGTERM' ? ': terminate' : '...'}`)
+        process.exit();
+    }
+
+    process.once('SIGINT', signal => unloadModulesAndStopProcess(signal));
+    process.once('SIGTERM', signal => unloadModulesAndStopProcess(signal));
+
     if (!client.isClientLogsSilent) client.logger.log(`Loaded ${client.commands.slashCommands.size} slash commands`, `Loaded ${client.commands.messageCommands.size} message commands`);
     if (client.config.commands.slashCommand.registerCommands && (client.config.commands.slashCommand.allowRegisterEmptyCommandList || client.commands.applicationCommandsSize)) {
         await client.commands.registerApplicationCommands();
