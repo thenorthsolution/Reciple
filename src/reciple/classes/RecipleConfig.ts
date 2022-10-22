@@ -130,18 +130,18 @@ export class RecipleConfig {
 
     /**
      * Parse token from config
-     * @param askIfNull Ask for token if the token is null/undefined
+     * @param askIfEmpty Ask for token if the token is undefined
      */
-    public parseToken(askIfNull: boolean = true): string | null {
-        let token = __token || this.config?.token || null;
-        if (!token) return token || (askIfNull ? this._askToken() : null);
+    public parseToken(askIfEmpty: boolean = true): string | null {
+        let token: string|null|undefined = __token || this.config?.token || undefined;
+        if (!token) return token || (askIfEmpty ? this._askToken() : null);
 
         const envToken = token.toString().split(':');
         if (envToken.length === 2 && envToken[0].toLocaleLowerCase() === 'env' && envToken[1]) {
-            token = process.env[envToken[1]] || null;
+            token = process.env[envToken[1]] || undefined;
         }
 
-        return token || (askIfNull ? this._askToken() : null);
+        return token || (askIfEmpty == null ? this._askToken() : null);
     }
 
     /**
