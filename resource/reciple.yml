@@ -94,7 +94,9 @@ messages:
     ephemeral: true
 
 # Ignored Files
-ignoredFiles: []
+ignoredFiles:
+  - '_*'
+  - '.*'
 
 
 ####################################################
