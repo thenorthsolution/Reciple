@@ -1,11 +1,11 @@
 import { Collection, normalizeArray, RestOrArray } from 'discord.js';
 import { existsSync, lstatSync, mkdirSync, readdirSync } from 'fs';
-import path from 'path';
 import { inspect } from 'util';
 import wildcardMatch from 'wildcard-match';
 import { ClientModuleManagerGetModulePathsOptions, ClientModuleManagerLoadModulesOptions, ClientModuleManagerResolveModuleFilesOptions, ClientModuleManagerStartModulesOptions, ClientModuleManagerUnloadModulesOptions } from '../../types/paramOptions';
 import { RecipleClient } from '../RecipleClient';
 import { RecipleModule, RecipleScript } from '../RecipleModule';
+import { path } from '../../util';
 
 export interface ClientModuleManagerOptions {
     client: RecipleClient;
@@ -126,7 +126,7 @@ export class ClientModuleManager {
 
         for (const file of options.files) {
             try {
-                const resolveFile = await import(file);
+                const resolveFile = await import((path().isAbsolute(file) ? 'file://' : '') + file);
 
                 let script: RecipleScript | RecipleModule | undefined =
                     resolveFile instanceof RecipleModule || ClientModuleManager.validateScript(resolveFile)
@@ -189,11 +189,11 @@ export class ClientModuleManager {
 
             modules.push(
                 ...readdirSync(dir)
-                    .map(file => path.resolve(!dir.startsWith('/') ? this.client.cwd : '', dir, file))
+                    .map(file => path().join(!dir.startsWith('/') ? this.client.cwd : '', dir, file))
                     .filter(file => (options?.filter ? options.filter(file) : file.endsWith('.js')))
             );
         }
 
-        return modules.filter(file => !(options?.ignoredFiles ?? this.client.config.ignoredFiles).some(ignored => wildcardMatch(ignored)(path.basename(file))));
+        return modules.filter(file => !(options?.ignoredFiles ?? this.client.config.ignoredFiles).some(ignored => wildcardMatch(ignored)(path().basename(file))));
     }
 }

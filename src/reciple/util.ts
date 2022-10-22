@@ -1,5 +1,6 @@
 import chalk from 'chalk';
-import { Logger, LogLevels } from 'fallout-utility';
+import { getOperatingSystem, Logger, LogLevels, OS } from 'fallout-utility';
+import { default as _path } from 'path';
 import { flags } from './flags';
 import { AnyCommandBuilder, CommandType } from './types/builders';
 
@@ -57,4 +58,13 @@ export function createLogger(stringifyJSON: boolean, debugmode: boolean = false,
             [LogLevels.DEBUG]: (message: string) => (!colorizeMessage ? message : chalk.blue(message)),
         },
     });
+}
+
+export function path(): _path.PlatformPath {
+    switch (getOperatingSystem()) {
+        case OS.WINDOWS:
+            return _path.win32;
+        default:
+            return _path.posix;
+    }
 }

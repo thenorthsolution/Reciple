@@ -1,9 +1,9 @@
 import { ClientOptions, PermissionResolvable } from 'discord.js';
 import { existsSync, readFileSync, writeFileSync } from 'fs';
-import { isSupportedVersion, version } from '../version.js';
+import { isSupportedVersion, version } from '../version';
 import { input, replaceAll } from 'fallout-utility';
 import { token as __token } from '../flags';
-import path from 'path';
+import { path } from '../util';
 import yaml from 'yaml';
 
 /**
@@ -75,8 +75,8 @@ export interface Config {
  */
 export class RecipleConfig {
     public config: Config = RecipleConfig.getDefaultConfig();
-    public configPath: string = path.resolve(process.cwd(), 'reciple.yml');
-    public static defaultConfigPath = path.resolve(__dirname, '../../../../resource/reciple.yml');
+    public configPath: string = path().join(process.cwd(), 'reciple.yml');
+    public static defaultConfigPath = path().join(__dirname, '../../../../resource/reciple.yml');
 
     /**
      * @param configPath Path to config
@@ -171,7 +171,7 @@ export class RecipleConfig {
      * Get default config
      */
     public static getDefaultConfig(): Config {
-        if (!existsSync(this.defaultConfigPath)) throw new Error('Default config file does not exists.');
+        if (!existsSync(this.defaultConfigPath)) throw new Error(`Default config file does not exists: ${this.defaultConfigPath}`);
 
         return yaml.parse(readFileSync(this.defaultConfigPath, 'utf-8'));
     }
