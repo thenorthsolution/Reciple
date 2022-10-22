@@ -133,7 +133,7 @@ export class RecipleConfig {
      * @param askIfEmpty Ask for token if the token is undefined
      */
     public parseToken(askIfEmpty: boolean = true): string | null {
-        let token: string|null|undefined = __token || this.config?.token || undefined;
+        let token: string | null | undefined = __token || this.config?.token || undefined;
         if (!token) return token || (askIfEmpty ? this._askToken() : null);
 
         const envToken = token.toString().split(':');
