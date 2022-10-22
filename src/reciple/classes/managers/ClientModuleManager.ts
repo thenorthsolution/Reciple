@@ -3,7 +3,6 @@ import { existsSync, lstatSync, mkdirSync, readdirSync } from 'fs';
 import path from 'path';
 import { inspect } from 'util';
 import wildcardMatch from 'wildcard-match';
-import { cwd } from '../../flags';
 import { ClientModuleManagerGetModulePathsOptions, ClientModuleManagerLoadModulesOptions, ClientModuleManagerResolveModuleFilesOptions, ClientModuleManagerStartModulesOptions, ClientModuleManagerUnloadModulesOptions } from '../../types/paramOptions';
 import { RecipleClient } from '../RecipleClient';
 import { RecipleModule, RecipleScript } from '../RecipleModule';
@@ -190,7 +189,7 @@ export class ClientModuleManager {
 
             modules.push(
                 ...readdirSync(dir)
-                    .map(file => path.join(cwd, dir, file))
+                    .map(file => path.join(!dir.startsWith('/') ? this.client.cwd : '', dir, file))
                     .filter(file => (options?.filter ? options.filter(file) : file.endsWith('.js')))
             );
         }

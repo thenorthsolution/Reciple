@@ -21,6 +21,7 @@ import path from 'path';
  */
 export interface RecipleClientOptions extends ClientOptions {
     config?: Config;
+    cwd?: string;
 }
 
 /**
@@ -65,6 +66,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
     readonly modules: ClientModuleManager = new ClientModuleManager({
         client: this,
     });
+    readonly cwd: string;
     readonly logger: Logger;
     readonly version: string = version;
 
@@ -83,6 +85,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
 
         if (this.config.fileLogging.enabled) this.logger.logFile(path.join(cwd, this.config.fileLogging.logFilePath ?? 'logs/latest.log'), false);
 
+        this.cwd = options.cwd ?? process.cwd();
         this.applicationCommands = new ApplicationCommandManager(this);
     }
 

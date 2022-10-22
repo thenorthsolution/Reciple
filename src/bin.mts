@@ -12,7 +12,7 @@ import path from 'path';
 import { inspect } from 'util';
 
 const allowedFiles = ['node_modules', 'reciple.yml', 'package.json'];
-const configPath = path.join(cwd, './reciple.yml');
+const configPath = path.join(cwd, 'reciple.yml');
 
 if (readdirSync(cwd).filter(f => !f.startsWith('.') && allowedFiles.indexOf(f)).length > 0 && !existsSync(flags.config ?? configPath)) {
     const ask = (flags.yes ? 'y' : null) ?? input('This directory does not contain reciple.yml. Would you like to init axis here? [y/n] ') ?? '';
@@ -29,7 +29,7 @@ try {
 }
 
 const config = configParser.getConfig();
-const client = new RecipleClient({ config: config, ...config.client });
+const client = new RecipleClient({ config: config, cwd, ...config.client });
 
 /**
  * Start

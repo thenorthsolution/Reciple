@@ -2,7 +2,7 @@ import { ClientOptions, PermissionResolvable } from 'discord.js';
 import { existsSync, readFileSync, writeFileSync } from 'fs';
 import { isSupportedVersion, version } from '../version.js';
 import { input, replaceAll } from 'fallout-utility';
-import { cwd, token as __token } from '../flags';
+import { token as __token } from '../flags';
 import path from 'path';
 import yaml from 'yaml';
 
@@ -75,7 +75,7 @@ export interface Config {
  */
 export class RecipleConfig {
     public config: Config = RecipleConfig.getDefaultConfig();
-    public configPath: string = path.join(cwd, 'reciple.yml');
+    public configPath: string = path.join(process.cwd(), 'reciple.yml');
     public static defaultConfigPath = path.join(__dirname, '../../../../resource/reciple.yml');
 
     /**
