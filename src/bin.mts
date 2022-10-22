@@ -53,9 +53,9 @@ client.on('ready', async () => {
     const unloadModulesAndStopProcess = async (signal: NodeJS.Signals) => {
         await client.modules.unloadModules({ reason: 'ProcessExit' });
 
-        client.logger.warn(`Exitting process${signal === 'SIGINT' ? ': keyboard interrupt' : signal === 'SIGTERM' ? ': terminate' : signal}`)
+        client.logger.warn(`Exitting process${signal === 'SIGINT' ? ': keyboard interrupt' : signal === 'SIGTERM' ? ': terminate' : signal}`);
         process.exit();
-    }
+    };
 
     process.once('SIGINT', signal => unloadModulesAndStopProcess(signal));
     process.once('SIGTERM', signal => unloadModulesAndStopProcess(signal));

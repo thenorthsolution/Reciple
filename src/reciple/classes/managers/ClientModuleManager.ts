@@ -29,7 +29,7 @@ export class ClientModuleManager {
      * @returns started modules
      */
     public async startModules(options: ClientModuleManagerStartModulesOptions): Promise<RecipleModule[]> {
-        const startedModules: RecipleModule[] = []
+        const startedModules: RecipleModule[] = [];
 
         for (const module_ of options.modules) {
             if (!this.client.isClientLogsSilent) this.client.logger.log(`Starting module '${module_}'`);
@@ -68,7 +68,7 @@ export class ClientModuleManager {
     public async loadModules(options?: ClientModuleManagerLoadModulesOptions): Promise<RecipleModule[]> {
         const loadedModules: RecipleModule[] = [];
 
-        for (const module_ of (options?.modules ?? this.modules.toJSON())) {
+        for (const module_ of options?.modules ?? this.modules.toJSON()) {
             try {
                 await module_.load().catch(err => {
                     throw err;
@@ -99,7 +99,7 @@ export class ClientModuleManager {
     public async unloadModules(options?: ClientModuleManagerUnloadModulesOptions): Promise<RecipleModule[]> {
         const unloadedModules: RecipleModule[] = [];
 
-        for (const module_ of (options?.modules ?? this.modules.toJSON())) {
+        for (const module_ of options?.modules ?? this.modules.toJSON()) {
             try {
                 await module_.unload().catch(err => {
                     throw err;
