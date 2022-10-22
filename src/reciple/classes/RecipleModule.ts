@@ -33,7 +33,7 @@ export interface RecipleScript {
      * @param reason Unload reason
      * @param client Bot client
      */
-    onUnLoad?(reason: unknown, client: RecipleClient<true>): void | Promise<void>;
+    onUnload?(reason: unknown, client: RecipleClient<true>): void | Promise<void>;
 }
 
 export interface RecipleModuleOptions<M = unknown> {
@@ -72,8 +72,8 @@ export class RecipleModule<M = unknown> {
         if (resolveCommands) this.resolveCommands();
     }
 
-    public async unLoad(reason?: any): Promise<void> {
-        if (typeof this.script.onUnLoad === 'function') await this.script.onUnLoad(reason, this.client);
+    public async unload(reason?: any): Promise<void> {
+        if (typeof this.script.onUnload === 'function') await this.script.onUnload(reason, this.client);
     }
 
     public async registerSlashCommands(...guilds: RestOrArray<GuildResolvable>): Promise<void> {

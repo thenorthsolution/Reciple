@@ -4,7 +4,7 @@ import path from 'path';
 import { inspect } from 'util';
 import wildcardMatch from 'wildcard-match';
 import { cwd } from '../../flags';
-import { ClientModuleManagerGetModulePathsOptions, ClientModuleManagerGetModulesFromFilesOptions } from '../../types/paramOptions';
+import { ClientModuleManagerGetModulePathsOptions, ClientModuleManagerGetModulesFromFilesOptions, ClientModuleManagerLoadModulesOptions, ClientModuleManagerStartModulesOptions, ClientModuleManagerUnloadModulesOptions } from '../../types/paramOptions';
 import { RecipleClient } from '../RecipleClient';
 import { RecipleModule, RecipleScript } from '../RecipleModule';
 
@@ -23,8 +23,10 @@ export class ClientModuleManager {
         options.modules?.forEach(m => (m instanceof RecipleModule ? m : new RecipleModule({ client: this.client, script: m })));
     }
 
-    public async startModules(modules: RecipleModule[], ignoreErrors: boolean = true): Promise<RecipleModule[]> {
-        for (const module_ of modules) {
+    public async startModules(options: ClientModuleManagerStartModulesOptions): Promise<RecipleModule[]> {
+        const startedModules: RecipleModule[] = []
+
+        for (const module_ of options.modules) {
             if (!this.client.isClientLogsSilent) this.client.logger.log(`Starting module '${module_}'`);
 
             try {
@@ -41,52 +43,63 @@ export class ClientModuleManager {
                     continue;
                 }
 
-                this.modules.set(module_.id, module_);
+                if (options.addToModulesCollection !== false) this.modules.set(module_.id, module_);
+
+                startedModules.push(module_);
             } catch (err) {
-                if (!ignoreErrors) throw err;
+                if (options?.ignoreErrors === false) throw err;
                 if (!this.client.isClientLogsSilent) this.client.logger.error(`Failed to start module '${module_}': `, err);
             }
         }
 
-        return modules;
+        return startedModules;
     }
 
-    public async loadModules(modules: RecipleModule[], addModuleCommandsToClient: boolean = true, ignoreErrors: boolean = true): Promise<RecipleModule[]> {
-        for (const module_ of this.modules.toJSON()) {
+    public async loadModules(options?: ClientModuleManagerLoadModulesOptions): Promise<RecipleModule[]> {
+        const loadedModules: RecipleModule[] = [];
+
+        for (const module_ of (options?.modules ?? this.modules.toJSON())) {
             try {
                 await module_.load().catch(err => {
                     throw err;
                 });
 
-                if (!this.client.isClientLogsSilent) this.client.logger.log(`Loaded module '${module_}'`);
-                if (addModuleCommandsToClient) {
+                if (options?.resolveCommands !== false) {
+                    module_.resolveCommands();
                     this.client.commands.add(module_.commands);
                 }
+
+                loadedModules.push(module_);
+
+                if (!this.client.isClientLogsSilent) this.client.logger.log(`Loaded module '${module_}'`);
             } catch (err) {
-                if (!ignoreErrors) throw err;
+                if (options?.ignoreErrors === false) throw err;
                 if (!this.client.isClientLogsSilent) this.client.logger.error(`Failed to load module '${module_}': `, err);
             }
         }
 
-        return modules;
+        return loadedModules;
     }
 
-    public async unLoadModules(modules: RecipleModule[], removeUnloadedModules: boolean = true, ignoreErrors: boolean = true): Promise<RecipleModule[]> {
-        for (const module_ of this.modules.toJSON()) {
+    public async unloadModules(options?: ClientModuleManagerUnloadModulesOptions): Promise<RecipleModule[]> {
+        const unloadedModules: RecipleModule[] = [];
+
+        for (const module_ of (options?.modules ?? this.modules.toJSON())) {
             try {
-                await module_.unLoad().catch(err => {
+                await module_.unload().catch(err => {
                     throw err;
                 });
 
-                if (removeUnloadedModules) this.modules.delete(module_.id);
+                unloadedModules.push(module_);
+
                 if (!this.client.isClientLogsSilent) this.client.logger.log(`Unloaded module '${module_}'`);
             } catch (err) {
-                if (!ignoreErrors) throw err;
+                if (options?.ignoreErrors === false) throw err;
                 if (!this.client.isClientLogsSilent) this.client.logger.error(`Failed to unLoad module '${module_}': `, err);
             }
         }
 
-        return modules;
+        return unloadedModules;
     }
 
     public async getModulesFromFiles(options: ClientModuleManagerGetModulesFromFilesOptions): Promise<RecipleModule[]> {
@@ -118,7 +131,7 @@ export class ClientModuleManager {
                     })
                 );
             } catch (err) {
-                if (options.dontSkipError) throw err;
+                if (options.ignoreErrors === false) throw err;
                 if (!this.client.isClientLogsSilent) this.client.logger.error(`Can't resolve module from: ${file}`, err);
             }
         }
@@ -133,7 +146,7 @@ export class ClientModuleManager {
         if (typeof s.versions !== 'string' && !Array.isArray(s.versions)) return false;
         if (typeof s.onStart !== 'function') return false;
         if (s.onLoad && typeof s.onLoad !== 'function') return false;
-        if (s.onUnLoad && typeof s.onUnLoad !== 'function') return false;
+        if (s.onUnload && typeof s.onUnload !== 'function') return false;
 
         return true;
     }

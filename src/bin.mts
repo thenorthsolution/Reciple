@@ -39,19 +39,19 @@ if (!client.isClientLogsSilent) client.logger.info('Starting Reciple client v' +
 
 client.addCommandListeners();
 
-await client.modules.startModules(
-    await client.modules.getModulesFromFiles({
+await client.modules.startModules({
+    modules: await client.modules.getModulesFromFiles({
         files: await client.modules.getModulePaths({
             filter: file => file.endsWith('.js') || file.endsWith('.cjs') || file.endsWith('.mjs'),
         }),
-    })
-);
+    }),
+});
 
 client.on('ready', async () => {
-    await client.modules.loadModules(client.modules.modules.toJSON(), true);
+    await client.modules.loadModules();
 
     const unloadModulesAndStopProcess = async (signal: NodeJS.Signals) => {
-        await client.modules.unLoadModules(client.modules.modules.toJSON(), true);
+        await client.modules.unloadModules({ reason: 'ProcessExit' });
 
         client.logger.warn(`Exitting process${signal === 'SIGINT' ? ': keyboard interrupt' : signal === 'SIGTERM' ? ': terminate' : signal}`)
         process.exit();

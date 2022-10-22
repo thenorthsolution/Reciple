@@ -63,7 +63,7 @@ export default {
     onLoad(client) {
         client.logger.log("Module loaded");
     },
-    onUnLoad(client) {
+    onUnLoad(reason, client) {
         client.logger.log("Unloading shits");
 
         for (let i = 0; i < 100; i++) {
