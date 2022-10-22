@@ -60,11 +60,4 @@ export function createLogger(stringifyJSON: boolean, debugmode: boolean = false,
     });
 }
 
-export function path(): _path.PlatformPath {
-    switch (getOperatingSystem()) {
-        case OS.WINDOWS:
-            return _path.win32;
-        default:
-            return _path.posix;
-    }
-}
+export const path: _path.PlatformPath = getOperatingSystem() === OS.WINDOWS ? _path.win32 : _path.posix;

@@ -12,7 +12,7 @@ import 'dotenv/config';
 import { inspect } from 'util';
 
 const allowedFiles = ['node_modules', 'reciple.yml', 'package.json'];
-const configPath = path().join(cwd, 'reciple.yml');
+const configPath = path.join(cwd, 'reciple.yml');
 
 if (!existsSync(cwd)) mkdirSync(cwd, { recursive: true });
 if (readdirSync(cwd).filter(f => !f.startsWith('.') && allowedFiles.indexOf(f)).length > 0 && !existsSync(flags.config ?? configPath)) {
