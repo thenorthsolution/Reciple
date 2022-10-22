@@ -189,7 +189,7 @@ export class ClientModuleManager {
 
             modules.push(
                 ...readdirSync(dir)
-                    .map(file => path.join(!dir.startsWith('/') ? this.client.cwd : '', dir, file))
+                    .map(file => path.resolve(!dir.startsWith('/') ? this.client.cwd : '', dir, file))
                     .filter(file => (options?.filter ? options.filter(file) : file.endsWith('.js')))
             );
         }

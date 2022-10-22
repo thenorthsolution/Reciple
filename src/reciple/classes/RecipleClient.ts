@@ -83,7 +83,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
         this.logger = createLogger(!!options.config?.fileLogging.stringifyLoggedJSON, options.config?.fileLogging.debugmode);
         this.config = { ...this.config, ...(options.config ?? {}) };
 
-        if (this.config.fileLogging.enabled) this.logger.logFile(path.join(cwd, this.config.fileLogging.logFilePath ?? 'logs/latest.log'), false);
+        if (this.config.fileLogging.enabled) this.logger.logFile(path.resolve(cwd, this.config.fileLogging.logFilePath ?? 'logs/latest.log'), false);
 
         this.cwd = options.cwd ?? process.cwd();
         this.applicationCommands = new ApplicationCommandManager(this);
