@@ -8,8 +8,12 @@ export type ApplicationCommandBuilder = AnySlashCommandBuilder | ContextMenuComm
 export class ApplicationCommandManager {
     readonly client: RecipleClient;
 
-    get commands() { return [...this.client.commands.additionalApplicationCommands, ...this.client.commands.slashCommands.toJSON()]; }
-    get size() { return this.commands.length; }
+    get commands() {
+        return [...this.client.commands.additionalApplicationCommands, ...this.client.commands.slashCommands.toJSON()];
+    }
+    get size() {
+        return this.commands.length;
+    }
 
     constructor(client: RecipleClient) {
         this.client = client;

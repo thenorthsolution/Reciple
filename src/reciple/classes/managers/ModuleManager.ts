@@ -129,11 +129,7 @@ export class ModuleManager {
                 const resolveFile = await import((path.isAbsolute(file) ? 'file://' : '') + file);
 
                 let script: RecipleScript | RecipleModule | undefined =
-                    resolveFile instanceof RecipleModule || ModuleManager.validateScript(resolveFile)
-                        ? resolveFile
-                        : resolveFile?.default?.default instanceof RecipleModule || ModuleManager.validateScript(resolveFile?.default?.default)
-                        ? resolveFile.default.default
-                        : resolveFile?.default;
+                    resolveFile instanceof RecipleModule || ModuleManager.validateScript(resolveFile) ? resolveFile : resolveFile?.default?.default instanceof RecipleModule || ModuleManager.validateScript(resolveFile?.default?.default) ? resolveFile.default.default : resolveFile?.default;
 
                 if (script instanceof RecipleModule) {
                     modules.push(script);
