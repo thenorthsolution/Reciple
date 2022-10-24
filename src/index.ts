@@ -3,7 +3,7 @@ export * from './reciple/classes/builders/MessageCommandOptionBuilder.js';
 export * from './reciple/classes/builders/SlashCommandBuilder.js';
 export * from './reciple/classes/managers/ApplicationCommandManager.js';
 export * from './reciple/classes/managers/ClientCommandManager.js';
-export * from './reciple/classes/managers/ClientModuleManager.js';
+export * from './reciple/classes/managers/ModuleManager.js';
 export * from './reciple/classes/managers/CommandCooldownManager.js';
 export * from './reciple/classes/managers/MessageCommandOptionManager.js';
 export * from './reciple/classes/RecipleClient.js';

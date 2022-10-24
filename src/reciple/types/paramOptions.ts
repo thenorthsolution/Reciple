@@ -21,7 +21,7 @@ export interface UserHasCommandPermissionsOptions {
     };
 }
 
-export interface ClientModuleManagerResolveModuleFilesOptions {
+export interface ModuleManagerResolveModuleFilesOptions {
     /**
      * valid reciple module (ESM or CJS) Javascript file paths
      */
@@ -38,7 +38,7 @@ export interface ClientModuleManagerResolveModuleFilesOptions {
     ignoreErrors?: boolean;
 }
 
-export interface ClientModuleManagerGetModulePathsOptions {
+export interface ModuleManagerGetModulePathsOptions {
     /**
      * Get javascript module file paths from folders
      */
@@ -56,7 +56,7 @@ export interface ClientModuleManagerGetModulePathsOptions {
     filter?: (file: string) => Awaitable<boolean>;
 }
 
-export interface ClientModuleManagerStartModulesOptions {
+export interface ModuleManagerStartModulesOptions {
     /**
      * Modules to start
      */
@@ -73,7 +73,7 @@ export interface ClientModuleManagerStartModulesOptions {
     ignoreErrors?: boolean;
 }
 
-export interface ClientModuleManagerLoadModulesOptions {
+export interface ModuleManagerLoadModulesOptions {
     /**
      * Modules to execute `load` method
      */
@@ -90,7 +90,7 @@ export interface ClientModuleManagerLoadModulesOptions {
     ignoreErrors?: boolean;
 }
 
-export interface ClientModuleManagerUnloadModulesOptions {
+export interface ModuleManagerUnloadModulesOptions {
     /**
      * Modules to execute `unload` method
      */

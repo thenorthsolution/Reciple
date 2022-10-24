@@ -2,21 +2,21 @@ import { Collection, normalizeArray, RestOrArray } from 'discord.js';
 import { existsSync, lstatSync, mkdirSync, readdirSync } from 'fs';
 import { inspect } from 'util';
 import wildcardMatch from 'wildcard-match';
-import { ClientModuleManagerGetModulePathsOptions, ClientModuleManagerLoadModulesOptions, ClientModuleManagerResolveModuleFilesOptions, ClientModuleManagerStartModulesOptions, ClientModuleManagerUnloadModulesOptions } from '../../types/paramOptions';
+import { ModuleManagerGetModulePathsOptions, ModuleManagerLoadModulesOptions, ModuleManagerResolveModuleFilesOptions, ModuleManagerStartModulesOptions, ModuleManagerUnloadModulesOptions } from '../../types/paramOptions';
 import { RecipleClient } from '../RecipleClient';
 import { RecipleModule, RecipleScript } from '../RecipleModule';
 import { path } from '../../util';
 
-export interface ClientModuleManagerOptions {
+export interface ModuleManagerOptions {
     client: RecipleClient;
     modules?: (RecipleModule | RecipleScript)[];
 }
 
-export class ClientModuleManager {
+export class ModuleManager {
     readonly client: RecipleClient;
     readonly modules: Collection<string, RecipleModule> = new Collection();
 
-    constructor(options: ClientModuleManagerOptions) {
+    constructor(options: ModuleManagerOptions) {
         this.client = options.client;
 
         options.modules?.forEach(m => (m instanceof RecipleModule ? m : new RecipleModule({ client: this.client, script: m })));
@@ -27,7 +27,7 @@ export class ClientModuleManager {
      * @param options start modules options
      * @returns started modules
      */
-    public async startModules(options: ClientModuleManagerStartModulesOptions): Promise<RecipleModule[]> {
+    public async startModules(options: ModuleManagerStartModulesOptions): Promise<RecipleModule[]> {
         const startedModules: RecipleModule[] = [];
 
         for (const module_ of options.modules) {
@@ -64,7 +64,7 @@ export class ClientModuleManager {
      * @param options load modules options
      * @returns loaded modules
      */
-    public async loadModules(options?: ClientModuleManagerLoadModulesOptions): Promise<RecipleModule[]> {
+    public async loadModules(options?: ModuleManagerLoadModulesOptions): Promise<RecipleModule[]> {
         const loadedModules: RecipleModule[] = [];
 
         for (const module_ of options?.modules ?? this.modules.toJSON()) {
@@ -95,7 +95,7 @@ export class ClientModuleManager {
      * @param options unload modules options
      * @returns unloaded modules
      */
-    public async unloadModules(options?: ClientModuleManagerUnloadModulesOptions): Promise<RecipleModule[]> {
+    public async unloadModules(options?: ModuleManagerUnloadModulesOptions): Promise<RecipleModule[]> {
         const unloadedModules: RecipleModule[] = [];
 
         for (const module_ of options?.modules ?? this.modules.toJSON()) {
@@ -121,7 +121,7 @@ export class ClientModuleManager {
      * @param options resolve module files options
      * @returns resolved modules
      */
-    public async resolveModuleFiles(options: ClientModuleManagerResolveModuleFilesOptions): Promise<RecipleModule[]> {
+    public async resolveModuleFiles(options: ModuleManagerResolveModuleFilesOptions): Promise<RecipleModule[]> {
         const modules: RecipleModule[] = [];
 
         for (const file of options.files) {
@@ -129,9 +129,9 @@ export class ClientModuleManager {
                 const resolveFile = await import((path.isAbsolute(file) ? 'file://' : '') + file);
 
                 let script: RecipleScript | RecipleModule | undefined =
-                    resolveFile instanceof RecipleModule || ClientModuleManager.validateScript(resolveFile)
+                    resolveFile instanceof RecipleModule || ModuleManager.validateScript(resolveFile)
                         ? resolveFile
-                        : resolveFile?.default?.default instanceof RecipleModule || ClientModuleManager.validateScript(resolveFile?.default?.default)
+                        : resolveFile?.default?.default instanceof RecipleModule || ModuleManager.validateScript(resolveFile?.default?.default)
                         ? resolveFile.default.default
                         : resolveFile?.default;
 
@@ -140,7 +140,7 @@ export class ClientModuleManager {
                     continue;
                 }
 
-                if (!ClientModuleManager.validateScript(script)) throw new Error(`Invalid module script: ${file}`);
+                if (!ModuleManager.validateScript(script)) throw new Error(`Invalid module script: ${file}`);
 
                 modules.push(
                     new RecipleModule({
@@ -180,7 +180,7 @@ export class ClientModuleManager {
      * @param options get module paths options
      * @returns module paths
      */
-    public async getModulePaths(options?: ClientModuleManagerGetModulePathsOptions): Promise<string[]> {
+    public async getModulePaths(options?: ModuleManagerGetModulePathsOptions): Promise<string[]> {
         const modules: string[] = [];
 
         for (const dir of options?.folders ?? normalizeArray([this.client.config.modulesFolder] as RestOrArray<string>)) {

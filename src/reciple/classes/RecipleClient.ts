@@ -7,8 +7,8 @@ import { botHasExecutePermissions, userHasCommandPermissions } from '../permissi
 import { MessageCommandOptionManager } from './managers/MessageCommandOptionManager';
 import { ApplicationCommandManager } from './managers/ApplicationCommandManager';
 import { ClientCommandManager } from './managers/ClientCommandManager';
-import { ClientModuleManager } from './managers/ClientModuleManager';
 import { AnyCommandBuilder, CommandType } from '../types/builders';
+import { ModuleManager } from './managers/ModuleManager';
 import { Config, RecipleConfig } from './RecipleConfig';
 import { getCommand, Logger } from 'fallout-utility';
 import { createLogger, path } from '../util';
@@ -62,7 +62,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
     });
     readonly applicationCommands: ApplicationCommandManager;
     readonly cooldowns: CommandCooldownManager = new CommandCooldownManager();
-    readonly modules: ClientModuleManager = new ClientModuleManager({
+    readonly modules: ModuleManager = new ModuleManager({
         client: this,
     });
     readonly cwd: string;
