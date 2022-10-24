@@ -62,7 +62,7 @@ client.on('ready', async () => {
     process.once('SIGTERM', signal => unloadModulesAndStopProcess(signal));
 
     if (!client.isClientLogsSilent) client.logger.log(`Loaded ${client.commands.slashCommands.size} slash commands`, `Loaded ${client.commands.messageCommands.size} message commands`);
-    if (client.config.commands.slashCommand.registerCommands && (client.config.commands.slashCommand.allowRegisterEmptyCommandList || client.commands.applicationCommandsSize)) {
+    if (client.config.commands.slashCommand.registerCommands && (client.config.commands.slashCommand.allowRegisterEmptyCommandList || client.applicationCommands.size)) {
         await client.commands.registerApplicationCommands();
     }
 

@@ -37,10 +37,10 @@ export class ApplicationCommandManager {
 
         if (!guild) {
             await this.client.application.commands.set(commands);
-            if (!this.client.isClientLogsSilent) this.client.logger.log(`Registered ${this.client.commands.applicationCommandsSize} application command(s) globally...`);
+            if (!this.client.isClientLogsSilent) this.client.logger.log(`Registered ${this.client.applicationCommands.size} application command(s) globally...`);
         } else {
             await this.client.application.commands.set(commands, guild);
-            if (!this.client.isClientLogsSilent) this.client.logger.log(`Registered ${this.client.commands.applicationCommandsSize} application command(s) to guild ${guild}`);
+            if (!this.client.isClientLogsSilent) this.client.logger.log(`Registered ${this.client.applicationCommands.size} application command(s) to guild ${guild}`);
         }
     }
 
