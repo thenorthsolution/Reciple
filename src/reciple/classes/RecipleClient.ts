@@ -6,7 +6,7 @@ import { CommandCooldownManager, CooledDownUser } from './managers/CommandCooldo
 import { botHasExecutePermissions, userHasCommandPermissions } from '../permissions';
 import { MessageCommandOptionManager } from './managers/MessageCommandOptionManager';
 import { ApplicationCommandManager } from './managers/ApplicationCommandManager';
-import { ClientCommandManager } from './managers/ClientCommandManager';
+import { CommandManager } from './managers/CommandManager';
 import { AnyCommandBuilder, CommandType } from '../types/builders';
 import { ModuleManager } from './managers/ModuleManager';
 import { Config, RecipleConfig } from './RecipleConfig';
@@ -57,7 +57,7 @@ export interface RecipleClient<Ready extends boolean = boolean> extends Client<R
 
 export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready> {
     readonly config: Config = RecipleConfig.getDefaultConfig();
-    readonly commands: ClientCommandManager = new ClientCommandManager({
+    readonly commands: CommandManager = new CommandManager({
         client: this,
     });
     readonly applicationCommands: ApplicationCommandManager;

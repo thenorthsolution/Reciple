@@ -5,19 +5,19 @@ import { SlashCommandBuilder } from '../builders/SlashCommandBuilder';
 import { RecipleClient } from '../RecipleClient';
 import { ApplicationCommandBuilder } from './ApplicationCommandManager';
 
-export interface ClientCommandManagerOptions {
+export interface CommandManagerOptions {
     client: RecipleClient;
     messageCommands?: (MessageCommandBuilder | MessageCommandData)[];
     slashCommands?: (AnySlashCommandBuilder | SlashCommandData)[];
 }
 
-export class ClientCommandManager {
+export class CommandManager {
     readonly client: RecipleClient;
     readonly slashCommands: Collection<string, AnySlashCommandBuilder> = new Collection();
     readonly messageCommands: Collection<string, MessageCommandBuilder> = new Collection();
     readonly additionalApplicationCommands: (ApplicationCommandBuilder | ApplicationCommandData)[] = [];
 
-    constructor(options: ClientCommandManagerOptions) {
+    constructor(options: CommandManagerOptions) {
         this.client = options.client;
 
         options.slashCommands?.forEach(e => this.slashCommands.set(e.name, SlashCommandBuilder.resolveSlashCommand(e)));

@@ -6,7 +6,7 @@ Guide for bots moving from reciple v5 to v6
     <summary>Sections</summary>
 
 - [New Managers](#managers)
-  - [ClientCommandManager](#clientcommandmanager)
+  - [CommandManager](#CommandManager)
   - [ApplicationCommandManager](#applicationcommandmanager)
   - [ModuleManager](#modulemanager)
 
@@ -14,9 +14,9 @@ Guide for bots moving from reciple v5 to v6
 
 
 ## New Managers
-- ### ClientCommandManager
-  - Removed `registerApplicationCommands` function and moved it to `ClientCommandManager#registerCommandManager()`
-  - `RecipleClient#commands` is a `ClientCommandManager`
+- ### CommandManager
+  - Removed `registerApplicationCommands` function and moved it to `CommandManager#registerCommandManager()`
+  - `RecipleClient#commands` is a `CommandManager`
   ```diff
   - await registerApplicationCommands()
   + await RecipleClient.commands.registerApplicationCommands()
