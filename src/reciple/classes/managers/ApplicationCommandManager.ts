@@ -11,6 +11,7 @@ export class ApplicationCommandManager {
     get commands() {
         return [...this.client.commands.additionalApplicationCommands, ...this.client.commands.slashCommands.toJSON()];
     }
+
     get size() {
         return this.commands.length;
     }
