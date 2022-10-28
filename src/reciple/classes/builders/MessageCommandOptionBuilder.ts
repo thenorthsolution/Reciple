@@ -5,10 +5,10 @@ import { Awaitable, isValidationEnabled } from 'discord.js';
  * Option builder for MessageCommandBuilder
  */
 export class MessageCommandOptionBuilder {
-    private _name: string = '';
-    private _description: string = '';
-    private _required: boolean = false;
-    private _validator?: (value: string) => Awaitable<boolean>;
+    protected _name: string = '';
+    protected _description: string = '';
+    protected _required: boolean = false;
+    protected _validator?: (value: string) => Awaitable<boolean>;
 
     get name(): typeof this._name {
         return this._name;

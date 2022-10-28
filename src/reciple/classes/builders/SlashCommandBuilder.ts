@@ -95,11 +95,11 @@ export interface SlashCommandBuilder<T = unknown> extends DiscordJsSlashCommandB
  */
 export class SlashCommandBuilder<T = unknown> extends DiscordJsSlashCommandBuilder implements SharedCommandBuilderProperties<T> {
     public readonly type = CommandType.SlashCommand;
-    private _cooldown: number = 0;
-    private _requiredBotPermissions: PermissionResolvable[] = [];
-    private _requiredMemberPermissions: PermissionResolvable[] = [];
-    private _halt?: SlashCommandHaltFunction<T>;
-    private _execute: SlashCommandExecuteFunction<T> = () => {
+    protected _cooldown: number = 0;
+    protected _requiredBotPermissions: PermissionResolvable[] = [];
+    protected _requiredMemberPermissions: PermissionResolvable[] = [];
+    protected _halt?: SlashCommandHaltFunction<T>;
+    protected _execute: SlashCommandExecuteFunction<T> = () => {
         /* Execute */
     };
     public metadata?: T;

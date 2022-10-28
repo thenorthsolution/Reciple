@@ -73,18 +73,18 @@ export type MessageCommandExecuteFunction<T = unknown> = CommandExecuteFunction<
  */
 export class MessageCommandBuilder<T = unknown> implements SharedCommandBuilderProperties<T> {
     public readonly type = CommandType.MessageCommand;
-    private _name: string = '';
-    private _description: string = '';
-    private _cooldown: number = 0;
-    private _aliases: string[] = [];
-    private _validateOptions: boolean = false;
-    private _options: MessageCommandOptionBuilder[] = [];
-    private _requiredBotPermissions: PermissionResolvable[] = [];
-    private _requiredMemberPermissions: PermissionResolvable[] = [];
-    private _allowExecuteInDM: boolean = true;
-    private _allowExecuteByBots: boolean = false;
-    private _halt?: MessageCommandHaltFunction<T>;
-    private _execute: MessageCommandExecuteFunction<T> = () => {
+    protected _name: string = '';
+    protected _description: string = '';
+    protected _cooldown: number = 0;
+    protected _aliases: string[] = [];
+    protected _validateOptions: boolean = false;
+    protected _options: MessageCommandOptionBuilder[] = [];
+    protected _requiredBotPermissions: PermissionResolvable[] = [];
+    protected _requiredMemberPermissions: PermissionResolvable[] = [];
+    protected _allowExecuteInDM: boolean = true;
+    protected _allowExecuteByBots: boolean = false;
+    protected _halt?: MessageCommandHaltFunction<T>;
+    protected _execute: MessageCommandExecuteFunction<T> = () => {
         /* Execute */
     };
     public metadata?: T;
