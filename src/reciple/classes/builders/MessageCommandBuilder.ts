@@ -89,40 +89,40 @@ export class MessageCommandBuilder<T = unknown> implements SharedCommandBuilderP
     };
     public metadata?: T;
 
-    get name() {
+    get name(): typeof this._name {
         return this._name;
     }
-    get description() {
+    get description(): typeof this._description {
         return this._description;
     }
-    get cooldown() {
+    get cooldown(): typeof this._cooldown {
         return this._cooldown;
     }
-    get aliases() {
+    get aliases(): typeof this._aliases {
         return this._aliases;
     }
-    get validateOptions() {
+    get validateOptions(): typeof this._validateOptions {
         return this._validateOptions;
     }
-    get options() {
+    get options(): typeof this._options {
         return this._options;
     }
-    get requiredBotPermissions() {
+    get requiredBotPermissions(): typeof this._requiredBotPermissions {
         return this._requiredBotPermissions;
     }
-    get requiredMemberPermissions() {
+    get requiredMemberPermissions(): typeof this._requiredMemberPermissions {
         return this._requiredMemberPermissions;
     }
-    get allowExecuteInDM() {
+    get allowExecuteInDM(): typeof this._allowExecuteInDM {
         return this._allowExecuteInDM;
     }
-    get allowExecuteByBots() {
+    get allowExecuteByBots(): typeof this._allowExecuteByBots {
         return this._allowExecuteByBots;
     }
-    get halt() {
+    get halt(): typeof this._halt {
         return this._halt;
     }
-    get execute() {
+    get execute(): typeof this._execute {
         return this._execute;
     }
 

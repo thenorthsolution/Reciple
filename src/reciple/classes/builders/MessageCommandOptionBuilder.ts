@@ -10,16 +10,16 @@ export class MessageCommandOptionBuilder {
     private _required: boolean = false;
     private _validator?: (value: string) => Awaitable<boolean>;
 
-    get name() {
+    get name(): typeof this._name {
         return this._name;
     }
-    get description() {
+    get description(): typeof this._description {
         return this._description;
     }
-    get required() {
+    get required(): typeof this._required {
         return this._required;
     }
-    get validator() {
+    get validator(): typeof this._validator {
         return this._validator;
     }
 

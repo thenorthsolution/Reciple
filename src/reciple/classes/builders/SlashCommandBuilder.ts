@@ -104,19 +104,19 @@ export class SlashCommandBuilder<T = unknown> extends DiscordJsSlashCommandBuild
     };
     public metadata?: T;
 
-    get cooldown() {
+    get cooldown(): typeof this._cooldown {
         return this._cooldown;
     }
-    get requiredBotPermissions() {
+    get requiredBotPermissions(): typeof this._requiredBotPermissions {
         return this._requiredBotPermissions;
     }
-    get requiredMemberPermissions() {
+    get requiredMemberPermissions(): typeof this._requiredMemberPermissions {
         return this._requiredMemberPermissions;
     }
-    get halt() {
+    get halt(): typeof this._halt {
         return this._halt;
     }
-    get execute() {
+    get execute(): typeof this._execute {
         return this._execute;
     }
 
