@@ -57,7 +57,7 @@ export class CommandCooldownManager extends Array<CooledDownUser> {
         if (!Object.keys(options).length) throw new TypeError('Provide atleast one option to remove cooldown data.');
 
         const removed: CooledDownUser[] = [];
-        let i = 0;
+        const i = 0;
 
         for (let i = 0; i < this.length; i++) {
             if (!CommandCooldownManager.checkOptions(options, this[i])) continue;
