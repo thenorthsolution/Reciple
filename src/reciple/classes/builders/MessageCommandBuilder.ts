@@ -1,10 +1,9 @@
 import { CommandType, CommandHaltFunction, CommandExecuteFunction, SharedCommandBuilderProperties, MessageCommandData, MessageCommandOptionResolvable } from '../../types/builders';
-import { disableValidators, Message, normalizeArray, PermissionResolvable, RestOrArray } from 'discord.js';
+import { isValidationEnabled, Message, normalizeArray, PermissionResolvable, RestOrArray } from 'discord.js';
 import { BaseCommandExecuteData, CommandHaltData } from '../../types/commands';
 import { MessageCommandOptionManager } from '../managers/MessageCommandOptionManager';
 import { MessageCommandOptionBuilder } from './MessageCommandOptionBuilder';
 import { Command } from 'fallout-utility';
-import { deprecationWarning } from '../../util';
 
 /**
  * Execute data for message command
@@ -185,7 +184,7 @@ export class MessageCommandBuilder<T = unknown> implements SharedCommandBuilderP
      * @param name Command name
      */
     public setName(name: string): this {
-        if (!name || typeof name !== 'string' || !name.match(/^[\w-]{1,32}$/)) throw new TypeError('name must be a string and match the regex /^[\\w-]{1,32}$/');
+        if (isValidationEnabled() && (!name || typeof name !== 'string' || !name.match(/^[\w-]{1,32}$/))) throw new TypeError('name must be a string and match the regex /^[\\w-]{1,32}$/');
         this.name = name;
 
         return this;
@@ -196,7 +195,7 @@ export class MessageCommandBuilder<T = unknown> implements SharedCommandBuilderP
      * @param description Command description
      */
     public setDescription(description: string): this {
-        if (!description || typeof description !== 'string') throw new TypeError('description must be a string.');
+        if (isValidationEnabled() && (!description || typeof description !== 'string')) throw new TypeError('description must be a string.');
         this.description = description;
         return this;
     }
@@ -231,8 +230,7 @@ export class MessageCommandBuilder<T = unknown> implements SharedCommandBuilderP
      * @param allowExecuteInDM `true` if the command can execute in DMs
      */
     public setAllowExecuteInDM(allowExecuteInDM: boolean): this {
-        if (typeof allowExecuteInDM !== 'boolean') throw new TypeError('allowExecuteInDM must be a boolean.');
-        this.allowExecuteInDM = allowExecuteInDM;
+        this.allowExecuteInDM = !!allowExecuteInDM;
         return this;
     }
 
@@ -241,8 +239,7 @@ export class MessageCommandBuilder<T = unknown> implements SharedCommandBuilderP
      * @param allowExecuteByBots `true` if the command can be executed by bots
      */
     public setAllowExecuteByBots(allowExecuteByBots: boolean): this {
-        if (typeof allowExecuteByBots !== 'boolean') throw new TypeError('allowExecuteByBots must be a boolean.');
-        this.allowExecuteByBots = allowExecuteByBots;
+        this.allowExecuteByBots = !!allowExecuteByBots;
         return this;
     }
 
@@ -254,8 +251,10 @@ export class MessageCommandBuilder<T = unknown> implements SharedCommandBuilderP
         for (const optionResolvable of normalizeArray(options)) {
             const option = typeof optionResolvable === 'function' ? optionResolvable(new MessageCommandOptionBuilder()) : optionResolvable instanceof MessageCommandOptionBuilder ? optionResolvable : MessageCommandOptionBuilder.resolveMessageCommandOption(optionResolvable);
 
-            if (this.options.find(o => o.name === option.name)) throw new TypeError('option with name "' + option.name + '" already exists.');
-            if (this.options.length > 0 && !this.options[this.options.length - 1 < 0 ? 0 : this.options.length - 1].required && option.required) throw new TypeError('All required options must be before optional options.');
+            if (isValidationEnabled()) {
+                if (this.options.find(o => o.name === option.name)) throw new TypeError('option with name "' + option.name + '" already exists.');
+                if (this.options.length > 0 && !this.options[this.options.length - 1 < 0 ? 0 : this.options.length - 1].required && option.required) throw new TypeError('All required options must be before optional options.');
+            }
 
             this.options.push(option);
         }
@@ -277,8 +276,7 @@ export class MessageCommandBuilder<T = unknown> implements SharedCommandBuilderP
      * @param validateOptions `true` if the command options needs to be validated before executing
      */
     public setValidateOptions(validateOptions: boolean): this {
-        if (typeof validateOptions !== 'boolean') throw new TypeError('validateOptions must be a boolean.');
-        this.validateOptions = validateOptions;
+        this.validateOptions = !!validateOptions;
         return this;
     }
 
@@ -303,7 +301,7 @@ export class MessageCommandBuilder<T = unknown> implements SharedCommandBuilderP
     }
 
     public setExecute(execute: MessageCommandExecuteFunction<T>): this {
-        if (!execute || typeof execute !== 'function') throw new TypeError('execute must be a function.');
+        if (isValidationEnabled() && (!execute || typeof execute !== 'function')) throw new TypeError('execute must be a function.');
         this.execute = execute;
         return this;
     }

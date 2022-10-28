@@ -1,5 +1,5 @@
 import { MessageCommandOptionData, MessageCommandOptionResolvable } from '../../types/builders';
-import { Awaitable } from 'discord.js';
+import { Awaitable, isValidationEnabled } from 'discord.js';
 
 /**
  * Option builder for MessageCommandBuilder
@@ -22,7 +22,7 @@ export class MessageCommandOptionBuilder {
      * @param name Option name
      */
     public setName(name: string): this {
-        if (typeof name !== 'string' || !name.match(/^[\w-]{1,32}$/)) throw new TypeError('name must be a string and match the regex /^[\\w-]{1,32}$/.');
+        if (isValidationEnabled() && (typeof name !== 'string' || !name.match(/^[\w-]{1,32}$/))) throw new TypeError('name must be a string and match the regex /^[\\w-]{1,32}$/.');
         this.name = name;
         return this;
     }
@@ -32,7 +32,7 @@ export class MessageCommandOptionBuilder {
      * @param description Option description
      */
     public setDescription(description: string): this {
-        if (!description || typeof description !== 'string') throw new TypeError('description must be a string.');
+        if (isValidationEnabled() && (!description || typeof description !== 'string')) throw new TypeError('description must be a string.');
         this.description = description;
         return this;
     }
@@ -42,8 +42,7 @@ export class MessageCommandOptionBuilder {
      * @param required `true` if this option is required
      */
     public setRequired(required: boolean): this {
-        if (typeof required !== 'boolean') throw new TypeError('required must be a boolean.');
-        this.required = required;
+        this.required = !!required;
         return this;
     }
 
@@ -52,7 +51,7 @@ export class MessageCommandOptionBuilder {
      * @param validator Custom function to validate value given for this option
      */
     public setValidator(validator: (value: string) => Awaitable<boolean>): this {
-        if (!validator || typeof validator !== 'function') throw new TypeError('validator must be a function.');
+        if (isValidationEnabled() && (!validator || typeof validator !== 'function')) throw new TypeError('validator must be a function.');
         this.validator = validator;
         return this;
     }
