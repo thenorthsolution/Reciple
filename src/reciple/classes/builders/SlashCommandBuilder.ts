@@ -22,6 +22,7 @@ import {
     ApplicationCommandOptionType,
     SharedSlashCommandOptions,
     PermissionsBitField,
+    isValidationEnabled,
 } from 'discord.js';
 
 /**
@@ -161,29 +162,29 @@ export class SlashCommandBuilder<T = unknown> extends DiscordJsSlashCommandBuild
     }
 
     public setCooldown(cooldown: number): this {
-        this.cooldown = cooldown;
+        this._cooldown = cooldown;
         return this;
     }
 
     public setRequiredBotPermissions(...permissions: RestOrArray<PermissionResolvable>): this {
-        this.requiredBotPermissions = normalizeArray(permissions);
+        this._requiredBotPermissions = normalizeArray(permissions);
         return this;
     }
 
     public setRequiredMemberPermissions(...permissions: RestOrArray<PermissionResolvable>): this {
-        this.requiredMemberPermissions = normalizeArray(permissions);
+        this._requiredMemberPermissions = normalizeArray(permissions);
         this.setDefaultMemberPermissions(this.requiredMemberPermissions.length ? new PermissionsBitField(this.requiredMemberPermissions).bitfield : undefined);
         return this;
     }
 
     public setHalt(halt?: SlashCommandHaltFunction<T> | null): this {
-        this.halt = halt ?? undefined;
+        this._halt = halt || undefined;
         return this;
     }
 
     public setExecute(execute: SlashCommandExecuteFunction<T>): this {
-        if (!execute || typeof execute !== 'function') throw new Error('execute must be a function.');
-        this.execute = execute;
+        if (isValidationEnabled() && (!execute || typeof execute !== 'function')) throw new Error('execute must be a function.');
+        this._execute = execute;
         return this;
     }
 
