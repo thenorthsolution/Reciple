@@ -185,7 +185,7 @@ export class MessageCommandBuilder<T = unknown> implements SharedCommandBuilderP
      */
     public setName(name: string): this {
         if (isValidationEnabled() && (!name || typeof name !== 'string' || !name.match(/^[\w-]{1,32}$/))) throw new TypeError('name must be a string and match the regex /^[\\w-]{1,32}$/');
-        this.name = name;
+        this._name = name;
 
         return this;
     }
@@ -196,7 +196,7 @@ export class MessageCommandBuilder<T = unknown> implements SharedCommandBuilderP
      */
     public setDescription(description: string): this {
         if (isValidationEnabled() && (!description || typeof description !== 'string')) throw new TypeError('description must be a string.');
-        this.description = description;
+        this._description = description;
         return this;
     }
 
@@ -211,7 +211,7 @@ export class MessageCommandBuilder<T = unknown> implements SharedCommandBuilderP
         if (aliases.some(a => !a || typeof a !== 'string' || a.match(/^\s+$/))) throw new TypeError('aliases must be strings and should not contain whitespaces');
         if (this.name && aliases.some(a => a == this.name)) throw new TypeError('alias cannot have same name to its real command name');
 
-        this.aliases = [...new Set(aliases.map(s => s.toLowerCase()))];
+        this._aliases = [...new Set(aliases.map(s => s.toLowerCase()))];
         return this;
     }
 
@@ -230,7 +230,7 @@ export class MessageCommandBuilder<T = unknown> implements SharedCommandBuilderP
      * @param allowExecuteInDM `true` if the command can execute in DMs
      */
     public setAllowExecuteInDM(allowExecuteInDM: boolean): this {
-        this.allowExecuteInDM = !!allowExecuteInDM;
+        this._allowExecuteInDM = !!allowExecuteInDM;
         return this;
     }
 
@@ -239,7 +239,7 @@ export class MessageCommandBuilder<T = unknown> implements SharedCommandBuilderP
      * @param allowExecuteByBots `true` if the command can be executed by bots
      */
     public setAllowExecuteByBots(allowExecuteByBots: boolean): this {
-        this.allowExecuteByBots = !!allowExecuteByBots;
+        this._allowExecuteByBots = !!allowExecuteByBots;
         return this;
     }
 
@@ -256,7 +256,7 @@ export class MessageCommandBuilder<T = unknown> implements SharedCommandBuilderP
                 if (this.options.length > 0 && !this.options[this.options.length - 1 < 0 ? 0 : this.options.length - 1].required && option.required) throw new TypeError('All required options must be before optional options.');
             }
 
-            this.options.push(option);
+            this._options.push(option);
         }
 
         return this;
@@ -276,33 +276,33 @@ export class MessageCommandBuilder<T = unknown> implements SharedCommandBuilderP
      * @param validateOptions `true` if the command options needs to be validated before executing
      */
     public setValidateOptions(validateOptions: boolean): this {
-        this.validateOptions = !!validateOptions;
+        this._validateOptions = !!validateOptions;
         return this;
     }
 
     public setCooldown(cooldown: number): this {
-        this.cooldown = cooldown;
+        this._cooldown = cooldown;
         return this;
     }
 
     public setRequiredBotPermissions(...permissions: RestOrArray<PermissionResolvable>): this {
-        this.requiredBotPermissions = normalizeArray(permissions);
+        this._requiredBotPermissions = normalizeArray(permissions);
         return this;
     }
 
     public setRequiredMemberPermissions(...permissions: RestOrArray<PermissionResolvable>): this {
-        this.requiredMemberPermissions = normalizeArray(permissions);
+        this._requiredMemberPermissions = normalizeArray(permissions);
         return this;
     }
 
     public setHalt(halt?: MessageCommandHaltFunction<T> | null): this {
-        this.halt = halt ?? undefined;
+        this._halt = halt || undefined;
         return this;
     }
 
     public setExecute(execute: MessageCommandExecuteFunction<T>): this {
         if (isValidationEnabled() && (!execute || typeof execute !== 'function')) throw new TypeError('execute must be a function.');
-        this.execute = execute;
+        this._execute = execute;
         return this;
     }
 
