@@ -127,7 +127,7 @@ export class MessageCommandBuilder<T = unknown> implements SharedCommandBuilderP
     }
 
     set name(name: typeof this._name) {
-        this.setName(name)
+        this.setName(name);
     }
     set description(description: typeof this._description) {
         this.setDescription(description);
@@ -266,7 +266,7 @@ export class MessageCommandBuilder<T = unknown> implements SharedCommandBuilderP
      * Replace options from command
      * @params options Message options
      */
-    public setOptions(...options: RestOrArray<MessageCommandOptionResolvable|((builder: MessageCommandOptionBuilder) => MessageCommandOptionBuilder)>): this {
+    public setOptions(...options: RestOrArray<MessageCommandOptionResolvable | ((builder: MessageCommandOptionBuilder) => MessageCommandOptionBuilder)>): this {
         this._options = [];
         return this.addOptions(...options);
     }
