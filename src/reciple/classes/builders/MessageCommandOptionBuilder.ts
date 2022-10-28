@@ -10,19 +10,27 @@ export class MessageCommandOptionBuilder {
     private _required: boolean = false;
     private _validator?: (value: string) => Awaitable<boolean>;
 
-    get name() { return this._name; }
-    get description() { return this._description; }
-    get required() { return this._required; }
-    get validator() { return this._validator; }
+    get name() {
+        return this._name;
+    }
+    get description() {
+        return this._description;
+    }
+    get required() {
+        return this._required;
+    }
+    get validator() {
+        return this._validator;
+    }
 
     set name(name: typeof this._name) {
-        this.setName(name)
+        this.setName(name);
     }
     set description(description: typeof this._description) {
-        this.setDescription(description)
+        this.setDescription(description);
     }
     set required(required: typeof this._required) {
-        this.setRequired(required)
+        this.setRequired(required);
     }
     set validator(validator: typeof this._validator) {
         this.setValidator(validator);
@@ -69,7 +77,7 @@ export class MessageCommandOptionBuilder {
      * @param validator Custom function to validate value given for this option
      */
     public setValidator(validator?: (value: string) => Awaitable<boolean>): this {
-        if (isValidationEnabled() && (validator !== undefined && typeof validator !== 'function')) throw new TypeError('validator must be a function.');
+        if (isValidationEnabled() && validator !== undefined && typeof validator !== 'function') throw new TypeError('validator must be a function.');
         this._validator = validator;
         return this;
     }
