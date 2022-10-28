@@ -94,14 +94,46 @@ export interface SlashCommandBuilder<T = unknown> extends DiscordJsSlashCommandB
  */
 export class SlashCommandBuilder<T = unknown> extends DiscordJsSlashCommandBuilder implements SharedCommandBuilderProperties<T> {
     public readonly type = CommandType.SlashCommand;
-    public cooldown: number = 0;
-    public requiredBotPermissions: PermissionResolvable[] = [];
-    public requiredMemberPermissions: PermissionResolvable[] = [];
-    public halt?: SlashCommandHaltFunction<T>;
-    public execute: SlashCommandExecuteFunction<T> = () => {
+    private _cooldown: number = 0;
+    private _requiredBotPermissions: PermissionResolvable[] = [];
+    private _requiredMemberPermissions: PermissionResolvable[] = [];
+    private _halt?: SlashCommandHaltFunction<T>;
+    private _execute: SlashCommandExecuteFunction<T> = () => {
         /* Execute */
     };
     public metadata?: T;
+
+    get cooldown() {
+        return this._cooldown;
+    }
+    get requiredBotPermissions() {
+        return this._requiredBotPermissions;
+    }
+    get requiredMemberPermissions() {
+        return this._requiredMemberPermissions;
+    }
+    get halt() {
+        return this._halt;
+    }
+    get execute() {
+        return this._execute;
+    }
+
+    set cooldown(cooldown: typeof this._cooldown) {
+        this.setCooldown(cooldown);
+    }
+    set requiredBotPermissions(permissions: typeof this._requiredBotPermissions) {
+        this.setRequiredBotPermissions(permissions);
+    }
+    set requiredMemberPermissions(permissions: typeof this._requiredMemberPermissions) {
+        this.setRequiredMemberPermissions(permissions);
+    }
+    set halt(halt: typeof this._halt) {
+        this.setHalt(halt);
+    }
+    set execute(execute: typeof this._execute) {
+        this.setExecute(execute);
+    }
 
     constructor(data?: Partial<Omit<SlashCommandData<T>, 'type'>>) {
         super();

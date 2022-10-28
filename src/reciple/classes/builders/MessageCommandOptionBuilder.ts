@@ -1,4 +1,4 @@
-import { MessageCommandOptionData } from '../../types/builders';
+import { MessageCommandOptionData, MessageCommandOptionResolvable } from '../../types/builders';
 import { Awaitable } from 'discord.js';
 
 /**
@@ -70,7 +70,7 @@ export class MessageCommandOptionBuilder {
      * Resolves message command option data/builder
      * @param option Option data to resolve
      */
-    public static resolveMessageCommandOption(option: MessageCommandOptionBuilder | MessageCommandOptionBuilder): MessageCommandOptionBuilder {
+    public static resolveMessageCommandOption(option: MessageCommandOptionResolvable): MessageCommandOptionBuilder {
         return this.isMessageCommandOption(option) ? option : new MessageCommandOptionBuilder(option);
     }
 

@@ -1,5 +1,5 @@
-import { MessageCommandBuilder, MessageCommandExecuteData, MessageCommandHaltData, validateMessageCommandOptions } from './builders/MessageCommandBuilder';
 import { Awaitable, ChannelType, ChatInputCommandInteraction, Client, ClientEvents, ClientOptions, Interaction, Message } from 'discord.js';
+import { MessageCommandBuilder, MessageCommandExecuteData, MessageCommandHaltData } from './builders/MessageCommandBuilder';
 import { SlashCommandBuilder, SlashCommandExecuteData, SlashCommandHaltData } from './builders/SlashCommandBuilder';
 import { AnyCommandExecuteData, AnyCommandHaltData, CommandHaltReason } from '../types/commands';
 import { CommandCooldownManager, CooledDownUser } from './managers/CommandCooldownManager';
@@ -193,7 +193,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
         const command = this.commands.get(parseCommand.command, CommandType.MessageCommand);
         if (!command) return;
 
-        const commandOptions = await validateMessageCommandOptions(command, parseCommand);
+        const commandOptions = await MessageCommandBuilder.validateOptions(command, parseCommand);
         const executeData: MessageCommandExecuteData = {
             message: message,
             options: commandOptions,

@@ -68,8 +68,8 @@
   },
   "devDependencies": {
     "@discordjs/docgen": "^0.12.1",
-    "@types/node": "^18.11.0",
-    "@types/semver": "^7.3.12",
+    "@types/node": "^18.11.7",
+    "@types/semver": "^7.3.13",
     "discord.js": "^14.6.0",
     "prettier": "2.7.1",
     "rimraf": "^3.0.2",

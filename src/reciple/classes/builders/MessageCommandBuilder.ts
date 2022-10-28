@@ -1,9 +1,10 @@
-import { CommandType, CommandHaltFunction, CommandExecuteFunction, SharedCommandBuilderProperties, MessageCommandData } from '../../types/builders';
-import { Message, normalizeArray, PermissionResolvable, RestOrArray } from 'discord.js';
+import { CommandType, CommandHaltFunction, CommandExecuteFunction, SharedCommandBuilderProperties, MessageCommandData, MessageCommandOptionResolvable } from '../../types/builders';
+import { disableValidators, Message, normalizeArray, PermissionResolvable, RestOrArray } from 'discord.js';
 import { BaseCommandExecuteData, CommandHaltData } from '../../types/commands';
 import { MessageCommandOptionManager } from '../managers/MessageCommandOptionManager';
 import { MessageCommandOptionBuilder } from './MessageCommandOptionBuilder';
 import { Command } from 'fallout-utility';
+import { deprecationWarning } from '../../util';
 
 /**
  * Execute data for message command
@@ -73,21 +74,95 @@ export type MessageCommandExecuteFunction<T = unknown> = CommandExecuteFunction<
  */
 export class MessageCommandBuilder<T = unknown> implements SharedCommandBuilderProperties<T> {
     public readonly type = CommandType.MessageCommand;
-    public name: string = '';
-    public description: string = '';
-    public cooldown: number = 0;
-    public aliases: string[] = [];
-    public validateOptions: boolean = false;
-    public options: MessageCommandOptionBuilder[] = [];
-    public requiredBotPermissions: PermissionResolvable[] = [];
-    public requiredMemberPermissions: PermissionResolvable[] = [];
-    public allowExecuteInDM: boolean = true;
-    public allowExecuteByBots: boolean = false;
-    public halt?: MessageCommandHaltFunction<T>;
-    public execute: MessageCommandExecuteFunction<T> = () => {
+    private _name: string = '';
+    private _description: string = '';
+    private _cooldown: number = 0;
+    private _aliases: string[] = [];
+    private _validateOptions: boolean = false;
+    private _options: MessageCommandOptionBuilder[] = [];
+    private _requiredBotPermissions: PermissionResolvable[] = [];
+    private _requiredMemberPermissions: PermissionResolvable[] = [];
+    private _allowExecuteInDM: boolean = true;
+    private _allowExecuteByBots: boolean = false;
+    private _halt?: MessageCommandHaltFunction<T>;
+    private _execute: MessageCommandExecuteFunction<T> = () => {
         /* Execute */
     };
     public metadata?: T;
+
+    get name() {
+        return this._name;
+    }
+    get description() {
+        return this._description;
+    }
+    get cooldown() {
+        return this._cooldown;
+    }
+    get aliases() {
+        return this._aliases;
+    }
+    get validateOptions() {
+        return this._validateOptions;
+    }
+    get options() {
+        return this._options;
+    }
+    get requiredBotPermissions() {
+        return this._requiredBotPermissions;
+    }
+    get requiredMemberPermissions() {
+        return this._requiredMemberPermissions;
+    }
+    get allowExecuteInDM() {
+        return this._allowExecuteInDM;
+    }
+    get allowExecuteByBots() {
+        return this._allowExecuteByBots;
+    }
+    get halt() {
+        return this._halt;
+    }
+    get execute() {
+        return this._execute;
+    }
+
+    set name(name: typeof this._name) {
+        this.setName(name)
+    }
+    set description(description: typeof this._description) {
+        this.setDescription(description);
+    }
+    set cooldown(cooldown: typeof this._cooldown) {
+        this.setCooldown(cooldown);
+    }
+    set aliases(aliases: typeof this._aliases) {
+        this.addAliases(aliases);
+    }
+    set validateOptions(validate: typeof this._validateOptions) {
+        this.setValidateOptions(validate);
+    }
+    set options(options: MessageCommandOptionResolvable[]) {
+        this.setOptions(options);
+    }
+    set requiredBotPermissions(permissions: typeof this._requiredBotPermissions) {
+        this.setRequiredBotPermissions(permissions);
+    }
+    set requiredMemberPermissions(permissions: typeof this._requiredMemberPermissions) {
+        this.setRequiredMemberPermissions(permissions);
+    }
+    set allowExecuteInDM(allow: typeof this._allowExecuteInDM) {
+        this.setAllowExecuteInDM(allow);
+    }
+    set allowExecuteByBots(allow: typeof this._allowExecuteByBots) {
+        this.setAllowExecuteByBots(allow);
+    }
+    set halt(halt: typeof this._halt) {
+        this.setHalt(halt);
+    }
+    set execute(execute: typeof this._execute) {
+        this.setExecute(execute);
+    }
 
     constructor(data?: Partial<Omit<MessageCommandData<T>, 'type'>>) {
         if (data?.name !== undefined) this.setName(data.name);
@@ -112,6 +187,7 @@ export class MessageCommandBuilder<T = unknown> implements SharedCommandBuilderP
     public setName(name: string): this {
         if (!name || typeof name !== 'string' || !name.match(/^[\w-]{1,32}$/)) throw new TypeError('name must be a string and match the regex /^[\\w-]{1,32}$/');
         this.name = name;
+
         return this;
     }
 
@@ -141,6 +217,16 @@ export class MessageCommandBuilder<T = unknown> implements SharedCommandBuilderP
     }
 
     /**
+     * Replace aliases from command builder
+     * @param aliases Command aliases
+     */
+    public setAliases(...aliases: RestOrArray<string>): this {
+        this._aliases = [];
+
+        return this.addAliases(...aliases);
+    }
+
+    /**
      * Set if command can be executed in dms
      * @param allowExecuteInDM `true` if the command can execute in DMs
      */
@@ -161,19 +247,29 @@ export class MessageCommandBuilder<T = unknown> implements SharedCommandBuilderP
     }
 
     /**
-     * Add option to the command
-     * @param option Message option builder
+     * Add options to command
+     * @param options Message options
      */
-    public addOption(option: MessageCommandOptionBuilder | ((constructor: MessageCommandOptionBuilder) => MessageCommandOptionBuilder)): this {
-        if (!option) throw new TypeError('option must be a MessageOption.');
+    public addOptions(...options: RestOrArray<MessageCommandOptionResolvable | ((builder: MessageCommandOptionBuilder) => MessageCommandOptionBuilder)>): this {
+        for (const optionResolvable of normalizeArray(options)) {
+            const option = typeof optionResolvable === 'function' ? optionResolvable(new MessageCommandOptionBuilder()) : optionResolvable instanceof MessageCommandOptionBuilder ? optionResolvable : MessageCommandOptionBuilder.resolveMessageCommandOption(optionResolvable);
 
-        option = typeof option === 'function' ? option(new MessageCommandOptionBuilder()) : option;
+            if (this.options.find(o => o.name === option.name)) throw new TypeError('option with name "' + option.name + '" already exists.');
+            if (this.options.length > 0 && !this.options[this.options.length - 1 < 0 ? 0 : this.options.length - 1].required && option.required) throw new TypeError('All required options must be before optional options.');
 
-        if (this.options.find(o => o.name === option.name)) throw new TypeError('option with name "' + option.name + '" already exists.');
-        if (this.options.length > 0 && !this.options[this.options.length - 1 < 0 ? 0 : this.options.length - 1].required && option.required) throw new TypeError('All required options must be before optional options.');
+            this.options.push(option);
+        }
 
-        this.options.push(option);
         return this;
+    }
+
+    /**
+     * Replace options from command
+     * @params options Message options
+     */
+    public setOptions(...options: RestOrArray<MessageCommandOptionResolvable|((builder: MessageCommandOptionBuilder) => MessageCommandOptionBuilder)>): this {
+        this._options = [];
+        return this.addOptions(...options);
     }
 
     /**
@@ -235,7 +331,7 @@ export class MessageCommandBuilder<T = unknown> implements SharedCommandBuilderP
             allowExecuteByBots: this.allowExecuteByBots,
             allowExecuteInDM: this.allowExecuteInDM,
             validateOptions: this.validateOptions,
-            options: this.options.map(o => o.toJSON()),
+            options: this.options.map(o => (o instanceof MessageCommandOptionBuilder ? o.toJSON() : o)),
         };
     }
 
@@ -262,48 +358,48 @@ export class MessageCommandBuilder<T = unknown> implements SharedCommandBuilderP
     public static isMessageCommandExecuteData(executeData: unknown): executeData is MessageCommandExecuteData {
         return (executeData as MessageCommandExecuteData).builder !== undefined && this.isMessageCommandBuilder((executeData as MessageCommandExecuteData).builder);
     }
-}
 
-/**
- * Validate message command options
- * @param builder Command builder
- * @param options Parsed command args
- */
-export async function validateMessageCommandOptions(builder: MessageCommandBuilder, options: Command): Promise<MessageCommandOptionManager> {
-    const args = options.args || [];
-    const required = builder.options.filter(o => o.required);
-    const optional = builder.options.filter(o => !o.required);
-    const allOptions = [...required, ...optional];
-    const result: MessageCommandValidatedOption[] = [];
+    /**
+     * Validate message command options
+     * @param builder Command builder
+     * @param options Parsed command args
+     */
+    public static async validateOptions(builder: MessageCommandBuilder, options: Command): Promise<MessageCommandOptionManager> {
+        const args = options.args || [];
+        const required = builder.options.filter(o => o.required);
+        const optional = builder.options.filter(o => !o.required);
+        const allOptions = [...required, ...optional];
+        const result: MessageCommandValidatedOption[] = [];
 
-    let i = 0;
-    for (const option of allOptions) {
-        const arg = args[i];
-        const value: MessageCommandValidatedOption = {
-            name: option.name,
-            value: arg ?? undefined,
-            required: option.required,
-            invalid: false,
-            missing: false,
-        };
+        let i = 0;
+        for (const option of allOptions) {
+            const arg = args[i];
+            const value: MessageCommandValidatedOption = {
+                name: option.name,
+                value: arg ?? undefined,
+                required: !!option.required,
+                invalid: false,
+                missing: false,
+            };
 
-        if (arg == undefined && option.required) {
-            value.missing = true;
+            if (arg == undefined && option.required) {
+                value.missing = true;
+                result.push(value);
+                continue;
+            }
+
+            if (arg == undefined && !option.required) {
+                result.push(value);
+                continue;
+            }
+
+            const validate = option.validator ? await Promise.resolve(option.validator(arg)) : true;
+            if (!validate) value.invalid = true;
+
             result.push(value);
-            continue;
+            i++;
         }
 
-        if (arg == undefined && !option.required) {
-            result.push(value);
-            continue;
-        }
-
-        const validate = option.validator ? await Promise.resolve(option.validator(arg)) : true;
-        if (!validate) value.invalid = true;
-
-        result.push(value);
-        i++;
+        return new MessageCommandOptionManager(...result);
     }
-
-    return new MessageCommandOptionManager(...result);
 }
