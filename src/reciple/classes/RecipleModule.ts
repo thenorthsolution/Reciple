@@ -1,5 +1,5 @@
 import { randomUUID } from 'crypto';
-import { Collection, GuildResolvable, normalizeArray, RestOrArray } from 'discord.js';
+import { GuildResolvable, normalizeArray, RestOrArray } from 'discord.js';
 import { AnyCommandBuilder, AnyCommandData, CommandType } from '../types/builders';
 import { validateCommandBuilder } from '../util';
 import { MessageCommandBuilder } from './builders/MessageCommandBuilder';
