@@ -3,7 +3,7 @@ import { Collection, normalizeArray, RestOrArray } from 'discord.js';
 import { existsSync, lstatSync, mkdirSync, readdirSync } from 'fs';
 import { RecipleModule, RecipleScript } from '../RecipleModule';
 import { RecipleClient } from '../RecipleClient';
-import { path } from '../../util';
+import { path, readDirTree } from '../../util';
 import { inspect } from 'util';
 import { isMatch } from 'micromatch';
 
@@ -184,12 +184,12 @@ export class ModuleManager {
             if (!lstatSync(dir).isDirectory()) continue;
 
             modules.push(
-                ...readdirSync(dir)
-                    .map(file => path.join(!dir.startsWith('/') ? this.client.cwd : '', dir, file))
-                    .filter(file => (options?.filter ? options.filter(file) : file.endsWith('.js')))
+                ...readDirTree(dir, file => (options?.filter ? options.filter(file) : file.endsWith('.js')) && lstatSync(file).isFile())
             );
         }
 
-        return modules.filter(file => !isMatch(path.basename(file), options?.ignoredFiles ?? this.client.config.ignoredFiles));
+        return modules
+            .map(file => path.join(!file.startsWith('/') ? this.client.cwd : '', file))
+            .filter(file => !isMatch(path.basename(file), options?.ignoredFiles ?? this.client.config.ignoredFiles));
     }
 }

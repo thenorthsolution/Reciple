@@ -3,6 +3,7 @@ import { AnyCommandBuilder, CommandType } from './types/builders';
 import { flags } from './flags';
 import chalk from 'chalk';
 import _path from 'path';
+import { lstatSync, readdirSync } from 'fs';
 
 /**
  * Check if an object is a class
@@ -24,11 +25,34 @@ export function deprecationWarning(content: string | Error): void {
     process.emitWarning(content, 'DeprecationWarning');
 }
 
-export function validateCommandBuilder(command: AnyCommandBuilder): boolean {
+/**
+ * Validate a command builder
+ * @param command command builder
+ */
+export function validateCommandBuilder(command: AnyCommandBuilder): command is AnyCommandBuilder {
     if (!command.name) return false;
     if (command.type === CommandType.MessageCommand && command.options.length && command.options.some(o => !o.name)) return false;
 
     return true;
+}
+
+export function readDirTree(folder: string, filter?: (file: string) => boolean): string[] {
+    const folders: string[] = [];
+    const files = readdirSync(folder);
+
+    for (const file of files) {
+        const next = path.join(folder, file);
+
+        if (filter && !filter(next)) continue;
+        if (lstatSync(next).isDirectory()) {
+            folders.push(...readDirTree(next));
+            continue;
+        }
+
+        folders.push(next);
+    }
+
+    return folders;
 }
 
 /**
@@ -37,7 +61,7 @@ export function validateCommandBuilder(command: AnyCommandBuilder): boolean {
  * @param debugmode display debug messages
  * @param colorizeMessage add logger colours to messages
  */
-export function createLogger(stringifyJSON: boolean, debugmode: boolean = false, colorizeMessage: boolean = true) {
+export function createLogger(stringifyJSON: boolean, debugmode: boolean = false, colorizeMessage: boolean = true): Logger {
     return new Logger({
         stringifyJSON: stringifyJSON,
         enableDebugMode: (flags.debugmode as boolean | undefined) ?? debugmode,
