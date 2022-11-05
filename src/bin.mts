@@ -2,14 +2,14 @@
 
 import { RecipleClient } from './reciple/classes/RecipleClient.js';
 import { RecipleConfig } from './reciple/classes/RecipleConfig.js';
-import { rawVersion } from './reciple/version.js';
 import { existsSync, mkdirSync, readdirSync } from 'fs';
+import { rawVersion } from './reciple/version.js';
 import { cwd, flags } from './reciple/flags.js';
-import { input } from 'fallout-utility';
 import { path } from './reciple/util.js';
+import { input } from 'fallout-utility';
+import { inspect } from 'util';
 import chalk from 'chalk';
 import 'dotenv/config';
-import { inspect } from 'util';
 
 const allowedFiles = ['node_modules', 'reciple.yml', 'package.json'];
 const configPath = path.join(cwd, 'reciple.yml');
