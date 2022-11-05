@@ -1,15 +1,16 @@
 {
   "name": "reciple",
+  "license": "GPL-3.0",
   "version": "6.0.0-dev.23",
   "bin": "./dist/lib/bin.mjs",
-  "license": "GPL-3.0",
-  "type": "commonjs",
-  "main": "./dist/lib/index.js",
-  "types": "./dist/types/index.d.ts",
-  "module": "./dist/lib/esm.mjs",
   "author": "FalloutStudios",
+  "main": "./dist/lib/index.js",
+  "module": "./dist/lib/esm.mjs",
+  "types": "./dist/types/index.d.ts",
   "description": "Handler for Discord.js",
   "homepage": "https://reciple.js.org",
+  "engineStrict": true,
+  "type": "commonjs",
   "exports": {
     ".": {
       "import": {
@@ -33,6 +34,18 @@
   "bugs": {
     "url": "https://github.com/FalloutStudios/reciple/issues"
   },
+  "engines": {
+    "node": ">=16.9.0"
+  },
+  "workspaces": [
+    "test"
+  ],
+  "files": [
+    "dist",
+    "resource",
+    "LICENSE",
+    "README.md"
+  ],
   "scripts": {
     "format": "npx prettier --write src",
     "clean": "npx rimraf dist",
@@ -47,16 +60,6 @@
     "type": "git",
     "url": "git+https://github.com/FalloutStudios/reciple.git"
   },
-  "engineStrict": true,
-  "engines": {
-    "node": ">=16.9.0"
-  },
-  "files": [
-    "dist",
-    "resource",
-    "LICENSE",
-    "README.md"
-  ],
   "dependencies": {
     "chalk": "4.1.2",
     "commander": "^9.4.1",
@@ -77,8 +80,5 @@
   },
   "peerDependencies": {
     "discord.js": "^14.5.0"
-  },
-  "workspaces": [
-    "test"
-  ]
+  }
 }
