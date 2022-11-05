@@ -53,7 +53,7 @@ export interface ModuleManagerGetModulePathsOptions {
      * @param file Loaded javascript file
      * @returns `true` if the path is acceptable
      */
-    filter?: (file: string) => boolean;
+    filter?: (file: string) => Awaitable<boolean>;
 }
 
 export interface ModuleManagerStartModulesOptions {
