@@ -3,9 +3,9 @@ import { Collection, normalizeArray, RestOrArray } from 'discord.js';
 import { existsSync, lstatSync, mkdirSync, readdirSync } from 'fs';
 import { RecipleModule, RecipleScript } from '../RecipleModule';
 import { RecipleClient } from '../RecipleClient';
-import wildcardMatch from 'wildcard-match';
 import { path } from '../../util';
 import { inspect } from 'util';
+import { isMatch } from 'micromatch';
 
 export interface ModuleManagerOptions {
     client: RecipleClient;
@@ -190,6 +190,6 @@ export class ModuleManager {
             );
         }
 
-        return modules.filter(file => !(options?.ignoredFiles ?? this.client.config.ignoredFiles).some(ignored => wildcardMatch(ignored)(path.basename(file))));
+        return modules.filter(file => !isMatch(path.basename(file), options?.ignoredFiles ?? this.client.config.ignoredFiles));
     }
 }

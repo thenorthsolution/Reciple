@@ -65,12 +65,13 @@
     "commander": "^9.4.1",
     "dotenv": "^16.0.3",
     "fallout-utility": "^1.5.13",
+    "micromatch": "^4.0.5",
     "semver": "^7.3.7",
-    "wildcard-match": "^5.1.2",
     "yaml": "^2.1.1"
   },
   "devDependencies": {
     "@discordjs/docgen": "^0.12.1",
+    "@types/micromatch": "^4.0.2",
     "@types/node": "^18.11.7",
     "@types/semver": "^7.3.13",
     "discord.js": "^14.6.0",

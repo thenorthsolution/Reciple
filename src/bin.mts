@@ -7,20 +7,21 @@ import { rawVersion } from './reciple/version.js';
 import { cwd, flags } from './reciple/flags.js';
 import { path } from './reciple/util.js';
 import { input } from 'fallout-utility';
+import match from 'micromatch';
 import { inspect } from 'util';
 import chalk from 'chalk';
 import 'dotenv/config';
 
-const allowedFiles = ['node_modules', 'reciple.yml', 'package.json'];
+const allowedFiles = ['node_modules', 'reciple.yml', 'package.json', '.*'];
 const configPath = path.join(cwd, 'reciple.yml');
 
 if (!existsSync(cwd)) mkdirSync(cwd, { recursive: true });
-if (readdirSync(cwd).filter(f => !f.startsWith('.') && allowedFiles.indexOf(f)).length > 0 && !existsSync(flags.config ?? configPath)) {
+if (readdirSync(cwd).some(f => match.isMatch(f, allowedFiles)) && !existsSync(flags.config ?? configPath)) {
     const ask = (flags.yes ? 'y' : null) ?? input('This directory does not contain reciple.yml. Would you like to init axis here? [y/n] ') ?? '';
     if (ask.toString().toLowerCase() !== 'y') process.exit(0);
 }
 
-let configParser;
+let configParser: RecipleConfig;
 
 try {
     configParser = new RecipleConfig(flags.config ?? configPath).parseConfig();
