@@ -1,7 +1,7 @@
 import { ConfigCommandPermissions } from '../classes/RecipleConfig';
 import { Awaitable, PermissionsBitField } from 'discord.js';
-import { AnyCommandBuilder } from './builders';
 import { RecipleModule } from '../classes/RecipleModule';
+import { AnyCommandBuilder } from './builders';
 
 export interface UserHasCommandPermissionsOptions {
     /**

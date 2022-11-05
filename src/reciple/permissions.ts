@@ -16,15 +16,11 @@ export function userHasCommandPermissions(options: UserHasCommandPermissionsOpti
 
 /**
  * Check if the bot has the required permissions in a guild
- * @param guild Check if the bot has the required permissions in this guild
+ * @param guildOrChannel Check if the bot has the required permissions in this guild or channel
  * @param requiredPermissions Required guild bot permissions
  */
+export function botHasExecutePermissions(guildOrChannel?: Guild | GuildTextBasedChannel, requiredPermissions?: PermissionResolvable[]): boolean;
 export function botHasExecutePermissions(guild?: Guild, requiredPermissions?: PermissionResolvable[]): boolean;
-/**
- * Check if the bot has the required permissions in a channel
- * @param channel Check if the bot has the required permissions in this channel
- * @param requiredPermissions Required guild bot permissions
- */
 export function botHasExecutePermissions(channel?: GuildTextBasedChannel, requiredPermissions?: PermissionResolvable[]): boolean;
 export function botHasExecutePermissions(guildOrChannel?: Guild | GuildTextBasedChannel, requiredPermissions?: PermissionResolvable[]): boolean {
     if (!requiredPermissions?.length) return true;

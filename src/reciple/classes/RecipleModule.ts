@@ -1,10 +1,10 @@
-import { randomUUID } from 'crypto';
-import { GuildResolvable, normalizeArray, RestOrArray } from 'discord.js';
 import { AnyCommandBuilder, AnyCommandData, CommandType } from '../types/builders';
-import { validateCommandBuilder } from '../util';
+import { GuildResolvable, normalizeArray, RestOrArray } from 'discord.js';
 import { MessageCommandBuilder } from './builders/MessageCommandBuilder';
 import { SlashCommandBuilder } from './builders/SlashCommandBuilder';
+import { validateCommandBuilder } from '../util';
 import { RecipleClient } from './RecipleClient';
+import { randomUUID } from 'crypto';
 
 /**
  * Reciple script object

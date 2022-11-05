@@ -1,3 +1,7 @@
+import { SlashCommandBuilder, SlashCommandExecuteData, SlashCommandExecuteFunction, SlashCommandHaltData, SlashCommandHaltFunction, SlashCommandOptionsOnlyBuilder, SlashCommandSubcommandsOnlyBuilder } from '../classes/builders/SlashCommandBuilder';
+import { MessageCommandBuilder, MessageCommandExecuteData, MessageCommandExecuteFunction, MessageCommandHaltData, MessageCommandHaltFunction } from '../classes/builders/MessageCommandBuilder';
+import { MessageCommandOptionBuilder } from '../classes/builders/MessageCommandOptionBuilder';
+
 import {
     ApplicationCommandOptionAllowedChannelTypes,
     ApplicationCommandOptionType,
@@ -17,9 +21,6 @@ import {
     SlashCommandSubcommandGroupBuilder,
     SlashCommandUserOption,
 } from 'discord.js';
-import { SlashCommandBuilder, SlashCommandExecuteData, SlashCommandExecuteFunction, SlashCommandHaltData, SlashCommandHaltFunction, SlashCommandOptionsOnlyBuilder, SlashCommandSubcommandsOnlyBuilder } from '../classes/builders/SlashCommandBuilder';
-import { MessageCommandBuilder, MessageCommandExecuteData, MessageCommandExecuteFunction, MessageCommandHaltData, MessageCommandHaltFunction } from '../classes/builders/MessageCommandBuilder';
-import { MessageCommandOptionBuilder } from '../classes/builders/MessageCommandOptionBuilder';
 
 /**
  * Any command builders

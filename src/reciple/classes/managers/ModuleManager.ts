@@ -1,11 +1,11 @@
+import { ModuleManagerGetModulePathsOptions, ModuleManagerLoadModulesOptions, ModuleManagerResolveModuleFilesOptions, ModuleManagerStartModulesOptions, ModuleManagerUnloadModulesOptions } from '../../types/paramOptions';
 import { Collection, normalizeArray, RestOrArray } from 'discord.js';
 import { existsSync, lstatSync, mkdirSync, readdirSync } from 'fs';
-import { inspect } from 'util';
-import wildcardMatch from 'wildcard-match';
-import { ModuleManagerGetModulePathsOptions, ModuleManagerLoadModulesOptions, ModuleManagerResolveModuleFilesOptions, ModuleManagerStartModulesOptions, ModuleManagerUnloadModulesOptions } from '../../types/paramOptions';
-import { RecipleClient } from '../RecipleClient';
 import { RecipleModule, RecipleScript } from '../RecipleModule';
+import { RecipleClient } from '../RecipleClient';
+import wildcardMatch from 'wildcard-match';
 import { path } from '../../util';
+import { inspect } from 'util';
 
 export interface ModuleManagerOptions {
     client: RecipleClient;

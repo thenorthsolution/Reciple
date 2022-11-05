@@ -1,9 +1,9 @@
-import { ApplicationCommandData, Collection, GuildResolvable, normalizeArray, RestOrArray } from 'discord.js';
 import { AnyCommandBuilder, AnyCommandData, AnySlashCommandBuilder, CommandType, MessageCommandData, SlashCommandData } from '../../types/builders';
+import { ApplicationCommandData, Collection, GuildResolvable, normalizeArray, RestOrArray } from 'discord.js';
 import { MessageCommandBuilder } from '../builders/MessageCommandBuilder';
+import { ApplicationCommandBuilder } from './ApplicationCommandManager';
 import { SlashCommandBuilder } from '../builders/SlashCommandBuilder';
 import { RecipleClient } from '../RecipleClient';
-import { ApplicationCommandBuilder } from './ApplicationCommandManager';
 
 export interface CommandManagerOptions {
     client: RecipleClient;

@@ -17,7 +17,7 @@ export const commander = new Command()
     .parse();
 
 /**
- * Used flags
+ * Used commander flags
  */
 export const flags = commander.opts();
 

@@ -1,8 +1,8 @@
-import chalk from 'chalk';
 import { getOperatingSystem, Logger, LogLevels, OS } from 'fallout-utility';
-import { default as _path } from 'path';
-import { flags } from './flags';
 import { AnyCommandBuilder, CommandType } from './types/builders';
+import { flags } from './flags';
+import chalk from 'chalk';
+import _path from 'path';
 
 /**
  * Check if an object is a class
@@ -60,4 +60,7 @@ export function createLogger(stringifyJSON: boolean, debugmode: boolean = false,
     });
 }
 
+/**
+ * Path module that depending on os
+ */
 export const path: _path.PlatformPath = getOperatingSystem() === OS.WINDOWS ? _path.win32 : _path.posix;
