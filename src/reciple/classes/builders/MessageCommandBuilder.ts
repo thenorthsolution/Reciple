@@ -377,7 +377,7 @@ export class MessageCommandBuilder<T = unknown> implements SharedCommandBuilderP
 
         for (let i = 0; i < allOptions.length; i++) {
             const arg = args[i];
-            result.push(await MessageCommandOptionBuilder.validateOption(allOptions[i]));
+            result.push(await MessageCommandOptionBuilder.validateOption(allOptions[i], arg));
         }
 
         return new MessageCommandOptionManager(...result);
