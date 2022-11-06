@@ -1,5 +1,6 @@
 import { MessageCommandOptionData, MessageCommandOptionResolvable } from '../../types/builders';
 import { Awaitable, isValidationEnabled } from 'discord.js';
+import { MessageCommandValidatedOption } from './MessageCommandBuilder';
 
 /**
  * Option builder for MessageCommandBuilder
@@ -105,5 +106,27 @@ export class MessageCommandOptionBuilder {
      */
     public static isMessageCommandOption(builder: unknown): builder is MessageCommandOptionBuilder {
         return builder instanceof MessageCommandOptionBuilder;
+    }
+
+    public static async validateOption(option: MessageCommandOptionResolvable, value?: string): Promise<MessageCommandValidatedOption> {
+        const validatedOption: MessageCommandValidatedOption = {
+            name: option.name,
+            value,
+            required: !!option.required,
+            invalid: false,
+            missing: false,
+        };
+
+        if (value == undefined && option.required) {
+            validatedOption.missing = true;
+            return validatedOption;
+        }
+
+        if (value == undefined && !option.required) return validatedOption;
+
+        const validate = option.validator !== undefined ? await Promise.resolve(option.validator(value ?? '')) : true;
+        if (!validate) validatedOption.invalid = true;
+
+        return validatedOption;
     }
 }

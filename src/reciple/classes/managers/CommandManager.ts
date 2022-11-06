@@ -1,4 +1,4 @@
-import { AnyCommandBuilder, AnyCommandData, AnySlashCommandBuilder, CommandType, MessageCommandData, SlashCommandData } from '../../types/builders';
+import { AnyCommandBuilder, AnyCommandData, AnySlashCommandBuilder, CommandType, MessageCommandData, MessageCommandResolvable, SlashCommandData, SlashCommandResolvable } from '../../types/builders';
 import { ApplicationCommandData, Collection, GuildResolvable, normalizeArray, RestOrArray } from 'discord.js';
 import { MessageCommandBuilder } from '../builders/MessageCommandBuilder';
 import { ApplicationCommandBuilder } from './ApplicationCommandManager';
@@ -7,8 +7,8 @@ import { RecipleClient } from '../RecipleClient';
 
 export interface CommandManagerOptions {
     client: RecipleClient;
-    messageCommands?: (MessageCommandBuilder | MessageCommandData)[];
-    slashCommands?: (AnySlashCommandBuilder | SlashCommandData)[];
+    messageCommands?: MessageCommandResolvable[];
+    slashCommands?: SlashCommandResolvable[];
 }
 
 export class CommandManager {
@@ -47,15 +47,14 @@ export class CommandManager {
      * @param command Command name
      * @param type Command type
      */
-    public get(command: string, type?: undefined): AnyCommandBuilder | undefined;
-    public get(command: string, type?: CommandType.MessageCommand): MessageCommandBuilder | undefined;
-    public get(command: string, type?: CommandType.SlashCommand): SlashCommandBuilder | undefined;
-    public get(command: string, type?: CommandType): AnyCommandBuilder | undefined {
+    public get<T = unknown>(command: string, type: CommandType.SlashCommand): AnySlashCommandBuilder<T> | undefined;
+    public get<T = unknown>(command: string, type: CommandType.MessageCommand): MessageCommandBuilder<T> | undefined;
+    public get<T = unknown>(command: string, type: CommandType): AnyCommandBuilder<T> | undefined {
         switch (type) {
             case CommandType.SlashCommand:
-                return this.slashCommands.get(command);
+                return this.slashCommands.get(command) as AnySlashCommandBuilder<T>;
             case CommandType.MessageCommand:
-                return this.messageCommands.get(command.toLowerCase()) ?? (this.client.config.commands.messageCommand.allowCommandAlias ? this.messageCommands.find(c => c.aliases.some(a => a == command?.toLowerCase())) : undefined);
+                return (this.messageCommands.get(command.toLowerCase()) ?? (this.client.config.commands.messageCommand.allowCommandAlias ? this.messageCommands.find(c => c.aliases.some(a => a == command?.toLowerCase())) : undefined)) as MessageCommandBuilder<T>;
             default:
                 throw new TypeError('Unknown command type');
         }

@@ -14,9 +14,9 @@ export class MessageCommandOptionManager extends Array<MessageCommandValidatedOp
      * @param name Option name
      * @param requied Is the option required
      */
-    public get(name: string, requied: true): MessageCommandValidatedOption;
     public get(name: string, requied?: boolean): MessageCommandValidatedOption | null;
-    public get(name: string, required?: boolean) {
+    public get(name: string, requied: true): MessageCommandValidatedOption;
+    public get(name: string, required?: boolean): MessageCommandValidatedOption | null {
         const option = this.find(o => o.name == name);
         if (!option?.value == undefined && required) throw new TypeError(`Can't find option named ${name}`);
 

@@ -62,7 +62,17 @@ export type CommandExecuteFunction<T extends CommandType, M = unknown> = (
 ) => Awaitable<void>;
 
 /**
- * Message command options resolvable
+ *  Slash command options resolvable
+ */
+export type SlashCommandResolvable<T = unknown, OptionsOnly = unknown> = OptionsOnly extends true ? SlashCommandOptionsOnlyBuilder<T> : OptionsOnly extends false ? SlashCommandSubcommandsOnlyBuilder<T> : AnySlashCommandBuilder<T> | SlashCommandData<T>;
+
+/**
+ *  Message command resolvable
+ */
+export type MessageCommandResolvable<T = unknown> = MessageCommandBuilder<T> | MessageCommandData<T>;
+
+/**
+ * Message command option resolvable
  */
 export type MessageCommandOptionResolvable = MessageCommandOptionBuilder | MessageCommandOptionData;
 

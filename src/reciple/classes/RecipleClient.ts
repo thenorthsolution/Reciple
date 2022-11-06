@@ -3,11 +3,11 @@ import { MessageCommandBuilder, MessageCommandExecuteData, MessageCommandHaltDat
 import { SlashCommandBuilder, SlashCommandExecuteData, SlashCommandHaltData } from './builders/SlashCommandBuilder';
 import { AnyCommandExecuteData, AnyCommandHaltData, CommandHaltReason } from '../types/commands';
 import { CommandCooldownManager, CooledDownUser } from './managers/CommandCooldownManager';
+import { AnyCommandBuilder, AnySlashCommandBuilder, CommandType } from '../types/builders';
 import { botHasExecutePermissions, userHasCommandPermissions } from '../permissions';
 import { MessageCommandOptionManager } from './managers/MessageCommandOptionManager';
 import { ApplicationCommandManager } from './managers/ApplicationCommandManager';
 import { CommandManager } from './managers/CommandManager';
-import { AnyCommandBuilder, CommandType } from '../types/builders';
 import { ModuleManager } from './managers/ModuleManager';
 import { Config, RecipleConfig } from './RecipleConfig';
 import { getCommand, Logger } from 'fallout-utility';
@@ -310,7 +310,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
      * @param command Halted command's builder
      * @param haltData Halted command's data
      */
-    protected async _haltCommand(command: SlashCommandBuilder, haltData: SlashCommandHaltData): Promise<boolean>;
+    protected async _haltCommand(command: AnySlashCommandBuilder, haltData: SlashCommandHaltData): Promise<boolean>;
     protected async _haltCommand(command: MessageCommandBuilder, haltData: MessageCommandHaltData): Promise<boolean>;
     protected async _haltCommand(command: AnyCommandBuilder, haltData: AnyCommandHaltData): Promise<boolean> {
         try {
@@ -337,7 +337,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
      * @param command Command builder
      * @param executeData Command execute data
      */
-    protected async _executeCommand(command: SlashCommandBuilder, executeData: SlashCommandExecuteData): Promise<SlashCommandExecuteData | undefined>;
+    protected async _executeCommand(command: AnySlashCommandBuilder, executeData: SlashCommandExecuteData): Promise<SlashCommandExecuteData | undefined>;
     protected async _executeCommand(command: MessageCommandBuilder, executeData: MessageCommandExecuteData): Promise<MessageCommandExecuteData | undefined>;
     protected async _executeCommand(command: AnyCommandBuilder, executeData: AnyCommandExecuteData): Promise<AnyCommandExecuteData | undefined> {
         try {

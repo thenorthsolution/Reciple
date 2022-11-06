@@ -1,4 +1,4 @@
-import { CommandType, CommandHaltFunction, CommandExecuteFunction, SharedCommandBuilderProperties, MessageCommandData, MessageCommandOptionResolvable } from '../../types/builders';
+import { CommandType, CommandHaltFunction, CommandExecuteFunction, SharedCommandBuilderProperties, MessageCommandData, MessageCommandOptionResolvable, MessageCommandResolvable } from '../../types/builders';
 import { isValidationEnabled, Message, normalizeArray, PermissionResolvable, RestOrArray } from 'discord.js';
 import { MessageCommandOptionManager } from '../managers/MessageCommandOptionManager';
 import { BaseCommandExecuteData, CommandHaltData } from '../../types/commands';
@@ -362,40 +362,14 @@ export class MessageCommandBuilder<T = unknown> implements SharedCommandBuilderP
      * @param builder Command builder
      * @param options Parsed command args
      */
-    public static async validateOptions(builder: MessageCommandBuilder, options: Command): Promise<MessageCommandOptionManager> {
-        const args = options.args || [];
-        const required = builder.options.filter(o => o.required);
-        const optional = builder.options.filter(o => !o.required);
-        const allOptions = [...required, ...optional];
+    public static async validateOptions(builder: MessageCommandResolvable, commandArgs: Command | string[]): Promise<MessageCommandOptionManager> {
+        const args = Array.isArray(commandArgs) ? commandArgs : commandArgs.args || [];
+        const allOptions = [...(builder.options ?? []).filter(o => o.required), ...(builder.options ?? []).filter(o => !o.required)];
         const result: MessageCommandValidatedOption[] = [];
 
-        let i = 0;
-        for (const option of allOptions) {
+        for (let i = 0; i < allOptions.length; i++) {
             const arg = args[i];
-            const value: MessageCommandValidatedOption = {
-                name: option.name,
-                value: arg ?? undefined,
-                required: !!option.required,
-                invalid: false,
-                missing: false,
-            };
-
-            if (arg == undefined && option.required) {
-                value.missing = true;
-                result.push(value);
-                continue;
-            }
-
-            if (arg == undefined && !option.required) {
-                result.push(value);
-                continue;
-            }
-
-            const validate = option.validator ? await Promise.resolve(option.validator(arg)) : true;
-            if (!validate) value.invalid = true;
-
-            result.push(value);
-            i++;
+            result.push(await MessageCommandOptionBuilder.validateOption(allOptions[i]));
         }
 
         return new MessageCommandOptionManager(...result);
