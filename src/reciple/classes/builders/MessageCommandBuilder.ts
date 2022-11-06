@@ -266,7 +266,7 @@ export class MessageCommandBuilder<T = unknown> implements SharedCommandBuilderP
      * Add new command option
      * @param option Message option
      */
-    public addOption(option: MessageCommandOptionResolvable| ((builder: MessageCommandOptionBuilder) => MessageCommandOptionBuilder)): this {
+    public addOption(option: MessageCommandOptionResolvable | ((builder: MessageCommandOptionBuilder) => MessageCommandOptionBuilder)): this {
         return this.addOptions(option);
     }
 
