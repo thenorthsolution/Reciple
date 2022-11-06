@@ -244,7 +244,7 @@ export class MessageCommandBuilder<T = unknown> implements SharedCommandBuilderP
     }
 
     /**
-     * Add options to command
+     * Add new command options
      * @param options Message options
      */
     public addOptions(...options: RestOrArray<MessageCommandOptionResolvable | ((builder: MessageCommandOptionBuilder) => MessageCommandOptionBuilder)>): this {
@@ -263,7 +263,15 @@ export class MessageCommandBuilder<T = unknown> implements SharedCommandBuilderP
     }
 
     /**
-     * Replace options from command
+     * Add new command option
+     * @param option Message option
+     */
+    public addOption(option: MessageCommandOptionResolvable| ((builder: MessageCommandOptionBuilder) => MessageCommandOptionBuilder)): this {
+        return this.addOptions(option);
+    }
+
+    /**
+     * Set options from command
      * @params options Message options
      */
     public setOptions(...options: RestOrArray<MessageCommandOptionResolvable | ((builder: MessageCommandOptionBuilder) => MessageCommandOptionBuilder)>): this {
