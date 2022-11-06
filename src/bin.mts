@@ -17,7 +17,7 @@ const configPath = path.join(cwd, 'reciple.yml');
 
 if (!existsSync(cwd)) mkdirSync(cwd, { recursive: true });
 if (readdirSync(cwd).some(f => match.isMatch(f, allowedFiles)) && !existsSync(flags.config ?? configPath)) {
-    const ask = (flags.yes ? 'y' : null) ?? input('This directory does not contain reciple.yml. Would you like to init axis here? [y/n] ') ?? '';
+    const ask = (flags.yes ? 'y' : null) ?? input('Would you like to create Reciple config here? [y/n] ') ?? '';
     if (ask.toString().toLowerCase() !== 'y') process.exit(0);
 }
 
