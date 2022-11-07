@@ -1,5 +1,5 @@
 {
-  "endOfLine": "lf",
+  "endOfLine": "crlf",
   "tabWidth": 4,
   "trailingComma": "es5",
   "arrowParens": "avoid",
