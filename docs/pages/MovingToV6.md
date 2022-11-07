@@ -1,47 +1,61 @@
-# Moving to V6
+# Moving to v6
 
-Guide for bots moving from reciple v5 to v6
+### Before you start
 
-<details open>
-    <summary>Sections</summary>
+Reciple v6 required Discord.js v14 and Node.js v16.9 or higher. To check your Node version, use `node -v` in your terminal.
 
-- [New Managers](#managers)
-  - [CommandManager](#CommandManager)
-  - [ApplicationCommandManager](#applicationcommandmanager)
-  - [ModuleManager](#modulemanager)
+### Installation
 
-</details>
+Install Reciple with your favorite package manager but in our case we will use npm.
+```
+npm i reciple discord.js
+```
 
+## ESM Support
 
-## New Managers
-- ### CommandManager
-  - Removed `registerApplicationCommands` function and moved it to `CommandManager#registerCommandManager()`
-  - `RecipleClient#commands` is a `CommandManager`
-  ```diff
-  - await registerApplicationCommands()
-  + await RecipleClient.commands.registerApplicationCommands()
-  ```
-- ### ApplicationCommandManager
-  - Registers, update, create, or remove application commands globally or from a guild
-  - Uses `RecipleClient#application` to register, update, create or remove commands.
-  - `RecipleClient#applicationCommands` is an `ApplicationCommandManager`
-  ```diff
-  + await Reciple.applicationCommands.set([
-  +   new SlashCommandBuilder()
-  +     .setName('test')
-  +     .setDescription('Hi')
-  + ], '0000000000000000000')
-  ```
-- ### ModuleManager
-  - Replaces `getModules()` function
-  - `RecipleClient#modules` is now a `ModuleManager`
-  ```diff
-  - await RecipleClient.startModules('modules')
-  + await RecipleClient.modules.startModules({
-  +   modules: await RecipleClient.modules.resolveModuleFiles(
-  +     await RecipleClient.modules.getModulePaths({
-  +       folders: ['modules']
-  +     })
-  +   )
-  + })
-  ```
+Reciple now supports esm and cjs modules.
+
+#### Supported file types
+
+- `module.js` *ESM or CJS*
+- `module.mjs`
+- `module.cjs`
+
+## Breaking Changes
+
+### Enum Values
+
+All reciple enum values now starts with `1` and increments
+
+### Registering Application Commands
+
+The v6 will now use `ApplicationCommandManager` class to register, edit, remove, and get application commands from client or guild. Instead of importing `registerApplicationCommands()` function, use `RecipleClient#applicationCommands#set()` method.
+
+### Loading & Storing Modules
+
+Loading modules now has four steps `resolve`, `start`, `[optional] load` and the `[optional] unload`.
+
+- Resolving modules is the process of getting module informations like filename and validation.
+- Starting the modules will check if the module can be loaded and be stored to client. This will execute the module script `onStart()`
+- Loading the module is an optional module function, It's called when the module is successfuly started and when the client is logged in. This will execute the module script `onLoad()` if exists.
+- Unloading the module is an optional module function, It's called when the module is being unloaded from the client. This will execute the module script `onUnload()` if exists.
+
+Reciple will now use `ModuleManager` to load, unload, and store `RecipleModule` classes into cache. Instead of importing `getModules()` function Reciple will now use `RecipleClient#modules#resolveModuleFiles()` method.
+
+### Command Manager
+
+Instead of `RecipleClient#commands` client slash and message commands will now be stored to `RecipleClient#commands` as `CommandManager` class. `RecipleClient#additionalApplicationCommands` and `RecipleClient#addCommand()` are also moved to `CommandManager` as `CommandManager#additionalApplicationCommand` and `CommandManager#add()`.
+
+## New Features
+
+### Builder Validation
+
+`SlashCommandBuilder` and `MessageCommandBuilder` will now only validate values if the Discord.js validation is enabled via `isValidationEnabled()`.
+
+### Unload Modules
+
+You can now unload modules properly. When using cli handler modules will be unloaded on `SIGINT` and `SIGTERM` exit signals.
+
+### Builder Metadata
+
+Builder metadata allows you to store extra information in `SlashCommandBuilder` or `MessageCommandBuilder`
