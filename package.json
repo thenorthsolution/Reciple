@@ -64,7 +64,7 @@
     "chalk": "4.1.2",
     "commander": "^9.4.1",
     "dotenv": "^16.0.3",
-    "fallout-utility": "^1.5.13",
+    "fallout-utility": "^1.5.15",
     "micromatch": "^4.0.5",
     "semver": "^7.3.7",
     "yaml": "^2.1.1"
