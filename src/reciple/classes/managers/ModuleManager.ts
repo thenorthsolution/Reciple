@@ -2,10 +2,11 @@ import { ModuleManagerGetModulePathsOptions, ModuleManagerLoadModulesOptions, Mo
 import { Collection, normalizeArray, RestOrArray } from 'discord.js';
 import { existsSync, lstatSync, mkdirSync, readdirSync } from 'fs';
 import { RecipleModule, RecipleScript } from '../RecipleModule';
+import { isSupportedVersion } from '../../version';
 import { RecipleClient } from '../RecipleClient';
+import { isMatch } from 'micromatch';
 import { path } from '../../util';
 import { inspect } from 'util';
-import { isMatch } from 'micromatch';
 
 export interface ModuleManagerOptions {
     client: RecipleClient;
@@ -137,6 +138,10 @@ export class ModuleManager {
                 }
 
                 if (!ModuleManager.validateScript(script)) throw new Error(`Invalid module script: ${file}`);
+
+                if (!this.client.config.disableVersionCheck && !normalizeArray([script.versions] as RestOrArray<string>)?.some(v => isSupportedVersion(v, this.client.version))) {
+                    throw new Error(`Unsupported module: ${file}`);
+                }
 
                 modules.push(
                     new RecipleModule({
