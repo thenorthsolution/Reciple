@@ -11,6 +11,7 @@ import match from 'micromatch';
 import { inspect } from 'util';
 import chalk from 'chalk';
 import 'dotenv/config';
+import { Events } from 'discord.js';
 
 const allowedFiles = ['node_modules', 'reciple.yml', 'package.json', '.*'];
 const configPath = path.join(cwd, 'reciple.yml');
@@ -49,7 +50,7 @@ await client.modules.startModules({
     }),
 });
 
-client.on('ready', async () => {
+client.on(Events.ClientReady, async () => {
     await client.modules.loadModules();
 
     const unloadModulesAndStopProcess = async (signal: NodeJS.Signals) => {
@@ -69,7 +70,7 @@ client.on('ready', async () => {
 
     if (!client.isClientLogsSilent) client.logger.warn(`Logged in as ${client.user?.tag || 'Unknown'}!`);
 
-    client.on('cacheSweep', () => client.cooldowns.clean());
+    client.on(Events.CacheSweep, () => client.cooldowns.clean());
 });
 
 client.login(config.token).catch(err => {

@@ -1,4 +1,4 @@
-import { CommandHaltReason, MessageCommandBuilder, SlashCommandBuilder } from 'reciple';
+import { CommandHaltReason, MessageCommandBuilder, RecipleEvents, SlashCommandBuilder } from 'reciple';
 
 export default {
     versions: '^6',
@@ -46,15 +46,15 @@ export default {
 
         client.logger.log("Module started");
 
-        client.on('recipleRegisterApplicationCommands', () => {
+        client.on(RecipleEvents.RegisterApplicationCommands, () => {
             client.logger.log(`Commands registered`);
         });
 
-        client.on('recipleCommandExecute', data => {
+        client.on(RecipleEvents.CommandExecute, data => {
             client.logger.log(`Command executed: ${data.builder.name}`);
         });
 
-        client.on('recipleCommandHalt', data => {
+        client.on(RecipleEvents.CommandHalt, data => {
             client.logger.log(`Command halted: ${data.executeData.builder.name}`);
         });
 

@@ -1,4 +1,4 @@
-import { Awaitable, ChannelType, ChatInputCommandInteraction, Client, ClientEvents, ClientOptions, Interaction, Message } from 'discord.js';
+import { Awaitable, ChannelType, ChatInputCommandInteraction, Client, ClientEvents, ClientOptions, Events, Interaction, Message } from 'discord.js';
 import { MessageCommandBuilder, MessageCommandExecuteData, MessageCommandHaltData } from './builders/MessageCommandBuilder';
 import { SlashCommandBuilder, SlashCommandExecuteData, SlashCommandHaltData } from './builders/SlashCommandBuilder';
 import { AnyCommandExecuteData, AnyCommandHaltData, CommandHaltReason } from '../types/commands';
@@ -31,6 +31,18 @@ export interface RecipleClientEvents extends ClientEvents {
     recipleCommandHalt: [haltData: AnyCommandHaltData];
     recipleRegisterApplicationCommands: [];
     recipleReplyError: [error: unknown];
+}
+
+export enum RecipleEvents {
+    RecipleCommandExecute = 'recipleCommandExecute',
+    RecipleCommandHalt = 'recipleCommandHalt',
+    RecipleRegisterApplicationCommands = 'recipleRegisterApplicationCommands',
+    RecipleReplyError = 'recipleReplyError',
+
+    CommandExecute = RecipleCommandExecute,
+    CommandHalt = RecipleCommandHalt,
+    RegisterApplicationCommands = RecipleRegisterApplicationCommands,
+    ReplyError = RecipleReplyError,
 }
 
 /**
@@ -92,11 +104,11 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
      * Listed to command executions
      */
     public addCommandListeners(): RecipleClient<Ready> {
-        this.on('messageCreate', message => {
+        this.on(Events.MessageCreate, message => {
             if (this.config.commands.messageCommand.enabled) this.messageCommandExecute(message);
         });
 
-        this.on('interactionCreate', interaction => {
+        this.on(Events.InteractionCreate, interaction => {
             if (this.config.commands.slashCommand.enabled) this.slashCommandExecute(interaction);
         });
 
