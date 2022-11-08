@@ -314,7 +314,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
      * @param error Received Error
      */
     protected _replyError(error: unknown) {
-        this.emit('recipleReplyError', error);
+        this.emit(RecipleEvents.ReplyError, error);
     }
 
     /**
@@ -333,7 +333,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
                       })
                     : false) || false;
 
-            this.emit('recipleCommandHalt', haltData);
+            this.emit(RecipleEvents.CommandHalt, haltData);
             return haltResolved;
         } catch (err) {
             if (!this.isClientLogsSilent) {
@@ -354,7 +354,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
     protected async _executeCommand(command: AnyCommandBuilder, executeData: AnyCommandExecuteData): Promise<AnyCommandExecuteData | undefined> {
         try {
             await Promise.resolve(command.type === CommandType.SlashCommand ? command.execute(executeData as SlashCommandExecuteData) : command.execute(executeData as MessageCommandExecuteData))
-                .then(() => this.emit('recipleCommandExecute', executeData))
+                .then(() => this.emit(RecipleEvents.CommandExecute, executeData))
                 .catch(async err =>
                     !(await this._haltCommand(command as any, {
                         executeData: executeData as any,

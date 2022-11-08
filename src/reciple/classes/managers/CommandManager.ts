@@ -3,7 +3,7 @@ import { ApplicationCommandData, Collection, GuildResolvable, normalizeArray, Re
 import { MessageCommandBuilder } from '../builders/MessageCommandBuilder';
 import { ApplicationCommandBuilder } from './ApplicationCommandManager';
 import { SlashCommandBuilder } from '../builders/SlashCommandBuilder';
-import { RecipleClient } from '../RecipleClient';
+import { RecipleClient, RecipleEvents } from '../RecipleClient';
 
 export interface CommandManagerOptions {
     client: RecipleClient;
@@ -72,7 +72,7 @@ export class CommandManager {
 
         await this.client.applicationCommands.set([...this.client.applicationCommands.commands], guilds);
 
-        this.client.emit('recipleRegisterApplicationCommands');
+        this.client.emit(RecipleEvents.RegisterApplicationCommands);
         return this;
     }
 }
