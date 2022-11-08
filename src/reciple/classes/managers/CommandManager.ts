@@ -1,4 +1,4 @@
-import { AnyCommandBuilder, AnyCommandData, AnySlashCommandBuilder, CommandType, MessageCommandData, MessageCommandResolvable, SlashCommandData, SlashCommandResolvable } from '../../types/builders';
+import { AnyCommandBuilder, AnyCommandData, AnySlashCommandBuilder, CommandType, MessageCommandResolvable, SlashCommandResolvable } from '../../types/builders';
 import { ApplicationCommandData, Collection, GuildResolvable, normalizeArray, RestOrArray } from 'discord.js';
 import { MessageCommandBuilder } from '../builders/MessageCommandBuilder';
 import { ApplicationCommandBuilder } from './ApplicationCommandManager';
