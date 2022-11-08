@@ -54,6 +54,8 @@ export function createLogger(stringifyJSON: boolean, debugmode: boolean = false,
             [LogLevels.ERROR]: (message: string) => (!colorizeMessage ? message : chalk.red(message)),
             [LogLevels.DEBUG]: (message: string) => (!colorizeMessage ? message : chalk.blue(message)),
         },
+        ObjectInspectDepth: 3,
+        ObjectInspectColorized: colorizeMessage
     });
 }
 
