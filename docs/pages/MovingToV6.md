@@ -59,3 +59,32 @@ You can now unload modules properly. When using cli handler modules will be unlo
 ### Builder Metadata
 
 Builder metadata allows you to store extra information in `SlashCommandBuilder` or `MessageCommandBuilder`
+
+### Don't Register empy commands
+
+Added config option to not register commands if its empty including additional application commands.
+
+```yml
+commands:
+  slashCommand:
+    // Will register application commands empty or not
+    allowRegisterEmptyCommandList: true
+```
+
+## Fixes
+
+### Fix null halt
+
+Fix `setHalt` accepts null values without converting it to undefined.
+
+### Fix path module in windows os
+
+Fix path module only supports posix file paths.
+
+### Token prompt on empty env value
+
+Will not prompt for token if the env value assigned for token is empty.
+
+### Fixed register application commands event
+
+Fixed client emitting `RegisterApplicationCommands` instead of `recipleRegisterApplicationCommands`
