@@ -1,16 +1,16 @@
 {
   "name": "reciple",
+  "type": "commonjs",
   "license": "GPL-3.0",
+  "engineStrict": true,
   "version": "6.0.0-dev.27",
-  "bin": "./dist/lib/bin.mjs",
   "author": "FalloutStudios",
+  "bin": "./dist/lib/bin.mjs",
   "main": "./dist/lib/index.js",
   "module": "./dist/lib/esm.mjs",
   "types": "./dist/types/index.d.ts",
-  "description": "Handler for Discord.js",
+  "description": "A simple Discord.js handler that just works",
   "homepage": "https://reciple.js.org",
-  "engineStrict": true,
-  "type": "commonjs",
   "exports": {
     ".": {
       "import": {
