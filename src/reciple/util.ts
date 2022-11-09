@@ -48,7 +48,7 @@ export function createLogger(stringifyJSON: boolean, debugmode: boolean = false,
             [LogLevels.ERROR]: (name?: string) => `[${chalk.red(new Date().toLocaleTimeString(undefined, { hour12: false }))}][${chalk.red((name ? name + '/' : '') + 'ERROR')}]`,
             [LogLevels.DEBUG]: (name?: string) => `[${chalk.blue(new Date().toLocaleTimeString(undefined, { hour12: false }))}][${chalk.blue((name ? name + '/' : '') + 'DEBUG')}]`,
         },
-        colorMessages: {
+        formatMessages: {
             [LogLevels.INFO]: (message: string) => message,
             [LogLevels.WARN]: (message: string) => (!colorizeMessage ? message : chalk.yellow(message)),
             [LogLevels.ERROR]: (message: string) => (!colorizeMessage ? message : chalk.red(message)),
