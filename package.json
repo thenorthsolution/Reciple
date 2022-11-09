@@ -5,12 +5,14 @@
   "engineStrict": true,
   "version": "6.0.0-dev.27",
   "author": "FalloutStudios",
-  "bin": "./dist/lib/bin.mjs",
   "main": "./dist/lib/index.js",
   "module": "./dist/lib/esm.mjs",
   "types": "./dist/types/index.d.ts",
   "description": "A simple Discord.js handler that just works",
   "homepage": "https://reciple.js.org",
+  "bin": {
+    "reciple": "./dist/lib/bin.mjs"
+  },
   "exports": {
     ".": {
       "import": {

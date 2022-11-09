@@ -1,7 +1,7 @@
 const { MessageCommandBuilder, CommandHaltReason } = require('reciple');
 
 module.exports = {
-    versions: '^6.1',
+    versions: '^6',
     commands: [
         new MessageCommandBuilder()
             .setName('hi')
