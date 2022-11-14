@@ -13,6 +13,8 @@
     "forceConsistentCasingInFileNames": true,
     "listEmittedFiles": true,
     "moduleResolution": "Node16",
+    "declarationMap": true,
+    "sourceMap": true,
     "strict": true,
     "skipLibCheck": true,
   }
