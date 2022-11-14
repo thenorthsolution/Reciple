@@ -1,5 +1,5 @@
 import { AnyCommandBuilder, AnyCommandData, AnySlashCommandBuilder, CommandType, MessageCommandResolvable, SlashCommandResolvable } from '../../types/builders';
-import { ApplicationCommandData, Collection, GuildResolvable, normalizeArray, RestOrArray } from 'discord.js';
+import { ApplicationCommandData, ApplicationCommandDataResolvable, Collection, GuildResolvable, normalizeArray, RestOrArray } from 'discord.js';
 import { MessageCommandBuilder } from '../builders/MessageCommandBuilder';
 import { ApplicationCommandBuilder } from './ApplicationCommandManager';
 import { SlashCommandBuilder } from '../builders/SlashCommandBuilder';
@@ -15,7 +15,7 @@ export class CommandManager {
     readonly client: RecipleClient;
     readonly slashCommands: Collection<string, AnySlashCommandBuilder> = new Collection();
     readonly messageCommands: Collection<string, MessageCommandBuilder> = new Collection();
-    readonly additionalApplicationCommands: (ApplicationCommandBuilder | ApplicationCommandData)[] = [];
+    readonly additionalApplicationCommands: (ApplicationCommandDataResolvable)[] = [];
 
     constructor(options: CommandManagerOptions) {
         this.client = options.client;
@@ -30,15 +30,20 @@ export class CommandManager {
      */
     public add(...commands: RestOrArray<AnyCommandBuilder | AnyCommandData>): this {
         for (const command of normalizeArray(commands)) {
-            if (command.type === CommandType.SlashCommand) {
+            if (command instanceof SlashCommandBuilder || command.type === CommandType.SlashCommand) {
                 this.slashCommands.set(command.name, SlashCommandBuilder.resolveSlashCommand(command));
-            } else if (command.type === CommandType.MessageCommand) {
+            } else if (command instanceof MessageCommandBuilder || command.type === CommandType.MessageCommand) {
                 this.messageCommands.set(command.name, MessageCommandBuilder.resolveMessageCommand(command));
             } else {
                 throw new Error(`Unknown reciple command type`);
             }
         }
 
+        return this;
+    }
+
+    public addAddtionalApplicationCommand(...commands: RestOrArray<ApplicationCommandDataResolvable>): this {
+        this.additionalApplicationCommands.push(...normalizeArray(commands));
         return this;
     }
 
