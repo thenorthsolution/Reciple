@@ -15,7 +15,7 @@ export class CommandManager {
     readonly client: RecipleClient;
     readonly slashCommands: Collection<string, AnySlashCommandBuilder> = new Collection();
     readonly messageCommands: Collection<string, MessageCommandBuilder> = new Collection();
-    readonly additionalApplicationCommands: (ApplicationCommandDataResolvable)[] = [];
+    readonly additionalApplicationCommands: ApplicationCommandDataResolvable[] = [];
 
     constructor(options: CommandManagerOptions) {
         this.client = options.client;
