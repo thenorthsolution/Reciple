@@ -16,6 +16,7 @@
     "declarationMap": true,
     "sourceMap": true,
     "strict": true,
+    "newLine": "lf",
     "skipLibCheck": true,
   }
 }
