@@ -5,6 +5,7 @@ import { SlashCommandBuilder } from './builders/SlashCommandBuilder';
 import { validateCommandBuilder } from '../util';
 import { RecipleClient } from './RecipleClient';
 import { randomUUID } from 'crypto';
+import { isSupportedVersion } from '../version';
 
 /**
  * Reciple script object
@@ -51,8 +52,28 @@ export class RecipleModule<M = unknown> {
     public readonly filePath?: string;
     public metadata?: M;
 
+    get versions() {
+        return this.script.versions;
+    }
+
+    get onStart() {
+        return this.script.onStart;
+    }
+
+    get onLoad() {
+        return this.script.onLoad;
+    }
+
+    get onUnload() {
+        return this.script.onUnload;
+    }
+
     get displayName() {
         return this.filePath ?? this.id;
+    }
+
+    get isSupported() {
+        return normalizeArray([this.versions] as RestOrArray<string>).some(v => isSupportedVersion(v, this.client.version));
     }
 
     constructor(options: RecipleModuleOptions<M>) {
