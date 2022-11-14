@@ -1,4 +1,4 @@
-import { ApplicationCommand, ApplicationCommandData, ContextMenuCommandBuilder, GuildResolvable, normalizeArray, RestOrArray, RESTPostAPIApplicationCommandsJSONBody, SlashCommandBuilder as DiscordJsSlashCommandBuilder } from 'discord.js';
+import { ApplicationCommand, ApplicationCommandData, ApplicationCommandDataResolvable, ContextMenuCommandBuilder, GuildResolvable, normalizeArray, RestOrArray, RESTPostAPIApplicationCommandsJSONBody, SlashCommandBuilder as DiscordJsSlashCommandBuilder } from 'discord.js';
 import { SlashCommandBuilder } from '../builders/SlashCommandBuilder';
 import { AnySlashCommandBuilder } from '../../types/builders';
 import { RecipleClient } from '../RecipleClient';
@@ -25,7 +25,7 @@ export class ApplicationCommandManager {
      * @param commands Application commands
      * @param guilds set only to guilds
      */
-    public async set(commands: (ApplicationCommandBuilder | ApplicationCommandData)[], ...guilds: RestOrArray<GuildResolvable>): Promise<void> {
+    public async set(commands: (ApplicationCommandBuilder | ApplicationCommandDataResolvable)[], ...guilds: RestOrArray<GuildResolvable>): Promise<void> {
         guilds = normalizeArray(guilds);
 
         if (!this.client.isReady()) throw new Error('Client is not ready');
@@ -54,7 +54,7 @@ export class ApplicationCommandManager {
      * @param command Application command
      * @param guilds add only in guilds
      */
-    public async add(command: ApplicationCommandBuilder | ApplicationCommandData, ...guilds: RestOrArray<GuildResolvable>): Promise<void> {
+    public async add(command: ApplicationCommandBuilder | ApplicationCommandDataResolvable, ...guilds: RestOrArray<GuildResolvable>): Promise<void> {
         guilds = normalizeArray(guilds);
 
         if (!this.client.isReady()) throw new Error('Client is not ready');
@@ -71,11 +71,11 @@ export class ApplicationCommandManager {
         guild = guild ? this.client.guilds.resolveId(guild) || undefined : undefined;
 
         if (!guild) {
-            await this.client.application.commands.create(command);
-            if (!this.client.isClientLogsSilent) this.client.logger.log(`Created application command '${command.name}' globally`);
+            const newCommand = await this.client.application.commands.create(command);
+            if (!this.client.isClientLogsSilent) this.client.logger.log(`Created application command '${newCommand.name}' globally`);
         } else {
-            await this.client.application.commands.create(command, guild);
-            if (!this.client.isClientLogsSilent) this.client.logger.log(`Created application command '${command.name}' to guild ${guild}`);
+            const newCommand = await this.client.application.commands.create(command, guild);
+            if (!this.client.isClientLogsSilent) this.client.logger.log(`Created application command '${newCommand.name}' to guild ${guild}`);
         }
     }
 
@@ -115,7 +115,7 @@ export class ApplicationCommandManager {
      * @param newCommand new application command data
      * @param guilds Edit only from guilds
      */
-    public async edit(command: string | ApplicationCommand, newCommand: ApplicationCommandBuilder | ApplicationCommandData, ...guilds: RestOrArray<GuildResolvable>): Promise<void> {
+    public async edit(command: string | ApplicationCommand, newCommand: ApplicationCommandBuilder | ApplicationCommandDataResolvable, ...guilds: RestOrArray<GuildResolvable>): Promise<void> {
         guilds = normalizeArray(guilds);
 
         if (!this.client.isReady()) throw new Error('Client is not ready');
@@ -169,9 +169,9 @@ export class ApplicationCommandManager {
      * @param commands Application command builders
      * @param setPermissions set slash commands permissions
      */
-    protected parseCommands(commands: (ApplicationCommandData | ApplicationCommandBuilder | RESTPostAPIApplicationCommandsJSONBody)[], setPermissions: boolean = true): (ApplicationCommandData | RESTPostAPIApplicationCommandsJSONBody)[] {
+    protected parseCommands(commands: (ApplicationCommandDataResolvable | ApplicationCommandBuilder | RESTPostAPIApplicationCommandsJSONBody)[], setPermissions: boolean = true): (ApplicationCommandDataResolvable | RESTPostAPIApplicationCommandsJSONBody)[] {
         return commands.map(cmd => {
-            if ((cmd as ApplicationCommandBuilder)?.toJSON === undefined) return (<unknown>cmd) as ApplicationCommandData;
+            if ((cmd as ApplicationCommandBuilder)?.toJSON === undefined) return (<unknown>cmd) as ApplicationCommandDataResolvable;
 
             if (SlashCommandBuilder.isSlashCommandBuilder(cmd) && this.client.config.commands.slashCommand.setRequiredPermissions) {
                 const permissions = setPermissions || this.client.config.commands.slashCommand.permissions.enabled ? this.client.config.commands.slashCommand.permissions.commands.find(cmd_ => cmd_.command.toLowerCase() === cmd.name.toLowerCase())?.permissions : undefined;
