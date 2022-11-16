@@ -84,19 +84,34 @@ export class RecipleModule<M = unknown> {
         this.metadata = options.metadata;
     }
 
+    /**
+     * Execute module's {@link RecipleScript.onStart}
+     */
     public async start(): Promise<boolean> {
         return Promise.resolve(this.script.onStart(this.client));
     }
 
+    /**
+     * Execute module's {@link RecipleScript.onLoad}
+     * @param resolveCommands Parse commands
+     */
     public async load(resolveCommands: boolean = true): Promise<void> {
         if (typeof this.script.onLoad === 'function') await this.script.onLoad(this.client);
         if (resolveCommands) this.resolveCommands();
     }
 
+    /**
+     * Execute module's {@link RecipleScript.onUnload}
+     * @param reason Unload reason
+     */
     public async unload(reason?: any): Promise<void> {
         if (typeof this.script.onUnload === 'function') await this.script.onUnload(reason, this.client);
     }
 
+    /**
+     * Register application commands from this module
+     * @param guilds Register to certain guilds
+     */
     public async registerSlashCommands(...guilds: RestOrArray<GuildResolvable>): Promise<void> {
         for (const command of this.commands) {
             if (command.type !== CommandType.SlashCommand) continue;
@@ -105,6 +120,10 @@ export class RecipleModule<M = unknown> {
         }
     }
 
+    /**
+     * Unregister application commands from this module
+     * @param guilds Unregister from certain guilds
+     */
     public async unregisterSlashCommands(...guilds: RestOrArray<GuildResolvable>): Promise<void> {
         for (const builder of this.commands) {
             if (builder.type !== CommandType.SlashCommand) continue;
@@ -124,6 +143,10 @@ export class RecipleModule<M = unknown> {
         }
     }
 
+    /**
+     * Update registered application commands of this module
+     * @param guilds update commands from certain guilds
+     */
     public async updateSlashCommands(...guilds: RestOrArray<GuildResolvable>): Promise<void> {
         for (const builder of this.commands) {
             if (builder.type !== CommandType.SlashCommand) continue;
@@ -143,6 +166,9 @@ export class RecipleModule<M = unknown> {
         }
     }
 
+    /**
+     * Resolve module commands
+     */
     public resolveCommands(): AnyCommandBuilder[] {
         if (!Array.isArray(this.script?.commands)) return this.commands;
 
