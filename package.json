@@ -3,7 +3,7 @@
   "type": "commonjs",
   "license": "GPL-3.0",
   "engineStrict": true,
-  "version": "6.0.0-dev.28",
+  "version": "6.0.0-dev.29",
   "author": "FalloutStudios",
   "main": "./dist/lib/index.js",
   "module": "./dist/lib/esm.mjs",
