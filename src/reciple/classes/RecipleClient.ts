@@ -328,9 +328,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
         try {
             const haltResolved =
                 (command.halt
-                    ? await Promise.resolve(command.type == CommandType.SlashCommand ? command.halt(haltData as SlashCommandHaltData) : command.halt(haltData as MessageCommandHaltData)).catch(err => {
-                          console.log(err);
-                      })
+                    ? await Promise.resolve(command.type == CommandType.SlashCommand ? command.halt(haltData as SlashCommandHaltData) : command.halt(haltData as MessageCommandHaltData)).catch(err => { throw err; })
                     : false) || false;
 
             this.emit(RecipleEvents.CommandHalt, haltData);
