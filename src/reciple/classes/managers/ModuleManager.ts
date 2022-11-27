@@ -63,10 +63,10 @@ export class ModuleManager {
     /**
      * Load modules
      * @param options load modules options
-     * @returns loaded modules
+     * @returns failed load modules
      */
     public async loadModules(options?: ModuleManagerLoadModulesOptions): Promise<RecipleModule[]> {
-        const loadedModules: RecipleModule[] = [];
+        const failedToLoadModules: RecipleModule[] = [];
 
         for (const module_ of options?.modules ?? this.modules.toJSON()) {
             try {
@@ -79,16 +79,16 @@ export class ModuleManager {
                     this.client.commands.add(module_.commands);
                 }
 
-                loadedModules.push(module_);
-
                 if (!this.client.isClientLogsSilent) this.client.logger.log(`Loaded module '${module_}'`);
             } catch (err) {
                 if (options?.ignoreErrors === false) throw err;
                 if (!this.client.isClientLogsSilent) this.client.logger.error(`Failed to load module '${module_}': `, err);
+
+                failedToLoadModules.push(module_);
             }
         }
 
-        return loadedModules;
+        return failedToLoadModules;
     }
 
     /**

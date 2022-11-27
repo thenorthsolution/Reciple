@@ -51,10 +51,14 @@ await client.modules.startModules({
 });
 
 client.on(Events.ClientReady, async () => {
-    await client.modules.loadModules();
+    const failedModuleds = await client.modules.loadModules();
+
+    client.modules.modules.sweep(m => failedModuleds.some(fm => fm.id === m.id));
 
     const unloadModulesAndStopProcess = async (signal: NodeJS.Signals) => {
-        await client.modules.unloadModules({ reason: 'ProcessExit' });
+        const unloadedModules = await client.modules.unloadModules({ reason: 'ProcessExit' });
+
+        client.modules.modules.sweep(m => unloadedModules.some(fm => fm.id === m.id));
 
         client.logger.warn(`Exitting process${signal === 'SIGINT' ? ': keyboard interrupt' : signal === 'SIGTERM' ? ': terminate' : signal}`);
         process.exit();
