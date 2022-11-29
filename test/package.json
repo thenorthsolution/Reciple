@@ -1,8 +1,11 @@
 {
   "name": "test",
   "private": true,
+  "type": "commonjs",
   "scripts": {
-    "start": "yarn exec reciple -D -y --token env:DISCORD_TOKEN"
+    "start": "node ../dist/lib/bin.mjs -D -y --token env:DISCORD_TOKEN"
   },
-  "packageManager": "yarn@3.2.2"
+  "dependencies": {
+    "reciple": "file:../"
+  }
 }

@@ -2,8 +2,8 @@ import { ClientOptions, PermissionResolvable } from 'discord.js';
 import { existsSync, readFileSync, writeFileSync } from 'fs';
 import { isSupportedVersion, version } from '../version';
 import { input, replaceAll } from 'fallout-utility';
-import { cwd, token as __token } from '../flags';
-import path from 'path';
+import { token as __token } from '../flags';
+import { path } from '../util';
 import yaml from 'yaml';
 
 /**
@@ -30,15 +30,16 @@ export interface Config {
             enabled: boolean;
             replyOnError: boolean;
             registerCommands: boolean;
+            allowRegisterEmptyCommandList: boolean;
             enableCooldown: boolean;
             setRequiredPermissions: boolean;
             acceptRepliedInteractions: boolean;
-            guilds?: string[]|string;
+            guilds?: string[] | string;
             permissions: {
                 enabled: boolean;
                 commands: ConfigCommandPermissions[];
-            }
-        }
+            };
+        };
         messageCommand: {
             enabled: boolean;
             prefix?: string;
@@ -49,22 +50,22 @@ export interface Config {
             permissions: {
                 enabled: boolean;
                 commands: ConfigCommandPermissions[];
-            }
-        }
-    }
+            };
+        };
+    };
     fileLogging: {
         enabled: boolean;
         debugmode: boolean;
         clientLogs: boolean;
         stringifyLoggedJSON: boolean;
         logFilePath: string;
-    }
+    };
     client: ClientOptions;
     messages: {
         [messageKey: string]: any;
-    }
+    };
     ignoredFiles: string[];
-    modulesFolder: string|string[];
+    modulesFolder: string | string[];
     disableVersionCheck: boolean;
     version: string;
 }
@@ -74,7 +75,7 @@ export interface Config {
  */
 export class RecipleConfig {
     public config: Config = RecipleConfig.getDefaultConfig();
-    public configPath: string = path.join(cwd, 'reciple.yml');
+    public configPath: string = path.join(process.cwd(), 'reciple.yml');
     public static defaultConfigPath = path.join(__dirname, '../../../../resource/reciple.yml');
 
     /**
@@ -94,10 +95,10 @@ export class RecipleConfig {
             if (!existsSync(defaultConfigPath)) throw new Error('Default Config file not found. Please reinstall Reciple.');
 
             const defaultConfig = replaceAll(readFileSync(defaultConfigPath, 'utf-8'), 'VERSION', version);
-            
+
             writeFileSync(this.configPath, defaultConfig, 'utf-8');
             if (!existsSync(this.configPath)) throw new Error('Failed to create config file.');
-            
+
             this.config = yaml.parse(defaultConfig);
             if (this.config && this.config.token === 'TOKEN') {
                 this.config.token = this._askToken() || this.config.token;
@@ -109,10 +110,10 @@ export class RecipleConfig {
 
         if (!existsSync(this.configPath)) throw new Error('Failed to read config file.');
         const config = readFileSync(this.configPath, 'utf-8');
-        
+
         this.config = yaml.parse(config);
 
-        if (!this._isSupportedConfig()) throw new Error('Unsupported config version. Your config version: '+ (this.config?.version || 'No version specified.') + ', Reciple version: '+ version);
+        if (!this._isSupportedConfig()) throw new Error('Unsupported config version. Your config version: ' + (this.config?.version || 'No version specified.') + ', Reciple version: ' + version);
 
         return this;
     }
@@ -128,19 +129,19 @@ export class RecipleConfig {
     }
 
     /**
-     * Parse token from config 
-     * @param askIfNull Ask for token if the token is null/undefined
+     * Parse token from config
+     * @param askIfEmpty Ask for token if the token is undefined
      */
-    public parseToken(askIfNull: boolean = true): string|null {
-        let token = __token || this.config?.token || null;
-        if (!token) return token || (askIfNull ? this._askToken() : null);
+    public parseToken(askIfEmpty: boolean = true): string | null {
+        let token: string | null | undefined = __token || this.config?.token || undefined;
+        if (!token) return token || (askIfEmpty ? this._askToken() : null);
 
         const envToken = token.toString().split(':');
         if (envToken.length === 2 && envToken[0].toLocaleLowerCase() === 'env' && envToken[1]) {
-            token = process.env[envToken[1]] || null;
+            token = process.env[envToken[1]] || undefined;
         }
 
-        return token || (askIfNull ? this._askToken() : null);
+        return token || (askIfEmpty == null ? this._askToken() : null);
     }
 
     /**
@@ -153,15 +154,24 @@ export class RecipleConfig {
     /**
      * Ask for a token
      */
-    protected _askToken(): string|null {
-        return __token || input({ text: 'Bot Token >>> ', echo: '*', repeatIfEmpty: true, sigint: true }) || null;
+    protected _askToken(): string | null {
+        return (
+            __token ||
+            input({
+                text: 'Bot Token >>> ',
+                echo: '*',
+                repeatIfEmpty: true,
+                sigint: true,
+            }) ||
+            null
+        );
     }
 
     /**
      * Get default config
      */
     public static getDefaultConfig(): Config {
-        if (!existsSync(this.defaultConfigPath)) throw new Error("Default config file does not exists.");
+        if (!existsSync(this.defaultConfigPath)) throw new Error(`Default config file does not exists: ${this.defaultConfigPath}`);
 
         return yaml.parse(readFileSync(this.defaultConfigPath, 'utf-8'));
     }

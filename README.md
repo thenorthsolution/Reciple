@@ -39,7 +39,7 @@ A simple Dicord.js handler that just works.
 To install the bot, run the following command in your terminal:
 
 ```bash
-npm i reciple
+npm i reciple discord.js
 ```
 
 You can initialize the bot to the current directory with the following command in your terminal:
@@ -102,7 +102,6 @@ npx reciple
 * `-c, --config <config>` Change path to config file
 * `-D, --debugmode` Enable debug mode
 * `-y, --yes` Automatically agree to Reciple confirmation prompts
-* `-v, --version` Display version
 * `-h, --help` display help for command
 
 ## MessageCommandBuilder Example
