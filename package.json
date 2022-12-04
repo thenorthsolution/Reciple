@@ -3,7 +3,7 @@
   "type": "commonjs",
   "license": "GPL-3.0",
   "engineStrict": true,
-  "version": "6.0.0",
+  "version": "6.0.1",
   "author": "FalloutStudios",
   "main": "./dist/lib/index.js",
   "module": "./dist/lib/esm.mjs",
@@ -66,7 +66,7 @@
     "chalk": "4.1.2",
     "commander": "^9.4.1",
     "dotenv": "^16.0.3",
-    "fallout-utility": "^1.5.17",
+    "fallout-utility": "^1.5.20",
     "micromatch": "^4.0.5",
     "semver": "^7.3.7",
     "yaml": "^2.1.1"
