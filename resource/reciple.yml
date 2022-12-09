@@ -20,6 +20,8 @@ commands:
     setRequiredPermissions: true
     # accept replied or deffered command interaction
     acceptRepliedInteractions: false
+    # legacy permissions checking
+    useLegacyPermissionsChecking: false
     # register commands to specific guild(s) empty to make it global
     guilds: []
     # overwrite command permissions

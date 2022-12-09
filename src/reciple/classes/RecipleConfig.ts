@@ -34,6 +34,7 @@ export interface Config {
             enableCooldown: boolean;
             setRequiredPermissions: boolean;
             acceptRepliedInteractions: boolean;
+            useLegacyPermissionsChecking: boolean;
             guilds?: string[] | string;
             permissions: {
                 enabled: boolean;
