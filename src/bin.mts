@@ -40,8 +40,6 @@ const client = new RecipleClient({ config: config, cwd, ...config.client });
 
 if (!client.isClientLogsSilent) client.logger.info('Starting Reciple client v' + rawVersion);
 
-client.addCommandListeners();
-
 await client.modules.startModules({
     modules: await client.modules.resolveModuleFiles({
         files: await client.modules.getModulePaths({
@@ -75,6 +73,14 @@ client.on(Events.ClientReady, async () => {
     if (!client.isClientLogsSilent) client.logger.warn(`Logged in as ${client.user?.tag || 'Unknown'}!`);
 
     client.on(Events.CacheSweep, () => client.cooldowns.clean());
+
+    client.on(Events.MessageCreate, message => {
+        if (client.config.commands.messageCommand.enabled) client.messageCommandExecute(message);
+    });
+
+    client.on(Events.InteractionCreate, interaction => {
+        if (client.config.commands.slashCommand.enabled) client.slashCommandExecute(interaction);
+    });
 });
 
 client.login(config.token).catch(err => {

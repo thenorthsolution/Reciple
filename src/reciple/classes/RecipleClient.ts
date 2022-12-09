@@ -11,7 +11,7 @@ import { CommandManager } from './managers/CommandManager';
 import { ModuleManager } from './managers/ModuleManager';
 import { Config, RecipleConfig } from './RecipleConfig';
 import { getCommand, Logger } from 'fallout-utility';
-import { createLogger, path } from '../util';
+import { createLogger, deprecationWarning, path } from '../util';
 import { version } from '../version.js';
 import { cwd } from '../flags';
 
@@ -102,8 +102,11 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
 
     /**
      * Listed to command executions
+     * @deprecated Not useful
      */
     public addCommandListeners(): RecipleClient<Ready> {
+        deprecationWarning(`RecipleClient#addCommandListeners() is deprecated! Listen to commands manually.`);
+
         this.on(Events.MessageCreate, message => {
             if (this.config.commands.messageCommand.enabled) this.messageCommandExecute(message);
         });
