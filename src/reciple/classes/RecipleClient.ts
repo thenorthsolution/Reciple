@@ -127,6 +127,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
         if (!command) return;
 
         const executeData: SlashCommandExecuteData = {
+            type: command.type,
             interaction,
             builder: command,
             client: this,
@@ -207,6 +208,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
 
         const commandOptions = await MessageCommandBuilder.validateOptions(command, parseCommand);
         const executeData: MessageCommandExecuteData = {
+            type: command.type,
             message: message,
             options: commandOptions,
             command: parseCommand,
