@@ -136,7 +136,8 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
             client: this,
         };
 
-        if (!this.config.commands.slashCommand.useLegacyPermissionsChecking ||
+        if (
+            !this.config.commands.slashCommand.useLegacyPermissionsChecking ||
             userHasCommandPermissions({
                 builder: command,
                 memberPermissions: interaction.memberPermissions ?? undefined,
