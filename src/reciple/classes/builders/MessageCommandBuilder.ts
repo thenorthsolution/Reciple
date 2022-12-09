@@ -10,6 +10,10 @@ import { Command } from 'fallout-utility';
  */
 export interface MessageCommandExecuteData<T = unknown> extends BaseCommandExecuteData {
     /**
+     * Command type
+     */
+    type: CommandType.MessageCommand;
+    /**
      * Command message
      */
     message: Message;

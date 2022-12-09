@@ -30,6 +30,10 @@ export type AnyCommandExecuteData<T = unknown> = SlashCommandExecuteData<T> | Me
  */
 export interface BaseCommandExecuteData {
     /**
+     * Command type
+     */
+    type: CommandType;
+    /**
      * Bot client
      */
     client: RecipleClient<true>;

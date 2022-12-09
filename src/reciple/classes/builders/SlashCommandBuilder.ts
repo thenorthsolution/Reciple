@@ -30,6 +30,10 @@ import {
  */
 export interface SlashCommandExecuteData<T = unknown> extends BaseCommandExecuteData {
     /**
+     * Command type
+     */
+    type: CommandType.SlashCommand;
+    /**
      * Command interaction
      */
     interaction: ChatInputCommandInteraction;
