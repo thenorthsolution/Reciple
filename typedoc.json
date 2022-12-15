@@ -5,11 +5,7 @@
   ],
   "entryPointStrategy": "expand",
   "out": "./docs/docs",
-  "plugin": [
-    "typedoc-plugin-mdn-links",
-    "typedoc-plugin-djs-links",
-    "typedoc-plugin-discord-types"
-  ],
+  "plugin": [],
   "theme": "default",
   "name": "Reciple.js",
   "cname": "reciple.js.org",
