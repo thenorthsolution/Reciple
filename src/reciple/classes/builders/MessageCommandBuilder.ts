@@ -366,7 +366,14 @@ export class MessageCommandBuilder<T = unknown> implements SharedCommandBuilderP
      * @param executeData data to check
      */
     public static isMessageCommandExecuteData(executeData: unknown): executeData is MessageCommandExecuteData {
-        return (executeData as MessageCommandExecuteData).builder !== undefined && this.isMessageCommandBuilder((executeData as MessageCommandExecuteData).builder);
+        return (executeData as MessageCommandExecuteData).type == CommandType.MessageCommand && this.isMessageCommandBuilder((executeData as MessageCommandExecuteData).builder);
+    }
+
+    /**
+     * Is a message command halt data
+     */
+    public static isMessageCommandHaltData(haltData: unknown): haltData is MessageCommandHaltData {
+        return this.isMessageCommandExecuteData((haltData as MessageCommandHaltData).executeData);
     }
 
     /**

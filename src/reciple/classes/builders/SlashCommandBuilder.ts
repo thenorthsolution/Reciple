@@ -333,6 +333,13 @@ export class SlashCommandBuilder<T = unknown> extends DiscordJsSlashCommandBuild
      * @param executeData data to check
      */
     public static isSlashCommandExecuteData(executeData: unknown): executeData is SlashCommandExecuteData {
-        return (executeData as SlashCommandExecuteData).builder !== undefined && this.isSlashCommandBuilder((executeData as SlashCommandExecuteData).builder);
+        return (executeData as SlashCommandExecuteData).type !== CommandType.SlashCommand && this.isSlashCommandBuilder((executeData as SlashCommandExecuteData).builder);
+    }
+
+    /**
+     * Is a message command halt data
+     */
+    public static isSlashCommandHaltData(haltData: unknown): haltData is SlashCommandHaltData {
+        return this.isSlashCommandExecuteData((haltData as SlashCommandHaltData).executeData);
     }
 }

@@ -1,6 +1,6 @@
 import { MessageCommandOptionData, MessageCommandOptionResolvable } from '../../types/builders';
-import { Awaitable, isValidationEnabled } from 'discord.js';
 import { MessageCommandValidatedOption } from './MessageCommandBuilder';
+import { Awaitable, isValidationEnabled } from 'discord.js';
 
 /**
  * Option builder for MessageCommandBuilder
