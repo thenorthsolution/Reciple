@@ -136,64 +136,51 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
             client: this,
         };
 
+        const userCooldown: Omit<CooledDownUser, 'expireTime'> = {
+            user: interaction.user,
+            command: command.name,
+            channel: interaction.channel ?? undefined,
+            guild: interaction.guild,
+            type: CommandType.SlashCommand,
+        };
+
         if (
-            !this.config.commands.slashCommand.useLegacyPermissionsChecking ||
+            this.config.commands.slashCommand.useLegacyPermissionsChecking &&
             userHasCommandPermissions({
                 builder: command,
                 memberPermissions: interaction.memberPermissions ?? undefined,
                 commandPermissions: this.config.commands.slashCommand.permissions,
             })
         ) {
-            if (!command) return;
-            if (interaction.inCachedGuild() && !botHasExecutePermissions(interaction.channel! || interaction.guild, command.requiredBotPermissions)) {
-                if (
-                    !(await this._haltCommand(command, {
-                        executeData,
-                        reason: CommandHaltReason.MissingBotPermissions,
-                    }))
-                ) {
-                    await interaction.reply(this.getConfigMessage('insufficientBotPerms', 'Insufficient bot permissions.')).catch(er => this._replyError(er));
-                }
-
-                return;
+            if (!(await this._haltCommand(command, { executeData, reason: CommandHaltReason.MissingMemberPermissions }))) {
+                await interaction.reply(this.getConfigMessage('noPermissions', 'You do not have permission to use this command.')).catch(er => this._replyError(er));
             }
 
-            const userCooldown: Omit<CooledDownUser, 'expireTime'> = {
-                user: interaction.user,
-                command: command.name,
-                channel: interaction.channel ?? undefined,
-                guild: interaction.guild,
-                type: CommandType.SlashCommand,
-            };
-
-            if (this.config.commands.slashCommand.enableCooldown && command.cooldown && !this.cooldowns.isCooledDown(userCooldown)) {
-                this.cooldowns.add({
-                    ...userCooldown,
-                    expireTime: Date.now() + command.cooldown,
-                });
-            } else if (this.config.commands.slashCommand.enableCooldown && command.cooldown) {
-                if (
-                    !(await this._haltCommand(command, {
-                        executeData,
-                        reason: CommandHaltReason.Cooldown,
-                        ...this.cooldowns.get(userCooldown)!,
-                    }))
-                ) {
-                    await interaction.reply(this.getConfigMessage('cooldown', 'You cannot execute this command right now due to the cooldown.')).catch(er => this._replyError(er));
-                }
-
-                return;
-            }
-
-            return this._executeCommand(command, executeData);
-        } else if (
-            !(await this._haltCommand(command, {
-                executeData,
-                reason: CommandHaltReason.MissingMemberPermissions,
-            }))
-        ) {
-            await interaction.reply(this.getConfigMessage('noPermissions', 'You do not have permission to use this command.')).catch(er => this._replyError(er));
+            return;
         }
+
+        if (interaction.inCachedGuild() && !botHasExecutePermissions(interaction.channel! || interaction.guild, command.requiredBotPermissions)) {
+            if (!(await this._haltCommand(command, { executeData, reason: CommandHaltReason.MissingBotPermissions }))) {
+                await interaction.reply(this.getConfigMessage('insufficientBotPerms', 'Insufficient bot permissions.')).catch(er => this._replyError(er));
+            }
+
+            return;
+        }
+
+        if (this.config.commands.slashCommand.enableCooldown && command.cooldown && !this.cooldowns.isCooledDown(userCooldown)) {
+            this.cooldowns.add({
+                ...userCooldown,
+                expireTime: Date.now() + command.cooldown,
+            });
+        } else if (this.config.commands.slashCommand.enableCooldown && command.cooldown) {
+            if (!(await this._haltCommand(command, { executeData, reason: CommandHaltReason.Cooldown, ...this.cooldowns.get(userCooldown)! }))) {
+                await interaction.reply(this.getConfigMessage('cooldown', 'You cannot execute this command right now due to the cooldown.')).catch(er => this._replyError(er));
+            }
+
+            return;
+        }
+
+        return this._executeCommand(command, executeData);
     }
 
     /**
@@ -220,90 +207,79 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
             client: this,
         };
 
+        const userCooldown: Omit<CooledDownUser, 'expireTime'> = {
+            user: message.author,
+            command: command.name,
+            channel: message.channel,
+            guild: message.guild,
+            type: CommandType.MessageCommand,
+        };
+
+        if ((!command.allowExecuteInDM && message.channel.type === ChannelType.DM) || (!command.allowExecuteByBots && (message.author.bot || message.author.system))) return;
+
         if (
-            userHasCommandPermissions({
+            !userHasCommandPermissions({
                 builder: command,
                 memberPermissions: message.member?.permissions,
                 commandPermissions: this.config.commands.messageCommand.permissions,
             })
         ) {
-            if ((!command.allowExecuteInDM && message.channel.type === ChannelType.DM) || (!command.allowExecuteByBots && (message.author.bot || message.author.system))) return;
-            if (command.validateOptions) {
-                if (commandOptions.some(o => o.invalid)) {
-                    if (
-                        !(await this._haltCommand(command, {
-                            executeData,
-                            reason: CommandHaltReason.InvalidArguments,
-                            invalidArguments: new MessageCommandOptionManager(...executeData.options.filter(o => o.invalid)),
-                        }))
-                    ) {
-                        message.reply(this.getConfigMessage('invalidArguments', 'Invalid argument(s) given.')).catch(er => this._replyError(er));
-                    }
-                    return;
-                }
-
-                if (commandOptions.some(o => o.missing)) {
-                    if (
-                        !(await this._haltCommand(command, {
-                            executeData,
-                            reason: CommandHaltReason.MissingArguments,
-                            missingArguments: new MessageCommandOptionManager(...executeData.options.filter(o => o.missing)),
-                        }))
-                    ) {
-                        message.reply(this.getConfigMessage('missingArguments', 'Not enough arguments.')).catch(er => this._replyError(er));
-                    }
-                    return;
-                }
+            if (!(await this._haltCommand(command, { executeData, reason: CommandHaltReason.MissingMemberPermissions }))) {
+                await message.reply(this.getConfigMessage('noPermissions', 'You do not have permission to use this command.')).catch(er => this._replyError(er));
             }
 
-            if (message.inGuild() && !botHasExecutePermissions(message.channel || message.guild, command.requiredBotPermissions)) {
-                if (
-                    !(await this._haltCommand(command, {
-                        executeData,
-                        reason: CommandHaltReason.MissingBotPermissions,
-                    }))
-                ) {
-                    message.reply(this.getConfigMessage('insufficientBotPerms', 'Insufficient bot permissions.')).catch(er => this._replyError(er));
-                }
-                return;
-            }
-
-            const userCooldown: Omit<CooledDownUser, 'expireTime'> = {
-                user: message.author,
-                command: command.name,
-                channel: message.channel,
-                guild: message.guild,
-                type: CommandType.MessageCommand,
-            };
-
-            if (this.config.commands.messageCommand.enableCooldown && command.cooldown && !this.cooldowns.isCooledDown(userCooldown)) {
-                this.cooldowns.add({
-                    ...userCooldown,
-                    expireTime: Date.now() + command.cooldown,
-                });
-            } else if (this.config.commands.messageCommand.enableCooldown && command.cooldown) {
-                if (
-                    !(await this._haltCommand(command, {
-                        executeData,
-                        reason: CommandHaltReason.Cooldown,
-                        ...this.cooldowns.get(userCooldown)!,
-                    }))
-                ) {
-                    await message.reply(this.getConfigMessage('cooldown', 'You cannot execute this command right now due to the cooldown.')).catch(er => this._replyError(er));
-                }
-
-                return;
-            }
-
-            return this._executeCommand(command, executeData);
-        } else if (
-            !(await this._haltCommand(command, {
-                executeData,
-                reason: CommandHaltReason.MissingMemberPermissions,
-            }))
-        ) {
-            message.reply(this.getConfigMessage('noPermissions', 'You do not have permission to use this command.')).catch(er => this._replyError(er));
+            return;
         }
+
+        if (command.validateOptions) {
+            if (commandOptions.some(o => o.invalid)) {
+                if (
+                    !(await this._haltCommand(command, {
+                        executeData,
+                        reason: CommandHaltReason.InvalidArguments,
+                        invalidArguments: new MessageCommandOptionManager(...executeData.options.filter(o => o.invalid)),
+                    }))
+                ) {
+                    message.reply(this.getConfigMessage('invalidArguments', 'Invalid argument(s) given.')).catch(er => this._replyError(er));
+                }
+                return;
+            }
+
+            if (commandOptions.some(o => o.missing)) {
+                if (
+                    !(await this._haltCommand(command, {
+                        executeData,
+                        reason: CommandHaltReason.MissingArguments,
+                        missingArguments: new MessageCommandOptionManager(...executeData.options.filter(o => o.missing)),
+                    }))
+                ) {
+                    message.reply(this.getConfigMessage('missingArguments', 'Not enough arguments.')).catch(er => this._replyError(er));
+                }
+                return;
+            }
+        }
+
+        if (message.inGuild() && !botHasExecutePermissions(message.channel || message.guild, command.requiredBotPermissions)) {
+            if (!(await this._haltCommand(command, { executeData, reason: CommandHaltReason.MissingBotPermissions }))) {
+                message.reply(this.getConfigMessage('insufficientBotPerms', 'Insufficient bot permissions.')).catch(er => this._replyError(er));
+            }
+            return;
+        }
+
+        if (this.config.commands.messageCommand.enableCooldown && command.cooldown && !this.cooldowns.isCooledDown(userCooldown)) {
+            this.cooldowns.add({
+                ...userCooldown,
+                expireTime: Date.now() + command.cooldown,
+            });
+        } else if (this.config.commands.messageCommand.enableCooldown && command.cooldown) {
+            if (!(await this._haltCommand(command, { executeData, reason: CommandHaltReason.Cooldown, ...this.cooldowns.get(userCooldown)! }))) {
+                await message.reply(this.getConfigMessage('cooldown', 'You cannot execute this command right now due to the cooldown.')).catch(er => this._replyError(er));
+            }
+
+            return;
+        }
+
+        return this._executeCommand(command, executeData);
     }
 
     /**
