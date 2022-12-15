@@ -4,8 +4,8 @@ import { MessageCommandBuilder } from './builders/MessageCommandBuilder';
 import { SlashCommandBuilder } from './builders/SlashCommandBuilder';
 import { validateCommandBuilder } from '../util';
 import { RecipleClient } from './RecipleClient';
-import { randomUUID } from 'crypto';
 import { isSupportedVersion } from '../version';
+import { randomUUID } from 'crypto';
 
 /**
  * Reciple script object

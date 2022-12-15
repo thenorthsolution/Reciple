@@ -7,11 +7,11 @@ import { AnyCommandBuilder, AnySlashCommandBuilder, CommandType } from '../types
 import { botHasExecutePermissions, userHasCommandPermissions } from '../permissions';
 import { MessageCommandOptionManager } from './managers/MessageCommandOptionManager';
 import { ApplicationCommandManager } from './managers/ApplicationCommandManager';
+import { createLogger, deprecationWarning, path } from '../util';
 import { CommandManager } from './managers/CommandManager';
 import { ModuleManager } from './managers/ModuleManager';
 import { Config, RecipleConfig } from './RecipleConfig';
 import { getCommand, Logger } from 'fallout-utility';
-import { createLogger, deprecationWarning, path } from '../util';
 import { version } from '../version.js';
 import { cwd } from '../flags';
 
@@ -310,9 +310,11 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
         try {
             const haltResolved =
                 (command.halt
-                    ? await Promise.resolve(command.type == CommandType.SlashCommand ? command.halt(haltData as SlashCommandHaltData) : command.halt(haltData as MessageCommandHaltData)).catch(err => {
-                          throw err;
-                      })
+                    ? await Promise.resolve(command.type == CommandType.SlashCommand
+                        ? command.halt(haltData as SlashCommandHaltData)
+                        : command.halt(haltData as MessageCommandHaltData)).catch(err => {
+                            throw err;
+                        })
                     : false) || false;
 
             this.emit(RecipleEvents.CommandHalt, haltData);
