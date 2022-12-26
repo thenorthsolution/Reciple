@@ -1,7 +1,10 @@
 import { Awaitable, Client as DiscordJsClient, ClientOptions as DiscordJsClientOptions } from 'discord.js';
 import { TypedEmitter } from 'tiny-typed-emitter';
+import { Config } from '../types/Config';
 
-export interface ClientOptions extends DiscordJsClientOptions {}
+export interface ClientOptions extends DiscordJsClientOptions {
+    config?: Config;
+}
 
 export interface ClientEvents {
     recipleCommandExecute: () => Awaitable<void>;

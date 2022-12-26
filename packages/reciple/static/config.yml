@@ -1,0 +1,66 @@
+# Your bot token here
+# To use env variable as a token just do it like this env:TOKEN_ENV
+token: TOKEN
+
+# Commands options
+commands:
+  # Interaction command options
+  slashCommand:
+    # enable interaction commands
+    enabled: true
+    # reply when an error occured
+    replyOnError: false
+    # register interaction commands on bot ready
+    registerCommands: true
+    # allow register empty list of application commands
+    allowRegisterEmptyCommandList: true
+    # set required permissions for interaction commands
+    setRequiredPermissions: true
+    # accept replied or deffered command interaction
+    acceptRepliedInteractions: false
+    # legacy permissions checking
+    useLegacyPermissionsChecking: false
+    # register commands to specific guild(s) empty to make it global
+    guilds: []
+
+  # message command options
+  messageCommand:
+    # enable message commands
+    enabled: true
+    # command prefix
+    prefix: '!'
+    # reply when an error occured
+    replyOnError: false
+    # command argument separator
+    commandArgumentSeparator: ' '
+
+# Client options
+# Learn more about client options at https://discord.js.org/#/docs/discord.js/main/typedef/ClientOptions
+client:
+  intents:
+    - Guilds
+    - GuildMessages
+    - MessageContent
+
+# Bot messages
+messages:
+  missingArguments: Not enough arguments.
+  invalidArguments: Invalid argument(s) given.
+  insufficientBotPerms:
+    content: Insufficient bot permissions.
+    ephemeral: true
+  noPermissions:
+    content: You do not have permission to use this command.
+    ephemeral: true
+  cooldown:
+    content: You cannot execute this command right now due to the cooldown.
+    ephemeral: true
+  error:
+    content: An error occurred.
+    ephemeral: true
+
+# Load modules regardless of its supported versions
+disableModuleVersionCheck: false
+
+# Current version
+version: ^VERSION

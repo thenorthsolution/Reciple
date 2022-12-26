@@ -4,6 +4,7 @@
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
     "forceConsistentCasingInFileNames": true,
+    "experimentalDecorators": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "sourceMap": true,

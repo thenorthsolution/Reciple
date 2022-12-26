@@ -17,6 +17,14 @@
     "build": "npx tsc"
   },
   "dependencies": {
-    "@reciple/client": "*"
+    "@reciple/client": "*",
+    "fallout-utility": "*"
+  },
+  "devDependencies": {
+    "discord.js": "^14.7.1",
+    "yaml": "^2.2.0"
+  },
+  "peerDependencies": {
+    "discord.js": "^14.7.1"
   }
 }
