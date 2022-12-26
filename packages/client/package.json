@@ -5,6 +5,16 @@
   "license": "GPL-3.0",
   "engineStrict": true,
   "version": "7.0.0",
+  "main": "./dist/index.js",
+  "module": "./dist/esm.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/esm.mjs",
+      "require": "./dist/index.js"
+    }
+  },
   "keywords": [
     "Discord",
     "Discord.js handler",
@@ -17,7 +27,8 @@
     "build": "npx tsc"
   },
   "dependencies": {
-    "fallout-utility": "^2.0.0"
+    "fallout-utility": "^2.0.0",
+    "tiny-typed-emitter": "^2.1.0"
   },
   "devDependencies": {
     "discord.js": "^14.7.1"

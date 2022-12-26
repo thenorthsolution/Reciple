@@ -5,7 +5,8 @@
     "packages/*"
   ],
   "scripts": {
-    "clean": "npx rimraf ./packages/bin ./packages/dist"
+    "clean": "npx rimraf ./packages/bin ./packages/dist",
+    "build": "npm run clean && npx lerna run build && npm i"
   },
   "devDependencies": {
     "lerna": "^6.1.0",

@@ -2,6 +2,17 @@
   "name": "reciple",
   "description": "Reciple command line",
   "version": "7.0.0",
+  "type": "module",
+  "main": "./bin/lib/commonjs.cjs",
+  "module": "./bin/lib/index.js",
+  "types": "./bin/lib/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./bin/lib/index.d.ts",
+      "import": "./bin/lib/index.js",
+      "require": "./bin/lib/commonjs.cjs"
+    }
+  },
   "scripts": {
     "build": "npx tsc"
   },
