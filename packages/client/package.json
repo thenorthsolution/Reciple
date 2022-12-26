@@ -1,0 +1,28 @@
+{
+  "name": "@reciple/client",
+  "description": "The Reciple client",
+  "author": "FalloutStudios",
+  "license": "GPL-3.0",
+  "engineStrict": true,
+  "version": "7.0.0",
+  "keywords": [
+    "Discord",
+    "Discord.js handler",
+    "Reciple"
+  ],
+  "engines": {
+    "node": ">=16.9.0"
+  },
+  "scripts": {
+    "build": "npx tsc"
+  },
+  "dependencies": {
+    "fallout-utility": "^2.0.0"
+  },
+  "devDependencies": {
+    "discord.js": "^14.7.1"
+  },
+  "peerDependencies": {
+    "discord.js": "^14.7.1"
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "name": "reciple",
+  "description": "Reciple command line",
+  "version": "7.0.0",
+  "scripts": {
+    "build": "npx tsc"
+  },
+  "dependencies": {
+    "@reciple/client": "*"
+  }
+}

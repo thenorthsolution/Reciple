@@ -1,87 +1,16 @@
 {
   "name": "reciple",
-  "type": "commonjs",
   "license": "GPL-3.0",
-  "engineStrict": true,
-  "version": "6.0.4",
-  "author": "FalloutStudios",
-  "main": "./dist/lib/index.js",
-  "module": "./dist/lib/esm.mjs",
-  "types": "./dist/types/index.d.ts",
-  "description": "A simple Discord.js handler that just works",
-  "homepage": "https://reciple.js.org",
-  "bin": {
-    "reciple": "./dist/lib/bin.mjs"
-  },
-  "exports": {
-    ".": {
-      "import": {
-        "types": "./dist/types/index.d.ts",
-        "default": "./dist/lib/esm.mjs"
-      },
-      "require": {
-        "types": "./dist/types/index.d.ts",
-        "default": "./dist/lib/index.js"
-      }
-    }
-  },
-  "keywords": [
-    "Discord",
-    "Discord.js handler",
-    "Reciple"
-  ],
-  "contributors": [
-    "GhexterCortes"
-  ],
-  "bugs": {
-    "url": "https://github.com/FalloutStudios/reciple/issues"
-  },
-  "engines": {
-    "node": ">=16.9.0"
-  },
   "workspaces": [
-    "test"
-  ],
-  "files": [
-    "dist",
-    "resource",
-    "LICENSE",
-    "README.md"
+    "packages/*"
   ],
   "scripts": {
-    "format": "npx prettier --write src",
-    "clean": "npx rimraf dist",
-    "build": "npm run clean && npx tsc",
-    "build:publish": "npm run format && npm run build && npm run docs && npm publish",
-    "build:publish-dev": "npm run format && npm run build && npm publish --tag dev",
-    "test": "npm run build && npm install && npm run start -w test",
-    "docs": "npx docgen --typescript true -c ./docs/index.json -o ./docs/docs.json -i src/index.ts",
-    "watch": "npx tsc --watch --noEmit"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/FalloutStudios/reciple.git"
-  },
-  "dependencies": {
-    "chalk": "4.1.2",
-    "commander": "^9.4.1",
-    "dotenv": "^16.0.3",
-    "fallout-utility": "^1.5.21",
-    "micromatch": "^4.0.5",
-    "semver": "^7.3.7",
-    "yaml": "^2.1.1"
+    "clean": "npx rimraf ./packages/bin ./packages/dist"
   },
   "devDependencies": {
-    "@discordjs/docgen": "^0.12.1",
-    "@types/micromatch": "^4.0.2",
-    "@types/node": "^18.11.9",
-    "@types/semver": "^7.3.13",
-    "discord.js": "^14.7.0",
-    "prettier": "^2.8.0",
+    "lerna": "^6.1.0",
+    "prettier": "^2.8.1",
     "rimraf": "^3.0.2",
-    "typescript": "^4.9.3"
-  },
-  "peerDependencies": {
-    "discord.js": "^14.5.0"
+    "typescript": "^4.9.4"
   }
 }

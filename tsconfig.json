@@ -1,22 +1,14 @@
 {
-  "include": [
-    "./src/**/*"
-  ],
   "compilerOptions": {
-    "target": "ES2020",
-    "module": "Node16",
-    "rootDir": "./src",
-    "declaration": true,
-    "outDir": "./dist/lib",
-    "declarationDir": "./dist/types",
-    "esModuleInterop": true,
+    "target": "ESNext",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
     "forceConsistentCasingInFileNames": true,
-    "listEmittedFiles": true,
-    "moduleResolution": "Node16",
-    "declarationMap": true,
-    "sourceMap": true,
-    "strict": true,
-    "newLine": "lf",
+    "esModuleInterop": true,
     "skipLibCheck": true,
+    "sourceMap": true,
+    "allowJs": true,
+    "strict": true,
+    "newLine": "lf"
   }
 }
