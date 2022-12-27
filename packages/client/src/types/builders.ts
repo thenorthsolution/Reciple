@@ -6,7 +6,6 @@ import { MessageCommandOptionResolvable } from '../classes/builders/MessageComma
 
 export enum CommandType {
     SlashCommand = 1,
-    ContextMenuCommand,
     MessageCommand
 }
 
