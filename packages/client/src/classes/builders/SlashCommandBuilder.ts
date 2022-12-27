@@ -58,7 +58,7 @@ export interface SlashCommandBuilder<Metadata = unknown> extends DiscordJsSlashC
 
 @mix(DiscordJsSlashCommandBuilder, BaseCommandBuilder)
 export class SlashCommandBuilder<Metadata = unknown> {
-    readonly type: CommandType.MessageCommand = CommandType.MessageCommand;
+    readonly type: CommandType.SlashCommand = CommandType.SlashCommand;
     public halt?: SlashCommandHaltFunction<Metadata>;
     public execute: SlashCommandExecuteFunction<Metadata> = () => {};
 
