@@ -1,4 +1,5 @@
 import semver from 'semver';
+import { AnyCommandBuilder, CommandType } from '..';
 
 export class Util {
     static get rawVersion(): string {
@@ -20,5 +21,11 @@ export class Util {
         if (!this.isValidVersion(version)) throw new TypeError(`Invalid supported version: ${version}`);
 
         return semver.satisfies(version, versionRange);
+    }
+
+    public static validateCommandBuilder(command: AnyCommandBuilder): command is AnyCommandBuilder {
+        if (!command.name) return false;
+        if (command.type === CommandType.MessageCommand && command.options.length && command.options.some(o => !o.name)) return false;
+        return true;
     }
 }

@@ -24,7 +24,7 @@ export type MessageCommandHaltData<Metadata = unknown> = CommandHaltData<Command
 export type MessageCommandHaltFunction<Metadata = unknown> = (data: MessageCommandHaltData<Metadata>) => Awaitable<void>;
 
 export class MessageCommandBuilder<Metadata = unknown> extends BaseCommandBuilder<Metadata> {
-    readonly type: CommandType = CommandType.MessageCommand;
+    readonly type: CommandType.MessageCommand = CommandType.MessageCommand;
     public name!: string;
     public description!: string;
     public aliases: string[] = [];
@@ -34,6 +34,24 @@ export class MessageCommandBuilder<Metadata = unknown> extends BaseCommandBuilde
     public options: MessageCommandOptionBuilder[] = [];
     public halt?: MessageCommandHaltFunction<Metadata>;
     public execute: MessageCommandExecuteFunction<Metadata> = () => {};
+
+    constructor(data?: Partial<Omit<MessageCommandData<Metadata>, 'type'>>) {
+        super();
+
+        if (data?.name !== undefined) this.setName(data.name);
+        if (data?.description !== undefined) this.setDescription(data.description);
+        if (data?.aliases !== undefined) this.addAliases(data.aliases);
+        if (data?.cooldown !== undefined) this.setCooldown(Number(data?.cooldown));
+        if (data?.requiredBotPermissions !== undefined) this.setRequiredBotPermissions(data.requiredBotPermissions);
+        if (data?.requiredMemberPermissions !== undefined) this.setRequiredMemberPermissions(data.requiredMemberPermissions);
+        if (data?.halt !== undefined) this.setHalt(data.halt);
+        if (data?.execute !== undefined) this.setExecute(data.execute);
+        if (data?.metadata !== undefined) this.setMetadata(data.metadata);
+        if (data?.allowExecuteByBots !== undefined) this.setUserBotPermission(data?.allowExecuteByBots);
+        if (data?.allowExecuteInDM !== undefined) this.setDmPermission(data?.allowExecuteInDM);
+        if (data?.validateOptions !== undefined) this.setValidateOptions(data?.validateOptions);
+        if (data?.options !== undefined) this.options = data.options.map(o => MessageCommandOptionBuilder.resolveMessageCommandOption(o));
+    }
 
     public setName(name: string): this {
         if (isValidationEnabled() && (!name || typeof name !== 'string' || !name.match(/^[\w-]{1,32}$/))) throw new TypeError('name must be a string and match the regex /^[\\w-]{1,32}$/');
@@ -74,9 +92,16 @@ export class MessageCommandBuilder<Metadata = unknown> extends BaseCommandBuilde
         return this;
     }
 
+    public setValidateOptions(validateOptions: boolean): this {
+        this.validateOptions = validateOptions;
+        return this;
+    }
+
     public addOptions(...options: RestOrArray<MessageCommandOptionResolvable | ((builder: MessageCommandOptionBuilder) => MessageCommandOptionBuilder)>): this {
         for (const optionResolvable of normalizeArray(options)) {
-            const option = typeof optionResolvable === 'function' ? optionResolvable(new MessageCommandOptionBuilder()) : optionResolvable instanceof MessageCommandOptionBuilder ? optionResolvable : MessageCommandOptionBuilder.from(optionResolvable);
+            const option = typeof optionResolvable === 'function'
+                ? optionResolvable(new MessageCommandOptionBuilder())
+                : MessageCommandOptionBuilder.resolveMessageCommandOption(optionResolvable);
 
             if (isValidationEnabled()) {
                 if (this.options.find(o => o.name === option.name)) throw new TypeError('option with name "' + option.name + '" already exists.');
@@ -87,5 +112,17 @@ export class MessageCommandBuilder<Metadata = unknown> extends BaseCommandBuilde
         }
 
         return this;
+    }
+
+    public static resolveMessageCommand<Metadata = unknown>(commandData: MessageCommandData<Metadata> | MessageCommandBuilder<Metadata>): MessageCommandBuilder<Metadata> {
+        return this.isMessageCommandBuilder<Metadata>(commandData) ? commandData : new MessageCommandBuilder(commandData);
+    }
+
+    public static isMessageCommandBuilder<Metadata = unknown>(builder: unknown): builder is MessageCommandBuilder<Metadata> {
+        return builder instanceof MessageCommandBuilder;
+    }
+
+    public static isMessageCommandExecuteData<Metadata>(executeData: unknown): executeData is MessageCommandExecuteData<Metadata> {
+        return (executeData as MessageCommandExecuteData<Metadata>).type == CommandType.MessageCommand && this.isMessageCommandBuilder<Metadata>((executeData as MessageCommandExecuteData).builder);
     }
 }

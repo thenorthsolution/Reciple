@@ -1,7 +1,7 @@
 import { ApplicationCommandOptionAllowedChannelTypes, ApplicationCommandOptionType, Awaitable, LocalizationMap, Message, SlashCommandAttachmentOption, SlashCommandBooleanOption, SlashCommandChannelOption, SlashCommandIntegerOption, SlashCommandMentionableOption, SlashCommandNumberOption, SlashCommandRoleOption, SlashCommandStringOption, SlashCommandSubcommandBuilder, SlashCommandSubcommandGroupBuilder, SlashCommandUserOption } from 'discord.js';
 import { BaseCommandBuilder } from '../classes/builders/BaseCommandBuilder';
 import { MessageCommandBuilder, MessageCommandExecuteData, MessageCommandExecuteFunction, MessageCommandHaltData, MessageCommandHaltFunction } from '../classes/builders/MessageCommandBuilder';
-import { SlashCommandBuilder, SlashCommandExecuteData, SlashCommandExecuteFunction, SlashCommandHaltData, SlashCommandHaltFunction } from '../classes/builders/SlashCommandBuilder';
+import { SlashCommandBuilder, SlashCommandExecuteData, SlashCommandExecuteFunction, SlashCommandHaltData, SlashCommandHaltFunction, SlashCommandOptionsOnlyBuilder, SlashCommandSubcommandsOnlyBuilder } from '../classes/builders/SlashCommandBuilder';
 import { MessageCommandOptionResolvable } from '../classes/builders/MessageCommandOptionBuilder';
 
 export enum CommandType {
@@ -9,7 +9,10 @@ export enum CommandType {
     MessageCommand
 }
 
-export type AnyCommandBuilder<Metadata = unknown> = SlashCommandBuilder<Metadata>|MessageCommandBuilder<Metadata>;
+export type AnySlashCommandBuilder<Metadata = unknown> = SlashCommandBuilder<Metadata>|SlashCommandOptionsOnlyBuilder<Metadata>|SlashCommandSubcommandsOnlyBuilder<Metadata>;
+
+export type AnyCommandData<Metadata = unknown> = SlashCommandData<Metadata>|MessageCommandData<Metadata>;
+export type AnyCommandBuilder<Metadata = unknown> = AnySlashCommandBuilder<Metadata>|MessageCommandBuilder<Metadata>;
 
 export type AnyCommandExecuteFunction<Metadata = unknown> = SlashCommandExecuteFunction<Metadata>|MessageCommandExecuteFunction<Metadata>;
 export type AnyCommandExecuteData<Metadata = unknown> = SlashCommandExecuteData<Metadata>|MessageCommandExecuteData<Metadata>;

@@ -44,7 +44,7 @@ export class MessageCommandOptionBuilder {
         };
     }
 
-    public static from(option: MessageCommandOptionResolvable): MessageCommandOptionBuilder {
+    public static resolveMessageCommandOption(option: MessageCommandOptionResolvable): MessageCommandOptionBuilder {
         return this.isMessageCommandOption(option) ? option : new MessageCommandOptionBuilder(option);
     }
 

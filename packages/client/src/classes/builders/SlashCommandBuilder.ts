@@ -2,14 +2,14 @@ import { Awaitable, SlashCommandAttachmentOption, SlashCommandBooleanOption, Sla
 import { BaseCommandBuilder } from './BaseCommandBuilder';
 import { isClass } from 'fallout-utility';
 import { mix } from 'ts-mixer';
-import { AnySlashCommandOptionBuilder, AnySlashCommandOptionData, AnySlashCommandOptionsOnlyOptionBuilder, CommandType, SlashCommandData } from '../../types/builders';
+import { AnySlashCommandBuilder, AnySlashCommandOptionBuilder, AnySlashCommandOptionData, AnySlashCommandOptionsOnlyOptionBuilder, CommandType, SlashCommandData } from '../../types/builders';
 import { CommandHaltData } from '../../types/commandHalt';
 import { Client } from '../Client';
 
 export type SlashCommandResolvable<Metadata = unknown> = SlashCommandBuilder<Metadata>|SlashCommandData<Metadata>;
 
 export interface SlashCommandExecuteData<Metadata = unknown> {
-    type: CommandType.MessageCommand;
+    type: CommandType.SlashCommand;
     client: Client;
     interaction: ChatInputCommandInteraction;
     builder: SlashCommandBuilder<Metadata>;
@@ -187,5 +187,17 @@ export class SlashCommandBuilder<Metadata = unknown> {
             .setDescription(option.description)
             .setNameLocalizations(option.nameLocalizations ?? null)
             .setDescriptionLocalizations(option.descriptionLocalizations ?? null) as T;
+    }
+
+    public static resolveSlashCommand<Metadata = unknown>(commandData: SlashCommandData<Metadata> | AnySlashCommandBuilder<Metadata>): AnySlashCommandBuilder<Metadata> {
+        return this.isSlashCommandBuilder<Metadata>(commandData) ? commandData : new SlashCommandBuilder<Metadata>(commandData);
+    }
+
+    public static isSlashCommandBuilder<Metadata = unknown>(builder: unknown): builder is AnySlashCommandBuilder<Metadata> {
+        return builder instanceof SlashCommandBuilder;
+    }
+
+    public static isSlashCommandExecuteData<Metadata = unknown>(executeData: unknown): executeData is SlashCommandExecuteData<Metadata> {
+        return (executeData as SlashCommandExecuteData<Metadata>).type == CommandType.SlashCommand && this.isSlashCommandBuilder<Metadata>((executeData as SlashCommandExecuteData).builder);
     }
 }
