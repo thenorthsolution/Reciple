@@ -1,5 +1,5 @@
-import { Awaitable, Message } from 'discord.js';
 import { BaseCommandData } from '../../types/commands';
+import { Awaitable, Message } from 'discord.js';
 
 export type MessageCommandOptionResolvable = MessageCommandOptionData|MessageCommandOptionBuilder;
 

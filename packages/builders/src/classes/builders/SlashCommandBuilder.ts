@@ -1,11 +1,11 @@
-import discordjs, { ApplicationCommandOptionType, Awaitable, ChatInputApplicationCommandData, ChatInputCommandInteraction, SharedSlashCommandOptions, SlashCommandAttachmentOption, SlashCommandBooleanOption, SlashCommandChannelOption, SlashCommandIntegerOption, SlashCommandMentionableOption, SlashCommandNumberOption, SlashCommandRoleOption, SlashCommandStringOption, SlashCommandSubcommandBuilder, SlashCommandSubcommandGroupBuilder, SlashCommandUserOption } from 'discord.js';
-import { mix } from 'ts-mixer';
+import discordjs, { ApplicationCommandOptionType, Awaitable, ChatInputCommandInteraction, SharedSlashCommandOptions, SlashCommandAttachmentOption, SlashCommandBooleanOption, SlashCommandChannelOption, SlashCommandIntegerOption, SlashCommandMentionableOption, SlashCommandNumberOption, SlashCommandRoleOption, SlashCommandStringOption, SlashCommandSubcommandBuilder, SlashCommandSubcommandGroupBuilder, SlashCommandUserOption } from 'discord.js';
+import { AnySlashCommandOptionBuilder, AnySlashCommandOptionData, SlashCommandOptionResolvable, SlashCommandSubcommandOptionsOnlyBuilder, SlashCommandSubcommandOptionsOnlyData, SlashCommandSubcommandsOnlyResolvable } from '../../types/slashCommandOptions';
 import { BaseCommandBuilder, BaseCommandBuilderData } from './BaseCommandBuilder';
 import { BaseInteractionBasedCommandData, CommandType } from '../../types/commands';
-import { Client } from '../Client';
 import { CommandHaltData } from '../../types/halt';
-import { AnySlashCommandOptionBuilder, AnySlashCommandOptionData, BaseSlashCommandOptionData, SlashCommandOptionResolvable, SlashCommandSubcommandOptionsOnlyBuilder, SlashCommandSubcommandOptionsOnlyData, SlashCommandSubcommandsOnlyResolvable } from '../../types/slashCommandOptions';
 import { isClass } from 'fallout-utility';
+import { Client } from '../Client';
+import { mix } from 'ts-mixer';
 
 export interface SlashCommandExecuteData<Metadata = unknown> {
     commandType: CommandType.SlashCommand;

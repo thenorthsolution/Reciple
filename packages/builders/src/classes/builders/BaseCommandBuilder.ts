@@ -1,5 +1,5 @@
-import { ContextMenuCommandBuilder, PermissionResolvable, PermissionsBitField, SlashCommandBuilder, isValidationEnabled } from 'discord.js';
-import { AnyCommandData, AnyCommandExecuteFunction, AnyCommandHaltFunction, CommandType } from '../../types/commands';
+import { ContextMenuCommandBuilder, PermissionResolvable, PermissionsBitField, SlashCommandBuilder } from 'discord.js';
+import { AnyCommandExecuteFunction, AnyCommandHaltFunction, CommandType } from '../../types/commands';
 import { MessageCommandBuilder } from './MessageCommandBuilder';
 
 export interface BaseCommandBuilderData<Metadata = unknown> {

@@ -1,9 +1,9 @@
 import discordjs, { Awaitable, ContextMenuCommandInteraction, ContextMenuCommandType } from 'discord.js';
 import { BaseInteractionBasedCommandData, CommandType } from '../../types/commands';
 import { BaseCommandBuilder, BaseCommandBuilderData } from './BaseCommandBuilder';
-import { mix } from 'ts-mixer';
 import { CommandHaltData } from '../../types/halt';
 import { Client } from '../Client';
+import { mix } from 'ts-mixer';
 
 export interface ContextMenuCommandExecuteData<Metadata = unknown> {
     commandType: CommandType.ContextMenuCommand;
