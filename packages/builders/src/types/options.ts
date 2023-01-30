@@ -18,7 +18,7 @@ export interface RecipleCommandsConfigOptions {
 
 export interface RecipleCommandsInteractionBasedConfigOptions extends RecipleCommandsConfigOptions {
     registerCommands: boolean;
-    allowRegisterEmptyCommandList: boolean;
+    registerEmptyCommandList: boolean;
     acceptRepliedInteractions: boolean;
     guilds: string[];
 }

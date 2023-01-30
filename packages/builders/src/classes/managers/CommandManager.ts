@@ -33,12 +33,18 @@ export class CommandManager {
         for (const command of normalizeArray(commands)) {
             switch (command.commandType) {
                 case CommandType.ContextMenuCommand:
+                    if (!this.client.config.commands.contextMenuCommand.enabled) break;
+
                     this.contextMenuCommands.set(command.name, ContextMenuCommandBuilder.resolve(command));
                     break;
                 case CommandType.MessageCommand:
+                    if (!this.client.config.commands.messageCommand.enabled) break;
+
                     this.messageCommands.set(command.name, MessageCommandBuilder.resolve(command));
                     break;
                 case CommandType.SlashCommand:
+                    if (!this.client.config.commands.slashCommand.enabled) break;
+
                     this.slashCommands.set(command.name, SlashCommandBuilder.resolve(command));
                     break;
                 default:
@@ -75,10 +81,23 @@ export class CommandManager {
 
     public async registerApplicationCommands(commandType: CommandType.ContextMenuCommand|CommandType.SlashCommand, guildIds: string[]): Promise<void> {
         const commands = this._parseApplicationCommands(commandType === CommandType.ContextMenuCommand
-            ? this.contextMenuCommands.toJSON()
+            ? this.client.config.commands.contextMenuCommand.registerCommands
+                ? this.contextMenuCommands.toJSON()
+                : []
             : commandType === CommandType.SlashCommand
-                ? this.slashCommands.toJSON()
+                ? this.client.config.commands.slashCommand.registerCommands
+                    ? this.slashCommands.toJSON()
+                    : []
                 : []);
+
+        if (!commands.length
+            &&
+            (
+                commandType === CommandType.ContextMenuCommand && !this.client.config.commands.contextMenuCommand.registerEmptyCommandList
+                ||
+                commandType === CommandType.SlashCommand && !this.client.config.commands.slashCommand.registerEmptyCommandList
+            )
+           ) return;
 
         for (const guildId of guildIds) {
             await this.client.application?.commands.set(commands, guildId)
