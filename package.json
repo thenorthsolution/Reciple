@@ -9,13 +9,9 @@
     "build": "npm run clean && npx lerna run build && npm i"
   },
   "devDependencies": {
-    "@types/node": "^18.11.17",
+    "@types/node": "^18.11.18",
     "lerna": "^6.1.0",
-    "prettier": "^2.8.1",
     "rimraf": "^3.0.2",
     "typescript": "^4.9.4"
-  },
-  "dependencies": {
-    "fallout-utility": "^2.1.1"
   }
 }
