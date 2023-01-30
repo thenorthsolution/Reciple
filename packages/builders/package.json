@@ -1,0 +1,16 @@
+{
+  "name": "@reciple/builders",
+  "description": "Reciple builder classes",
+  "license": "GPL-3.0",
+  "version": "1.0.0",
+  "main": "./dist/index.js",
+  "module": "./dist/esm.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/esm.mjs",
+      "require": "./dist/index.js"
+    }
+  }
+}
