@@ -1,5 +1,6 @@
 import { ContextMenuCommandExecuteData, ContextMenuCommandHaltData } from '../classes/builders/ContextMenuCommandBuilder';
 import { MessageCommandExecuteData } from '../classes/builders/MessageCommandBuilder';
+import { AnySlashCommandBuilder } from '../classes/builders/SlashCommandBuilder';
 import { CommandType } from './commands';
 
 export enum CommandHaltReason {
@@ -9,6 +10,7 @@ export enum CommandHaltReason {
     MissingArguments,
     MissingMemberPermissions,
     MissingBotPermissions,
+    NoExecuteHandler
 }
 
 export type CommandHaltData<T extends CommandType, M = unknown> =
@@ -25,7 +27,7 @@ export interface BaseCommandHaltData<T extends CommandType, Metadata = unknown> 
         ? ContextMenuCommandExecuteData<Metadata>
         : T extends CommandType.MessageCommand
             ? MessageCommandExecuteData<Metadata>
-            : never;
+            : AnySlashCommandBuilder<Metadata>;
 }
 
 export interface CommandErrorHaltData<T extends CommandType, M = unknown> extends BaseCommandHaltData<T, M> {
@@ -56,4 +58,8 @@ export interface CommandMissingMemberPermissionsHaltData<T extends CommandType, 
 
 export interface CommandMissingBotPermissionsHaltData<T extends CommandType, M = unknown> extends BaseCommandHaltData<T, M> {
     reason: CommandHaltReason.MissingBotPermissions;
+}
+
+export interface CommandNoExecuteHandlerHaltData<T extends CommandType, M = unknown> extends BaseCommandHaltData<T, M> {
+    reason: CommandHaltReason.NoExecuteHandler;
 }

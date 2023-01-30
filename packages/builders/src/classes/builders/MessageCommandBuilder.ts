@@ -21,12 +21,22 @@ export type MessageCommandHaltData<Metadata = unknown> = CommandHaltData<Command
 export type MessageCommandExecuteFunction<Metadata = unknown> = (executeData: MessageCommandExecuteData<Metadata>) => Awaitable<void>;
 export type MessageCommandHaltFunction<Metadata = unknown> = (haltData: MessageCommandHaltData<Metadata>) => Awaitable<boolean>;
 
+export type MessageCommandResovable<Metadata = unknown> = MessageCommandBuilder<Metadata>|MessageCommandData<Metadata>;
+
 export interface MessageCommandData<Metadata = unknown> extends BaseCommandBuilderData<Metadata>, BaseCommandData {
-    
+    commandType: CommandType.MessageCommand;
+    aliases: string[];
+    halt?: MessageCommandHaltFunction<Metadata>;
+    execute?: MessageCommandExecuteFunction<Metadata>;
+    validateOptions: boolean;
+    dmPermission: boolean;
+    userBotPermission: boolean;
+    options: MessageCommandOptionResolvable[];
 }
 
-export class MessageCommandBuilder<Metadata = unknown> extends BaseCommandBuilder<Metadata> {
-    public commandType: CommandType.ContextMenuCommand = CommandType.ContextMenuCommand;
+export class MessageCommandBuilder<Metadata = unknown> extends BaseCommandBuilder<Metadata> implements MessageCommandData<Metadata> {
+    readonly commandType: CommandType.MessageCommand = CommandType.MessageCommand;
+
     public name: string = '';
     public aliases: string[] = [];
     public description: string = '';
@@ -123,5 +133,23 @@ export class MessageCommandBuilder<Metadata = unknown> extends BaseCommandBuilde
         return this;
     }
 
-    // TODO: public static from
+    public toJSON(): MessageCommandData<Metadata> {
+        return {
+            ...this.toCommandData(),
+            commandType: this.commandType,
+            name: this.name,
+            aliases: this.aliases,
+            description: this.description,
+            validateOptions: this.validateOptions,
+            dmPermission: this.dmPermission,
+            userBotPermission: this.userBotPermission,
+            options: this.options.map(o => o.toJSON()),
+            halt: this.halt,
+            execute: this.execute
+        };
+    }
+
+    public static resolve<Metadata = unknown>(messageCommandResolvable: MessageCommandResovable<Metadata>): MessageCommandBuilder<Metadata> {
+        return messageCommandResolvable instanceof MessageCommandBuilder ? messageCommandResolvable : new MessageCommandBuilder(messageCommandResolvable);
+    }
 }

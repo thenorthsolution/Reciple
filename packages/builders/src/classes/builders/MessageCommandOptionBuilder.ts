@@ -61,6 +61,6 @@ export class MessageCommandOptionBuilder implements MessageCommandOptionData {
     }
 
     public static from(optionResolvable: MessageCommandOptionResolvable): MessageCommandOptionBuilder {
-        return new MessageCommandOptionBuilder(optionResolvable instanceof MessageCommandOptionBuilder ? optionResolvable.toJSON() : optionResolvable); 
+        return optionResolvable instanceof MessageCommandOptionBuilder ? optionResolvable : new MessageCommandOptionBuilder(optionResolvable); 
     }
 }

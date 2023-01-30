@@ -19,13 +19,16 @@ export type ContextMenuCommandHaltFunction<Metadata = unknown> = (haltData: Cont
 
 export interface ContextMenuCommandData<Metadata = unknown> extends BaseCommandBuilderData<Metadata>, BaseInteractionBasedCommandData<false> {
     type: ContextMenuCommandType;
+    halt?: ContextMenuCommandHaltFunction<Metadata>;
+    execute?: ContextMenuCommandExecuteFunction<Metadata>;
 }
 
 export interface ContextMenuCommandBuilder<Metadata = unknown> extends discordjs.ContextMenuCommandBuilder, BaseCommandBuilder<Metadata> {}
 
 @mix(discordjs.ContextMenuCommandBuilder, BaseCommandBuilder)
 export class ContextMenuCommandBuilder<Metadata = unknown> {
-    public commandType: CommandType.ContextMenuCommand = CommandType.ContextMenuCommand;
+    readonly commandType: CommandType.ContextMenuCommand = CommandType.ContextMenuCommand;
+
     public halt?: ContextMenuCommandHaltFunction<Metadata>;
     public execute?: ContextMenuCommandExecuteFunction<Metadata>;
 

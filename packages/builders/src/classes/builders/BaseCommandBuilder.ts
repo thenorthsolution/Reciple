@@ -1,5 +1,5 @@
 import { ContextMenuCommandBuilder, PermissionResolvable, PermissionsBitField, SlashCommandBuilder, isValidationEnabled } from 'discord.js';
-import { AnyCommandExecuteFunction, AnyCommandHaltFunction, CommandType } from '../../types/commands';
+import { AnyCommandData, AnyCommandExecuteFunction, AnyCommandHaltFunction, CommandType } from '../../types/commands';
 import { MessageCommandBuilder } from './MessageCommandBuilder';
 
 export interface BaseCommandBuilderData<Metadata = unknown> {
@@ -59,6 +59,18 @@ export abstract class BaseCommandBuilder<Metadata = unknown> implements BaseComm
 
     public isMessageCommand(): this is MessageCommandBuilder {
         return this.commandType === CommandType.MessageCommand;
+    }
+
+    protected toCommandData(): BaseCommandBuilderData<Metadata> {
+        return {
+            commandType: this.commandType,
+            metadata: this.metadata,
+            cooldown: this.cooldown,
+            halt: this.halt,
+            execute: this.execute,
+            requiredBotPermissions: this.requiredBotPermissions,
+            requiredMemberPermissions: this.requiredMemberPermissions
+        };
     }
 
     protected from(data?: Omit<Partial<BaseCommandBuilderData<Metadata>>, 'commandType'>): void {
