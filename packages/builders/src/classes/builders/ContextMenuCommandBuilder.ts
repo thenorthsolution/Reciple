@@ -2,12 +2,12 @@ import discordjs, { Awaitable, ContextMenuCommandInteraction, ContextMenuCommand
 import { BaseInteractionBasedCommandData, CommandType } from '../../types/commands';
 import { BaseCommandBuilder, BaseCommandBuilderData } from './BaseCommandBuilder';
 import { CommandHaltData } from '../../types/halt';
-import { Client } from '../Client';
+import { RecipleClient } from '../RecipleClient';
 import { mix } from 'ts-mixer';
 
 export interface ContextMenuCommandExecuteData<Metadata = unknown> {
     commandType: CommandType.ContextMenuCommand;
-    client: Client;
+    RecipleClient: RecipleClient;
     interaction: ContextMenuCommandInteraction;
     builder: ContextMenuCommandBuilder<Metadata>;
 }
@@ -17,7 +17,10 @@ export type ContextMenuCommandHaltData<Metadata = unknown> = CommandHaltData<Com
 export type ContextMenuCommandExecuteFunction<Metadata = unknown> = (executeData: ContextMenuCommandExecuteData<Metadata>) => Awaitable<void>;
 export type ContextMenuCommandHaltFunction<Metadata = unknown> = (haltData: ContextMenuCommandHaltData<Metadata>) => Awaitable<boolean>;
 
+export type ContextMenuCommandResolvable<Metadata = unknown> = ContextMenuCommandBuilder<Metadata>|ContextMenuCommandData<Metadata>;
+
 export interface ContextMenuCommandData<Metadata = unknown> extends BaseCommandBuilderData<Metadata>, BaseInteractionBasedCommandData<false> {
+    commandType: CommandType.ContextMenuCommand;
     type: ContextMenuCommandType;
     halt?: ContextMenuCommandHaltFunction<Metadata>;
     execute?: ContextMenuCommandExecuteFunction<Metadata>;
@@ -47,5 +50,9 @@ export class ContextMenuCommandBuilder<Metadata = unknown> {
     public setExecute(execute?: ContextMenuCommandExecuteFunction<Metadata>|null): this {
         this.execute = execute || undefined;
         return this;
+    }
+
+    public static resolve<Metadata>(contextMenuCommandResolvable: ContextMenuCommandResolvable<Metadata>): ContextMenuCommandBuilder<Metadata> {
+        return contextMenuCommandResolvable instanceof ContextMenuCommandBuilder ? contextMenuCommandResolvable : new ContextMenuCommandBuilder(contextMenuCommandResolvable);
     }
 }

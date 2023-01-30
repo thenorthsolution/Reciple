@@ -5,11 +5,11 @@ import { BaseCommandBuilder, BaseCommandBuilderData } from './BaseCommandBuilder
 import { BaseCommandData, CommandType } from '../../types/commands';
 import { CommandHaltData } from '../../types/halt';
 import { CommandData } from 'fallout-utility';
-import { Client } from '../Client';
+import { RecipleClient } from '../RecipleClient';
 
 export interface MessageCommandExecuteData<Metadata = unknown> {
     commandType: CommandType.MessageCommand;
-    client: Client;
+    RecipleClient: RecipleClient;
     message: Message;
     options: MessageCommandOptionManager;
     command: CommandData;

@@ -1,12 +1,12 @@
-import { If, LocalizationMap, PermissionResolvable } from 'discord.js';
+import discordjs, { LocalizationMap, PermissionResolvable } from 'discord.js';
 import { ContextMenuCommandBuilder, ContextMenuCommandData, ContextMenuCommandExecuteData, ContextMenuCommandExecuteFunction, ContextMenuCommandHaltData, ContextMenuCommandHaltFunction } from '../classes/builders/ContextMenuCommandBuilder';
 import { MessageCommandBuilder, MessageCommandData, MessageCommandExecuteData, MessageCommandExecuteFunction, MessageCommandHaltData, MessageCommandHaltFunction } from '../classes/builders/MessageCommandBuilder';
 import { AnySlashCommandBuilder, SlashCommandData, SlashCommandExecuteData, SlashCommandExecuteFunction, SlashCommandHaltData, SlashCommandHaltFunction } from '../classes/builders/SlashCommandBuilder';
 
 export enum CommandType {
-    SlashCommand = 1,
+    ContextMenuCommand,
     MessageCommand,
-    ContextMenuCommand
+    SlashCommand
 }
 
 export type AnyCommandHaltData<Metadata = unknown> = ContextMenuCommandHaltData<Metadata>|MessageCommandHaltData<Metadata>|SlashCommandHaltData<Metadata>;
@@ -17,6 +17,8 @@ export type AnyCommandExecuteFunction<Metadata = unknown> = ContextMenuCommandEx
 
 export type AnyCommandBuilder<Metadata = unknown> = ContextMenuCommandBuilder<Metadata>|MessageCommandBuilder<Metadata>|AnySlashCommandBuilder<Metadata>;
 export type AnyCommandData<Metadata = unknown> = ContextMenuCommandData<Metadata>|MessageCommandData<Metadata>|SlashCommandData<Metadata>;
+
+export type ApplicationCommandBuilder = ContextMenuCommandBuilder|AnySlashCommandBuilder|discordjs.SlashCommandBuilder;
 
 export interface BaseCommandData {
     name: string;

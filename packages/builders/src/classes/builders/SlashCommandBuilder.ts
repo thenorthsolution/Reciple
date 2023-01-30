@@ -4,12 +4,12 @@ import { BaseCommandBuilder, BaseCommandBuilderData } from './BaseCommandBuilder
 import { BaseInteractionBasedCommandData, CommandType } from '../../types/commands';
 import { CommandHaltData } from '../../types/halt';
 import { isClass } from 'fallout-utility';
-import { Client } from '../Client';
+import { RecipleClient } from '../RecipleClient';
 import { mix } from 'ts-mixer';
 
 export interface SlashCommandExecuteData<Metadata = unknown> {
     commandType: CommandType.SlashCommand;
-    client: Client;
+    RecipleClient: RecipleClient;
     interaction: ChatInputCommandInteraction;
     builder: SlashCommandBuilder<Metadata>;
 }
@@ -25,7 +25,7 @@ export type SlashCommandSubcommandsOnlyBuilder<Metadata = unknown> = Omit<SlashC
 export type SlashCommandOptionsOnlyBuilder<Metadata = unknown> = Omit<SlashCommandBuilder<Metadata>, 'addSubcommand' | 'addSubcommandGroup'>;
 
 export interface SlashCommandData<Metadata = unknown> extends BaseCommandBuilderData<Metadata>, BaseInteractionBasedCommandData<true> {
-    type: CommandType.SlashCommand;
+    commandType: CommandType.SlashCommand;
     halt?: SlashCommandHaltFunction<Metadata>;
     execute?: SlashCommandExecuteFunction<Metadata>;
     options: SlashCommandOptionResolvable[]|SlashCommandSubcommandsOnlyResolvable[];
