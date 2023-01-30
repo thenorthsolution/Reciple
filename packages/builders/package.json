@@ -1,8 +1,8 @@
 {
-  "name": "@reciple/builders",
+  "name": "@reciple/client",
   "description": "Reciple builder classes",
   "license": "GPL-3.0",
-  "version": "1.0.0",
+  "version": "7.0.0",
   "main": "./dist/index.js",
   "module": "./dist/esm.mjs",
   "types": "./dist/index.d.ts",
@@ -12,5 +12,9 @@
       "import": "./dist/esm.mjs",
       "require": "./dist/index.js"
     }
+  },
+  "dependencies": {
+    "discord.js": "^14.7.1",
+    "fallout-utility": "^2.1.3"
   }
 }
