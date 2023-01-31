@@ -4,8 +4,8 @@ import { MessageCommandOptionManager } from '../managers/MessageCommandOptionMan
 import { BaseCommandBuilder, BaseCommandBuilderData } from './BaseCommandBuilder';
 import { BaseCommandData, CommandType } from '../../types/commands';
 import { CommandHaltData } from '../../types/halt';
-import { CommandData } from 'fallout-utility';
 import { RecipleClient } from '../RecipleClient';
+import { CommandData } from 'fallout-utility';
 
 export interface MessageCommandExecuteData<Metadata = unknown> {
     commandType: CommandType.MessageCommand;

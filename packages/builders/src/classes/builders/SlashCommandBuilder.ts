@@ -3,8 +3,8 @@ import { AnySlashCommandOptionBuilder, AnySlashCommandOptionData, SlashCommandOp
 import { BaseCommandBuilder, BaseCommandBuilderData } from './BaseCommandBuilder';
 import { BaseInteractionBasedCommandData, CommandType } from '../../types/commands';
 import { CommandHaltData } from '../../types/halt';
-import { isClass } from 'fallout-utility';
 import { RecipleClient } from '../RecipleClient';
+import { isClass } from 'fallout-utility';
 import { mix } from 'ts-mixer';
 
 export interface SlashCommandExecuteData<Metadata = unknown> {

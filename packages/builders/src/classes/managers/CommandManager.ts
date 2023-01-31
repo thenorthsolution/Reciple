@@ -1,9 +1,9 @@
 import { ApplicationCommandDataResolvable, Collection, GuildResolvable, RESTPostAPIApplicationCommandsJSONBody, RestOrArray, normalizeArray } from 'discord.js';
-import { RecipleClient } from '../RecipleClient';
 import { AnySlashCommandBuilder, SlashCommandBuilder, SlashCommandResolvable } from '../builders/SlashCommandBuilder';
-import { MessageCommandBuilder, MessageCommandResovable } from '../builders/MessageCommandBuilder';
-import { ContextMenuCommandBuilder, ContextMenuCommandResolvable } from '../builders/ContextMenuCommandBuilder';
 import { AnyCommandBuilder, AnyCommandData, ApplicationCommandBuilder, CommandType } from '../../types/commands';
+import { ContextMenuCommandBuilder, ContextMenuCommandResolvable } from '../builders/ContextMenuCommandBuilder';
+import { MessageCommandBuilder, MessageCommandResovable } from '../builders/MessageCommandBuilder';
+import { RecipleClient } from '../RecipleClient';
 
 export interface CommandManagerOptions {
     client: RecipleClient;
