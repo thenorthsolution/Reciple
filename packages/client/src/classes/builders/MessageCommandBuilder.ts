@@ -6,7 +6,7 @@ import { BaseCommandData, CommandType } from '../../types/commands';
 import { CommandHaltData, CommandHaltReason } from '../../types/halt';
 import { RecipleClient } from '../RecipleClient';
 import { CommandData, getCommand } from 'fallout-utility';
-import { MessageCommandValidateOptionData } from '../../types/config';
+import { MessageCommandValidateOptionData } from '../../types/options';
 import { CommandCooldownData } from '../managers/CommandCooldownManager';
 import { botHasPermissionsToExecute, memberHasExecutePermissions } from '../utils/permissions';
 
@@ -93,8 +93,8 @@ export class MessageCommandBuilder extends BaseCommandBuilder implements Message
         return this;
     }
 
-    public setDescription(name: string): this {
-        this.name = name;
+    public setDescription(description: string): this {
+        this.description = description;
         return this;
     }
 
@@ -174,7 +174,7 @@ export class MessageCommandBuilder extends BaseCommandBuilder implements Message
         if (!commandData || !commandData.name) return;
 
         const builder = client.commands.get(commandData.name, CommandType.MessageCommand);
-        if (!builder || !builder.dmPermission && !message.inGuild() || !builder.userBotPermission && (message.author.bot || message.author.system)) return;
+        if (!builder || (!builder.dmPermission && !message.inGuild()) || (!builder.userBotPermission && (message.author.bot || message.author.system))) return;
 
         const executeData: MessageCommandExecuteData<boolean> = {
             commandType: builder.commandType,

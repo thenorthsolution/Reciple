@@ -11,6 +11,12 @@ export interface RecipleConfigOptions {
             commandArgumentSeparator: string;
             prefix: string;
         };
+        additionalApplicationCommands: Pick<RecipleCommandsInteractionBasedConfigOptions, 'registerCommands'>;
+    };
+    applicationCommandRegister: {
+        allowRegisterGlobally: boolean;
+        allowRegisterOnGuilds: boolean;
+        registerEmptyCommands: boolean;
     };
     client: discordjs.ClientOptions;
 }
@@ -21,14 +27,15 @@ export interface RecipleCommandsConfigOptions {
 }
 
 export interface RecipleCommandsInteractionBasedConfigOptions extends RecipleCommandsConfigOptions {
-    registerCommands: boolean;
-    registerEmptyCommandList: boolean;
+    registerCommands: {
+        registerGlobally: boolean;
+        registerToGuilds: string[];
+    };
     acceptRepliedInteractions: boolean;
-    guilds: string[];
 }
 
 export interface RecipleClientOptions extends discordjs.ClientOptions {
-    recipleOptions: RecipleConfigOptions;
+    recipleOptions: Partial<RecipleConfigOptions>;
 }
 
 export interface MessageCommandValidateOptionData {

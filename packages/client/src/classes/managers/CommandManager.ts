@@ -10,6 +10,7 @@ export interface CommandManagerOptions {
     contextMenuCommands?: ContextMenuCommandResolvable[];
     messageCommands?: MessageCommandResovable[];
     slashCommands?: SlashCommandResolvable[];
+    additionalApplicationCommands?: ApplicationCommandDataResolvable[];
 }
 
 export class CommandManager {
@@ -17,7 +18,7 @@ export class CommandManager {
     readonly contextMenuCommands: Collection<string, ContextMenuCommandBuilder> = new Collection();
     readonly messageCommands: Collection<string, MessageCommandBuilder> = new Collection();
     readonly slashCommands: Collection<string, AnySlashCommandBuilder> = new Collection();
-    readonly additionalCommands: ApplicationCommandDataResolvable[] = [];
+    readonly additionalApplicationCommands: ApplicationCommandDataResolvable[] = [];
 
     get size() { return this.contextMenuCommands.size + this.messageCommands.size + this.slashCommands.size; }
 
@@ -27,6 +28,8 @@ export class CommandManager {
         options.contextMenuCommands?.forEach(c => this.contextMenuCommands.set(c.name, ContextMenuCommandBuilder.resolve(c)));
         options.messageCommands?.forEach(c => this.messageCommands.set(c.name, MessageCommandBuilder.resolve(c)));
         options.slashCommands?.forEach(c => this.slashCommands.set(c.name, SlashCommandBuilder.resolve(c)));
+
+        this.additionalApplicationCommands = options.additionalApplicationCommands ?? [];
     }
 
     public add(...commands: RestOrArray<AnyCommandBuilder|AnyCommandData>): this {
@@ -55,9 +58,9 @@ export class CommandManager {
         return this;
     }
 
-    public addAdditionalCommands(...commands: RestOrArray<ApplicationCommandDataResolvable>): this {
+    public addAdditionalApplicationCommands(...commands: RestOrArray<ApplicationCommandDataResolvable>): this {
         for (const command of normalizeArray(commands)) {
-            this.additionalCommands.push(command);
+            this.additionalApplicationCommands.push(command);
         }
 
         return this;
@@ -69,40 +72,47 @@ export class CommandManager {
     public get(command: string, type: CommandType): AnyCommandBuilder | undefined {
         switch (type) {
             case CommandType.ContextMenuCommand:
-                return this.contextMenuCommands.get(command) as ContextMenuCommandBuilder;
+                return this.contextMenuCommands.get(command);
             case CommandType.MessageCommand:
-                return (this.messageCommands.get(command.toLowerCase()) ?? this.messageCommands.find(c => c.aliases.some(a => a == command?.toLowerCase()))) as MessageCommandBuilder;
+                return (this.messageCommands.get(command) ?? this.messageCommands.find(c => c.aliases.some(a => a == command?.toLowerCase())));
             case CommandType.SlashCommand:
-                return this.slashCommands.get(command) as SlashCommandBuilder;
+                return this.slashCommands.get(command);
             default:
                 throw new TypeError('Unknown command type');
         }
     }
 
-    public async registerApplicationCommands(commandType: CommandType.ContextMenuCommand|CommandType.SlashCommand, guildIds: string[]): Promise<void> {
-        const commands = this._parseApplicationCommands(commandType === CommandType.ContextMenuCommand
-            ? this.client.config.commands.contextMenuCommand.registerCommands
-                ? this.contextMenuCommands.toJSON()
-                : []
-            : commandType === CommandType.SlashCommand
-                ? this.client.config.commands.slashCommand.registerCommands
-                    ? this.slashCommands.toJSON()
-                    : []
-                : []);
+    public async registerApplicationCommands(): Promise<void> {
+        const globalCommands: RESTPostAPIApplicationCommandsJSONBody[] = [];
+        const guildCommands: Collection<string, RESTPostAPIApplicationCommandsJSONBody[]> = new Collection();
 
-        if (!commands.length
-            &&
-            (
-                commandType === CommandType.ContextMenuCommand && !this.client.config.commands.contextMenuCommand.registerEmptyCommandList
-                ||
-                commandType === CommandType.SlashCommand && !this.client.config.commands.slashCommand.registerEmptyCommandList
-            )
-           ) return;
+        if (this.client.config.commands.contextMenuCommand.registerCommands.registerGlobally) globalCommands.push(...this._parseApplicationCommands(this.contextMenuCommands.toJSON()));
+        this.client.config.commands.contextMenuCommand.registerCommands.registerToGuilds.forEach(guildId => {
+            guildCommands.set(guildId, [...(guildCommands.get(guildId) ?? []), ...this._parseApplicationCommands(this.contextMenuCommands.toJSON())]);
+        });
 
-        for (const guildId of guildIds) {
-            await this.client.application?.commands.set(commands, guildId)
-                .then(commands => this.client.emit('recipleRegisterApplicationCommands', commands, guildId))
+        if (this.client.config.commands.slashCommand.registerCommands.registerGlobally) globalCommands.push(...this._parseApplicationCommands(this.slashCommands.toJSON()));
+        this.client.config.commands.slashCommand.registerCommands.registerToGuilds.forEach(guildId => {
+            guildCommands.set(guildId, [...(guildCommands.get(guildId) ?? []), ...this._parseApplicationCommands(this.slashCommands.toJSON())]);
+        });
+
+        if (this.client.config.commands.additionalApplicationCommands.registerCommands.registerGlobally) globalCommands.push(...this._parseApplicationCommands(this.additionalApplicationCommands));
+        this.client.config.commands.additionalApplicationCommands.registerCommands.registerToGuilds.forEach(guildId => {
+            guildCommands.set(guildId, [...(guildCommands.get(guildId) ?? []), ...this._parseApplicationCommands(this.additionalApplicationCommands)]);
+        });
+
+        if (this.client.config.applicationCommandRegister.allowRegisterGlobally) {
+            await this.client.application?.commands.set(globalCommands)
+                .then(commands => this.client.emit('recipleRegisterApplicationCommands', commands))
                 .catch(err => this.client._throwError(err));
+        }
+
+        if (this.client.config.applicationCommandRegister.allowRegisterOnGuilds) {
+            for (const guildBasedCommands of guildCommands.map((commands, guildId) => ({ guildId, commands }))) {
+                await this.client.application?.commands.set(guildBasedCommands.commands, guildBasedCommands.guildId)
+                    .then(commands => this.client.emit('recipleRegisterApplicationCommands', commands, guildBasedCommands.guildId))
+                    .catch(err => this.client._throwError(err));
+            }
         }
     }
 

@@ -3,7 +3,7 @@ import { BaseInteractionBasedCommandData, CommandType } from '../../types/comman
 import { BaseCommandBuilder, BaseCommandBuilderData } from './BaseCommandBuilder';
 import { CommandHaltData, CommandHaltReason } from '../../types/halt';
 import { RecipleClient } from '../RecipleClient';
-import { mix } from 'ts-mixer';
+import { Mixin, mix } from 'ts-mixer';
 import { CommandCooldownData } from '../managers/CommandCooldownManager';
 import { botHasPermissionsToExecute } from '../utils/permissions';
 
@@ -30,15 +30,14 @@ export interface ContextMenuCommandData extends BaseCommandBuilderData, BaseInte
 
 export interface ContextMenuCommandBuilder extends discordjs.ContextMenuCommandBuilder, BaseCommandBuilder {}
 
-@mix(discordjs.ContextMenuCommandBuilder, BaseCommandBuilder)
-export class ContextMenuCommandBuilder {
+export class ContextMenuCommandBuilder extends Mixin(discordjs.ContextMenuCommandBuilder, BaseCommandBuilder) {
     readonly commandType: CommandType.ContextMenuCommand = CommandType.ContextMenuCommand;
 
     public halt?: ContextMenuCommandHaltFunction;
     public execute?: ContextMenuCommandExecuteFunction;
 
     constructor(data?: Omit<Partial<ContextMenuCommandData>, 'commandType'>) {
-        this.from(data);
+        super(data);
 
         if (data?.name !== undefined) this.setName(data.name);
         if (data?.nameLocalizations !== undefined) this.setNameLocalizations(data.nameLocalizations);

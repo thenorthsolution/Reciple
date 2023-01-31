@@ -1,5 +1,5 @@
 import discordjs, { ApplicationCommand, Awaitable, ClientEvents, Collection } from 'discord.js';
-import { RecipleClientOptions, RecipleConfigOptions } from '../types/config';
+import { RecipleClientOptions, RecipleConfigOptions } from '../types/options';
 import { CommandCooldownManager } from './managers/CommandCooldownManager';
 import { Logger } from 'fallout-utility';
 import { AnyCommandBuilder, AnyCommandData, AnyCommandExecuteData, AnyCommandHaltData, CommandType } from '../types/commands';
@@ -8,6 +8,8 @@ import { ContextMenuCommandExecuteData, ContextMenuCommandHaltData, ContextMenuC
 import { MessageCommandExecuteData, MessageCommandHaltData, MessageCommandResovable } from './builders/MessageCommandBuilder';
 import { SlashCommandExecuteData, SlashCommandHaltData, SlashCommandResolvable } from './builders/SlashCommandBuilder';
 import { CommandHaltReason } from '../types/halt';
+import defaultsDeep from 'lodash.defaultsdeep';
+import { defaultRecipleConfigOptions } from './utils/defaults';
 
 export interface RecipleClient<Ready extends boolean = boolean> extends discordjs.Client<Ready> {
     on<E extends keyof RecipleClientEvents>(event: E, listener: (...args: RecipleClientEvents[E]) => Awaitable<void>): this;
@@ -29,19 +31,21 @@ export interface RecipleClient<Ready extends boolean = boolean> extends discordj
 export interface RecipleClientEvents extends ClientEvents {
     recipleCommandExecute: [executeData: AnyCommandExecuteData];
     recipleCommandHalt: [haltData: AnyCommandHaltData];
-    recipleRegisterApplicationCommands: [commands: Collection<string, ApplicationCommand>, guildId: string];
+    recipleRegisterApplicationCommands: [commands: Collection<string, ApplicationCommand>, guildId?: string];
     recipleError: [error: Error];
     recipleDebug: [message: string];
 }
 
 export class RecipleClient<Ready extends boolean = boolean> extends discordjs.Client<Ready> {
-    readonly config!: RecipleConfigOptions;
+    readonly config: RecipleConfigOptions;
     readonly commands: CommandManager = new CommandManager({ client: this });
     readonly cooldowns: CommandCooldownManager = new CommandCooldownManager();
     readonly logger?: Logger;
 
     constructor(options: RecipleClientOptions) {
         super(options);
+
+        this.config = defaultsDeep(options.recipleOptions, defaultRecipleConfigOptions);
     }
 
     public isReady(): this is RecipleClient<true> {
@@ -60,6 +64,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends discordjs.Cl
     public async _haltCommand(command: MessageCommandResovable, haltData: MessageCommandHaltData): Promise<boolean>;
     public async _haltCommand(command: SlashCommandResolvable, haltData: SlashCommandHaltData): Promise<boolean>;
     public async _haltCommand(command: AnyCommandBuilder|AnyCommandData, haltData: AnyCommandHaltData): Promise<boolean> {
+        this.emit('recipleCommandHalt', haltData);
         const haltResolve = await Promise.resolve(command.halt
             ? command.commandType  === CommandType.ContextMenuCommand
                 ? command.halt(haltData as ContextMenuCommandHaltData)
@@ -69,10 +74,6 @@ export class RecipleClient<Ready extends boolean = boolean> extends discordjs.Cl
                         ? command.halt(haltData as SlashCommandHaltData)
                         : false
             : false)
-            .then(res => {
-                this.emit('recipleCommandHalt', haltData);
-                return res;
-            })
             .catch(err => this._throwError(err));
 
         return haltResolve ?? true;
@@ -82,27 +83,31 @@ export class RecipleClient<Ready extends boolean = boolean> extends discordjs.Cl
     public async _executeCommand(command: MessageCommandResovable, executeData: MessageCommandExecuteData): Promise<boolean>;
     public async _executeCommand(command: SlashCommandResolvable, executeData: SlashCommandExecuteData): Promise<boolean>;
     public async _executeCommand(command: AnyCommandBuilder|AnyCommandData, executeData: AnyCommandExecuteData): Promise<boolean> {
+        console.log(`Execute ${command.name} ${command.commandType}`);
         if (!command.execute) {
             // @ts-expect-error
             await this._haltCommand(command, { commandType: command.commandType, reason: CommandHaltReason.NoExecuteHandler, executeData });
             return false;
         }
 
-        return !!await Promise.resolve(command.halt
-            ? command.commandType  === CommandType.ContextMenuCommand
-                ? command.execute(executeData as ContextMenuCommandExecuteData)
-                : command.commandType === CommandType.MessageCommand
-                    ? command.execute(executeData as MessageCommandExecuteData)
-                    : command.commandType === CommandType.SlashCommand
-                        ? command.execute(executeData as SlashCommandExecuteData)
-                        : false
-            : false
+        return !!await Promise.resolve(command.commandType  === CommandType.ContextMenuCommand
+            ? command.execute(executeData as ContextMenuCommandExecuteData)
+            : command.commandType === CommandType.MessageCommand
+                ? command.execute(executeData as MessageCommandExecuteData)
+                : command.commandType === CommandType.SlashCommand
+                    ? command.execute(executeData as SlashCommandExecuteData)
+                    : false
         )
         .then(() => this.emit('recipleCommandExecute', executeData))
-        .catch(err => {
+        .catch(async err => {
             // @ts-expect-error
             const isHandled = await this._haltCommand(command, { commandType: command.commandType, reason: CommandHaltReason.Error, executeData, error: err });
             if (!isHandled) this._throwError(err);
         });
+    }
+
+    public login(token?: string): Promise<string> {
+        this.config.token = token ?? this.config.token;
+        return super.login(this.config.token);
     }
 }

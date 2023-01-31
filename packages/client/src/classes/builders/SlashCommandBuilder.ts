@@ -5,7 +5,7 @@ import { BaseInteractionBasedCommandData, CommandType } from '../../types/comman
 import { CommandHaltData, CommandHaltReason } from '../../types/halt';
 import { RecipleClient } from '../RecipleClient';
 import { isClass } from 'fallout-utility';
-import { mix } from 'ts-mixer';
+import { Mixin, mix } from 'ts-mixer';
 import { CommandCooldownData } from '../managers/CommandCooldownManager';
 import { botHasPermissionsToExecute } from '../utils/permissions';
 
@@ -66,15 +66,14 @@ export interface SlashCommandBuilder extends discordjs.SlashCommandBuilder, Base
     ): Omit<this, 'addSubcommand' | 'addSubcommandGroup'>;
 }
 
-@mix(discordjs.SlashCommandBuilder, BaseCommandBuilder)
-export class SlashCommandBuilder {
+export class SlashCommandBuilder extends Mixin(discordjs.SlashCommandBuilder, BaseCommandBuilder) {
     readonly commandType: CommandType.SlashCommand = CommandType.SlashCommand;
 
     public halt?: SlashCommandHaltFunction;
     public execute?: SlashCommandExecuteFunction;
 
     constructor(data?: Omit<Partial<SlashCommandData>, 'commandType'>) {
-        this.from(data);
+        super(data);
 
         if (data?.name !== undefined) this.setName(data.name);
         if (data?.nameLocalizations !== undefined) this.setNameLocalizations(data.nameLocalizations);
