@@ -14,6 +14,7 @@ export interface RecipleConfigOptions {
 
 export interface RecipleCommandsConfigOptions {
     enabled: boolean;
+    enableCooldown: boolean;
 }
 
 export interface RecipleCommandsInteractionBasedConfigOptions extends RecipleCommandsConfigOptions {

@@ -1,6 +1,7 @@
 import { ContextMenuCommandBuilder, PermissionResolvable, PermissionsBitField, SlashCommandBuilder } from 'discord.js';
-import { AnyCommandExecuteFunction, AnyCommandHaltFunction, CommandType } from '../../types/commands';
+import { AnyCommandBuilder, AnyCommandExecuteData, AnyCommandExecuteFunction, AnyCommandHaltFunction, CommandType } from '../../types/commands';
 import { MessageCommandBuilder } from './MessageCommandBuilder';
+import { RecipleClient } from '../RecipleClient';
 
 export interface BaseCommandBuilderData<Metadata = unknown> {
     commandType: CommandType;

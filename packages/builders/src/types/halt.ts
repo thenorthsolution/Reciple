@@ -1,6 +1,6 @@
-import { ContextMenuCommandExecuteData, ContextMenuCommandHaltData } from '../classes/builders/ContextMenuCommandBuilder';
+import { ContextMenuCommandExecuteData } from '../classes/builders/ContextMenuCommandBuilder';
 import { MessageCommandExecuteData } from '../classes/builders/MessageCommandBuilder';
-import { AnySlashCommandBuilder } from '../classes/builders/SlashCommandBuilder';
+import { SlashCommandExecuteData } from '../classes/builders/SlashCommandBuilder';
 import { CommandCooldownData } from '../classes/managers/CommandCooldownManager';
 import { MessageCommandOptionManager } from '../classes/managers/MessageCommandOptionManager';
 import { CommandType } from './commands';
@@ -21,7 +21,8 @@ export type CommandHaltData<T extends CommandType, M = unknown> =
     | CommandCooldownHaltData<T, M>
     | (T extends CommandType.MessageCommand ? CommandInvalidArgumentsHaltData<T, M> | CommandMissingArgumentsHaltData<T, M> | CommandValidateOptionErrorHaltData<T, M> : never)
     | CommandMissingMemberPermissionsHaltData<T, M>
-    | CommandMissingBotPermissionsHaltData<T, M>;
+    | CommandMissingBotPermissionsHaltData<T, M>
+    | CommandNoExecuteHandlerHaltData<T, M>;
 
 export interface BaseCommandHaltData<T extends CommandType, Metadata = unknown> {
     reason: CommandHaltReason;
@@ -30,7 +31,9 @@ export interface BaseCommandHaltData<T extends CommandType, Metadata = unknown> 
         ? ContextMenuCommandExecuteData<Metadata>
         : T extends CommandType.MessageCommand
             ? MessageCommandExecuteData<Metadata>
-            : AnySlashCommandBuilder<Metadata>;
+            : T extends CommandType.SlashCommand
+                ? SlashCommandExecuteData<Metadata>
+                : never;
 }
 
 export interface CommandErrorHaltData<T extends CommandType, M = unknown> extends BaseCommandHaltData<T, M> {

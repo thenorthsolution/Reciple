@@ -1,13 +1,15 @@
 import discordjs, { Awaitable, ContextMenuCommandInteraction, ContextMenuCommandType } from 'discord.js';
 import { BaseInteractionBasedCommandData, CommandType } from '../../types/commands';
 import { BaseCommandBuilder, BaseCommandBuilderData } from './BaseCommandBuilder';
-import { CommandHaltData } from '../../types/halt';
+import { CommandHaltData, CommandHaltReason } from '../../types/halt';
 import { RecipleClient } from '../RecipleClient';
 import { mix } from 'ts-mixer';
+import { CommandCooldownData } from '../managers/CommandCooldownManager';
+import { botHasPermissionsToExecute } from '../utils/permissions';
 
 export interface ContextMenuCommandExecuteData<Metadata = unknown> {
     commandType: CommandType.ContextMenuCommand;
-    RecipleClient: RecipleClient;
+    client: RecipleClient;
     interaction: ContextMenuCommandInteraction;
     builder: ContextMenuCommandBuilder<Metadata>;
 }
@@ -52,7 +54,57 @@ export class ContextMenuCommandBuilder<Metadata = unknown> {
         return this;
     }
 
-    public static resolve<Metadata>(contextMenuCommandResolvable: ContextMenuCommandResolvable<Metadata>): ContextMenuCommandBuilder<Metadata> {
+    public static resolve<Metadata = unknown>(contextMenuCommandResolvable: ContextMenuCommandResolvable<Metadata>): ContextMenuCommandBuilder<Metadata> {
         return contextMenuCommandResolvable instanceof ContextMenuCommandBuilder ? contextMenuCommandResolvable : new ContextMenuCommandBuilder(contextMenuCommandResolvable);
+    }
+
+    public static async execute<Metadata = unknown>(client: RecipleClient, interaction: ContextMenuCommandInteraction): Promise<ContextMenuCommandExecuteData<Metadata>|undefined> {
+        if (!client.config.commands.contextMenuCommand.enabled) return;
+        if (!client.config.commands.contextMenuCommand.acceptRepliedInteractions && (interaction.replied || interaction.deferred)) return;
+
+        const builder = client.commands.get<Metadata>(interaction.commandName, CommandType.ContextMenuCommand);
+        if (!builder) return;
+
+        const executeData: ContextMenuCommandExecuteData<Metadata> = {
+            builder,
+            commandType: builder.commandType,
+            interaction,
+            client
+        };
+
+        if (client.config.commands.contextMenuCommand.enableCooldown && builder.cooldown) {
+            const cooldownData: Omit<CommandCooldownData, 'endsAt'> = {
+                command: builder.name,
+                user: interaction.user,
+                type: builder.commandType
+            };
+
+            const isCooledDown = client.cooldowns.isCooledDown(cooldownData);
+            if (!isCooledDown) {
+                client.cooldowns.add({ ...cooldownData, endsAt: new Date(Date.now() + builder.cooldown) });
+            } else {
+                await client._haltCommand<Metadata>(builder, {
+                    commandType: builder.commandType,
+                    reason: CommandHaltReason.Cooldown,
+                    cooldownData: client.cooldowns.get(cooldownData)!,
+                    executeData
+                });
+                return;
+            }
+        }
+
+        if (builder.requiredBotPermissions !== undefined && interaction.inGuild()) {
+            const isBotExecuteAllowed = botHasPermissionsToExecute((interaction.channel || interaction.guild)!, builder.requiredBotPermissions);
+            if (!isBotExecuteAllowed) {
+                await client._haltCommand<Metadata>(builder, {
+                    commandType: builder.commandType,
+                    reason: CommandHaltReason.MissingBotPermissions,
+                    executeData
+                });
+                return;
+            }
+        }
+
+        return await client._executeCommand(builder, executeData) ? executeData : undefined;
     }
 }

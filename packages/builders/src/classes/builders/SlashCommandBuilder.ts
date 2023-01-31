@@ -2,16 +2,18 @@ import discordjs, { ApplicationCommandOptionType, Awaitable, ChatInputCommandInt
 import { AnySlashCommandOptionBuilder, AnySlashCommandOptionData, SlashCommandOptionResolvable, SlashCommandSubcommandOptionsOnlyBuilder, SlashCommandSubcommandOptionsOnlyData, SlashCommandSubcommandsOnlyResolvable } from '../../types/slashCommandOptions';
 import { BaseCommandBuilder, BaseCommandBuilderData } from './BaseCommandBuilder';
 import { BaseInteractionBasedCommandData, CommandType } from '../../types/commands';
-import { CommandHaltData } from '../../types/halt';
+import { CommandHaltData, CommandHaltReason } from '../../types/halt';
 import { RecipleClient } from '../RecipleClient';
 import { isClass } from 'fallout-utility';
 import { mix } from 'ts-mixer';
+import { CommandCooldownData } from '../managers/CommandCooldownManager';
+import { botHasPermissionsToExecute } from '../utils/permissions';
 
 export interface SlashCommandExecuteData<Metadata = unknown> {
     commandType: CommandType.SlashCommand;
-    RecipleClient: RecipleClient;
+    client: RecipleClient;
     interaction: ChatInputCommandInteraction;
-    builder: SlashCommandBuilder<Metadata>;
+    builder: AnySlashCommandBuilder<Metadata>;
 }
 
 export type SlashCommandHaltData<Metadata = unknown> = CommandHaltData<CommandType.SlashCommand, Metadata>;
@@ -207,5 +209,55 @@ export class SlashCommandBuilder<Metadata = unknown> {
 
     public static resolve<Metadata>(slashCommandResolvable: SlashCommandResolvable<Metadata>): SlashCommandBuilder<Metadata> {
         return slashCommandResolvable instanceof SlashCommandBuilder ? slashCommandResolvable : new SlashCommandBuilder(slashCommandResolvable as SlashCommandData<Metadata>);
+    }
+
+    public static async execute<Metadata = unknown>(client: RecipleClient, interaction: ChatInputCommandInteraction): Promise<SlashCommandExecuteData<Metadata>|undefined> {
+        if (!client.config.commands.slashCommand.enabled) return;
+        if (!client.config.commands.slashCommand.acceptRepliedInteractions && (interaction.replied || interaction.deferred)) return;
+
+        const builder = client.commands.get<Metadata>(interaction.commandName, CommandType.SlashCommand);
+        if (!builder) return;
+
+        const executeData: SlashCommandExecuteData<Metadata> = {
+            builder,
+            commandType: builder.commandType,
+            interaction,
+            client
+        };
+
+        if (client.config.commands.slashCommand.enableCooldown && builder.cooldown) {
+            const cooldownData: Omit<CommandCooldownData, 'endsAt'> = {
+                command: builder.name,
+                user: interaction.user,
+                type: builder.commandType
+            };
+
+            const isCooledDown = client.cooldowns.isCooledDown(cooldownData);
+            if (!isCooledDown) {
+                client.cooldowns.add({ ...cooldownData, endsAt: new Date(Date.now() + builder.cooldown) });
+            } else {
+                await client._haltCommand<Metadata>(builder, {
+                    commandType: builder.commandType,
+                    reason: CommandHaltReason.Cooldown,
+                    cooldownData: client.cooldowns.get(cooldownData)!,
+                    executeData
+                });
+                return;
+            }
+        }
+
+        if (builder.requiredBotPermissions !== undefined && interaction.inGuild()) {
+            const isBotExecuteAllowed = botHasPermissionsToExecute((interaction.channel || interaction.guild)!, builder.requiredBotPermissions);
+            if (!isBotExecuteAllowed) {
+                await client._haltCommand<Metadata>(builder, {
+                    commandType: builder.commandType,
+                    reason: CommandHaltReason.MissingBotPermissions,
+                    executeData
+                });
+                return;
+            }
+        }
+
+        return await client._executeCommand(builder, executeData) ? executeData : undefined;
     }
 }

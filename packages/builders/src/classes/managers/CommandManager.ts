@@ -1,8 +1,8 @@
 import { ApplicationCommandDataResolvable, Collection, GuildResolvable, RESTPostAPIApplicationCommandsJSONBody, RestOrArray, normalizeArray } from 'discord.js';
-import { AnySlashCommandBuilder, SlashCommandBuilder, SlashCommandResolvable } from '../builders/SlashCommandBuilder';
-import { AnyCommandBuilder, AnyCommandData, ApplicationCommandBuilder, CommandType } from '../../types/commands';
-import { ContextMenuCommandBuilder, ContextMenuCommandResolvable } from '../builders/ContextMenuCommandBuilder';
-import { MessageCommandBuilder, MessageCommandResovable } from '../builders/MessageCommandBuilder';
+import { AnySlashCommandBuilder, SlashCommandBuilder, SlashCommandExecuteData, SlashCommandResolvable } from '../builders/SlashCommandBuilder';
+import { AnyCommandBuilder, AnyCommandData, AnyCommandExecuteData, ApplicationCommandBuilder, CommandType } from '../../types/commands';
+import { ContextMenuCommandBuilder, ContextMenuCommandExecuteData, ContextMenuCommandResolvable } from '../builders/ContextMenuCommandBuilder';
+import { MessageCommandBuilder, MessageCommandExecuteData, MessageCommandResovable } from '../builders/MessageCommandBuilder';
 import { RecipleClient } from '../RecipleClient';
 
 export interface CommandManagerOptions {
@@ -105,6 +105,21 @@ export class CommandManager {
                 .catch(err => this.client._throwError(err));
         }
     }
+
+    public async execute<Metadata = unknown>(command: string, type: CommandType.ContextMenuCommand): Promise<ContextMenuCommandExecuteData<Metadata>|undefined>;
+    public async execute<Metadata = unknown>(command: string, type: CommandType.MessageCommand): Promise<MessageCommandExecuteData<Metadata>|undefined>
+    public async execute<Metadata = unknown>(command: string, type: CommandType.SlashCommand): Promise<SlashCommandExecuteData<Metadata>|undefined>
+    public async execute<Metadata = unknown>(command: string, type: CommandType): Promise<AnyCommandExecuteData<Metadata>|undefined> {
+        const builder = type === CommandType.ContextMenuCommand
+            ? this.contextMenuCommands.get(command)
+            : type === CommandType.MessageCommand
+                ? this.messageCommands.get(command)
+                : type === CommandType.SlashCommand
+                    ? this.slashCommands.get(command)
+                    : undefined;
+
+        if (!builder) return;
+    } 
 
     private _parseApplicationCommands(commands: (ApplicationCommandDataResolvable | ApplicationCommandBuilder)[]): RESTPostAPIApplicationCommandsJSONBody[] {
         return commands.map(cmd => {
