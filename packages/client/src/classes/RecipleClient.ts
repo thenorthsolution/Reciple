@@ -43,7 +43,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends discordjs.Cl
     readonly logger?: Logger;
 
     constructor(options: RecipleClientOptions) {
-        super({ ...options, ...{ ...defaultRecipleConfigOptions.client, ...options.recipleOptions.client} });
+        super({ ...options, ...{ ...defaultRecipleConfigOptions.client, ...options.recipleOptions.client } });
 
         this.config = defaultsDeep(options.recipleOptions, defaultRecipleConfigOptions);
     }
