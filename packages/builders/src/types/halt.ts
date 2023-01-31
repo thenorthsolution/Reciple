@@ -10,6 +10,7 @@ export enum CommandHaltReason {
     Cooldown,
     InvalidArguments,
     MissingArguments,
+    ValidateOptionError,
     MissingMemberPermissions,
     MissingBotPermissions,
     NoExecuteHandler
@@ -18,7 +19,7 @@ export enum CommandHaltReason {
 export type CommandHaltData<T extends CommandType, M = unknown> =
     | CommandErrorHaltData<T, M>
     | CommandCooldownHaltData<T, M>
-    | (T extends CommandType.MessageCommand ? CommandInvalidArgumentsHaltData<T, M> | CommandMissingArgumentsHaltData<T, M> : never)
+    | (T extends CommandType.MessageCommand ? CommandInvalidArgumentsHaltData<T, M> | CommandMissingArgumentsHaltData<T, M> | CommandValidateOptionErrorHaltData<T, M> : never)
     | CommandMissingMemberPermissionsHaltData<T, M>
     | CommandMissingBotPermissionsHaltData<T, M>;
 
@@ -50,6 +51,11 @@ export interface CommandInvalidArgumentsHaltData<T extends CommandType, M = unkn
 export interface CommandMissingArgumentsHaltData<T extends CommandType, M = unknown> extends BaseCommandHaltData<T, M> {
     reason: CommandHaltReason.MissingArguments;
     missingArguments: MessageCommandOptionManager;
+}
+
+export interface CommandValidateOptionErrorHaltData<T extends CommandType, M = unknown> extends BaseCommandHaltData<T, M> {
+    reason: CommandHaltReason.ValidateOptionError;
+    error: any;
 }
 
 export interface CommandMissingMemberPermissionsHaltData<T extends CommandType, M = unknown> extends BaseCommandHaltData<T, M> {

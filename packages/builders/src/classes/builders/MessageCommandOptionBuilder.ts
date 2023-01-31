@@ -60,7 +60,29 @@ export class MessageCommandOptionBuilder implements MessageCommandOptionData {
         };
     }
 
-    public static from(optionResolvable: MessageCommandOptionResolvable): MessageCommandOptionBuilder {
+    public static resolve(optionResolvable: MessageCommandOptionResolvable): MessageCommandOptionBuilder {
         return optionResolvable instanceof MessageCommandOptionBuilder ? optionResolvable : new MessageCommandOptionBuilder(optionResolvable); 
+    }
+
+    public static async validateOptionValue(option: MessageCommandOptionResolvable, message: Message, value?: string): Promise<MessageCommandOptionValue> {
+        const validatedOption: MessageCommandOptionValue = {
+            name: option.name,
+            builder: MessageCommandOptionBuilder.resolve(option),
+            value,
+            invalid: false,
+            missing: false,
+        };
+
+        if (value == undefined && option.required) {
+            validatedOption.missing = true;
+            return validatedOption;
+        }
+
+        if (value == undefined && !option.required) return validatedOption;
+
+        const validate = option.validator !== undefined ? await Promise.resolve(option.validator(value ?? '', message)) : true;
+        if (!validate) validatedOption.invalid = true;
+
+        return validatedOption;
     }
 }
