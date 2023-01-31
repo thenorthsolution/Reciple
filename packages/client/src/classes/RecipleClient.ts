@@ -1,12 +1,12 @@
-import discordjs, { ApplicationCommand, ApplicationCommandDataResolvable, Awaitable, ClientEvents, Collection } from 'discord.js';
-import { RecipleClientOptions, RecipleConfigOptions } from '../types/options';
+import discordjs, { ApplicationCommand, Awaitable, ClientEvents, Collection } from 'discord.js';
+import { RecipleClientOptions, RecipleConfigOptions } from '../types/config';
 import { CommandCooldownManager } from './managers/CommandCooldownManager';
 import { Logger } from 'fallout-utility';
 import { AnyCommandBuilder, AnyCommandData, AnyCommandExecuteData, AnyCommandHaltData, CommandType } from '../types/commands';
 import { CommandManager } from './managers/CommandManager';
-import { ContextMenuCommandBuilder, ContextMenuCommandExecuteData, ContextMenuCommandHaltData, ContextMenuCommandResolvable } from './builders/ContextMenuCommandBuilder';
-import { MessageCommandBuilder, MessageCommandExecuteData, MessageCommandHaltData, MessageCommandResovable } from './builders/MessageCommandBuilder';
-import { AnySlashCommandBuilder, SlashCommandExecuteData, SlashCommandHaltData, SlashCommandResolvable } from './builders/SlashCommandBuilder';
+import { ContextMenuCommandExecuteData, ContextMenuCommandHaltData, ContextMenuCommandResolvable } from './builders/ContextMenuCommandBuilder';
+import { MessageCommandExecuteData, MessageCommandHaltData, MessageCommandResovable } from './builders/MessageCommandBuilder';
+import { SlashCommandExecuteData, SlashCommandHaltData, SlashCommandResolvable } from './builders/SlashCommandBuilder';
 import { CommandHaltReason } from '../types/halt';
 
 export interface RecipleClient<Ready extends boolean = boolean> extends discordjs.Client<Ready> {

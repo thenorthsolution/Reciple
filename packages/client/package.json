@@ -13,6 +13,10 @@
       "require": "./dist/index.js"
     }
   },
+  "scripts": {
+    "clean": "npx rimraf ./dist",
+    "build": "npm run clean && npx tsc"
+  },
   "dependencies": {
     "discord.js": "^14.7.1",
     "fallout-utility": "^2.1.3"

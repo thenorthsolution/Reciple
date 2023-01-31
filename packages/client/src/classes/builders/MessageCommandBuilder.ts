@@ -6,7 +6,7 @@ import { BaseCommandData, CommandType } from '../../types/commands';
 import { CommandHaltData, CommandHaltReason } from '../../types/halt';
 import { RecipleClient } from '../RecipleClient';
 import { CommandData, getCommand } from 'fallout-utility';
-import { MessageCommandValidateOptionData } from '../../types/options';
+import { MessageCommandValidateOptionData } from '../../types/config';
 import { CommandCooldownData } from '../managers/CommandCooldownManager';
 import { botHasPermissionsToExecute, memberHasExecutePermissions } from '../utils/permissions';
 
