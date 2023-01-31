@@ -106,9 +106,9 @@ export class CommandManager {
         }
     }
 
-    private _parseApplicationCommands(commands: (ApplicationCommandDataResolvable | ApplicationCommandBuilder | RESTPostAPIApplicationCommandsJSONBody)[]): ApplicationCommandDataResolvable[] {
+    private _parseApplicationCommands(commands: (ApplicationCommandDataResolvable | ApplicationCommandBuilder)[]): RESTPostAPIApplicationCommandsJSONBody[] {
         return commands.map(cmd => {
-            if ((cmd as ApplicationCommandBuilder)?.toJSON === undefined) return (<unknown>cmd) as ApplicationCommandDataResolvable;
+            if ((cmd as ApplicationCommandBuilder)?.toJSON === undefined) return (<unknown>cmd) as RESTPostAPIApplicationCommandsJSONBody;
             return (cmd as ApplicationCommandBuilder).toJSON();
         });
     }
