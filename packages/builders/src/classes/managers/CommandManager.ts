@@ -106,7 +106,7 @@ export class CommandManager {
         }
     }
 
-    private _parseApplicationCommands(commands: (ApplicationCommandDataResolvable | ApplicationCommandBuilder | RESTPostAPIApplicationCommandsJSONBody)[], setPermissions: boolean = true): (ApplicationCommandDataResolvable | RESTPostAPIApplicationCommandsJSONBody)[] {
+    private _parseApplicationCommands(commands: (ApplicationCommandDataResolvable | ApplicationCommandBuilder | RESTPostAPIApplicationCommandsJSONBody)[]): ApplicationCommandDataResolvable[] {
         return commands.map(cmd => {
             if ((cmd as ApplicationCommandBuilder)?.toJSON === undefined) return (<unknown>cmd) as ApplicationCommandDataResolvable;
             return (cmd as ApplicationCommandBuilder).toJSON();
