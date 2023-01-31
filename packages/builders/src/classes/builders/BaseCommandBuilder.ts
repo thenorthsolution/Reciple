@@ -1,34 +1,31 @@
 import { ContextMenuCommandBuilder, PermissionResolvable, PermissionsBitField, SlashCommandBuilder } from 'discord.js';
-import { AnyCommandBuilder, AnyCommandExecuteData, AnyCommandExecuteFunction, AnyCommandHaltFunction, CommandType } from '../../types/commands';
+import { AnyCommandExecuteFunction, AnyCommandHaltFunction, CommandType } from '../../types/commands';
 import { MessageCommandBuilder } from './MessageCommandBuilder';
-import { RecipleClient } from '../RecipleClient';
 
-export interface BaseCommandBuilderData<Metadata = unknown> {
+export interface BaseCommandBuilderData {
     commandType: CommandType;
-    metadata?: Metadata;
     cooldown?: number;
     requiredBotPermissions?: PermissionResolvable;
     requiredMemberPermissions?: PermissionResolvable;
-    halt?: AnyCommandHaltFunction<Metadata>;
-    execute?: AnyCommandExecuteFunction<Metadata>;
+    halt?: AnyCommandHaltFunction;
+    execute?: AnyCommandExecuteFunction;
 }
 
-export abstract class BaseCommandBuilder<Metadata = unknown> implements BaseCommandBuilderData<Metadata> {
+export abstract class BaseCommandBuilder implements BaseCommandBuilderData {
     abstract readonly commandType: CommandType;
-    abstract halt?: AnyCommandHaltFunction<Metadata>;
-    abstract execute?: AnyCommandExecuteFunction<Metadata>;
+    abstract halt?: AnyCommandHaltFunction;
+    abstract execute?: AnyCommandExecuteFunction;
 
-    public metadata?: Metadata;
     public cooldown?: number;
     public requiredBotPermissions?: bigint;
     public requiredMemberPermissions?: bigint;
 
-    constructor(data?: Omit<Partial<BaseCommandBuilderData<Metadata>>, 'commandType'>) {
+    constructor(data?: Omit<Partial<BaseCommandBuilderData>, 'commandType'>) {
         this.from(data);
     }
 
-    public abstract setHalt(halt?: AnyCommandHaltFunction<Metadata>|null): this;
-    public abstract setExecute(execute?: AnyCommandExecuteFunction<Metadata>|null): this;
+    public abstract setHalt(halt?: AnyCommandHaltFunction|null): this;
+    public abstract setExecute(execute?: AnyCommandExecuteFunction|null): this;
 
     public setCooldown(cooldown?: number|null): this {
         this.cooldown = cooldown || undefined;
@@ -45,11 +42,6 @@ export abstract class BaseCommandBuilder<Metadata = unknown> implements BaseComm
         return this;
     }
 
-    public setMetadata(metadata?: Metadata): this {
-        this.metadata = metadata;
-        return this;
-    }
-
     public isContextMenu(): this is ContextMenuCommandBuilder {
         return this.commandType === CommandType.ContextMenuCommand;
     }
@@ -62,10 +54,9 @@ export abstract class BaseCommandBuilder<Metadata = unknown> implements BaseComm
         return this.commandType === CommandType.MessageCommand;
     }
 
-    protected toCommandData(): BaseCommandBuilderData<Metadata> {
+    protected toCommandData(): BaseCommandBuilderData {
         return {
             commandType: this.commandType,
-            metadata: this.metadata,
             cooldown: this.cooldown,
             halt: this.halt,
             execute: this.execute,
@@ -74,12 +65,11 @@ export abstract class BaseCommandBuilder<Metadata = unknown> implements BaseComm
         };
     }
 
-    protected from(data?: Omit<Partial<BaseCommandBuilderData<Metadata>>, 'commandType'>): void {
+    protected from(data?: Omit<Partial<BaseCommandBuilderData>, 'commandType'>): void {
         if (data?.cooldown !== undefined) this.setCooldown(Number(data?.cooldown));
         if (data?.requiredBotPermissions !== undefined) this.setRequiredBotPermissions(data.requiredBotPermissions);
         if (data?.requiredMemberPermissions !== undefined) this.setRequiredMemberPermissions(data.requiredMemberPermissions);
         if (data?.halt !== undefined) this.setHalt(data.halt);
         if (data?.execute !== undefined) this.setExecute(data.execute);
-        if (data?.metadata !== undefined) this.setMetadata(data.metadata);
     }
 }

@@ -56,18 +56,17 @@ export class RecipleClient<Ready extends boolean = boolean> extends discordjs.Cl
         this.emit('recipleError', error);
     }
 
-    public async _haltCommand<Metadata = unknown>(command: ContextMenuCommandResolvable<Metadata>, haltData: ContextMenuCommandHaltData<Metadata>): Promise<boolean>;
-    public async _haltCommand<Metadata = unknown>(command: MessageCommandResovable<Metadata>, haltData: MessageCommandHaltData<Metadata>): Promise<boolean>;
-    public async _haltCommand<Metadata = unknown>(command: SlashCommandResolvable<Metadata>, haltData: SlashCommandHaltData<Metadata>): Promise<boolean>;
-    public async _haltCommand<Metadata = unknown>(command: AnyCommandBuilder<Metadata>|AnyCommandData<Metadata>, haltData: AnyCommandHaltData<Metadata>): Promise<boolean>;
-    public async _haltCommand<Metadata = unknown>(command: AnyCommandBuilder<Metadata>|AnyCommandData<Metadata>, haltData: AnyCommandHaltData<Metadata>): Promise<boolean> {
+    public async _haltCommand(command: ContextMenuCommandResolvable, haltData: ContextMenuCommandHaltData): Promise<boolean>;
+    public async _haltCommand(command: MessageCommandResovable, haltData: MessageCommandHaltData): Promise<boolean>;
+    public async _haltCommand(command: SlashCommandResolvable, haltData: SlashCommandHaltData): Promise<boolean>;
+    public async _haltCommand(command: AnyCommandBuilder|AnyCommandData, haltData: AnyCommandHaltData): Promise<boolean> {
         const haltResolve = await Promise.resolve(command.halt
             ? command.commandType  === CommandType.ContextMenuCommand
-                ? command.halt(haltData as ContextMenuCommandHaltData<Metadata>)
+                ? command.halt(haltData as ContextMenuCommandHaltData)
                 : command.commandType === CommandType.MessageCommand
-                    ? command.halt(haltData as MessageCommandHaltData<Metadata>)
+                    ? command.halt(haltData as MessageCommandHaltData)
                     : command.commandType === CommandType.SlashCommand
-                        ? command.halt(haltData as SlashCommandHaltData<Metadata>)
+                        ? command.halt(haltData as SlashCommandHaltData)
                         : false
             : false)
             .then(res => {
@@ -79,11 +78,10 @@ export class RecipleClient<Ready extends boolean = boolean> extends discordjs.Cl
         return haltResolve ?? true;
     }
 
-    public async _executeCommand<Metadata = unknown>(command: ContextMenuCommandResolvable<Metadata>, executeData: ContextMenuCommandExecuteData<Metadata>): Promise<boolean>;
-    public async _executeCommand<Metadata = unknown>(command: MessageCommandResovable<Metadata>, executeData: MessageCommandExecuteData<Metadata>): Promise<boolean>;
-    public async _executeCommand<Metadata = unknown>(command: SlashCommandResolvable<Metadata>, executeData: SlashCommandExecuteData<Metadata>): Promise<boolean>;
-    public async _executeCommand<Metadata = unknown>(command: AnyCommandBuilder<Metadata>|AnyCommandData<Metadata>, executeData: AnyCommandExecuteData<Metadata>): Promise<boolean>;
-    public async _executeCommand<Metadata = unknown>(command: AnyCommandBuilder<Metadata>|AnyCommandData<Metadata>, executeData: AnyCommandExecuteData<Metadata>): Promise<boolean> {
+    public async _executeCommand(command: ContextMenuCommandResolvable, executeData: ContextMenuCommandExecuteData): Promise<boolean>;
+    public async _executeCommand(command: MessageCommandResovable, executeData: MessageCommandExecuteData): Promise<boolean>;
+    public async _executeCommand(command: SlashCommandResolvable, executeData: SlashCommandExecuteData): Promise<boolean>;
+    public async _executeCommand(command: AnyCommandBuilder|AnyCommandData, executeData: AnyCommandExecuteData): Promise<boolean> {
         if (!command.execute) {
             // @ts-expect-error
             await this._haltCommand(command, { commandType: command.commandType, reason: CommandHaltReason.NoExecuteHandler, executeData });
@@ -92,11 +90,11 @@ export class RecipleClient<Ready extends boolean = boolean> extends discordjs.Cl
 
         return !!await Promise.resolve(command.halt
             ? command.commandType  === CommandType.ContextMenuCommand
-                ? command.execute(executeData as ContextMenuCommandExecuteData<Metadata>)
+                ? command.execute(executeData as ContextMenuCommandExecuteData)
                 : command.commandType === CommandType.MessageCommand
-                    ? command.execute(executeData as MessageCommandExecuteData<Metadata>)
+                    ? command.execute(executeData as MessageCommandExecuteData)
                     : command.commandType === CommandType.SlashCommand
-                        ? command.execute(executeData as SlashCommandExecuteData<Metadata>)
+                        ? command.execute(executeData as SlashCommandExecuteData)
                         : false
             : false
         )
@@ -104,6 +102,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends discordjs.Cl
         .catch(err => {
             // @ts-expect-error
             const isHandled = await this._haltCommand(command, { commandType: command.commandType, reason: CommandHaltReason.Error, executeData, error: err });
+            if (!isHandled) this._throwError(err);
         });
     }
 }

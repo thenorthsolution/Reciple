@@ -16,59 +16,59 @@ export enum CommandHaltReason {
     NoExecuteHandler
 }
 
-export type CommandHaltData<T extends CommandType, M = unknown> =
-    | CommandErrorHaltData<T, M>
-    | CommandCooldownHaltData<T, M>
-    | (T extends CommandType.MessageCommand ? CommandInvalidArgumentsHaltData<T, M> | CommandMissingArgumentsHaltData<T, M> | CommandValidateOptionErrorHaltData<T, M> : never)
-    | CommandMissingMemberPermissionsHaltData<T, M>
-    | CommandMissingBotPermissionsHaltData<T, M>
-    | CommandNoExecuteHandlerHaltData<T, M>;
+export type CommandHaltData<T extends CommandType> =
+    | CommandErrorHaltData<T>
+    | CommandCooldownHaltData<T>
+    | (T extends CommandType.MessageCommand ? CommandInvalidArgumentsHaltData<T> | CommandMissingArgumentsHaltData<T> | CommandValidateOptionErrorHaltData<T> : never)
+    | CommandMissingMemberPermissionsHaltData<T>
+    | CommandMissingBotPermissionsHaltData<T>
+    | CommandNoExecuteHandlerHaltData<T>;
 
-export interface BaseCommandHaltData<T extends CommandType, Metadata = unknown> {
+export interface BaseCommandHaltData<T extends CommandType> {
     reason: CommandHaltReason;
     commandType: T;
     executeData: T extends CommandType.ContextMenuCommand
-        ? ContextMenuCommandExecuteData<Metadata>
+        ? ContextMenuCommandExecuteData
         : T extends CommandType.MessageCommand
-            ? MessageCommandExecuteData<Metadata>
+            ? MessageCommandExecuteData<boolean>
             : T extends CommandType.SlashCommand
-                ? SlashCommandExecuteData<Metadata>
+                ? SlashCommandExecuteData
                 : never;
 }
 
-export interface CommandErrorHaltData<T extends CommandType, M = unknown> extends BaseCommandHaltData<T, M> {
+export interface CommandErrorHaltData<T extends CommandType> extends BaseCommandHaltData<T> {
     reason: CommandHaltReason.Error;
     error: any;
 }
 
-export interface CommandCooldownHaltData<T extends CommandType, M = unknown> extends BaseCommandHaltData<T, M> {
+export interface CommandCooldownHaltData<T extends CommandType> extends BaseCommandHaltData<T> {
     reason: CommandHaltReason.Cooldown;
     cooldownData: CommandCooldownData;
 }
 
-export interface CommandInvalidArgumentsHaltData<T extends CommandType, M = unknown> extends BaseCommandHaltData<T, M> {
+export interface CommandInvalidArgumentsHaltData<T extends CommandType> extends BaseCommandHaltData<T> {
     reason: CommandHaltReason.InvalidArguments;
     invalidArguments: MessageCommandOptionManager;
 }
 
-export interface CommandMissingArgumentsHaltData<T extends CommandType, M = unknown> extends BaseCommandHaltData<T, M> {
+export interface CommandMissingArgumentsHaltData<T extends CommandType> extends BaseCommandHaltData<T> {
     reason: CommandHaltReason.MissingArguments;
     missingArguments: MessageCommandOptionManager;
 }
 
-export interface CommandValidateOptionErrorHaltData<T extends CommandType, M = unknown> extends BaseCommandHaltData<T, M> {
+export interface CommandValidateOptionErrorHaltData<T extends CommandType> extends BaseCommandHaltData<T> {
     reason: CommandHaltReason.ValidateOptionError;
     error: any;
 }
 
-export interface CommandMissingMemberPermissionsHaltData<T extends CommandType, M = unknown> extends BaseCommandHaltData<T, M> {
+export interface CommandMissingMemberPermissionsHaltData<T extends CommandType> extends BaseCommandHaltData<T> {
     reason: CommandHaltReason.MissingMemberPermissions;
 }
 
-export interface CommandMissingBotPermissionsHaltData<T extends CommandType, M = unknown> extends BaseCommandHaltData<T, M> {
+export interface CommandMissingBotPermissionsHaltData<T extends CommandType> extends BaseCommandHaltData<T> {
     reason: CommandHaltReason.MissingBotPermissions;
 }
 
-export interface CommandNoExecuteHandlerHaltData<T extends CommandType, M = unknown> extends BaseCommandHaltData<T, M> {
+export interface CommandNoExecuteHandlerHaltData<T extends CommandType> extends BaseCommandHaltData<T> {
     reason: CommandHaltReason.NoExecuteHandler;
 }

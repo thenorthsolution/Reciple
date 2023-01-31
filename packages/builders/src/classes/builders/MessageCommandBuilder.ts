@@ -1,40 +1,43 @@
 import { MessageCommandOptionBuilder, MessageCommandOptionResolvable } from './MessageCommandOptionBuilder';
-import { Awaitable, Message, RestOrArray, isValidationEnabled, normalizeArray } from 'discord.js';
+import { Awaitable, If, Message, RestOrArray, isValidationEnabled, normalizeArray } from 'discord.js';
 import { MessageCommandOptionManager } from '../managers/MessageCommandOptionManager';
 import { BaseCommandBuilder, BaseCommandBuilderData } from './BaseCommandBuilder';
 import { BaseCommandData, CommandType } from '../../types/commands';
-import { CommandHaltData } from '../../types/halt';
+import { CommandHaltData, CommandHaltReason } from '../../types/halt';
 import { RecipleClient } from '../RecipleClient';
-import { CommandData } from 'fallout-utility';
+import { CommandData, getCommand } from 'fallout-utility';
+import { MessageCommandValidateOptionData } from '../../types/options';
+import { CommandCooldownData } from '../managers/CommandCooldownManager';
+import { botHasPermissionsToExecute, memberHasExecutePermissions } from '../utils/permissions';
 
-export interface MessageCommandExecuteData<Metadata = unknown> {
+export interface MessageCommandExecuteData<Options extends boolean = true> {
     commandType: CommandType.MessageCommand;
-    RecipleClient: RecipleClient;
+    client: RecipleClient;
     message: Message;
-    options: MessageCommandOptionManager;
+    options: If<Options, MessageCommandOptionManager>;
     command: CommandData;
-    builder: MessageCommandBuilder<Metadata>;
+    builder: MessageCommandBuilder;
 }
 
-export type MessageCommandHaltData<Metadata = unknown> = CommandHaltData<CommandType.MessageCommand, Metadata>;
+export type MessageCommandHaltData = CommandHaltData<CommandType.MessageCommand>;
 
-export type MessageCommandExecuteFunction<Metadata = unknown> = (executeData: MessageCommandExecuteData<Metadata>) => Awaitable<void>;
-export type MessageCommandHaltFunction<Metadata = unknown> = (haltData: MessageCommandHaltData<Metadata>) => Awaitable<boolean>;
+export type MessageCommandExecuteFunction = (executeData: MessageCommandExecuteData) => Awaitable<void>;
+export type MessageCommandHaltFunction = (haltData: MessageCommandHaltData) => Awaitable<boolean>;
 
-export type MessageCommandResovable<Metadata = unknown> = MessageCommandBuilder<Metadata>|MessageCommandData<Metadata>;
+export type MessageCommandResovable = MessageCommandBuilder|MessageCommandData;
 
-export interface MessageCommandData<Metadata = unknown> extends BaseCommandBuilderData<Metadata>, BaseCommandData {
+export interface MessageCommandData extends BaseCommandBuilderData, BaseCommandData {
     commandType: CommandType.MessageCommand;
     aliases: string[];
-    halt?: MessageCommandHaltFunction<Metadata>;
-    execute?: MessageCommandExecuteFunction<Metadata>;
+    halt?: MessageCommandHaltFunction;
+    execute?: MessageCommandExecuteFunction;
     validateOptions: boolean;
     dmPermission: boolean;
     userBotPermission: boolean;
     options: MessageCommandOptionResolvable[];
 }
 
-export class MessageCommandBuilder<Metadata = unknown> extends BaseCommandBuilder<Metadata> implements MessageCommandData<Metadata> {
+export class MessageCommandBuilder extends BaseCommandBuilder implements MessageCommandData {
     readonly commandType: CommandType.MessageCommand = CommandType.MessageCommand;
 
     public name: string = '';
@@ -44,10 +47,10 @@ export class MessageCommandBuilder<Metadata = unknown> extends BaseCommandBuilde
     public dmPermission: boolean = false;
     public userBotPermission: boolean = false;
     public options: MessageCommandOptionBuilder[] = [];
-    public halt?: MessageCommandHaltFunction<Metadata>;
-    public execute?: MessageCommandExecuteFunction<Metadata>;
+    public halt?: MessageCommandHaltFunction;
+    public execute?: MessageCommandExecuteFunction;
 
-    constructor(data?: Omit<Partial<MessageCommandData<Metadata>>, 'commandType'>) {
+    constructor(data?: Omit<Partial<MessageCommandData>, 'commandType'>) {
         super(data);
 
         if (data?.name !== undefined) this.setName(data.name);
@@ -123,17 +126,17 @@ export class MessageCommandBuilder<Metadata = unknown> extends BaseCommandBuilde
         return this;
     }
 
-    public setHalt(halt?: MessageCommandHaltFunction<Metadata>|null): this {
+    public setHalt(halt?: MessageCommandHaltFunction|null): this {
         this.halt = halt || undefined;
         return this;
     }
 
-    public setExecute(execute?: MessageCommandExecuteFunction<Metadata>|null): this {
+    public setExecute(execute?: MessageCommandExecuteFunction|null): this {
         this.execute = execute || undefined;
         return this;
     }
 
-    public toJSON(): MessageCommandData<Metadata> {
+    public toJSON(): MessageCommandData {
         return {
             ...this.toCommandData(),
             commandType: this.commandType,
@@ -149,7 +152,124 @@ export class MessageCommandBuilder<Metadata = unknown> extends BaseCommandBuilde
         };
     }
 
-    public static resolve<Metadata = unknown>(messageCommandResolvable: MessageCommandResovable<Metadata>): MessageCommandBuilder<Metadata> {
+    public static resolve(messageCommandResolvable: MessageCommandResovable): MessageCommandBuilder {
         return messageCommandResolvable instanceof MessageCommandBuilder ? messageCommandResolvable : new MessageCommandBuilder(messageCommandResolvable);
+    }
+
+    public static async validateCommandOptions(options: MessageCommandValidateOptionData): Promise<MessageCommandOptionManager> {
+        const validated: MessageCommandOptionManager = new MessageCommandOptionManager();
+
+        for (let i = 0; i < options.command.options.length; i++) {
+            const arg = options.args[i];
+            validated.set(options.command.options[i].name, await MessageCommandOptionBuilder.validateOptionValue(options.command.options[i], options.message));
+        }
+
+        return validated;
+    }
+
+    public static async execute(client: RecipleClient, message: Message, prefix?: string, separator?: string): Promise<MessageCommandExecuteData|undefined> {
+        if (!client.config.commands.messageCommand.enabled || !message.content) return;
+
+        const commandData = getCommand(message.content, prefix ?? client.config.commands.messageCommand.prefix, separator ?? client.config.commands.messageCommand.commandArgumentSeparator);
+        if (!commandData || !commandData.name) return;
+
+        const builder = client.commands.get(commandData.name, CommandType.MessageCommand);
+        if (!builder || !builder.dmPermission && !message.inGuild() || !builder.userBotPermission && (message.author.bot || message.author.system)) return;
+
+        const executeData: MessageCommandExecuteData<boolean> = {
+            commandType: builder.commandType,
+            builder,
+            command: commandData,
+            message,
+            options: null,
+            client
+        };
+
+        const commandOptions = await MessageCommandBuilder.validateCommandOptions({
+            client,
+            message,
+            command: builder,
+            args: commandData.args
+        }).catch((err: Error) => err);
+
+        if (commandOptions instanceof Error) {
+            const isHandled = await client._haltCommand(builder, {
+                commandType: builder.commandType,
+                reason: CommandHaltReason.ValidateOptionError,
+                error: commandOptions,
+                executeData
+            });
+
+            if (!isHandled) client._throwError(commandOptions);
+            return;
+        }
+
+        executeData.options = commandOptions;
+
+        if (client.config.commands.slashCommand.enableCooldown && builder.cooldown) {
+            const cooldownData: Omit<CommandCooldownData, 'endsAt'> = {
+                command: builder.name,
+                user: message.author,
+                type: builder.commandType
+            };
+
+            const isCooledDown = client.cooldowns.isCooledDown(cooldownData);
+            if (!isCooledDown) {
+                client.cooldowns.add({ ...cooldownData, endsAt: new Date(Date.now() + builder.cooldown) });
+            } else {
+                await client._haltCommand(builder, {
+                    commandType: builder.commandType,
+                    reason: CommandHaltReason.Cooldown,
+                    cooldownData: client.cooldowns.get(cooldownData)!,
+                    executeData
+                });
+                return;
+            }
+        }
+
+        if (!message.inGuild() && message.member?.permissions && builder.requiredMemberPermissions && memberHasExecutePermissions({ builder, memberPermissions: message.member?.permissions })) {
+            await client._haltCommand(builder, {
+                commandType: builder.commandType,
+                reason: CommandHaltReason.MissingMemberPermissions,
+                executeData
+            });
+            return;
+        }
+
+        if (builder.validateOptions) {
+            if (commandOptions.some(o => o.invalid)) {
+                await client._haltCommand(builder, {
+                    commandType: builder.commandType,
+                    reason: CommandHaltReason.InvalidArguments,
+                    executeData,
+                    invalidArguments: new MessageCommandOptionManager(commandOptions.filter(o => o.invalid).map(o => [o.name, o]))
+                });
+                return;
+            }
+
+            if (commandOptions.some(o => o.missing)) {
+                await client._haltCommand(builder, {
+                    commandType: builder.commandType,
+                    reason: CommandHaltReason.MissingArguments,
+                    executeData,
+                    missingArguments: new MessageCommandOptionManager(commandOptions.filter(o => o.missing).map(o => [o.name, o]))
+                });
+                return;
+            }
+        }
+
+        if (builder.requiredBotPermissions && message.inGuild()) {
+            const isBotExecuteAllowed = botHasPermissionsToExecute((message.channel || message.guild)!, builder.requiredBotPermissions);
+            if (!isBotExecuteAllowed) {
+                await client._haltCommand(builder, {
+                    commandType: builder.commandType,
+                    reason: CommandHaltReason.MissingBotPermissions,
+                    executeData
+                });
+                return;
+            }
+        }
+
+        return await client._executeCommand(builder, executeData) ? executeData : undefined;
     }
 }

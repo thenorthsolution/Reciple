@@ -1,4 +1,6 @@
-import discordjs from 'discord.js';
+import discordjs, { Message } from 'discord.js';
+import { RecipleClient } from '../classes/RecipleClient';
+import { MessageCommandResovable } from '../classes/builders/MessageCommandBuilder';
 
 export interface RecipleConfigOptions {
     token: string;
@@ -7,6 +9,7 @@ export interface RecipleConfigOptions {
         slashCommand: RecipleCommandsInteractionBasedConfigOptions;
         messageCommand: RecipleCommandsConfigOptions & {
             commandArgumentSeparator: string;
+            prefix: string;
         };
     };
     client: discordjs.ClientOptions;
@@ -26,4 +29,11 @@ export interface RecipleCommandsInteractionBasedConfigOptions extends RecipleCom
 
 export interface RecipleClientOptions extends discordjs.ClientOptions {
     recipleOptions: RecipleConfigOptions;
+}
+
+export interface MessageCommandValidateOptionData {
+    message: Message;
+    client: RecipleClient;
+    command: MessageCommandResovable;
+    args: string[];
 }

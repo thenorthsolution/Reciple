@@ -13,27 +13,27 @@ export interface SlashCommandExecuteData<Metadata = unknown> {
     commandType: CommandType.SlashCommand;
     client: RecipleClient;
     interaction: ChatInputCommandInteraction;
-    builder: AnySlashCommandBuilder<Metadata>;
+    builder: AnySlashCommandBuilder;
 }
 
-export type SlashCommandHaltData<Metadata = unknown> = CommandHaltData<CommandType.SlashCommand, Metadata>;
+export type SlashCommandHaltData = CommandHaltData<CommandType.SlashCommand>;
 
-export type SlashCommandExecuteFunction<Metadata = unknown> = (executeData: SlashCommandExecuteData<Metadata>) => Awaitable<void>;
-export type SlashCommandHaltFunction<Metadata = unknown> = (haltData: SlashCommandHaltData<Metadata>) => Awaitable<boolean>;
+export type SlashCommandExecuteFunction = (executeData: SlashCommandExecuteData) => Awaitable<void>;
+export type SlashCommandHaltFunction = (haltData: SlashCommandHaltData) => Awaitable<boolean>;
 
-export type SlashCommandResolvable<Metadata = unknown> = AnySlashCommandBuilder<Metadata>|SlashCommandData<Metadata>;
-export type AnySlashCommandBuilder<Metadata = unknown> = SlashCommandSubcommandsOnlyBuilder<Metadata>|SlashCommandOptionsOnlyBuilder<Metadata>|SlashCommandBuilder<Metadata>;
-export type SlashCommandSubcommandsOnlyBuilder<Metadata = unknown> = Omit<SlashCommandBuilder<Metadata>, 'addBooleanOption' | 'addUserOption' | 'addChannelOption' | 'addRoleOption' | 'addAttachmentOption' | 'addMentionableOption' | 'addStringOption' | 'addIntegerOption' | 'addNumberOption'>;
-export type SlashCommandOptionsOnlyBuilder<Metadata = unknown> = Omit<SlashCommandBuilder<Metadata>, 'addSubcommand' | 'addSubcommandGroup'>;
+export type SlashCommandResolvable = AnySlashCommandBuilder|SlashCommandData;
+export type AnySlashCommandBuilder = SlashCommandSubcommandsOnlyBuilder|SlashCommandOptionsOnlyBuilder|SlashCommandBuilder;
+export type SlashCommandSubcommandsOnlyBuilder = Omit<SlashCommandBuilder, 'addBooleanOption' | 'addUserOption' | 'addChannelOption' | 'addRoleOption' | 'addAttachmentOption' | 'addMentionableOption' | 'addStringOption' | 'addIntegerOption' | 'addNumberOption'>;
+export type SlashCommandOptionsOnlyBuilder = Omit<SlashCommandBuilder, 'addSubcommand' | 'addSubcommandGroup'>;
 
-export interface SlashCommandData<Metadata = unknown> extends BaseCommandBuilderData<Metadata>, BaseInteractionBasedCommandData<true> {
+export interface SlashCommandData extends BaseCommandBuilderData, BaseInteractionBasedCommandData<true> {
     commandType: CommandType.SlashCommand;
-    halt?: SlashCommandHaltFunction<Metadata>;
-    execute?: SlashCommandExecuteFunction<Metadata>;
+    halt?: SlashCommandHaltFunction;
+    execute?: SlashCommandExecuteFunction;
     options: SlashCommandOptionResolvable[]|SlashCommandSubcommandsOnlyResolvable[];
 }
 
-export interface SlashCommandBuilder<Metadata = unknown> extends discordjs.SlashCommandBuilder, BaseCommandBuilder<Metadata> {
+export interface SlashCommandBuilder extends discordjs.SlashCommandBuilder, BaseCommandBuilder {
     addSubcommandGroup(input: SlashCommandSubcommandGroupBuilder | ((subcommandGroup: SlashCommandSubcommandGroupBuilder) => SlashCommandSubcommandGroupBuilder)): SlashCommandSubcommandsOnlyBuilder;
     addSubcommand(input: SlashCommandSubcommandBuilder | ((subcommandGroup: SlashCommandSubcommandBuilder) => SlashCommandSubcommandBuilder)): SlashCommandSubcommandsOnlyBuilder;
 
@@ -67,13 +67,13 @@ export interface SlashCommandBuilder<Metadata = unknown> extends discordjs.Slash
 }
 
 @mix(discordjs.SlashCommandBuilder, BaseCommandBuilder)
-export class SlashCommandBuilder<Metadata = unknown> {
+export class SlashCommandBuilder {
     readonly commandType: CommandType.SlashCommand = CommandType.SlashCommand;
 
-    public halt?: SlashCommandHaltFunction<Metadata>;
-    public execute?: SlashCommandExecuteFunction<Metadata>;
+    public halt?: SlashCommandHaltFunction;
+    public execute?: SlashCommandExecuteFunction;
 
-    constructor(data?: Omit<Partial<SlashCommandData<Metadata>>, 'commandType'>) {
+    constructor(data?: Omit<Partial<SlashCommandData>, 'commandType'>) {
         this.from(data);
 
         if (data?.name !== undefined) this.setName(data.name);
@@ -91,12 +91,12 @@ export class SlashCommandBuilder<Metadata = unknown> {
         }
     }
 
-    public setHalt(halt?: SlashCommandHaltFunction<Metadata>|null): this {
+    public setHalt(halt?: SlashCommandHaltFunction|null): this {
         this.halt = halt || undefined;
         return this;
     }
 
-    public setExecute(execute?: SlashCommandExecuteFunction<Metadata>|null): this {
+    public setExecute(execute?: SlashCommandExecuteFunction|null): this {
         this.execute = execute || undefined;
         return this;
     }
@@ -207,18 +207,18 @@ export class SlashCommandBuilder<Metadata = unknown> {
             .setDescriptionLocalizations(option.descriptionLocalizations ?? null) as T;
     }
 
-    public static resolve<Metadata>(slashCommandResolvable: SlashCommandResolvable<Metadata>): SlashCommandBuilder<Metadata> {
-        return slashCommandResolvable instanceof SlashCommandBuilder ? slashCommandResolvable : new SlashCommandBuilder(slashCommandResolvable as SlashCommandData<Metadata>);
+    public static resolve(slashCommandResolvable: SlashCommandResolvable): SlashCommandBuilder {
+        return slashCommandResolvable instanceof SlashCommandBuilder ? slashCommandResolvable : new SlashCommandBuilder(slashCommandResolvable as SlashCommandData);
     }
 
-    public static async execute<Metadata = unknown>(client: RecipleClient, interaction: ChatInputCommandInteraction): Promise<SlashCommandExecuteData<Metadata>|undefined> {
+    public static async execute(client: RecipleClient, interaction: ChatInputCommandInteraction): Promise<SlashCommandExecuteData|undefined> {
         if (!client.config.commands.slashCommand.enabled) return;
         if (!client.config.commands.slashCommand.acceptRepliedInteractions && (interaction.replied || interaction.deferred)) return;
 
-        const builder = client.commands.get<Metadata>(interaction.commandName, CommandType.SlashCommand);
+        const builder = client.commands.get(interaction.commandName, CommandType.SlashCommand);
         if (!builder) return;
 
-        const executeData: SlashCommandExecuteData<Metadata> = {
+        const executeData: SlashCommandExecuteData = {
             builder,
             commandType: builder.commandType,
             interaction,
@@ -236,7 +236,7 @@ export class SlashCommandBuilder<Metadata = unknown> {
             if (!isCooledDown) {
                 client.cooldowns.add({ ...cooldownData, endsAt: new Date(Date.now() + builder.cooldown) });
             } else {
-                await client._haltCommand<Metadata>(builder, {
+                await client._haltCommand(builder, {
                     commandType: builder.commandType,
                     reason: CommandHaltReason.Cooldown,
                     cooldownData: client.cooldowns.get(cooldownData)!,
@@ -249,7 +249,7 @@ export class SlashCommandBuilder<Metadata = unknown> {
         if (builder.requiredBotPermissions !== undefined && interaction.inGuild()) {
             const isBotExecuteAllowed = botHasPermissionsToExecute((interaction.channel || interaction.guild)!, builder.requiredBotPermissions);
             if (!isBotExecuteAllowed) {
-                await client._haltCommand<Metadata>(builder, {
+                await client._haltCommand(builder, {
                     commandType: builder.commandType,
                     reason: CommandHaltReason.MissingBotPermissions,
                     executeData

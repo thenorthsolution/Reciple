@@ -63,17 +63,17 @@ export class CommandManager {
         return this;
     }
 
-    public get<Metadata = unknown>(command: string, type: CommandType.ContextMenuCommand): ContextMenuCommandBuilder<Metadata> | undefined;
-    public get<Metadata = unknown>(command: string, type: CommandType.MessageCommand): MessageCommandBuilder<Metadata> | undefined;
-    public get<Metadata = unknown>(command: string, type: CommandType.SlashCommand): AnySlashCommandBuilder<Metadata> | undefined;
-    public get<Metadata = unknown>(command: string, type: CommandType): AnyCommandBuilder<Metadata> | undefined {
+    public get(command: string, type: CommandType.ContextMenuCommand): ContextMenuCommandBuilder | undefined;
+    public get(command: string, type: CommandType.MessageCommand): MessageCommandBuilder | undefined;
+    public get(command: string, type: CommandType.SlashCommand): AnySlashCommandBuilder | undefined;
+    public get(command: string, type: CommandType): AnyCommandBuilder | undefined {
         switch (type) {
             case CommandType.ContextMenuCommand:
-                return this.contextMenuCommands.get(command) as ContextMenuCommandBuilder<Metadata>;
+                return this.contextMenuCommands.get(command) as ContextMenuCommandBuilder;
             case CommandType.MessageCommand:
-                return (this.messageCommands.get(command.toLowerCase()) ?? this.messageCommands.find(c => c.aliases.some(a => a == command?.toLowerCase()))) as MessageCommandBuilder<Metadata>;
+                return (this.messageCommands.get(command.toLowerCase()) ?? this.messageCommands.find(c => c.aliases.some(a => a == command?.toLowerCase()))) as MessageCommandBuilder;
             case CommandType.SlashCommand:
-                return this.slashCommands.get(command) as SlashCommandBuilder<Metadata>;
+                return this.slashCommands.get(command) as SlashCommandBuilder;
             default:
                 throw new TypeError('Unknown command type');
         }
@@ -106,10 +106,10 @@ export class CommandManager {
         }
     }
 
-    public async execute<Metadata = unknown>(command: string, type: CommandType.ContextMenuCommand): Promise<ContextMenuCommandExecuteData<Metadata>|undefined>;
-    public async execute<Metadata = unknown>(command: string, type: CommandType.MessageCommand): Promise<MessageCommandExecuteData<Metadata>|undefined>
-    public async execute<Metadata = unknown>(command: string, type: CommandType.SlashCommand): Promise<SlashCommandExecuteData<Metadata>|undefined>
-    public async execute<Metadata = unknown>(command: string, type: CommandType): Promise<AnyCommandExecuteData<Metadata>|undefined> {
+    public async execute(command: string, type: CommandType.ContextMenuCommand): Promise<ContextMenuCommandExecuteData|undefined>;
+    public async execute(command: string, type: CommandType.MessageCommand): Promise<MessageCommandExecuteData|undefined>
+    public async execute(command: string, type: CommandType.SlashCommand): Promise<SlashCommandExecuteData|undefined>
+    public async execute(command: string, type: CommandType): Promise<AnyCommandExecuteData|undefined> {
         const builder = type === CommandType.ContextMenuCommand
             ? this.contextMenuCommands.get(command)
             : type === CommandType.MessageCommand

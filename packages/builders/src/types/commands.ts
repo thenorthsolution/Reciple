@@ -9,14 +9,14 @@ export enum CommandType {
     SlashCommand
 }
 
-export type AnyCommandHaltData<Metadata = unknown> = ContextMenuCommandHaltData<Metadata>|MessageCommandHaltData<Metadata>|SlashCommandHaltData<Metadata>;
-export type AnyCommandExecuteData<Metadata = unknown> = ContextMenuCommandExecuteData<Metadata>|MessageCommandExecuteData<Metadata>|SlashCommandExecuteData<Metadata>;
+export type AnyCommandHaltData = ContextMenuCommandHaltData|MessageCommandHaltData|SlashCommandHaltData;
+export type AnyCommandExecuteData = ContextMenuCommandExecuteData|MessageCommandExecuteData|SlashCommandExecuteData;
 
-export type AnyCommandHaltFunction<Metadata = unknown> = ContextMenuCommandHaltFunction<Metadata>|MessageCommandHaltFunction<Metadata>|SlashCommandHaltFunction<Metadata>;
-export type AnyCommandExecuteFunction<Metadata = unknown> = ContextMenuCommandExecuteFunction<Metadata>|MessageCommandExecuteFunction<Metadata>|SlashCommandExecuteFunction<Metadata>;
+export type AnyCommandHaltFunction = ContextMenuCommandHaltFunction|MessageCommandHaltFunction|SlashCommandHaltFunction;
+export type AnyCommandExecuteFunction = ContextMenuCommandExecuteFunction|MessageCommandExecuteFunction|SlashCommandExecuteFunction;
 
-export type AnyCommandBuilder<Metadata = unknown> = ContextMenuCommandBuilder<Metadata>|MessageCommandBuilder<Metadata>|AnySlashCommandBuilder<Metadata>;
-export type AnyCommandData<Metadata = unknown> = ContextMenuCommandData<Metadata>|MessageCommandData<Metadata>|SlashCommandData<Metadata>;
+export type AnyCommandBuilder = ContextMenuCommandBuilder|MessageCommandBuilder|AnySlashCommandBuilder;
+export type AnyCommandData = ContextMenuCommandData|MessageCommandData|SlashCommandData;
 
 export type ApplicationCommandBuilder = ContextMenuCommandBuilder|AnySlashCommandBuilder|discordjs.SlashCommandBuilder;
 
