@@ -1,7 +1,7 @@
-import discordjs, { LocalizationMap, PermissionResolvable } from 'discord.js';
 import { ContextMenuCommandBuilder, ContextMenuCommandData, ContextMenuCommandExecuteData, ContextMenuCommandExecuteFunction, ContextMenuCommandHaltData, ContextMenuCommandHaltFunction } from '../classes/builders/ContextMenuCommandBuilder';
 import { MessageCommandBuilder, MessageCommandData, MessageCommandExecuteData, MessageCommandExecuteFunction, MessageCommandHaltData, MessageCommandHaltFunction } from '../classes/builders/MessageCommandBuilder';
 import { AnySlashCommandBuilder, SlashCommandData, SlashCommandExecuteData, SlashCommandExecuteFunction, SlashCommandHaltData, SlashCommandHaltFunction } from '../classes/builders/SlashCommandBuilder';
+import discordjs, { LocalizationMap, PermissionResolvable } from 'discord.js';
 
 export enum CommandType {
     ContextMenuCommand,

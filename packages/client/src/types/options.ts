@@ -1,6 +1,6 @@
-import discordjs, { Message } from 'discord.js';
-import { RecipleClient } from '../classes/RecipleClient';
 import { MessageCommandResovable } from '../classes/builders/MessageCommandBuilder';
+import { RecipleClient } from '../classes/RecipleClient';
+import discordjs, { Message } from 'discord.js';
 
 export interface RecipleConfigOptions {
     token: string;

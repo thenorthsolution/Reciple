@@ -1,4 +1,4 @@
-import { ApplicationCommandDataResolvable, Collection, GuildResolvable, RESTPostAPIApplicationCommandsJSONBody, RestOrArray, normalizeArray } from 'discord.js';
+import { ApplicationCommandDataResolvable, Collection, RESTPostAPIApplicationCommandsJSONBody, RestOrArray, normalizeArray } from 'discord.js';
 import { AnySlashCommandBuilder, SlashCommandBuilder, SlashCommandExecuteData, SlashCommandResolvable } from '../builders/SlashCommandBuilder';
 import { AnyCommandBuilder, AnyCommandData, AnyCommandExecuteData, ApplicationCommandBuilder, CommandType } from '../../types/commands';
 import { ContextMenuCommandBuilder, ContextMenuCommandExecuteData, ContextMenuCommandResolvable } from '../builders/ContextMenuCommandBuilder';

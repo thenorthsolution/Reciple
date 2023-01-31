@@ -1,5 +1,5 @@
 import { Guild, GuildTextBasedChannel, PermissionResolvable, PermissionsBitField } from 'discord.js';
-import { AnyCommandBuilder, CommandType } from '../../types/commands';
+import { AnyCommandBuilder } from '../types/commands';
 
 export interface UserHasExecutePermissionsOptions {
     builder: AnyCommandBuilder;

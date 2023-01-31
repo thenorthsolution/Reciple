@@ -1,11 +1,11 @@
 import discordjs, { Awaitable, ContextMenuCommandInteraction, ContextMenuCommandType } from 'discord.js';
 import { BaseInteractionBasedCommandData, CommandType } from '../../types/commands';
 import { BaseCommandBuilder, BaseCommandBuilderData } from './BaseCommandBuilder';
+import { CommandCooldownData } from '../managers/CommandCooldownManager';
 import { CommandHaltData, CommandHaltReason } from '../../types/halt';
+import { botHasPermissionsToExecute } from '../../utils/permissions';
 import { RecipleClient } from '../RecipleClient';
 import { Mixin, mix } from 'ts-mixer';
-import { CommandCooldownData } from '../managers/CommandCooldownManager';
-import { botHasPermissionsToExecute } from '../utils/permissions';
 
 export interface ContextMenuCommandExecuteData {
     commandType: CommandType.ContextMenuCommand;

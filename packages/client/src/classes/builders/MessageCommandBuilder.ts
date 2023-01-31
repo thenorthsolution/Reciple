@@ -1,14 +1,14 @@
 import { MessageCommandOptionBuilder, MessageCommandOptionResolvable } from './MessageCommandOptionBuilder';
 import { Awaitable, If, Message, RestOrArray, isValidationEnabled, normalizeArray } from 'discord.js';
+import { botHasPermissionsToExecute, memberHasExecutePermissions } from '../../utils/permissions';
 import { MessageCommandOptionManager } from '../managers/MessageCommandOptionManager';
 import { BaseCommandBuilder, BaseCommandBuilderData } from './BaseCommandBuilder';
-import { BaseCommandData, CommandType } from '../../types/commands';
-import { CommandHaltData, CommandHaltReason } from '../../types/halt';
-import { RecipleClient } from '../RecipleClient';
-import { CommandData, getCommand } from 'fallout-utility';
-import { MessageCommandValidateOptionData } from '../../types/options';
 import { CommandCooldownData } from '../managers/CommandCooldownManager';
-import { botHasPermissionsToExecute, memberHasExecutePermissions } from '../utils/permissions';
+import { MessageCommandValidateOptionData } from '../../types/options';
+import { CommandHaltData, CommandHaltReason } from '../../types/halt';
+import { BaseCommandData, CommandType } from '../../types/commands';
+import { CommandData, getCommand } from 'fallout-utility';
+import { RecipleClient } from '../RecipleClient';
 
 export interface MessageCommandExecuteData<Options extends boolean = true> {
     commandType: CommandType.MessageCommand;

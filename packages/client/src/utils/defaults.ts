@@ -1,4 +1,4 @@
-import { RecipleConfigOptions } from '../../types/options';
+import { RecipleConfigOptions } from '../types/options';
 
 export const defaultRecipleConfigOptions: RecipleConfigOptions = {
     token: '',

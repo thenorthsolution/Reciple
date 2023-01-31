@@ -1,8 +1,8 @@
+import { MessageCommandOptionManager } from '../classes/managers/MessageCommandOptionManager';
 import { ContextMenuCommandExecuteData } from '../classes/builders/ContextMenuCommandBuilder';
 import { MessageCommandExecuteData } from '../classes/builders/MessageCommandBuilder';
 import { SlashCommandExecuteData } from '../classes/builders/SlashCommandBuilder';
 import { CommandCooldownData } from '../classes/managers/CommandCooldownManager';
-import { MessageCommandOptionManager } from '../classes/managers/MessageCommandOptionManager';
 import { CommandType } from './commands';
 
 export enum CommandHaltReason {
