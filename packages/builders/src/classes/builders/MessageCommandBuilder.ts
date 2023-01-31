@@ -111,7 +111,7 @@ export class MessageCommandBuilder<Metadata = unknown> extends BaseCommandBuilde
     public addOption(optionResolvable: MessageCommandOptionResolvable | ((builder: MessageCommandOptionBuilder) => MessageCommandOptionBuilder)): this {
         const option = typeof optionResolvable === 'function'
             ? optionResolvable(new MessageCommandOptionBuilder())
-            : MessageCommandOptionBuilder.from(optionResolvable);
+            : MessageCommandOptionBuilder.resolve(optionResolvable);
 
         if (isValidationEnabled()) {
             if (this.options.find(o => o.name === option.name)) throw new TypeError('An option with name "' + option.name + '" already exists.');
