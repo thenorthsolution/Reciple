@@ -1,6 +1,8 @@
 import { ContextMenuCommandExecuteData, ContextMenuCommandHaltData } from '../classes/builders/ContextMenuCommandBuilder';
 import { MessageCommandExecuteData } from '../classes/builders/MessageCommandBuilder';
 import { AnySlashCommandBuilder } from '../classes/builders/SlashCommandBuilder';
+import { CommandCooldownData } from '../classes/managers/CommandCooldownManager';
+import { MessageCommandOptionManager } from '../classes/managers/MessageCommandOptionManager';
 import { CommandType } from './commands';
 
 export enum CommandHaltReason {
@@ -35,21 +37,19 @@ export interface CommandErrorHaltData<T extends CommandType, M = unknown> extend
     error: any;
 }
 
-// TODO: Cooldown data
 export interface CommandCooldownHaltData<T extends CommandType, M = unknown> extends BaseCommandHaltData<T, M> {
     reason: CommandHaltReason.Cooldown;
+    cooldownData: CommandCooldownData;
 }
 
-// TODO: Arguments manager
 export interface CommandInvalidArgumentsHaltData<T extends CommandType, M = unknown> extends BaseCommandHaltData<T, M> {
     reason: CommandHaltReason.InvalidArguments;
-    invalidArguments: string[];
+    invalidArguments: MessageCommandOptionManager;
 }
 
-// TODO: Arguments manager
 export interface CommandMissingArgumentsHaltData<T extends CommandType, M = unknown> extends BaseCommandHaltData<T, M> {
     reason: CommandHaltReason.MissingArguments;
-    missingArguments: string[];
+    missingArguments: MessageCommandOptionManager;
 }
 
 export interface CommandMissingMemberPermissionsHaltData<T extends CommandType, M = unknown> extends BaseCommandHaltData<T, M> {
