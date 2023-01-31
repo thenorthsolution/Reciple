@@ -42,7 +42,8 @@ export const defaultRecipleConfigOptions: RecipleConfigOptions = {
     client: {
         intents: [
             'Guilds',
-            'GuildMessages'
+            'GuildMessages',
+            'MessageContent'
         ]
     }
 };
