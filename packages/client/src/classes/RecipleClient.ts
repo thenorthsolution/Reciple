@@ -83,7 +83,6 @@ export class RecipleClient<Ready extends boolean = boolean> extends discordjs.Cl
     public async _executeCommand(command: MessageCommandResovable, executeData: MessageCommandExecuteData): Promise<boolean>;
     public async _executeCommand(command: SlashCommandResolvable, executeData: SlashCommandExecuteData): Promise<boolean>;
     public async _executeCommand(command: AnyCommandBuilder|AnyCommandData, executeData: AnyCommandExecuteData): Promise<boolean> {
-        console.log(`Execute ${command.name} ${command.commandType}`);
         if (!command.execute) {
             // @ts-expect-error
             await this._haltCommand(command, { commandType: command.commandType, reason: CommandHaltReason.NoExecuteHandler, executeData });
