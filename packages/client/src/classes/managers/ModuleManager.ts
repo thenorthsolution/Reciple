@@ -1,4 +1,4 @@
-import { Awaitable, Collection, RestOrArray, normalizeArray } from 'discord.js';
+import { ApplicationCommandType, Awaitable, Collection, RestOrArray, normalizeArray } from 'discord.js';
 import { RecipleClient } from '../RecipleClient';
 import { RecipleModule, RecipleModuleScript } from '../RecipleModule';
 import { path } from 'fallout-utility';
@@ -8,10 +8,19 @@ import { inspect } from 'util';
 
 export interface ModuleManagerEvents {
     resolveModuleFileError: (file: string, error: Error) => Awaitable<void>;
+
     preLoadModule: (module: RecipleModule) => Awaitable<void>;
     postLoadModule: (module: RecipleModule) => Awaitable<void>;
     loadModuleError: (module: RecipleModule, error: Error) => Awaitable<void>;
+
     loadModuleFailed: (module: RecipleModule) => Awaitable<void>;
+    preStartModule: (module: RecipleModule) => Awaitable<void>;
+    postStartModule: (module: RecipleModule) => Awaitable<void>;
+    startModuleError: (module: RecipleModule, error: Error) => Awaitable<void>;
+
+    preUnloadModule: (module: RecipleModule) => Awaitable<void>;
+    postUnloadModule: (module: RecipleModule) => Awaitable<void>;
+    unloadModuleError: (module: RecipleModule, error: Error) => Awaitable<void>;
 }
 
 export interface ModuleManagerOptions {
@@ -21,7 +30,6 @@ export interface ModuleManagerOptions {
 
 export interface ModuleManagerModulesActionOptions {
     modules: RecipleModule[];
-    addToModulesCollection: boolean;
 }
 
 export class ModuleManager extends TypedEmitter<ModuleManagerEvents> {
@@ -35,7 +43,7 @@ export class ModuleManager extends TypedEmitter<ModuleManagerEvents> {
         options.modules?.forEach(m => m instanceof RecipleModule ? this.modules.set(m.id, m) : new RecipleModule({ client: this.client, script: m }))
     }
 
-    public async loadModules(options: ModuleManagerModulesActionOptions): Promise<RecipleModule[]> {
+    public async loadModules(options: ModuleManagerModulesActionOptions & { addToModulesCollection?: boolean; }): Promise<RecipleModule[]> {
         const loadedModules: RecipleModule[] = [];
 
         for (const module_ of options.modules) {
@@ -65,6 +73,69 @@ export class ModuleManager extends TypedEmitter<ModuleManagerEvents> {
         }
 
         return loadedModules;
+    }
+
+    public async startModules(options: ModuleManagerModulesActionOptions & { resolveCommands?: boolean; }): Promise<RecipleModule[]> {
+        const startedModules: RecipleModule[] = [];
+
+        for (const module_ of options.modules) {
+            this.emit('preStartModule', module_);
+
+            try {
+                await module_.start(options.resolveCommands !== false);
+                if (module_.commands.length) this.client.commands.add(...module_.commands);
+
+                this.emit('postStartModule', module_);
+                startedModules.push(module_);
+            } catch(err) {
+                this._throwError(err as Error, { name: 'startModuleError', values: [module_, err as Error] });
+            }
+        }
+
+        return startedModules;
+    }
+
+    public async unloadModules(options: ModuleManagerModulesActionOptions & { reason?: string; removeFromModulesCollection?: boolean; removeCommandsFromClient?: boolean; }): Promise<RecipleModule[]> {
+        const unloadedModules: RecipleModule[] = [];
+
+        for (const module_ of options.modules) {
+            this.emit('preUnloadModule', module_);
+
+            try {
+                await module_.unload(options.reason);
+
+                if (options.removeCommandsFromClient !== false) {
+                    for (const cmd of module_.commands) {
+                        if (cmd.isContextMenu()) {
+                            this.client.commands.contextMenuCommands.delete(cmd.name);
+
+                            const applicationCommands = this.client.application?.commands.cache.filter(c => c.name === cmd.name && (c.type === ApplicationCommandType.Message || c.type === ApplicationCommandType.User)).toJSON();
+                            for (const applicationCommand of (applicationCommands ?? [])) {
+                                await this.client.application?.commands.delete(applicationCommand, applicationCommand.guildId || undefined);
+                            }
+                        } else if (cmd.isMessageCommand()) {
+                            this.client.commands.messageCommands.delete(cmd.name);
+                        } else if (cmd.isSlashCommand()) {
+                            this.client.commands.slashCommands.delete(cmd.name);
+
+                            const applicationCommands = this.client.application?.commands.cache.filter(c => c.name === cmd.name && c.type === ApplicationCommandType.ChatInput).toJSON();
+                            for (const applicationCommand of (applicationCommands ?? [])) {
+                                await this.client.application?.commands.delete(applicationCommand, applicationCommand.guildId || undefined);
+                            }
+                        }
+                    }
+                }
+
+                if (options.removeFromModulesCollection !== false) this.modules.delete(module_.id);
+
+                this.emit('postUnloadModule', module_);
+                unloadedModules.push(module_);
+            } catch(err) {
+                this._throwError(err as Error, { name: 'unloadModuleError', values: [module_, err as Error] });
+            }
+        }
+
+        return unloadedModules;
     }
 
     public async resolveModuleFiles(files: string[], disableVersionCheck: boolean = false): Promise<RecipleModule[]> {
