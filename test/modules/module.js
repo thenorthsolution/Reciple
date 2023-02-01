@@ -1,3 +1,5 @@
+const { ContextMenuCommandBuilder } = require('reciple');
+
 module.exports = {
     versions: `^7`,
     commands: [
