@@ -8,8 +8,8 @@ import { ContextMenuCommandBuilder, MessageCommandBuilder, SlashCommandBuilder }
 export interface RecipleModuleScript {
     versions: string|string[];
     commands?: (AnyCommandBuilder|AnyCommandData)[];
-    onLoad(client: RecipleClient<true>, module: RecipleModule): boolean | Promise<boolean>;
-    onStart?(client: RecipleClient<false>, module: RecipleModule): void | Promise<void>;
+    onStart(client: RecipleClient<true>, module: RecipleModule): boolean | Promise<boolean>;
+    onLoad?(client: RecipleClient<false>, module: RecipleModule): void | Promise<void>;
     onUnload?(unloadData: RecipleModuleScriptUnloadData): void | Promise<void>;
 }
 
@@ -48,13 +48,13 @@ export class RecipleModule {
     get displayName() { return this.filePath ?? this.id; }
     get isSupported() { return normalizeArray([this.versions] as RestOrArray<string>).some(v => semver.satisfies(this.client.version, v)); }
 
-    public async start(resolveCommands: boolean = true): Promise<void> {
-        if (this.onStart) Promise.resolve(this.onStart(this.client, this));
-        if (resolveCommands) this.resolveCommands();
+    public async start(): Promise<boolean> {
+        return Promise.resolve(this.onStart(this.client, this));
     }
 
-    public async load(): Promise<boolean> {
-        return Promise.resolve(this.onLoad(this.client, this));
+    public async load(resolveCommands: boolean = true): Promise<void> {
+        if (this.onLoad) Promise.resolve(this.onLoad(this.client, this));
+        if (resolveCommands) this.resolveCommands();
     }
 
     public async unload(reason?: string): Promise<void> {

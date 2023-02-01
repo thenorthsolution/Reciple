@@ -46,14 +46,14 @@ export function eventLogger(client: RecipleClient): void {
 
     client.modules.on('resolveModuleFileError', (file, error) => client.logger?.err(`Failed to resolve module '${file}': `, error));
 
-    client.modules.on('preLoadModule', (module_) => client.logger?.debug(`Loading module '${module_.displayName}'`));
-    client.modules.on('postLoadModule', (module_) => client.logger?.log(`Loaded module '${module_.displayName}'`));
-    client.modules.on('loadModuleFailed', (module_) => client.logger?.error(`Failed to load module '${module_.displayName}': Returned false`));
-    client.modules.on('loadModuleError', (module_, err) => client.logger?.error(`An error occured while loading module: '${module_.displayName}': `, err));
-
     client.modules.on('preStartModule', (module_) => client.logger?.debug(`Starting module '${module_.displayName}'`));
     client.modules.on('postStartModule', (module_) => client.logger?.log(`Started module '${module_.displayName}'`));
+    client.modules.on('startModuleFailed', (module_) => client.logger?.error(`Failed to load module '${module_.displayName}': Returned false`));
     client.modules.on('startModuleError', (module_, err) => client.logger?.error(`An error occured while starting module '${module_.displayName}': `, err));
+
+    client.modules.on('preLoadModule', (module_) => client.logger?.debug(`Loading module '${module_.displayName}'`));
+    client.modules.on('postLoadModule', (module_) => client.logger?.log(`Loaded module '${module_.displayName}'`));
+    client.modules.on('loadModuleError', (module_, err) => client.logger?.error(`An error occured while loading module: '${module_.displayName}': `, err));
 
     client.modules.on('preUnloadModule', (module_) => client.logger?.debug(`Unloading module '${module_.displayName}'`));
     client.modules.on('postUnloadModule', (module_) => client.logger?.log(`Unloaded module '${module_.displayName}'`));

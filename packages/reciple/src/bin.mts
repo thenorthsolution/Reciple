@@ -37,18 +37,18 @@ client.logger?.info(`Starting Reciple client v${realVersion} - ${new Date()}`);
 
 eventLogger(client);
 
-await client.modules.loadModules({
+await client.modules.startModules({
     modules: await client.modules.resolveModuleFiles(await getModules(config.modules, file => file.endsWith('.js') || file.endsWith('.mjs') || file.endsWith('.cjs')), config.modules.disableModuleVersionCheck),
     addToModulesCollection: true
 });
 
 client.once('ready', async () => {
-    const startedModules = await client.modules.startModules({
+    const loadedModules = await client.modules.loadModules({
         modules: client.modules.modules.toJSON(),
         resolveCommands: true
     });
 
-    client.modules.modules.sweep(m => !startedModules.some(s => s.id == m.id));
+    client.modules.modules.sweep(m => !loadedModules.some(s => s.id == m.id));
 
     const unloadModulesAndStopProcess = async (signal: NodeJS.Signals) => {
         await client.modules.unloadModules({

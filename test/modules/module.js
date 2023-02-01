@@ -69,7 +69,7 @@ module.exports = {
      * @param {RecipleClient} client 
      * @returns 
      */
-    onLoad(client) {
+    onStart(client) {
         client.on('recipleCommandHalt', data => client.logger?.log(`Command halt ${data.executeData.builder.name}: `, data));
 
         client.logger.warn(`Started module!`);
@@ -80,7 +80,7 @@ module.exports = {
      * 
      * @param {RecipleClient} client 
      */
-    onStart(client) {
+    onLoad(client) {
         client.logger.warn(`Loaded module!`);
     }
 };

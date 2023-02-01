@@ -9,14 +9,14 @@ import { inspect } from 'util';
 export interface ModuleManagerEvents {
     resolveModuleFileError: (file: string, error: Error) => Awaitable<void>;
 
-    preLoadModule: (module: RecipleModule) => Awaitable<void>;
-    postLoadModule: (module: RecipleModule) => Awaitable<void>;
-    loadModuleError: (module: RecipleModule, error: Error) => Awaitable<void>;
-
-    loadModuleFailed: (module: RecipleModule) => Awaitable<void>;
+    startModuleFailed: (module: RecipleModule) => Awaitable<void>;
     preStartModule: (module: RecipleModule) => Awaitable<void>;
     postStartModule: (module: RecipleModule) => Awaitable<void>;
     startModuleError: (module: RecipleModule, error: Error) => Awaitable<void>;
+
+    preLoadModule: (module: RecipleModule) => Awaitable<void>;
+    postLoadModule: (module: RecipleModule) => Awaitable<void>;
+    loadModuleError: (module: RecipleModule, error: Error) => Awaitable<void>;
 
     preUnloadModule: (module: RecipleModule) => Awaitable<void>;
     postUnloadModule: (module: RecipleModule) => Awaitable<void>;
@@ -43,56 +43,56 @@ export class ModuleManager extends TypedEmitter<ModuleManagerEvents> {
         options.modules?.forEach(m => m instanceof RecipleModule ? this.modules.set(m.id, m) : new RecipleModule({ client: this.client, script: m }))
     }
 
-    public async loadModules(options: ModuleManagerModulesActionOptions & { addToModulesCollection?: boolean; }): Promise<RecipleModule[]> {
-        const loadedModules: RecipleModule[] = [];
+    public async startModules(options: ModuleManagerModulesActionOptions & { addToModulesCollection?: boolean; }): Promise<RecipleModule[]> {
+        const startModules: RecipleModule[] = [];
 
         for (const module_ of options.modules) {
-            this.emit('preLoadModule', module_);
+            this.emit('preStartModule', module_);
 
             try {
                 let error: Error|null = null;
 
-                const start = await module_.load().catch(err => {
+                const start = await module_.start().catch(err => {
                     error = err;
                     return false;
                 });
 
                 if (error) throw new Error(`An error occured while loading module '${module_}': \n${inspect(error)}`);
                 if (!start) {
-                    this.emit('loadModuleFailed', module_);
+                    this.emit('startModuleFailed', module_);
                     continue;
                 }
 
                 if (options.addToModulesCollection !== false) this.modules.set(module_.id, module_);
 
-                loadedModules.push(module_);
+                startModules.push(module_);
+                this.emit('postStartModule', module_);
+            } catch(err) {
+                this._throwError(err as Error, { name: 'startModuleError', values: [module_, err as Error] });
+            }
+        }
+
+        return startModules;
+    }
+
+    public async loadModules(options: ModuleManagerModulesActionOptions & { resolveCommands?: boolean; }): Promise<RecipleModule[]> {
+        const loadedModules: RecipleModule[] = [];
+
+        for (const module_ of options.modules) {
+            this.emit('preLoadModule', module_);
+
+            try {
+                await module_.load(options.resolveCommands !== false);
+                if (module_.commands.length) this.client.commands.add(...module_.commands);
+
                 this.emit('postLoadModule', module_);
+                loadedModules.push(module_);
             } catch(err) {
                 this._throwError(err as Error, { name: 'loadModuleError', values: [module_, err as Error] });
             }
         }
 
         return loadedModules;
-    }
-
-    public async startModules(options: ModuleManagerModulesActionOptions & { resolveCommands?: boolean; }): Promise<RecipleModule[]> {
-        const startedModules: RecipleModule[] = [];
-
-        for (const module_ of options.modules) {
-            this.emit('preStartModule', module_);
-
-            try {
-                await module_.start(options.resolveCommands !== false);
-                if (module_.commands.length) this.client.commands.add(...module_.commands);
-
-                this.emit('postStartModule', module_);
-                startedModules.push(module_);
-            } catch(err) {
-                this._throwError(err as Error, { name: 'startModuleError', values: [module_, err as Error] });
-            }
-        }
-
-        return startedModules;
     }
 
     public async unloadModules(options: ModuleManagerModulesActionOptions & { reason?: string; removeFromModulesCollection?: boolean; removeCommandsFromClient?: boolean; }): Promise<RecipleModule[]> {
@@ -194,8 +194,8 @@ export class ModuleManager extends TypedEmitter<ModuleManagerEvents> {
 
         if (typeof s !== 'object') return this.client._throwError(new Error(`Invalid Reciple module script`));
         if (typeof s.versions !== 'string' && !Array.isArray(s.versions)) return this.client._throwError(new Error(`Invalid module supported versions`));
-        if (typeof s.onLoad !== 'function') return this.client._throwError(new Error(`Module's "onStart" property is not a valid function`));
-        if (s.onStart && typeof s.onStart !== 'function') return this.client._throwError(new Error(`Module's "onLoad" property is not a valid function`));
+        if (typeof s.onStart !== 'function') return this.client._throwError(new Error(`Module's "onStart" property is not a valid function`));
+        if (s.onLoad && typeof s.onLoad !== 'function') return this.client._throwError(new Error(`Module's "onLoad" property is not a valid function`));
         if (s.onUnload && typeof s.onUnload !== 'function') return this.client._throwError(new Error(`Module's "onUnload" property is not a valid function`));
     }
 
