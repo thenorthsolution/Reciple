@@ -59,7 +59,12 @@ export class MessageCommandBuilder extends BaseCommandBuilder implements Message
         super(data);
 
         if (data?.name !== undefined) this.setName(data.name);
+        if (data?.aliases !== undefined) this.setAliases(data.aliases);
         if (data?.description !== undefined) this.setDescription(data.description);
+        if (data?.dmPermission !== undefined) this.setDmPermission(data.dmPermission);
+        if (data?.userBotPermission !== undefined) this.setUserBotPermission(data.userBotPermission);
+        if (data?.validateOptions !== undefined) this.setValidateOptions(data.validateOptions);
+        if (data?.options !== undefined) this.setOptions(data.options);
     }
 
     public setName(name: string): this {
