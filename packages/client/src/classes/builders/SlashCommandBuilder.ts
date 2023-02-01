@@ -34,6 +34,12 @@ export interface SlashCommandData extends BaseCommandBuilderData, BaseInteractio
 }
 
 export interface SlashCommandBuilder extends discordjs.SlashCommandBuilder, BaseCommandBuilder {
+    halt?: SlashCommandHaltFunction;
+    execute?: SlashCommandExecuteFunction;
+
+    setHalt(halt?: SlashCommandHaltFunction|null): this;
+    setExecute(execute?: SlashCommandExecuteFunction|null): this;
+
     addSubcommandGroup(input: SlashCommandSubcommandGroupBuilder | ((subcommandGroup: SlashCommandSubcommandGroupBuilder) => SlashCommandSubcommandGroupBuilder)): SlashCommandSubcommandsOnlyBuilder;
     addSubcommand(input: SlashCommandSubcommandBuilder | ((subcommandGroup: SlashCommandSubcommandBuilder) => SlashCommandSubcommandBuilder)): SlashCommandSubcommandsOnlyBuilder;
 
@@ -69,9 +75,6 @@ export interface SlashCommandBuilder extends discordjs.SlashCommandBuilder, Base
 export class SlashCommandBuilder extends Mixin(discordjs.SlashCommandBuilder, BaseCommandBuilder) {
     readonly commandType: CommandType.SlashCommand = CommandType.SlashCommand;
 
-    public halt?: SlashCommandHaltFunction;
-    public execute?: SlashCommandExecuteFunction;
-
     constructor(data?: Omit<Partial<SlashCommandData>, 'commandType'>) {
         super(data);
 
@@ -88,16 +91,6 @@ export class SlashCommandBuilder extends Mixin(discordjs.SlashCommandBuilder, Ba
                 SlashCommandBuilder.addOption(this, isClass<AnySlashCommandOptionBuilder>(option) ? option : SlashCommandBuilder.resolveOption(option as AnySlashCommandOptionData));
             }
         }
-    }
-
-    public setHalt(halt?: SlashCommandHaltFunction|null): this {
-        this.halt = halt || undefined;
-        return this;
-    }
-
-    public setExecute(execute?: SlashCommandExecuteFunction|null): this {
-        this.execute = execute || undefined;
-        return this;
     }
 
     public static addOption<Builder extends SharedSlashCommandOptions>(builder: Builder, option: AnySlashCommandOptionBuilder|SlashCommandSubcommandOptionsOnlyBuilder): Builder {

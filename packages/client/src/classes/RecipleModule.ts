@@ -83,6 +83,8 @@ export class RecipleModule {
                     break;
             }
 
+            console.log(command);
+
             if (!command) continue;
             commands.push(command);
         }

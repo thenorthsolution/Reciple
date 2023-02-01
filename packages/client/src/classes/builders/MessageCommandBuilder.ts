@@ -37,6 +37,13 @@ export interface MessageCommandData extends BaseCommandBuilderData, BaseCommandD
     options: MessageCommandOptionResolvable[];
 }
 
+export interface MessageCommandBuilder extends BaseCommandBuilder {
+    halt?: MessageCommandHaltFunction;
+    execute?: MessageCommandExecuteFunction;
+    setHalt(halt?: MessageCommandHaltFunction|null): this;
+    setExecute(execute?: MessageCommandExecuteFunction|null): this;
+}
+
 export class MessageCommandBuilder extends BaseCommandBuilder implements MessageCommandData {
     readonly commandType: CommandType.MessageCommand = CommandType.MessageCommand;
 
@@ -47,8 +54,6 @@ export class MessageCommandBuilder extends BaseCommandBuilder implements Message
     public dmPermission: boolean = false;
     public userBotPermission: boolean = false;
     public options: MessageCommandOptionBuilder[] = [];
-    public halt?: MessageCommandHaltFunction;
-    public execute?: MessageCommandExecuteFunction;
 
     constructor(data?: Omit<Partial<MessageCommandData>, 'commandType'>) {
         super(data);
@@ -126,19 +131,9 @@ export class MessageCommandBuilder extends BaseCommandBuilder implements Message
         return this;
     }
 
-    public setHalt(halt?: MessageCommandHaltFunction|null): this {
-        this.halt = halt || undefined;
-        return this;
-    }
-
-    public setExecute(execute?: MessageCommandExecuteFunction|null): this {
-        this.execute = execute || undefined;
-        return this;
-    }
-
     public toJSON(): MessageCommandData {
         return {
-            ...this.toCommandData(),
+            ...super.toCommandData(),
             commandType: this.commandType,
             name: this.name,
             aliases: this.aliases,

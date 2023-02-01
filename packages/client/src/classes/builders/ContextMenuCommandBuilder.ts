@@ -28,29 +28,21 @@ export interface ContextMenuCommandData extends BaseCommandBuilderData, BaseInte
     execute?: ContextMenuCommandExecuteFunction;
 }
 
-export interface ContextMenuCommandBuilder extends discordjs.ContextMenuCommandBuilder, BaseCommandBuilder {}
+export interface ContextMenuCommandBuilder extends discordjs.ContextMenuCommandBuilder, BaseCommandBuilder {
+    halt?: ContextMenuCommandHaltFunction;
+    execute?: ContextMenuCommandExecuteFunction;
+    setHalt(halt?: ContextMenuCommandHaltFunction|null): this;
+    setExecute(execute?: ContextMenuCommandExecuteFunction|null): this;
+}
 
 export class ContextMenuCommandBuilder extends Mixin(discordjs.ContextMenuCommandBuilder, BaseCommandBuilder) {
     readonly commandType: CommandType.ContextMenuCommand = CommandType.ContextMenuCommand;
-
-    public halt?: ContextMenuCommandHaltFunction;
-    public execute?: ContextMenuCommandExecuteFunction;
 
     constructor(data?: Omit<Partial<ContextMenuCommandData>, 'commandType'>) {
         super(data);
 
         if (data?.name !== undefined) this.setName(data.name);
         if (data?.nameLocalizations !== undefined) this.setNameLocalizations(data.nameLocalizations);
-    }
-
-    public setHalt(halt?: ContextMenuCommandHaltFunction|null): this {
-        this.halt = halt || undefined;
-        return this;
-    }
-
-    public setExecute(execute?: ContextMenuCommandExecuteFunction|null): this {
-        this.execute = execute || undefined;
-        return this;
     }
 
     public static resolve(contextMenuCommandResolvable: ContextMenuCommandResolvable): ContextMenuCommandBuilder {

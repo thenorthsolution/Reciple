@@ -33,7 +33,7 @@ const client = new RecipleClient({
     logger: config.logger.enabled ? createLogger(config.logger) : undefined
 });
 
-client.logger?.info('Starting Reciple client v' + realVersion);
+client.logger?.info(`Starting Reciple client v${realVersion} - ${new Date()}`);
 
 eventLogger(client);
 

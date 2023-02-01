@@ -5,7 +5,13 @@ module.exports = {
             commandType: 2,
             name: 'tae',
             description: 'Tae ko',
-            execute: async message => message.reply('tite')
+            execute: async ({message}) => message.reply('tite')
+        },
+        {
+            commandType: 3,
+            name: 'test',
+            description: 'Sus',
+            execute: async ({interaction}) => interaction.reply('e')
         }
     ],
     onLoad() {

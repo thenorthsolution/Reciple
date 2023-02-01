@@ -24,8 +24,14 @@ export abstract class BaseCommandBuilder implements BaseCommandBuilderData {
         this.from(data);
     }
 
-    public abstract setHalt(halt?: AnyCommandHaltFunction|null): this;
-    public abstract setExecute(execute?: AnyCommandExecuteFunction|null): this;
+    public setHalt(halt?: AnyCommandHaltFunction|null): this {
+        this.halt = halt || undefined;
+        return this;
+    }
+    public setExecute(execute?: AnyCommandExecuteFunction|null): this {
+        this.execute = execute || undefined;
+        return this;
+    }
 
     public setCooldown(cooldown?: number|null): this {
         this.cooldown = cooldown || undefined;
