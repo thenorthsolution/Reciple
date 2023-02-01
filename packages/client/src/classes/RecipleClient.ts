@@ -5,11 +5,12 @@ import { SlashCommandExecuteData, SlashCommandHaltData, SlashCommandResolvable }
 import discordjs, { ApplicationCommand, Awaitable, ClientEvents, Collection } from 'discord.js';
 import { RecipleClientOptions, RecipleConfigOptions } from '../types/options';
 import { CommandCooldownManager } from './managers/CommandCooldownManager';
-import { defaultRecipleConfigOptions } from '../utils/defaults';
+import { defaultRecipleConfigOptions, version } from '../utils/constants';
 import { CommandManager } from './managers/CommandManager';
 import { CommandHaltReason } from '../types/halt';
 import defaultsDeep from 'lodash.defaultsdeep';
 import { Logger } from 'fallout-utility';
+import { ModuleManager } from './managers/ModuleManager';
 
 export interface RecipleClient<Ready extends boolean = boolean> extends discordjs.Client<Ready> {
     on<E extends keyof RecipleClientEvents>(event: E, listener: (...args: RecipleClientEvents[E]) => Awaitable<void>): this;
@@ -38,9 +39,11 @@ export interface RecipleClientEvents extends ClientEvents {
 
 export class RecipleClient<Ready extends boolean = boolean> extends discordjs.Client<Ready> {
     readonly config: RecipleConfigOptions;
+    readonly modules: ModuleManager = new ModuleManager({ client: this });
     readonly commands: CommandManager = new CommandManager({ client: this });
     readonly cooldowns: CommandCooldownManager = new CommandCooldownManager();
     readonly logger?: Logger;
+    readonly version: string = version;
 
     constructor(options: RecipleClientOptions) {
         super({ ...options, ...{ ...defaultRecipleConfigOptions.client, ...options.recipleOptions.client } });

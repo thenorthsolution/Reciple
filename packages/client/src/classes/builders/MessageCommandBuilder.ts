@@ -1,5 +1,5 @@
 import { MessageCommandOptionBuilder, MessageCommandOptionResolvable } from './MessageCommandOptionBuilder';
-import { Awaitable, If, Message, RestOrArray, isValidationEnabled, normalizeArray } from 'discord.js';
+import { Awaitable, If, Message, RestOrArray, SlashCommandAssertions, isValidationEnabled, normalizeArray } from 'discord.js';
 import { botHasPermissionsToExecute, memberHasExecutePermissions } from '../../utils/permissions';
 import { MessageCommandOptionManager } from '../managers/MessageCommandOptionManager';
 import { BaseCommandBuilder, BaseCommandBuilderData } from './BaseCommandBuilder';

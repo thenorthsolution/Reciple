@@ -11,5 +11,5 @@ export * from './types/commands';
 export * from './types/halt';
 export * from './types/options';
 export * from './types/slashCommandOptions';
-export * from './utils/defaults';
+export * from './utils/constants';
 export * from './utils/permissions';

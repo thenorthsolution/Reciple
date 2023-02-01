@@ -1,4 +1,6 @@
+import { readFileSync } from 'fs';
 import { RecipleConfigOptions } from '../types/options';
+import { path } from 'fallout-utility';
 
 export const defaultRecipleConfigOptions: RecipleConfigOptions = {
     token: '',
@@ -47,3 +49,5 @@ export const defaultRecipleConfigOptions: RecipleConfigOptions = {
         ]
     }
 };
+
+export const version = JSON.parse(readFileSync(path.join(__dirname, '../../package.json'), 'utf-8')).version;
