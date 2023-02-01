@@ -161,7 +161,7 @@ export class MessageCommandBuilder extends BaseCommandBuilder implements Message
 
         for (let i = 0; i < options.command.options.length; i++) {
             const arg = options.args[i];
-            validated.set(options.command.options[i].name, await MessageCommandOptionBuilder.validateOptionValue(options.command.options[i], options.message));
+            validated.set(options.command.options[i].name, await MessageCommandOptionBuilder.validateOptionValue(options.command.options[i], options.message, arg));
         }
 
         return validated;
