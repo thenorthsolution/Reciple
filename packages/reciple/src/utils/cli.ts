@@ -1,5 +1,6 @@
 import { realVersion } from '@reciple/client';
 import { Command } from 'commander';
+import { path } from 'fallout-utility';
 
 export const command = new Command()
     .name('reciple')
@@ -9,7 +10,8 @@ export const command = new Command()
     .option('-t, --token <token>', 'Replace used bot token')
     .option('-c, --config <config>', 'Change path to config file')
     .option('-D, --debugmode', 'Enable debug mode')
-    .option('-y, --yes', 'Agree to all Reciple confirmation prompts');
+    .option('-y, --yes', 'Agree to all Reciple confirmation prompts')
+    .parse();
 
 export const flags = command.opts();
-export const cwd = command.args[0] || process.cwd();
+export const cwd = command.args[0] ? path.resolve(command.args[0]) : process.cwd();

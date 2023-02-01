@@ -42,7 +42,7 @@ export class Config {
 
             if (configData.token === 'TOKEN') {
                 configData.token = await this.askToken() || 'TOKEN';
-                configYaml = replaceAll(configYaml, 'TOKEN', configData.token);
+                configYaml = replaceAll(configYaml, 'token: TOKEN', `token: ${configData.token}`);
             }
 
             writeFileSync(this.configPath, configYaml, 'utf-8');

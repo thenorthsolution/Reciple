@@ -1,14 +1,14 @@
+#!/usr/bin/env node
+
 import { existsSync, mkdirSync, readdirSync } from 'fs';
-import { command, cwd } from './utils/cli.js';
+import { flags, cwd } from './utils/cli.js';
 import { path } from 'fallout-utility';
 import micromatch from 'micromatch';
 import promptConfirm from '@inquirer/confirm';
 import { Config } from './classes/Config.js';
-import { CommandType, ContextMenuCommandBuilder, MessageCommandBuilder, RecipleClient, SlashCommandBuilder, realVersion } from '@reciple/client';
+import { ContextMenuCommandBuilder, MessageCommandBuilder, RecipleClient, SlashCommandBuilder, realVersion } from '@reciple/client';
 import { createLogger, eventLogger } from './utils/logger.js';
 import { getModules } from './utils/modules.js';
-
-const flags = command.parse().opts();
 
 const allowedFiles = ['node_modules', 'reciple.yml', 'package.json', '.*'];
 const configPath = flags.config ?? path.join(cwd, 'reciple.yml');
@@ -84,3 +84,5 @@ client.once('ready', async () => {
         MessageCommandBuilder.execute(client, message);
     });
 });
+
+client.login();

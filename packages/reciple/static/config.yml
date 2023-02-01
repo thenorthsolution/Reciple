@@ -59,8 +59,6 @@ applicationCommandRegister:
   allowRegisterOnGuilds: true
   # Register empty command list
   registerEmptyCommands: true
-}
-
 
 # Logger config
 logger:
