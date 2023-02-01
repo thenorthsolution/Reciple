@@ -6,6 +6,7 @@
   "main": "./bin/index.js",
   "module": "./bin/esm.mjs",
   "types": "./bin/index.d.ts",
+  "bin": "./bin/bin.mjs",
   "exports": {
     ".": {
       "types": "./bin/index.d.ts",
