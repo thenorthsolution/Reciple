@@ -11,8 +11,8 @@
     "build": "npx lerna run build && npm run bootstrap",
     "watch": "npx tsc --watch --noEmit",
     "test": "node ./packages/reciple/bin/bin.mjs ./test -t env:TOKEN -y",
-    "publish:next": "npx lerna version --no-private npx lerna publish from-package --temp-tag next",
-    "publish:all": "npx lerna version --no-private npx lerna publish from-package"
+    "publish:next": "npx lerna publish --no-private --temp-tag next",
+    "publish:all": "npx lerna publish --no-private"
   },
   "devDependencies": {
     "@types/node": "^18.11.18",
