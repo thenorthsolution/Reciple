@@ -1,4 +1,5 @@
 const { ContextMenuCommandBuilder } = require('reciple');
+const { ApplicationCommandType } = require('discord.js');
 
 module.exports = {
     versions: `^7`,
@@ -14,7 +15,11 @@ module.exports = {
             name: 'test',
             description: 'Sus',
             execute: async ({interaction}) => interaction.reply('e')
-        }
+        },
+        new ContextMenuCommandBuilder()
+            .setName('Kill')
+            .setType(ApplicationCommandType.User)
+            .setExecute(async ({interaction}) => interaction.reply(`Killed this mf`))
     ],
     onLoad() {
         console.log(`Loaded UwUue;`);
