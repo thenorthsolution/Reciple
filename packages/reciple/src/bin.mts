@@ -38,7 +38,7 @@ client.logger?.info('Starting Reciple client v' + realVersion);
 eventLogger(client);
 
 await client.modules.loadModules({
-    modules: await client.modules.resolveModuleFiles(await getModules(config.modules, file => file.endsWith('.js') || file.endsWith('.mjs') || file.endsWith('.cjs'))),
+    modules: await client.modules.resolveModuleFiles(await getModules(config.modules, file => file.endsWith('.js') || file.endsWith('.mjs') || file.endsWith('.cjs')), config.modules.disableModuleVersionCheck),
     addToModulesCollection: true
 });
 
@@ -51,7 +51,7 @@ client.once('ready', async () => {
     client.modules.modules.sweep(m => !startedModules.some(s => s.id == m.id));
 
     const unloadModulesAndStopProcess = async (signal: NodeJS.Signals) => {
-        const unloadedModules = await client.modules.unloadModules({
+        await client.modules.unloadModules({
             reason: 'ProcessExit',
             modules: client.modules.modules.toJSON(),
             removeCommandsFromClient: false,

@@ -7,11 +7,11 @@ export interface RecipleConfigOptions {
     token: string;
     commands: {
         contextMenuCommand: RecipleCommandsInteractionBasedConfigOptions;
-        slashCommand: RecipleCommandsInteractionBasedConfigOptions;
         messageCommand: RecipleCommandsConfigOptions & {
             commandArgumentSeparator: string;
             prefix: string;
         };
+        slashCommand: RecipleCommandsInteractionBasedConfigOptions;
         additionalApplicationCommands: Pick<RecipleCommandsInteractionBasedConfigOptions, 'registerCommands'>;
     };
     applicationCommandRegister: {

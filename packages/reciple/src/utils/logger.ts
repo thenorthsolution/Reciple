@@ -1,7 +1,8 @@
 import { IConfig } from '../classes/Config';
-import { Logger, LoggerLevel } from 'fallout-utility';
+import { Logger, LoggerLevel, path } from 'fallout-utility';
 import chalk from 'chalk';
 import { RecipleClient } from '..';
+import { cwd } from './cli';
 
 export function formatLogMessage(message: string, logger: Logger, config: IConfig['logger'], level: LoggerLevel): string {
     const color = (msg: string) => {
@@ -23,7 +24,7 @@ export function formatLogMessage(message: string, logger: Logger, config: IConfi
 }
 
 export function createLogger(config: IConfig['logger']): Logger {
-    return new Logger({
+    const logger = new Logger({
         enableDebugmode: config.debugmode === true,
         forceEmitLogEvents: true,
         name: 'Client',
@@ -34,9 +35,14 @@ export function createLogger(config: IConfig['logger']): Logger {
             [LoggerLevel.DEBUG]: (message, logger) => formatLogMessage(message, logger, config, LoggerLevel.DEBUG),
         }
     });
+
+    if (config.logToFile.enabled) logger.logToFile(path.join(cwd, config.logToFile.logsFolder, 'latest.log'));
+    return logger;
 }
 
 export function eventLogger(client: RecipleClient): void {
+    client.on('recipleDebug', debug => client.logger?.debug(debug));
+
     client.modules.on('resolveModuleFileError', (file, error) => client.logger?.err(`Failed to resolve module '${file}': `, error));
 
     client.modules.on('preLoadModule', (module_) => client.logger?.debug(`Loading module '${module_.displayName}'`));

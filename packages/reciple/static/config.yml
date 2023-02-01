@@ -1,0 +1,101 @@
+# The bot token
+#   You can directly set the bot token as value or use token from env
+#   To use token from env set the value like this:
+#     token: env:TOKEN
+token: TOKEN
+
+# Commands Config
+commands:
+  contextMenuCommand:
+    # If false, the client will ignore this type of command when executed
+    enabled: true
+    # Enable user command cooldowns if available
+    enableCooldown: true
+    # Command register config
+    registerCommands:
+      # Allow commands to be registered globally
+      registerGlobally: true
+      # Allow commands to be registered a given guilds/servers
+      registerToGuilds: []
+    # If enabled, the client will accept replied interactions of this type
+    acceptRepliedInteractions: false
+  slashCommand:
+    # If false, the client will ignore this type of command when executed
+    enabled: true
+    # Enable user command cooldowns if available
+    enableCooldown: true
+    # Command register config
+    registerCommands:
+      # Allow commands to be registered globally
+      registerGlobally: true
+      # Allow commands to be registered a given guilds/servers
+      registerToGuilds: []
+    # If enabled, the client will accept replied interactions of this type
+    acceptRepliedInteractions: false
+  messageCommand:
+    # If false, the client will ignore this type of command when executed
+    enabled: true
+    # Enable user command cooldowns if available
+    enableCooldown: true
+    # String separator for command options
+    commandArgumentSeparator: ' '
+    # Command prefix
+    prefix: '!'
+  additionalApplicationCommands:
+    # Command register config
+    registerCommands:
+      # Allow commands to be registered globally
+      registerGlobally: true
+      # Allow commands to be registered a given guilds/servers
+      registerToGuilds: []
+
+# Application commands register config
+applicationCommandRegister:
+  # Wether allow all application commands to be registered globally
+  #   This ignores their specific configs
+  allowRegisterGlobally: true
+  # Wether allow all application commands to be registered to guilds
+  #   This ignores their specific configs
+  allowRegisterOnGuilds: true
+  # Register empty command list
+  registerEmptyCommands: true
+}
+
+
+# Logger config
+logger:
+  # Enables client logger
+  enabled: true
+  # Enables logger debug mode
+  debugmode: false
+  # Enables colored console logs
+  coloredMessages: true
+  # File file config
+  logToFile:
+    # Enables log file
+    enabled: true
+    # Sets the log file folder
+    logsFolder: './logs'
+
+# Modules config
+modules:
+  # Reciple modules folders
+  #   You can add multiple folders by adding the folder path or using glob patterns
+  #   To use glob patterns add the pattern with prefix "glob:"
+  #     ['glob:./modules/*']
+  modulesFolders: ['./modules']
+  # Excluded files or folders
+  #   You can add the file/folder name or use glob patterns
+  exclude: []
+  # If false, the client will still load unsupported modules
+  disableModuleVersionCheck: false
+
+# Discord.js client options
+client:
+  intents:
+    - 'Guilds'
+    - 'GuildMessages'
+    - 'MessageContent'
+
+# Don't change this value
+version: ^VERSION
