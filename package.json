@@ -1,5 +1,5 @@
 {
-  "name": "reciple-repo",
+  "name": "reciple-monorepo",
   "license": "GPL-3.0",
   "workspaces": [
     "packages/*"

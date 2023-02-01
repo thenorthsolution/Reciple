@@ -17,6 +17,9 @@
     "clean": "npx rimraf ./dist",
     "build": "npm run clean && npx tsc"
   },
+  "files": [
+    "dist"
+  ],
   "dependencies": {
     "fallout-utility": "*",
     "lodash.defaultsdeep": "^4.6.1",
