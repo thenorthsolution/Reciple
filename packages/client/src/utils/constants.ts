@@ -1,6 +1,7 @@
 import { readFileSync } from 'fs';
 import { RecipleConfigOptions } from '../types/options';
 import { path } from 'fallout-utility';
+import semver from 'semver';
 
 export const defaultRecipleConfigOptions: RecipleConfigOptions = {
     token: '',
@@ -40,14 +41,8 @@ export const defaultRecipleConfigOptions: RecipleConfigOptions = {
         allowRegisterGlobally: true,
         allowRegisterOnGuilds: false,
         registerEmptyCommands: true
-    },
-    client: {
-        intents: [
-            'Guilds',
-            'GuildMessages',
-            'MessageContent'
-        ]
     }
 };
 
-export const version = JSON.parse(readFileSync(path.join(__dirname, '../../package.json'), 'utf-8')).version;
+export const realVersion = JSON.parse(readFileSync(path.join(__dirname, '../../package.json'), 'utf-8')).version;
+export const version = `${semver.coerce(realVersion)}`;

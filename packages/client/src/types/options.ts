@@ -1,3 +1,4 @@
+import { Logger } from 'fallout-utility';
 import { MessageCommandResovable } from '../classes/builders/MessageCommandBuilder';
 import { RecipleClient } from '../classes/RecipleClient';
 import discordjs, { Message } from 'discord.js';
@@ -18,7 +19,6 @@ export interface RecipleConfigOptions {
         allowRegisterOnGuilds: boolean;
         registerEmptyCommands: boolean;
     };
-    client: discordjs.ClientOptions;
 }
 
 export interface RecipleCommandsConfigOptions {
@@ -36,6 +36,7 @@ export interface RecipleCommandsInteractionBasedConfigOptions extends RecipleCom
 
 export interface RecipleClientOptions extends discordjs.ClientOptions {
     recipleOptions: Partial<RecipleConfigOptions>;
+    logger?: Logger;
 }
 
 export interface MessageCommandValidateOptionData {

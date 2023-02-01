@@ -6,6 +6,7 @@ export * from './classes/builders/SlashCommandBuilder';
 export * from './classes/managers/CommandCooldownManager';
 export * from './classes/managers/CommandManager';
 export * from './classes/managers/MessageCommandOptionManager';
+export * from './classes/managers/ModuleManager';
 export * from './classes/RecipleClient';
 export * from './types/commands';
 export * from './types/halt';

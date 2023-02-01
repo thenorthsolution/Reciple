@@ -46,9 +46,10 @@ export class RecipleClient<Ready extends boolean = boolean> extends discordjs.Cl
     readonly version: string = version;
 
     constructor(options: RecipleClientOptions) {
-        super({ ...options, ...{ ...defaultRecipleConfigOptions.client, ...options.recipleOptions.client } });
+        super({ ...options });
 
         this.config = defaultsDeep(options.recipleOptions, defaultRecipleConfigOptions);
+        this.logger = options.logger;
     }
 
     public isReady(): this is RecipleClient<true> {
