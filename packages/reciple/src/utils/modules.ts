@@ -26,14 +26,13 @@ export async function getModules(config: IConfig['modules'], filter?: (filename:
             continue;
         }
 
-        if (!existsSync(folder)) mkdirSync(folder, { recursive: true });
-        if (!lstatSync(folder).isDirectory()) continue;
+        const dir = path.join(cwd, folder);
 
-        modules.push(
-            ...readdirSync(folder)
-                .map(file => path.join(cwd, folder, file))
-                .filter(file => (filter ? filter(file) : file.endsWith('.js')))
-        );
+        if (!existsSync(dir)) mkdirSync(dir, { recursive: true });
+        if (!lstatSync(dir).isDirectory()) continue;
+
+        const files = readdirSync(dir).map(file => path.join(dir, file));
+        modules.push(...files.filter(file => (filter ? filter(file) : file.endsWith('.js'))));
     }
 
     return modules;

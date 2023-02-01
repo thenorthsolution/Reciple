@@ -4,7 +4,7 @@ import { AnySlashCommandBuilder, SlashCommandData, SlashCommandExecuteData, Slas
 import discordjs, { LocalizationMap, PermissionResolvable } from 'discord.js';
 
 export enum CommandType {
-    ContextMenuCommand,
+    ContextMenuCommand = 1,
     MessageCommand,
     SlashCommand
 }

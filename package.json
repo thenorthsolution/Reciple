@@ -8,7 +8,8 @@
     "bootstrap": "npx lerna bootstrap",
     "clean": "npx rimraf ./packages/bin ./packages/dist",
     "build": "npx lerna run build && npm run bootstrap",
-    "watch": "npx tsc --watch --noEmit"
+    "watch": "npx tsc --watch --noEmit",
+    "test": "node ./packages/reciple/bin/bin.mjs ./test -t env:TOKEN -y"
   },
   "devDependencies": {
     "@types/node": "^18.11.18",

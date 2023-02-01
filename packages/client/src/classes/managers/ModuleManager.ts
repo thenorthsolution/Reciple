@@ -142,7 +142,7 @@ export class ModuleManager extends TypedEmitter<ModuleManagerEvents> {
         const modules: RecipleModule[] = [];
 
         for (const file of files) {
-            const filePath = (path.isAbsolute(file) ? 'file://' : '') + file;
+            const filePath = path.resolve(file);
 
             try {
                 const resolveFile = await import(filePath);
@@ -194,8 +194,8 @@ export class ModuleManager extends TypedEmitter<ModuleManagerEvents> {
 
         if (typeof s !== 'object') return this.client._throwError(new Error(`Invalid Reciple module script`));
         if (typeof s.versions !== 'string' && !Array.isArray(s.versions)) return this.client._throwError(new Error(`Invalid module supported versions`));
-        if (typeof s.onStart !== 'function') return this.client._throwError(new Error(`Module's "onStart" property is not a valid function`));
-        if (s.onLoad && typeof s.onLoad !== 'function') return this.client._throwError(new Error(`Module's "onLoad" property is not a valid function`));
+        if (typeof s.onLoad !== 'function') return this.client._throwError(new Error(`Module's "onStart" property is not a valid function`));
+        if (s.onStart && typeof s.onStart !== 'function') return this.client._throwError(new Error(`Module's "onLoad" property is not a valid function`));
         if (s.onUnload && typeof s.onUnload !== 'function') return this.client._throwError(new Error(`Module's "onUnload" property is not a valid function`));
     }
 

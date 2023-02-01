@@ -11,6 +11,7 @@ export const command = new Command()
     .option('-c, --config <config>', 'Change path to config file')
     .option('-D, --debugmode', 'Enable debug mode')
     .option('-y, --yes', 'Agree to all Reciple confirmation prompts')
+    .option('--env', '.env file location')
     .parse();
 
 export const flags = command.opts();

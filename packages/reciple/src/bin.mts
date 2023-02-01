@@ -72,6 +72,10 @@ client.once('ready', async () => {
 
     client.logger?.warn(`Logged in as ${client.user?.tag} (${client.user?.id})`);
 
+    client.logger?.log(`Loaded ${client.commands.contextMenuCommands.size} context menu commands`);
+    client.logger?.log(`Loaded ${client.commands.messageCommands.size} message commands`);
+    client.logger?.log(`Loaded ${client.commands.slashCommands.size} slash commands`);
+
     client.on('interactionCreate', interaction => {
         if (interaction.isContextMenuCommand()) {
             ContextMenuCommandBuilder.execute(client, interaction);
@@ -85,4 +89,4 @@ client.once('ready', async () => {
     });
 });
 
-client.login();
+client.login(config.token);

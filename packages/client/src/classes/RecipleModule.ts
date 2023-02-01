@@ -35,6 +35,7 @@ export class RecipleModule {
     public commands: AnyCommandBuilder[] = [];
 
     constructor(options: RecipleModuleOptions) {
+        this.filePath = options.filePath;
         this._script = options.script;
         this.client = options.client;
         this.id = randomUUID();
@@ -68,13 +69,19 @@ export class RecipleModule {
         const commands: AnyCommandBuilder[] = [];
 
         for (const commandData of (this._script.commands ?? [])) {
-            const command = commandData.commandType === CommandType.ContextMenuCommand
-                ? ContextMenuCommandBuilder.resolve(commandData)
-                : commandData.commandType === CommandType.MessageCommand
-                    ? MessageCommandBuilder.resolve(commandData)
-                    : commandData.commandType === CommandType.SlashCommand
-                        ? SlashCommandBuilder.resolve(commandData)
-                        : null;
+            let command: AnyCommandBuilder;
+
+            switch (commandData.commandType) {
+                case CommandType.ContextMenuCommand:
+                    command = ContextMenuCommandBuilder.resolve(commandData);
+                    break;
+                case CommandType.MessageCommand:
+                    command = MessageCommandBuilder.resolve(commandData);
+                    break;
+                case CommandType.SlashCommand:
+                    command = SlashCommandBuilder.resolve(commandData);
+                    break;
+            }
 
             if (!command) continue;
             commands.push(command);

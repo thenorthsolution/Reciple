@@ -21,7 +21,7 @@ export function formatLogMessage(message: string, logger: Logger, config: IConfi
         }
     };
 
-    return `[${color(new Date().toLocaleTimeString(undefined, { hour12: false }))}][${color((logger.name ? logger.name + '/' : '') + LoggerLevel[level])}] ${message}`;
+    return `[${color(new Date().toLocaleTimeString(undefined, { hour12: false }))}][${color((logger.name ? logger.name + '/' : '') + LoggerLevel[level])}] ${color(message)}`;
 }
 
 export function createLogger(config: IConfig['logger']): Logger {

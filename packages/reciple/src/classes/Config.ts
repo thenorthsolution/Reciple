@@ -3,8 +3,12 @@ import { path, replaceAll } from 'fallout-utility';
 import { existsSync, readFileSync, writeFileSync } from 'fs';
 import { ClientOptions } from 'discord.js';
 import yml from 'yaml';
-import 'dotenv/config';
-import { flags } from '../utils/cli';
+import dotenv from 'dotenv';
+import { cwd, flags } from '../utils/cli';
+
+dotenv.config({
+    path: flags.env ? path.resolve(flags.env) : path.join(cwd, '.env')
+});
 
 export interface IConfig extends RecipleConfigOptions {
     logger: {
@@ -50,6 +54,8 @@ export class Config {
 
             return this;
         }
+
+        this.config = yml.parse(readFileSync(this.configPath, 'utf-8'));
 
         return this;
     }
