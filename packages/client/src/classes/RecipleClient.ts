@@ -5,7 +5,7 @@ import { SlashCommandExecuteData, SlashCommandHaltData, SlashCommandResolvable }
 import discordjs, { ApplicationCommand, Awaitable, ClientEvents, Collection } from 'discord.js';
 import { RecipleClientOptions, RecipleConfigOptions } from '../types/options';
 import { CommandCooldownManager } from './managers/CommandCooldownManager';
-import { defaultRecipleConfigOptions, version } from '../utils/constants';
+import { version } from '../utils/constants';
 import { CommandManager } from './managers/CommandManager';
 import { CommandHaltReason } from '../types/halt';
 import defaultsDeep from 'lodash.defaultsdeep';
@@ -48,7 +48,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends discordjs.Cl
     constructor(options: RecipleClientOptions) {
         super({ ...options });
 
-        this.config = defaultsDeep(options.recipleOptions, defaultRecipleConfigOptions);
+        this.config = options.recipleOptions;
         this.logger = options.logger;
     }
 

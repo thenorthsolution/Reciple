@@ -4,6 +4,7 @@ import { AnyCommandBuilder, AnyCommandData, AnyCommandExecuteData, ApplicationCo
 import { ContextMenuCommandBuilder, ContextMenuCommandExecuteData, ContextMenuCommandResolvable } from '../builders/ContextMenuCommandBuilder';
 import { MessageCommandBuilder, MessageCommandExecuteData, MessageCommandResovable } from '../builders/MessageCommandBuilder';
 import { RecipleClient } from '../RecipleClient';
+import { RecipleCommandsInteractionBasedConfigOptions, RecipleConfigOptions } from '../..';
 
 export interface CommandManagerOptions {
     client: RecipleClient;
@@ -36,17 +37,17 @@ export class CommandManager {
         for (const command of normalizeArray(commands)) {
             switch (command.commandType) {
                 case CommandType.ContextMenuCommand:
-                    if (!this.client.config.commands.contextMenuCommand.enabled) break;
+                    if (this.client.config.commands?.contextMenuCommand?.enabled === false) break;
 
                     this.contextMenuCommands.set(command.name, ContextMenuCommandBuilder.resolve(command));
                     break;
                 case CommandType.MessageCommand:
-                    if (!this.client.config.commands.messageCommand.enabled) break;
+                    if (this.client.config.commands?.messageCommand?.enabled === false) break;
 
                     this.messageCommands.set(command.name, MessageCommandBuilder.resolve(command));
                     break;
                 case CommandType.SlashCommand:
-                    if (!this.client.config.commands.slashCommand.enabled) break;
+                    if (this.client.config.commands?.slashCommand?.enabled === false) break;
 
                     this.slashCommands.set(command.name, SlashCommandBuilder.resolve(command));
                     break;
@@ -82,32 +83,48 @@ export class CommandManager {
         }
     }
 
-    public async registerApplicationCommands(): Promise<void> {
+    public async registerApplicationCommands(options?: { commands?: Partial<RecipleCommandsInteractionBasedConfigOptions>; applicationCommandRegister: Partial<RecipleCommandsInteractionBasedConfigOptions['registerCommands']>; }): Promise<void> {
+        const commandConfig = {
+            contextMenuCommand: {
+                ...this.client.config.commands?.contextMenuCommand,
+                ...options?.commands
+            },
+            slashCommand: {
+                ...this.client.config.commands?.slashCommand,
+                ...options?.commands
+            },
+            additionalApplicationCommands: {
+                ...this.client.config.commands?.contextMenuCommand,
+                ...options?.commands
+            }
+        };
+
         const globalCommands: RESTPostAPIApplicationCommandsJSONBody[] = [];
         const guildCommands: Collection<string, RESTPostAPIApplicationCommandsJSONBody[]> = new Collection();
 
-        if (this.client.config.commands.contextMenuCommand.registerCommands.registerGlobally) globalCommands.push(...this._parseApplicationCommands(this.contextMenuCommands.toJSON()));
-        this.client.config.commands.contextMenuCommand.registerCommands.registerToGuilds.forEach(guildId => {
+        if (commandConfig.contextMenuCommand.registerCommands?.registerGlobally !== false) globalCommands.push(...this._parseApplicationCommands(this.contextMenuCommands.toJSON()));
+        if (commandConfig.slashCommand.registerCommands?.registerGlobally !== false) globalCommands.push(...this._parseApplicationCommands(this.slashCommands.toJSON()));
+        if (commandConfig.additionalApplicationCommands.registerCommands?.registerGlobally !== false) globalCommands.push(...this._parseApplicationCommands(this.additionalApplicationCommands));
+
+        commandConfig.contextMenuCommand.registerCommands?.registerToGuilds.forEach(guildId => {
             guildCommands.set(guildId, [...(guildCommands.get(guildId) ?? []), ...this._parseApplicationCommands(this.contextMenuCommands.toJSON())]);
         });
 
-        if (this.client.config.commands.slashCommand.registerCommands.registerGlobally) globalCommands.push(...this._parseApplicationCommands(this.slashCommands.toJSON()));
-        this.client.config.commands.slashCommand.registerCommands.registerToGuilds.forEach(guildId => {
+        commandConfig.slashCommand.registerCommands?.registerToGuilds.forEach(guildId => {
             guildCommands.set(guildId, [...(guildCommands.get(guildId) ?? []), ...this._parseApplicationCommands(this.slashCommands.toJSON())]);
         });
 
-        if (this.client.config.commands.additionalApplicationCommands.registerCommands.registerGlobally) globalCommands.push(...this._parseApplicationCommands(this.additionalApplicationCommands));
-        this.client.config.commands.additionalApplicationCommands.registerCommands.registerToGuilds.forEach(guildId => {
+        commandConfig.additionalApplicationCommands.registerCommands?.registerToGuilds.forEach(guildId => {
             guildCommands.set(guildId, [...(guildCommands.get(guildId) ?? []), ...this._parseApplicationCommands(this.additionalApplicationCommands)]);
         });
 
-        if (this.client.config.applicationCommandRegister.allowRegisterGlobally) {
+        if (options?.applicationCommandRegister?.registerGlobally ?? this.client.config.applicationCommandRegister?.allowRegisterGlobally !== false) {
             await this.client.application?.commands.set(globalCommands)
                 .then(commands => this.client.emit('recipleRegisterApplicationCommands', commands))
                 .catch(err => this.client._throwError(err));
         }
 
-        if (this.client.config.applicationCommandRegister.allowRegisterOnGuilds) {
+        if (options?.applicationCommandRegister.registerToGuilds ?? this.client.config.applicationCommandRegister?.allowRegisterOnGuilds !== false) {
             for (const guildBasedCommands of guildCommands.map((commands, guildId) => ({ guildId, commands }))) {
                 await this.client.application?.commands.set(guildBasedCommands.commands, guildBasedCommands.guildId)
                     .then(commands => this.client.emit('recipleRegisterApplicationCommands', commands, guildBasedCommands.guildId))

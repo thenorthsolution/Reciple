@@ -5,19 +5,19 @@ import discordjs, { Message } from 'discord.js';
 
 export interface RecipleConfigOptions {
     token: string;
-    commands: {
-        contextMenuCommand: RecipleCommandsInteractionBasedConfigOptions;
-        messageCommand: RecipleCommandsConfigOptions & {
+    commands?: {
+        contextMenuCommand?: Partial<RecipleCommandsInteractionBasedConfigOptions>;
+        messageCommand?: Partial<RecipleCommandsConfigOptions & {
             commandArgumentSeparator: string;
             prefix: string;
-        };
-        slashCommand: RecipleCommandsInteractionBasedConfigOptions;
-        additionalApplicationCommands: Pick<RecipleCommandsInteractionBasedConfigOptions, 'registerCommands'>;
+        }>;
+        slashCommand?: Partial<RecipleCommandsInteractionBasedConfigOptions>;
+        additionalApplicationCommands?: Pick<Partial<RecipleCommandsInteractionBasedConfigOptions>, 'registerCommands'>;
     };
-    applicationCommandRegister: {
-        allowRegisterGlobally: boolean;
-        allowRegisterOnGuilds: boolean;
-        registerEmptyCommands: boolean;
+    applicationCommandRegister?: {
+        allowRegisterGlobally?: boolean;
+        allowRegisterOnGuilds?: boolean;
+        registerEmptyCommands?: boolean;
     };
 }
 
@@ -35,7 +35,7 @@ export interface RecipleCommandsInteractionBasedConfigOptions extends RecipleCom
 }
 
 export interface RecipleClientOptions extends discordjs.ClientOptions {
-    recipleOptions: Partial<RecipleConfigOptions>;
+    recipleOptions: Partial<RecipleConfigOptions> & { token: string; };
     logger?: Logger;
 }
 

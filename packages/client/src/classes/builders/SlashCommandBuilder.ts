@@ -204,8 +204,8 @@ export class SlashCommandBuilder extends Mixin(discordjs.SlashCommandBuilder, Ba
     }
 
     public static async execute(client: RecipleClient, interaction: ChatInputCommandInteraction): Promise<SlashCommandExecuteData|undefined> {
-        if (!client.config.commands.slashCommand.enabled) return;
-        if (!client.config.commands.slashCommand.acceptRepliedInteractions && (interaction.replied || interaction.deferred)) return;
+        if (!client.config?.commands?.slashCommand?.enabled !== false) return;
+        if (!client.config?.commands?.slashCommand?.acceptRepliedInteractions && (interaction.replied || interaction.deferred)) return;
 
         const builder = client.commands.get(interaction.commandName, CommandType.SlashCommand);
         if (!builder) return;
@@ -217,7 +217,7 @@ export class SlashCommandBuilder extends Mixin(discordjs.SlashCommandBuilder, Ba
             client
         };
 
-        if (client.config.commands.slashCommand.enableCooldown && builder.cooldown) {
+        if (client.config.commands?.slashCommand?.enableCooldown !== false && builder.cooldown) {
             const cooldownData: Omit<CommandCooldownData, 'endsAt'> = {
                 command: builder.name,
                 user: interaction.user,
