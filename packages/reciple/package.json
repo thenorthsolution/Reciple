@@ -2,7 +2,7 @@
   "name": "reciple",
   "description": "Reciple is a Discord.js handler",
   "license": "GPL-3.0",
-  "version": "7.0.0-next.0",
+  "version": "7.0.0-next.1",
   "main": "./bin/index.js",
   "module": "./bin/esm.mjs",
   "types": "./bin/index.d.ts",
