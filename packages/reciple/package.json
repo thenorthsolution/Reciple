@@ -40,5 +40,6 @@
   },
   "peerDependencies": {
     "discord.js": "^14.7.1"
-  }
+  },
+  "gitHead": "c5620aa5f046aa426b832c052a4f933817270573"
 }
