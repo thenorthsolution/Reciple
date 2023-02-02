@@ -2,6 +2,6 @@
   "$schema": "node_modules/lerna/schemas/lerna-schema.json",
   "useWorkspaces": true,
   "version": "independent",
-  "preid": "next",
-  "preDistTag": "next"
+  "preid": "dev",
+  "preDistTag": "dev"
 }
