@@ -8,25 +8,22 @@ export async function getModules(config: IConfig['modules'], filter?: (filename:
     const { globby, isDynamicPattern } = await import('globby');
 
     for (const folder of config.modulesFolders) {
-        const glob = folder.toLowerCase().split(':')[0] === 'glob';
+        const dir = path.isAbsolute(folder) ? folder : path.join(cwd, folder);
 
-        if (glob) {
-            const pattern = folder.split(':')[1];
-            if (!isDynamicPattern(pattern)) continue;
+        if (isDynamicPattern(dir)) {
 
             modules.push(...await getModules({
                 ...config,
-                modulesFolders: await globby(pattern, {
+                modulesFolders: await globby(dir, {
                     cwd,
                     gitignore: true,
-                    ignore: config.exclude,
-                    onlyDirectories: true
+                    ignore: config.exclude.map(p => path.isAbsolute(p) ? p : path.join(cwd, p)),
+                    onlyDirectories: true,
+                    absolute: true
                 })
             }));
             continue;
         }
-
-        const dir = path.join(cwd, folder);
 
         if (!existsSync(dir)) mkdirSync(dir, { recursive: true });
         if (!lstatSync(dir).isDirectory()) continue;

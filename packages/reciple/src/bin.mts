@@ -59,7 +59,7 @@ client.once('ready', async () => {
         });
 
 
-        client.logger?.warn(`Process exited ${signal === 'SIGINT' ? ': keyboard interrupt' : signal === 'SIGTERM' ? ': terminate' : signal}`);
+        client.logger?.warn(`Process exited: ${signal === 'SIGINT' ? 'keyboard interrupt' : signal === 'SIGTERM' ? 'terminate' : signal}`);
         process.exit();
     };
 

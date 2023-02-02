@@ -2,7 +2,7 @@
   "name": "@reciple/test",
   "private": true,
   "dependencies": {
-    "reciple": "^7.0.0",
+    "reciple": "^7.0.0-next.0",
     "discord.js": "^14.7.1"
   }
 }
