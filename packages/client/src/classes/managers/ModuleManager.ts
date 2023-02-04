@@ -5,6 +5,8 @@ import { path } from 'fallout-utility';
 import semver from 'semver';
 import { TypedEmitter } from 'tiny-typed-emitter';
 import { inspect } from 'util';
+import { ModuleError } from '../errors/ModuleError';
+import { realVersion } from '../..';
 
 export interface ModuleManagerEvents {
     resolveModuleFileError: (file: string, error: Error) => Awaitable<void>;
@@ -57,7 +59,7 @@ export class ModuleManager extends TypedEmitter<ModuleManagerEvents> {
                     return false;
                 });
 
-                if (error) throw new Error(`An error occured while loading module '${module_}': \n${inspect(error)}`);
+                if (error) throw new ModuleError('LoadModuleFail', module_.displayName, inspect(error));
                 if (!start) {
                     this.emit('startModuleFailed', module_);
                     continue;
@@ -162,7 +164,7 @@ export class ModuleManager extends TypedEmitter<ModuleManagerEvents> {
                 this.validateScript(script);
 
                 if (!disableVersionCheck && !normalizeArray([script.versions] as RestOrArray<string>)?.some(v => semver.satisfies(this.client.version, v))) {
-                    throw new Error(`Unsupported module: ${filePath}`);
+                    throw new ModuleError('UnsupportedModule', filePath, realVersion);
                 }
 
                 modules.push(
@@ -192,11 +194,11 @@ export class ModuleManager extends TypedEmitter<ModuleManagerEvents> {
     public validateScript(script: unknown): asserts script is RecipleModuleScript {
         const s = script as Partial<RecipleModuleScript>;
 
-        if (typeof s !== 'object') return this.client._throwError(new Error(`Invalid Reciple module script`));
-        if (typeof s.versions !== 'string' && !Array.isArray(s.versions)) return this.client._throwError(new Error(`Invalid module supported versions`));
-        if (typeof s.onStart !== 'function') return this.client._throwError(new Error(`Module's "onStart" property is not a valid function`));
-        if (s.onLoad && typeof s.onLoad !== 'function') return this.client._throwError(new Error(`Module's "onLoad" property is not a valid function`));
-        if (s.onUnload && typeof s.onUnload !== 'function') return this.client._throwError(new Error(`Module's "onUnload" property is not a valid function`));
+        if (typeof s !== 'object') return this.client._throwError(new ModuleError('InvalidScript'));
+        if (typeof s.versions !== 'string' && !Array.isArray(s.versions)) return this.client._throwError(new ModuleError(`NoSupportedVersions`));
+        if (typeof s.onStart !== 'function') return this.client._throwError(new ModuleError('InvalidOnStartEvent'));
+        if (s.onLoad && typeof s.onLoad !== 'function') return this.client._throwError(new ModuleError('InvalidOnLoadEvent'));
+        if (s.onUnload && typeof s.onUnload !== 'function') return this.client._throwError(new ModuleError('InvalidOnUnloadEvent'));
     }
 
     public _throwError<E extends keyof ModuleManagerEvents>(error: Error, event: { name: E; values: Parameters<ModuleManagerEvents[E]>; }, throwWhenNoListener: boolean = true): void {

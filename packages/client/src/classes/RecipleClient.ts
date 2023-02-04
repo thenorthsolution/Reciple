@@ -11,6 +11,9 @@ import { CommandHaltReason } from '../types/halt';
 import defaultsDeep from 'lodash.defaultsdeep';
 import { Logger } from 'fallout-utility';
 import { ModuleManager } from './managers/ModuleManager';
+import { CommandError } from './errors/CommandError';
+import { getCommandBuilderName } from '../utils/functions';
+import { inspect } from 'util';
 
 export interface RecipleClient<Ready extends boolean = boolean> extends discordjs.Client<Ready> {
     on<E extends keyof RecipleClientEvents>(event: E, listener: (...args: RecipleClientEvents[E]) => Awaitable<void>): this;
@@ -78,7 +81,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends discordjs.Cl
                         ? command.halt(haltData as SlashCommandHaltData)
                         : false
             : false)
-            .catch(err => this._throwError(err));
+            .catch(err => this._throwError(new CommandError('CommandHaltError', getCommandBuilderName(command), command.name, inspect(err))));
 
         return haltResolve ?? true;
     }
@@ -105,7 +108,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends discordjs.Cl
         .catch(async err => {
             // @ts-expect-error
             const isHandled = await this._haltCommand(command, { commandType: command.commandType, reason: CommandHaltReason.Error, executeData, error: err });
-            if (!isHandled) this._throwError(err);
+            if (!isHandled) this._throwError(new CommandError('CommandExecuteError', getCommandBuilderName(command), command.name, inspect(err)));
         });
     }
 

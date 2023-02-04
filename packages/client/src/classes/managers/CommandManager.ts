@@ -5,6 +5,7 @@ import { ContextMenuCommandBuilder, ContextMenuCommandExecuteData, ContextMenuCo
 import { MessageCommandBuilder, MessageCommandExecuteData, MessageCommandResovable } from '../builders/MessageCommandBuilder';
 import { RecipleClient } from '../RecipleClient';
 import { RecipleCommandsInteractionBasedConfigOptions, RecipleConfigOptions } from '../..';
+import { CommandError } from '../errors/CommandError';
 
 export interface CommandManagerOptions {
     client: RecipleClient;
@@ -52,7 +53,7 @@ export class CommandManager {
                     this.slashCommands.set(command.name, SlashCommandBuilder.resolve(command));
                     break;
                 default:
-                    throw new Error('Unknown command type');
+                    throw new CommandError('UnknownCommand');
             }
         }
 
