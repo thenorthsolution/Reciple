@@ -10,7 +10,7 @@ export const CommandErrorCodes = {
 export type CommandErrorCodes = typeof CommandErrorCodes;
 
 export class CommandError extends BaseError<CommandErrorCodes> {
-    readonly type: ErrorType.CommandError = ErrorType.CommandError;
+    readonly errorType: ErrorType.CommandError = ErrorType.CommandError;
 
     constructor(code: keyof CommandErrorCodes, ...placeholders: RestOrArray<string>) {
         super(code, CommandErrorCodes, ...normalizeArray(placeholders));

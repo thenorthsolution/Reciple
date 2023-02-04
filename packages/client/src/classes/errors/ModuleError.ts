@@ -14,7 +14,7 @@ export const ModuleErrorCodes = {
 export type ModuleErrorCodes = typeof ModuleErrorCodes;
 
 export class ModuleError extends BaseError<ModuleErrorCodes> {
-    readonly type: ErrorType.ModuleError = ErrorType.ModuleError;
+    readonly errorType: ErrorType.ModuleError = ErrorType.ModuleError;
 
     constructor(code: keyof ModuleErrorCodes, ...placeholders: RestOrArray<string>) {
         super(code, ModuleErrorCodes, ...normalizeArray(placeholders));
