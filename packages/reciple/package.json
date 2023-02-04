@@ -2,7 +2,7 @@
   "name": "reciple",
   "description": "Reciple is a Discord.js handler",
   "license": "GPL-3.0",
-  "version": "7.0.0-dev.6",
+  "version": "7.0.0-dev.7",
   "main": "./bin/index.js",
   "module": "./bin/esm.mjs",
   "types": "./bin/index.d.ts",
@@ -26,7 +26,7 @@
   "dependencies": {
     "@inquirer/confirm": "^0.0.28-alpha.0",
     "@inquirer/password": "^0.0.28-alpha.0",
-    "@reciple/client": "^7.0.0-dev.2",
+    "@reciple/client": "^7.0.0-dev.3",
     "chalk": "4.1.2",
     "commander": "^10.0.0",
     "dotenv": "^16.0.3",
