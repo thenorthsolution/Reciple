@@ -4,16 +4,23 @@ on:
     branches: ['main', 'v7']
     # paths: ['./packages/*/src/**']
     tags: ['*']
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: 'The branch, tag or SHA to checkout'
+        required: true
+      ref_type:
+        type: choice
+        description: 'Branch or tag'
+        options:
+          - branch
+          - tag
+        required: true
 jobs:
   build:
     name: Build documentation
     runs-on: ubuntu-latest
     if: github.repository_owner == 'FalloutStudios'
-    strategy:
-      max-parallel: 1
-      fail-fast: false
-      matrix:
-        package: ['reciple', 'client']
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
