@@ -2,7 +2,7 @@ name: Documentation
 on:
   push:
     branches: ['main', 'v7']
-    paths: ['./packages/*/src/**', './.github/worklows/documentation.yml']
+    # paths: ['./packages/*/src/**']
     tags: ['*']
   workflow_dispatch:
     inputs:
