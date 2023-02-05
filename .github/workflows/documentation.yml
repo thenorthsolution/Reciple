@@ -3,7 +3,7 @@ on:
   push:
     branches: ['main', 'v7']
     # paths: ['./packages/*/src/**']
-    tags: ['*']
+    tags: ['reciple@**', '@reciple/**']
   workflow_dispatch:
     inputs:
       ref:
@@ -88,7 +88,7 @@ jobs:
         id: format-tag
         uses: ./packages/actions/src/formatTag
         with:
-          tag: ${{ github.ref || github.ref_name }}
+          tag: ${{ inputs.ref || github.ref_name }}
 
       - name: Move docs to correct directory
         if: ${{ matrix.package == steps.format-tag.outputs.package }}
