@@ -74,13 +74,6 @@ jobs:
           name: docgen
           path: docs
 
-      - name: Checkout docs repository
-        uses: actions/checkout@v3
-        with:
-          repository: 'FalloutStudios/Reciple'
-          ref: 'docs'
-          path: 'out'
-
       - name: Install dependencies
         run: npm run bootstrap
 
@@ -90,6 +83,13 @@ jobs:
         uses: ./packages/actions/src/formatTag
         with:
           tag: ${{ inputs.ref || github.ref_name }}
+
+      - name: Checkout docs repository
+        uses: actions/checkout@v3
+        with:
+          repository: 'FalloutStudios/Reciple'
+          ref: 'docs'
+          path: 'out'
 
       - name: Move docs to correct directory
         if: ${{ github.ref_type == 'tag' && matrix.package == steps.format-tag.outputs.package }}
