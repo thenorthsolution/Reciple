@@ -104,8 +104,7 @@ jobs:
       - name: Move docs to correct directory
         if: ${{ github.ref_type == 'branch' }}
         env:
-          PACKAGE: ${{ steps.format-tag.outputs.package }}
-          SEMVER: ${{ steps.format-tag.outputs.semver }}
+          PACKAGE: ${{ matrix.package }}
         run: |
           echo "docs/${PACKAGE}/docs/docs.json > out/${PACKAGE}/${GITHUB_REF_NAME}.json"
           mkdir -p out/${PACKAGE}
