@@ -82,17 +82,17 @@ jobs:
       - name: Install dependencies
         run: npm run bootstrap
 
-      - name: Parse package semver
-        id: parse-semver
-        uses: ./packages/actions/src/getSemver
+      - name: Format tag package semver
+        id: format-tag
+        uses: ./packages/actions/src/formatTag
         with:
           tag: ${{ github.ref || github.ref_name }}
 
       - name: Move docs to correct directory
-        if: ${{ matrix.package == steps.parse-semver.outputs.package }}
+        if: ${{ matrix.package == steps.format-tag.outputs.package }}
         env:
-          PACKAGE: ${{ steps.parse-semver.outputs.package }}
-          SEMVER: ${{ steps.parse-semver.outputs.semver }}
+          PACKAGE: ${{ steps.format-tag.outputs.package }}
+          SEMVER: ${{ steps.format-tag.outputs.semver }}
         run: |
           echo "docs/packages/${PACKAGE}/docs/docs.json > out/${PACKAGE}/${SEMVER}.json"
           mkdir -p out/${PACKAGE}
