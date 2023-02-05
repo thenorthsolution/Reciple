@@ -24,12 +24,15 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+
       - name: Install node.js v16
         uses: actions/setup-node@v3
         with:
           node-version: 16
+
       - name: Install dependencies
         run: npm run bootstrap
+
       - name: Build docs.json
         run: npm run docs
   upload:
@@ -43,27 +46,33 @@ jobs:
         package: ['reciple', 'client']
     steps:
       - name: Checkout repository
-          uses: actions/checkout@v3
+        uses: actions/checkout@v3
+
       - name: Install node.js v16
         uses: actions/setup-node@v3
         with:
           node-version: 16
+
       - name: Install dependencies
         run: npm run bootstrap
+
       - name: Build docs.json
         run: npm run docs
+
       - name: Checkout docs repository
         uses: actions/checkout@v3
         with:
           repository: 'FalloutStudios/Reciple'
           ref: 'docs'
           path: 'out'
+
       - name: Extract package and semver from tag
         id: extract-tag
         if: ${{ github.ref_type == 'tag' }}
         uses: ./packages/actions/src/formatTag
         with:
           tag: ${{ github.ref_name }}
+
       - name: Move docs to correct directory
         if: ${{ github.ref_type == 'tag' && matrix.package == steps.extract-tag.outputs.package }}
         env:
@@ -73,6 +82,7 @@ jobs:
           echo "packages/${PACKAGE}/docs/docs.json > out/${PACKAGE}/${SEMVER}.json"
           mkdir -p out/${PACKAGE}
           mv packages/${PACKAGE}/docs/docs.json out/${PACKAGE}/${SEMVER}.json
+
       - name: Commit and push
         run: |
           cd out
