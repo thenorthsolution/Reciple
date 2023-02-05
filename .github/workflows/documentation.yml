@@ -59,6 +59,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      - name: Install node.js v16
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+
       - name: Download docgen artifacts
         uses: actions/download-artifact@v3
         with:
@@ -71,6 +76,9 @@ jobs:
           repository: 'FalloutStudios/Reciple'
           ref: 'docs'
           path: 'out'
+
+      - name: Install dependencies
+        run: npm run bootstrap
 
       - name: Extract package and semver from tag
         id: extract-tag
