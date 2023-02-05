@@ -16,6 +16,12 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 16
+      - name: Checkout docs repository
+        uses: actions/checkout@v3
+        with:
+          repository: 'FalloutStudios/Reciple'
+          ref: 'docs'
+          path: 'out'
       - name: Install dependencies
         run: npm run bootstrap
       - name: Build docs.json
