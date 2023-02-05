@@ -4,7 +4,8 @@
       "runner": "nx/tasks-runners/default",
       "options": {
         "cacheableOperations": [
-          "build"
+          "build",
+          "docs"
         ]
       }
     }
@@ -17,6 +18,21 @@
       "outputs": [
         "{projectRoot}/dist",
         "{projectRoot}/bin"
+      ],
+      "inputs": [
+        "{projectRoot}/src/**/*"
+      ]
+    },
+    "docs": {
+      "dependsOn": [
+        "build",
+        "^docs"
+      ],
+      "outputs": [
+        "{projectRoot}/docs"
+      ],
+      "inputs": [
+        "{projectRoot}/src/**/*"
       ]
     }
   }
