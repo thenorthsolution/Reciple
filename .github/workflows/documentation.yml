@@ -2,12 +2,18 @@ name: Documentation
 on:
   push:
     branches: ['main', 'v7']
+    paths: ['./packages/*/src/**']
     tags: ['*']
 jobs:
   build:
     name: Build documentation
     runs-on: ubuntu-latest
     if: github.repository_owner == 'FalloutStudios'
+    strategy:
+      max-parallel: 1
+      fail-fast: false
+      matrix:
+        package: ['reciple', 'client']
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -27,10 +33,12 @@ jobs:
         run: npm run docs
       - name: Extract package and semver from tag
         id: extract-tag
-        uses: discordjs/discord.js/packages/actions/src/formatTag@main
+        if: ${{ github.ref_type == 'tag' }}
+        uses: ./packages/actions/src/formatTag
         with:
           tag: ${{ github.ref_name }}
       - name: Move docs to correct directory
+        if: ${{ github.ref_type == 'tag' && matrix.package == steps.extract-tag.outputs.package }}
         env:
           PACKAGE: ${{ steps.extract-tag.outputs.package }}
           SEMVER: ${{ steps.extract-tag.outputs.semver }}
