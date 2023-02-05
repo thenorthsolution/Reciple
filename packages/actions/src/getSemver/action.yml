@@ -1,0 +1,14 @@
+name: 'Get Semver'
+description: 'Get semver from package in this monorepo'
+inputs:
+  package:
+    description: 'package name'
+    required: true
+outputs:
+  package:
+    description: 'The package string'
+  semver:
+    description: 'The semver string'
+runs:
+  using: node16
+  main: ./index.js

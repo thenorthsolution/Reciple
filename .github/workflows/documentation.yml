@@ -80,17 +80,17 @@ jobs:
       - name: Install dependencies
         run: npm run bootstrap
 
-      - name: Extract package and semver from tag
-        id: extract-tag
-        uses: ./packages/actions/src/formatTag
+      - name: Get package semver
+        id: get-semver
+        uses: ./packages/actions/src/getSemver
         with:
-          tag: ${{ github.ref_name }}
+          package: ${{ matrix.package }}
 
       - name: Move docs to correct directory
-        if: ${{ github.ref_type == 'tag' && matrix.package == steps.extract-tag.outputs.package }}
+        if: ${{ matrix.package == steps.get-semver.outputs.package }}
         env:
-          PACKAGE: ${{ steps.extract-tag.outputs.package }}
-          SEMVER: ${{ steps.extract-tag.outputs.semver }}
+          PACKAGE: ${{ steps.get-semver.outputs.package }}
+          SEMVER: ${{ steps.get-semver.outputs.semver }}
         run: |
           echo "docs/packages/${PACKAGE}/docs/docs.json > out/${PACKAGE}/${SEMVER}.json"
           mkdir -p out/${PACKAGE}
