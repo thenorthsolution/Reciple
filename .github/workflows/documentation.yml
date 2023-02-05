@@ -2,7 +2,7 @@ name: Documentation
 on:
   push:
     branches: ['main', 'v7']
-    tags: ['**']
+    tags: ['*']
 jobs:
   build:
     name: Build documentation
