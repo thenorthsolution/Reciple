@@ -1,7 +1,7 @@
 name: Documentation
 on:
   push:
-    branches: ['main', 'v*']
+    branches: ['main', 'v7']
     paths: ['./packages/**/src/**']
     tags: ['**']
 jobs:
