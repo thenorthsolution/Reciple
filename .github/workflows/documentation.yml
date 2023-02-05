@@ -1,29 +1,51 @@
 name: Documentation
 on:
   push:
-    branches:
-      - '*'
-      - '!docs'
-      - '!gh-pages'
-    tags:
-      - '*'
+    branches: ['main', 'v7']
+    paths: ['./packages/**/src/**']
+    tags: ['**']
 jobs:
-  docs:
-    name: Deploy Documentation
+  build:
+    name: Build documentation
     runs-on: ubuntu-latest
+    if: github.repository_owner == 'FalloutStudios'
     steps:
       - name: Checkout repository
-        uses: actions/checkout@master
-
-      - name: Install Node v16
-        uses: actions/setup-node@master
+        uses: actions/checkout@v3
+      - name: Install node.js v16
+        uses: actions/setup-node@v3
         with:
           node-version: 16
-
-      - name: Install dependencidocses
-        run: npm ci
-
-      - name: Deploy docs
-        uses: discordjs/action-docs@v1
+      - name: Checkout docs repository
+        uses: actions/checkout@v3
+        with:
+          repository: 'FalloutStudios/Reciple'
+          ref: 'docs'
+          path: 'out'
+      - name: Install dependencies
+        run: npm run bootstrap
+      - name: Build docs.json
+        run: npm run docs
+      - name: Extract package and semver from tag
+        if: ${{ github.ref_type == 'tag' }}
+        id: extract-tag
+        uses: discordjs/discord.js/packages/actions/src/formatTag@main
+        with:
+          tag: ${{ github.ref_name }}
+      - name: Move docs to correct directory
+        if: ${{ github.ref_type == 'tag' && matrix.package == steps.extract-tag.outputs.package }}
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PACKAGE: ${{ steps.extract-tag.outputs.package }}
+          SEMVER: ${{ steps.extract-tag.outputs.semver }}
+        run: |
+          mkdir -p out/${PACKAGE}
+          mv packages/${PACKAGE}/docs/docs.json out/${PACKAGE}/${SEMVER}.json
+      - name: Commit and push
+        run: |
+          cd out
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add .
+          git commit -m "Docs build for ${GITHUB_REF_TYPE} ${GITHUB_REF_NAME}: ${GITHUB_SHA}" || true
+          git push
+
