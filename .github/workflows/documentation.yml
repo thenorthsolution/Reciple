@@ -86,12 +86,13 @@ jobs:
 
       - name: Format tag package semver
         id: format-tag
+        if: ${{ github.ref_type === 'tag' }}
         uses: ./packages/actions/src/formatTag
         with:
           tag: ${{ inputs.ref || github.ref_name }}
 
       - name: Move docs to correct directory
-        if: ${{ matrix.package == steps.format-tag.outputs.package }}
+        if: ${{ github.ref_type === 'tag' && matrix.package == steps.format-tag.outputs.package }}
         env:
           PACKAGE: ${{ steps.format-tag.outputs.package }}
           SEMVER: ${{ steps.format-tag.outputs.semver }}
@@ -99,6 +100,16 @@ jobs:
           echo "docs/packages/${PACKAGE}/docs/docs.json > out/${PACKAGE}/${SEMVER}.json"
           mkdir -p out/${PACKAGE}
           mv docs/packages/${PACKAGE}/docs/docs.json out/${PACKAGE}/${SEMVER}.json
+
+      - name: Move docs to correct directory
+        if: ${{ github.ref_type === 'branch' }}
+        env:
+          PACKAGE: ${{ steps.format-tag.outputs.package }}
+          SEMVER: ${{ steps.format-tag.outputs.semver }}
+        run: |
+          echo "docs/packages/${PACKAGE}/docs/docs.json > out/${PACKAGE}/${GITHUB_REF_NAME}.json"
+          mkdir -p out/${PACKAGE}
+          mv docs/packages/${PACKAGE}/docs/docs.json out/${PACKAGE}/${GITHUB_REF_NAME}.json
 
       - name: Commit and push
         run: |
