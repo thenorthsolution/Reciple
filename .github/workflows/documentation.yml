@@ -86,7 +86,7 @@ jobs:
 
       - name: Format tag package semver
         id: format-tag
-        if: ${{ github.ref_type === 'tag' }}
+        if: ${{ github.ref_type == 'tag' }}
         uses: ./packages/actions/src/formatTag
         with:
           tag: ${{ inputs.ref || github.ref_name }}
