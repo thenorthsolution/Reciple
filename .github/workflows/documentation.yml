@@ -16,6 +16,9 @@ on:
           - branch
           - tag
         required: true
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
 jobs:
   build:
     name: Build documentation
@@ -37,6 +40,12 @@ jobs:
 
       - name: Build docs.json
         run: npm run docs
+
+      - name: Upload docgen artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: docgen
+          path: packages/*/docs/docs.json
   upload:
     name: Upload Documentation
     needs: build
@@ -58,8 +67,11 @@ jobs:
       - name: Install dependencies
         run: npm run bootstrap
 
-      - name: Build docs.json
-        run: npm run docs
+      - name: Download docgen artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: docgen
+          path: docs
 
       - name: Checkout docs repository
         uses: actions/checkout@v3
@@ -81,9 +93,9 @@ jobs:
           PACKAGE: ${{ steps.extract-tag.outputs.package }}
           SEMVER: ${{ steps.extract-tag.outputs.semver }}
         run: |
-          echo "packages/${PACKAGE}/docs/docs.json > out/${PACKAGE}/${SEMVER}.json"
+          echo "docs/packages/${PACKAGE}/docs/docs.json > out/${PACKAGE}/${SEMVER}.json"
           mkdir -p out/${PACKAGE}
-          mv packages/${PACKAGE}/docs/docs.json out/${PACKAGE}/${SEMVER}.json
+          mv docs/packages/${PACKAGE}/docs/docs.json out/${PACKAGE}/${SEMVER}.json
 
       - name: Commit and push
         run: |
