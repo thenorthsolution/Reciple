@@ -21,16 +21,36 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 16
+      - name: Install dependencies
+        run: npm run bootstrap
+      - name: Build docs.json
+        run: npm run docs
+  upload:
+    name: Upload Documentation
+    needs: build
+    runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 1
+      fail-fast: false
+      matrix:
+        package: ['reciple', 'client']
+    steps:
+      - name: Checkout repository
+          uses: actions/checkout@v3
+      - name: Install node.js v16
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - name: Install dependencies
+        run: npm run bootstrap
+      - name: Build docs.json
+        run: npm run docs
       - name: Checkout docs repository
         uses: actions/checkout@v3
         with:
           repository: 'FalloutStudios/Reciple'
           ref: 'docs'
           path: 'out'
-      - name: Install dependencies
-        run: npm run bootstrap
-      - name: Build docs.json
-        run: npm run docs
       - name: Extract package and semver from tag
         id: extract-tag
         if: ${{ github.ref_type == 'tag' }}
@@ -54,4 +74,3 @@ jobs:
           git add .
           git commit -m "Docs build for ${GITHUB_REF_TYPE} ${GITHUB_REF_NAME}: ${GITHUB_SHA}" || true
           git push
-
