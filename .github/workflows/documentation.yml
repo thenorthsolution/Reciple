@@ -74,7 +74,6 @@ jobs:
 
       - name: Extract package and semver from tag
         id: extract-tag
-        if: ${{ github.ref_type == 'tag' }}
         uses: ./packages/actions/src/formatTag
         with:
           tag: ${{ github.ref_name }}
