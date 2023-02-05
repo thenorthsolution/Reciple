@@ -8,5 +8,15 @@
         "path": "../../README.md"
       }
     ]
+  },
+  {
+    "name": "Guide",
+    "files": [
+      {
+        "name": "Moving to v7",
+        "id": "moving-to-v7",
+        "path": "../movingTov7.md"
+      }
+    ]
   }
 ]
