@@ -11,9 +11,11 @@
     "build": "npx lerna run build && npm run bootstrap",
     "watch": "npx tsc --watch --noEmit",
     "test": "node ./packages/reciple/bin/bin.mjs ./test -t env:TOKEN -y",
-    "publish:dev": "npx lerna publish prerelease --no-private"
+    "publish:dev": "npx lerna publish prerelease --no-private",
+    "docs": "npx lerna run docs"
   },
   "devDependencies": {
+    "@discordjs/docgen": "^0.12.1",
     "@types/node": "^18.11.18",
     "lerna": "^6.1.0",
     "rimraf": "^3.0.2",

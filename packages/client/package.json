@@ -15,7 +15,8 @@
   },
   "scripts": {
     "clean": "npx rimraf ./dist",
-    "build": "npm run clean && npx tsc"
+    "build": "npm run clean && npx tsc",
+    "docs": "npx docgen -i ./src/**/*.ts -c ./docs/custom.json -o ./docs/docs.json --typescript"
   },
   "files": [
     "dist",
