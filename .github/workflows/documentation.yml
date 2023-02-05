@@ -88,12 +88,6 @@ jobs:
         with:
           package: ${{ matrix.package }}
 
-      - name: Display package semver
-        env:
-          PACKAGE: ${{ steps.parse-semver.outputs.package }}
-          SEMVER: ${{ steps.parse-semver.outputs.semver }}
-        run: echo "package ${PACKAGE}; server (${SEMVER});"
-
       - name: Move docs to correct directory
         if: ${{ matrix.package == steps.parse-semver.outputs.package }}
         env:
