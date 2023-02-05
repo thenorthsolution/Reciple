@@ -86,7 +86,7 @@ jobs:
         id: parse-semver
         uses: ./packages/actions/src/getSemver
         with:
-          package: ${{ matrix.package }}
+          tag: ${{ github.ref || github.ref_name }}
 
       - name: Move docs to correct directory
         if: ${{ matrix.package == steps.parse-semver.outputs.package }}
