@@ -26,17 +26,16 @@ jobs:
       - name: Build docs.json
         run: npm run docs
       - name: Extract package and semver from tag
-        if: ${{ github.ref_type == 'tag' }}
         id: extract-tag
         uses: discordjs/discord.js/packages/actions/src/formatTag@main
         with:
           tag: ${{ github.ref_name }}
       - name: Move docs to correct directory
-        if: ${{ github.ref_type == 'tag' && matrix.package == steps.extract-tag.outputs.package }}
         env:
           PACKAGE: ${{ steps.extract-tag.outputs.package }}
           SEMVER: ${{ steps.extract-tag.outputs.semver }}
         run: |
+          echo "packages/${PACKAGE}/docs/docs.json > out/${PACKAGE}/${SEMVER}.json"
           mkdir -p out/${PACKAGE}
           mv packages/${PACKAGE}/docs/docs.json out/${PACKAGE}/${SEMVER}.json
       - name: Commit and push
