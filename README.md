@@ -17,21 +17,15 @@
 A simple Dicord.js handler that just works.
 </h3>
 
-***
-
-<p align="center">
-    <a href="https://discord.gg/2CattJYNpw" title="">
-        <img src="https://i.imgur.com/GffJByO.png" alt="Join Discord">
-    </a>
-</p>
-
 # Features
 
-* [CLI based handler](#command-line)
-* [Message command builder](#messagecommandbuilder-example)
-* [Built-in message command validation](#built-in-message-command-validation)
-* Automatically register application commands
+* [CLI based handler](#cli-usage)
+* [Supports Context Menus](#context-menus)
+* [Supports Prefix/Message commands](#message-commands)
+* [Validate messsage command options](#validate-message-command-options)
+* [Supports Slash Commands](#slash-commands)
 * [Built-in command cooldowns](#command-cooldowns)
+* Automatically register application commands
 * [Highly configurable](#config)
 
 ## Installation
@@ -51,6 +45,117 @@ npx reciple
 It will ask you to continue if the directory is not empty. Type `y` to continue. After the bot has been initialized, it will ask you for your bot token.
 
 > You can change the token anytime you want
+
+## CLI usage
+```yml
+Usage: reciple [options] [cwd]
+
+Reciple.js - Discord.js handler cli
+
+Arguments:
+  cwd                    Change the current working directory
+
+Options:
+  -v, --version          output the version number
+  -t, --token <token>    Replace used bot token
+  -c, --config <config>  Change path to config file
+  -D, --debugmode        Enable debug mode
+  -y, --yes              Agree to all Reciple confirmation prompts
+  --env                  .env file location
+  -h, --help             display help for command
+```
+
+## Message Commands
+
+Reciple provides built-in `MessageCommandBuilder` class that can be used for message command handler.
+
+```js
+const { MessageCommandBuilder } = require('reciple');
+
+new MessageCommandBuilder()
+    .setName("command")
+    .setDescription("Your lil tiny description")
+    .addAliases('cmd', 'cmd1')
+    .setExecute(command => command.message.reply("Hello!"))
+```
+
+### Validate Message Command Options
+
+```js
+const { MessageCommandBuilder } = require('reciple');
+
+new MessageCommandBuilder()
+    .setName("command")
+    .setDescription("Your lil tiny description")
+    .addAliases('cmd', 'cmd1')
+    .setValidateOptions(true) // Validate options
+    .addOption(option => option
+        .setName("quantity")
+        .setDescription("Must be a number")
+        .setRequired(true) // A required option
+        .setValidator(val => !isNaN(Number(val))) // Validate value
+    )
+    .setExecute(async command => {
+        const quantity = Number(command.options.getValue('quantity', true));
+
+        await command.message.reply("Quantity: " + quantity);
+    })
+```
+
+## Context Menus
+
+Reciple provides custom `ContextMenuBuilder` class that can be used for context menu command handler.
+
+```js
+const { ContextMenuBuilder } = require('reciple');
+const { ApplicationCommandType } = require('discord.js');
+
+new ContextMenuBuilder()
+    .setName('Ban')
+    .setType(ApplicationCommandType.User)
+    .setExecute(async ({ interaction }) => {
+        if (!interaction.inCachedGuild()) return;
+        await interaction.member.ban();
+    })
+```
+
+## Slash Commands
+
+Reciple provides custom `SlashCommandBuilder` class that can be used for slash command handler.
+
+```js
+const { SlashCommandBuilder } = require('reciple');
+
+new SlashCommandBuilder()
+    .setName('ping')
+    .setDescription('Pong')
+    .setExecute(async ({ interaction }) => interaction.reply(`Pong!`))
+```
+
+## Command Cooldowns
+
+```js
+const { MessageCommandBuilder, MessageCommandBuilder, SlashCommandBuilder } = require('reciple');
+const { ApplicationCommandType } = require('discord.js');
+
+new ContextMenuCommandBuilder()
+    .setName('Context Menu')
+    .setType(ApplicationCommandType.Message)
+    .setCooldown(1000 * 5) // 5 seconds cooldown
+    .setExecute(async ({ interaction }) => interaction.reply(`Hello!`));
+
+new ContextMenuCommandBuilder()
+    .setName('message-command')
+    .setDescription(`Your command`)
+    .setCooldown(1000 * 5) // 5 seconds cooldown
+    .setExecute(async ({ message }) => message.reply(`Hello!`));
+
+new SlashCommandBuilder()
+    .setName('slash-command')
+    .setDescription(`Your command`)
+    .setCooldown(1000 * 5) // 5 seconds cooldown
+    .setExecute(async ({ interaction }) => interaction.reply(`Hello!`));
+```
 
 ## Config
 
@@ -82,101 +187,7 @@ Use env variable
 npx reciple --token "env:TOKEN_VARIABLE"
 ```
 
-## Starting the bot
-To start the bot, run the following command:
-
-```bash
-npx reciple
-```
-
-## Command line
-
-**Usage:** `reciple [options] [current-working-directory]`
-
-**Arguments:**
-* `current-working-directory` Change the current working directory
-
-**Options:**
-* `-v, --version` output the version number
-* `-t, --token <token>` Replace used bot token
-* `-c, --config <config>` Change path to config file
-* `-D, --debugmode` Enable debug mode
-* `-y, --yes` Automatically agree to Reciple confirmation prompts
-* `-h, --help` display help for command
-
-## MessageCommandBuilder Example
-
-* Read docs for [MessageCommandBuilder](https://reciple.js.org/#/docs/reciple.js/main/class/MessageCommandBuilder)
-
-```js
-new MessageCommandBuilder()
-    .setName("command")
-    .setDescription("Your lil tiny description")
-    .addAliases('cmd', 'cmd1')
-    .setExecute(command => command.message.reply("Hello!"))
-```
-
-## Built-in message command validation
-
-* Read docs for [MessageCommandBuilder#setValidateOptions()](https://reciple.js.org/#/docs/reciple.js/main/class/MessageCommandBuilder?scrollTo=setValidateOptions), [MessageCommandOptionBuilder](https://reciple.js.org/#/docs/reciple.js/main/class/MessageCommandOptionBuilder), [MessageCommandOptionManager](https://reciple.js.org/#/docs/reciple.js/main/class/MessageCommandOptionManager)
-```js
-new MessageCommandBuilder()
-    .setName("command")
-    .setDescription("Your lil tiny description")
-    .addAliases('cmd', 'cmd1')
-    .setValidateOptions(true) // Validate options
-    .addOption(option => option
-        .setName("quantity")
-        .setDescription("Must be a number")
-        .setRequired(true) // A required option
-        .setValidator(val => !isNaN(Number(val))) // Validate value
-    )
-    .setExecute(async command => {
-        const quantity = Number(command.options.getValue('quantity', true));
-
-        await command.message.reply("Quantity: " + quantity);
-    })
-```
-
-## Command Cooldowns
-
-* Read docs for [SlashCommandBuilder#setCooldown()](https://reciple.js.org/#/docs/reciple.js/main/class/SlashCommandBuilder?scrollTo=setCooldown), [MessageCommandBuilder#setCooldown()](https://reciple.js.org/#/docs/reciple.js/main/class/MessageCommandBuilder?scrollTo=setCooldown), [CommandHaltReason](https://reciple.js.org/#/docs/reciple.js/main/typedef/CommandHaltReason), [CommandCooldownData](https://reciple.js.org/#/docs/reciple.js/main/typedef/CommandCooldownData)
-
-```js
-// Slash command
-new SlashCommandBuilder()
-    .setName("command")
-    .setDescription("Your lil tiny description")
-    .setCooldown(1000 * 60) // Cooldown in milliseconds
-    .setExecute(command => command.interaction.reply('hi'))
-    .setHalt(async halt => {
-        // Handle command on cooldown
-        if (halt.reason == CommandHaltReason.Cooldown) {
-            await halt.executeData.interaction.reply((halt.expireTime - Date.now()) / 1000 + " seconds cooldown");
-            return true;
-        }
-    })
-
-// Message command
-new MessageCommandBuilder()
-    .setName("command")
-    .setDescription("Your lil tiny description")
-    .setCooldown(1000 * 60) // Cooldown in milliseconds
-    .setExecute(command => command.message.reply('hi'))
-    .setHalt(async halt => {
-        // Handle command on cooldown
-        if (halt.reason == CommandHaltReason.Cooldown) {
-            await halt.executeData.message.reply((halt.expireTime - Date.now()) / 1000 + " seconds cooldown");
-            return true;
-        }
-    })
-```
-
 ***
 
 > ## Fun Fact
 > The name reciple is from a minecraft bug. The bug was a misspelling of the word `recipe`. [View Mojang Bug Report](https://bugs.mojang.com/browse/MC-225837)
-
-***
-
-[#letTheEarthBreathe](https://rebellion.global/)
