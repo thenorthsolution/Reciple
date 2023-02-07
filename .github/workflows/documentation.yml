@@ -42,9 +42,6 @@ jobs:
       - name: Build docs.json
         run: npm run docs
 
-      - name: List built files
-        run: npx lerna exec "ls ./dist" --scope @reciple/client && npx lerna exec "ls ./bin" --scope reciple
-
       - name: Upload docgen artifacts
         uses: actions/upload-artifact@v3
         with:
