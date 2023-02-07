@@ -12,7 +12,7 @@
     "watch": "npx tsc --watch --noEmit",
     "test": "node ./packages/reciple/bin/bin.mjs ./test -t env:TOKEN -y",
     "publish:dev": "npx lerna publish prerelease --no-private",
-    "docs": "npm run build && npx lerna run docs"
+    "docs": "npx lerna run docs"
   },
   "devDependencies": {
     "@discordjs/docgen": "^0.12.1",
