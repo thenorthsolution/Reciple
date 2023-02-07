@@ -25,11 +25,10 @@
     },
     "docs": {
       "dependsOn": [
-        "build",
         "^docs"
       ],
       "outputs": [
-        "{projectRoot}/docs"
+        "{projectRoot}/docs/docs.json"
       ],
       "inputs": [
         "{projectRoot}/src/**/*"

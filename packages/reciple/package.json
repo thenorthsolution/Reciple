@@ -17,7 +17,7 @@
   "scripts": {
     "clean": "npx rimraf ./bin",
     "build": "npm run clean && npx tsc",
-    "docs": "npx docgen -i ./bin/exports.d.ts -c ./docs/custom.json -o ./docs/docs.json --typescript"
+    "docs": "npx docgen -i ./src/exports.ts -c ./docs/custom.json -o ./docs/docs.json --typescript"
   },
   "files": [
     "bin",
