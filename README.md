@@ -13,8 +13,8 @@
     <a href="https://www.codefactor.io/repository/github/falloutstudios/reciple/overview/main">
         <img src="https://www.codefactor.io/repository/github/falloutstudios/reciple/badge/main">
     </a>
-
-A simple Dicord.js handler that just works.
+    <br>
+    A simple Dicord.js handler that just works.
 </h3>
 
 # Features

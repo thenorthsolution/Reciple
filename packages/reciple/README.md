@@ -13,20 +13,20 @@
     <a href="https://www.codefactor.io/repository/github/falloutstudios/reciple/overview/main">
         <img src="https://www.codefactor.io/repository/github/falloutstudios/reciple/badge/main">
     </a>
-
-A simple Dicord.js handler that just works.
+    <br>
+    A simple Dicord.js handler that just works.
 </h3>
 
 # Features
 
-* [CLI based handler](#cli-usage)
-* [Supports Context Menus](#context-menus)
-* [Supports Prefix/Message commands](#message-commands)
-* [Validate messsage command options](#validate-message-command-options)
-* [Supports Slash Commands](#slash-commands)
-* [Built-in command cooldowns](#command-cooldowns)
-* Automatically register application commands
-* [Highly configurable](#config)
+-   [CLI based handler](#cli-usage)
+-   [Supports Context Menus](#context-menus)
+-   [Supports Prefix/Message commands](#message-commands)
+-   [Validate messsage command options](#validate-message-command-options)
+-   [Supports Slash Commands](#slash-commands)
+-   [Built-in command cooldowns](#command-cooldowns)
+-   Automatically register application commands
+-   [Highly configurable](#config)
 
 ## Installation
 
@@ -47,6 +47,7 @@ It will ask you to continue if the directory is not empty. Type `y` to continue.
 > You can change the token anytime you want
 
 ## CLI usage
+
 ```yml
 Usage: reciple [options] [cwd]
 
@@ -70,36 +71,38 @@ Options:
 Reciple provides built-in `MessageCommandBuilder` class that can be used for message command handler.
 
 ```js
-const { MessageCommandBuilder } = require('reciple');
+const { MessageCommandBuilder } = require("reciple");
 
 new MessageCommandBuilder()
     .setName("command")
     .setDescription("Your lil tiny description")
-    .addAliases('cmd', 'cmd1')
-    .setExecute(command => command.message.reply("Hello!"))
+    .addAliases("cmd", "cmd1")
+    .setExecute((command) => command.message.reply("Hello!"));
 ```
 
 ### Validate Message Command Options
 
 ```js
-const { MessageCommandBuilder } = require('reciple');
+const { MessageCommandBuilder } = require("reciple");
 
 new MessageCommandBuilder()
     .setName("command")
     .setDescription("Your lil tiny description")
-    .addAliases('cmd', 'cmd1')
+    .addAliases("cmd", "cmd1")
     .setValidateOptions(true) // Validate options
-    .addOption(option => option
-        .setName("quantity")
-        .setDescription("Must be a number")
-        .setRequired(true) // A required option
-        .setValidator(val => !isNaN(Number(val))) // Validate value
+    .addOption(
+        (option) =>
+            option
+                .setName("quantity")
+                .setDescription("Must be a number")
+                .setRequired(true) // A required option
+                .setValidator((val) => !isNaN(Number(val))) // Validate value
     )
-    .setExecute(async command => {
-        const quantity = Number(command.options.getValue('quantity', true));
+    .setExecute(async (command) => {
+        const quantity = Number(command.options.getValue("quantity", true));
 
         await command.message.reply("Quantity: " + quantity);
-    })
+    });
 ```
 
 ## Context Menus
@@ -107,16 +110,16 @@ new MessageCommandBuilder()
 Reciple provides custom `ContextMenuBuilder` class that can be used for context menu command handler.
 
 ```js
-const { ContextMenuBuilder } = require('reciple');
-const { ApplicationCommandType } = require('discord.js');
+const { ContextMenuBuilder } = require("reciple");
+const { ApplicationCommandType } = require("discord.js");
 
 new ContextMenuBuilder()
-    .setName('Ban')
+    .setName("Ban")
     .setType(ApplicationCommandType.User)
     .setExecute(async ({ interaction }) => {
         if (!interaction.inCachedGuild()) return;
         await interaction.member.ban();
-    })
+    });
 ```
 
 ## Slash Commands
@@ -124,34 +127,38 @@ new ContextMenuBuilder()
 Reciple provides custom `SlashCommandBuilder` class that can be used for slash command handler.
 
 ```js
-const { SlashCommandBuilder } = require('reciple');
+const { SlashCommandBuilder } = require("reciple");
 
 new SlashCommandBuilder()
-    .setName('ping')
-    .setDescription('Pong')
-    .setExecute(async ({ interaction }) => interaction.reply(`Pong!`))
+    .setName("ping")
+    .setDescription("Pong")
+    .setExecute(async ({ interaction }) => interaction.reply(`Pong!`));
 ```
 
 ## Command Cooldowns
 
 ```js
-const { MessageCommandBuilder, MessageCommandBuilder, SlashCommandBuilder } = require('reciple');
-const { ApplicationCommandType } = require('discord.js');
+const {
+    MessageCommandBuilder,
+    MessageCommandBuilder,
+    SlashCommandBuilder,
+} = require("reciple");
+const { ApplicationCommandType } = require("discord.js");
 
 new ContextMenuCommandBuilder()
-    .setName('Context Menu')
+    .setName("Context Menu")
     .setType(ApplicationCommandType.Message)
     .setCooldown(1000 * 5) // 5 seconds cooldown
     .setExecute(async ({ interaction }) => interaction.reply(`Hello!`));
 
 new ContextMenuCommandBuilder()
-    .setName('message-command')
+    .setName("message-command")
     .setDescription(`Your command`)
     .setCooldown(1000 * 5) // 5 seconds cooldown
     .setExecute(async ({ message }) => message.reply(`Hello!`));
 
 new SlashCommandBuilder()
-    .setName('slash-command')
+    .setName("slash-command")
     .setDescription(`Your command`)
     .setCooldown(1000 * 5) // 5 seconds cooldown
     .setExecute(async ({ interaction }) => interaction.reply(`Hello!`));
@@ -187,7 +194,8 @@ Use env variable
 npx reciple --token "env:TOKEN_VARIABLE"
 ```
 
-***
+---
 
 > ## Fun Fact
+>
 > The name reciple is from a minecraft bug. The bug was a misspelling of the word `recipe`. [View Mojang Bug Report](https://bugs.mojang.com/browse/MC-225837)
