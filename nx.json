@@ -25,6 +25,7 @@
     },
     "docs": {
       "dependsOn": [
+        "build",
         "^docs"
       ],
       "outputs": [
