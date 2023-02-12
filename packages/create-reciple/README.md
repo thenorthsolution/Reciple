@@ -3,5 +3,5 @@
 A tool to create starter project for Reciple
 
 ```bash
-npm create reciple@dev
+npm create reciple@latest
 ```
