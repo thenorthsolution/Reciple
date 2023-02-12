@@ -4,7 +4,7 @@ import { existsSync, mkdirSync, readdirSync } from 'fs';
 import { flags, cwd } from './utils/cli.js';
 import { path } from 'fallout-utility';
 import micromatch from 'micromatch';
-import promptConfirm from '@inquirer/confirm';
+import prompts from 'prompts';
 import { Config } from './classes/Config.js';
 import { ContextMenuCommandBuilder, MessageCommandBuilder, RecipleClient, SlashCommandBuilder, realVersion } from '@reciple/client';
 import { createLogger, eventLogger } from './utils/logger.js';
@@ -15,14 +15,16 @@ const configPath = flags.config ?? path.join(cwd, 'reciple.yml');
 
 if (!existsSync(cwd)) mkdirSync(cwd, { recursive: true });
 if (readdirSync(cwd).filter(f => !micromatch.isMatch(f, allowedFiles)).length && !existsSync(configPath) && !flags.yes) {
-    const confirm = await promptConfirm(
+    const confirm = await prompts(
         {
-            default: false,
-            message: 'Would you like to create Reciple config here?'
+            initial: false,
+            message: `Would you like to create Reciple instance ${cwd !== process.cwd() ? 'in your chosen directory': 'here'}?`,
+            name: 'confirm',
+            type: 'confirm'
         }
     );
 
-    if (!confirm) process.exit(0);
+    if (!confirm.confirm) process.exit(0);
 }
 
 const configParser = await (new Config(configPath)).parseConfig();

@@ -68,11 +68,13 @@ export class Config {
     }
 
     public async askToken(): Promise<string> {
-        return (await import('@inquirer/password')).default({
-            message: `Bot token`,
+        return (await (await import('prompts')).default({
+            name: 'token',
+            type: 'password',
             mask: '*',
-            validate: value => !value.length ? 'Enter a valid bot token' : true
-        });
+            message: 'Bot token:',
+            validate: value => !value.length ? `Enter a valid bot token` : true
+        })).token;
     }
 
     public parseToken(): string|null {
