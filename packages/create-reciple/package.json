@@ -1,7 +1,7 @@
 {
   "name": "create-reciple",
   "license": "GPL-3.0",
-  "version": "7.0.0-dev.14",
+  "version": "7.0.0-dev.15",
   "type": "module",
   "description": "Starter project for Reciple handler",
   "types": "./bin/bin.d.ts",
