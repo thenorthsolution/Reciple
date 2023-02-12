@@ -1,3 +1,4 @@
+import { ChildProcess, spawn } from 'child_process';
 import { copyFileSync, existsSync, lstatSync, mkdirSync, readdirSync, statSync } from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -11,6 +12,9 @@ export async function create(cwd: string, templateDir: string): Promise<void> {
 
     copyFile(templateDir, cwd);
     copyFile(path.join(root, 'assets'), cwd, f => f.replace('dot.', '.'));
+
+    await runScript('npm', cwd, ['install']);
+    await runScript('npx', cwd, ['reciple', '-y']);
 }
 
 
@@ -29,4 +33,16 @@ export function copyFile(from: string, to: string, rename?: (f: string) => strin
 
     mkdirSync(path.dirname(to), { recursive: true });
     copyFileSync(from, to);
+}
+
+
+export function runScript(command: string, cwd: string, options?: string[]) {
+    const child: ChildProcess = spawn(command, options ?? [], { cwd, env: { ...process.env, FORCE_COLOR: '1' }, stdio: ['inherit', 'inherit', 'inherit'] });
+
+    child.stdout?.pipe(process.stdout);
+    child.stderr?.pipe(process.stderr);
+
+    if (child.stdin) process.stdin.pipe(child.stdin);
+
+    return new Promise((res) => child.on('close', () => res(void 0)));
 }

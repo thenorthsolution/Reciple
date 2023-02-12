@@ -6,6 +6,6 @@
   },
   "dependencies": {
     "discord.js": "^14",
-    "reciple": "^7"
+    "reciple": "^7.0.0-dev.14"
   }
 }
