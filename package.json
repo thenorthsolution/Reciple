@@ -10,7 +10,7 @@
     "clean": "npx rimraf ./packages/bin ./packages/dist",
     "build": "npx lerna run build --no-private && npm run bootstrap",
     "watch": "npx tsc --watch --noEmit",
-    "test": "node ./packages/reciple/bin/bin.mjs ./test -t env:TOKEN -y",
+    "test": "node ./packages/reciple/bin/bin.mjs ./test -t env:TOKEN",
     "publish:dev": "npx lerna publish prerelease --no-private",
     "docs": "npx lerna run docs --no-private"
   },

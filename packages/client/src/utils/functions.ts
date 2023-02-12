@@ -1,7 +1,6 @@
 import { AnyCommandBuilder, AnyCommandData, CommandType } from '../types/commands';
 import { RestOrArray, normalizeArray } from 'discord.js';
 import { replaceAll } from 'fallout-utility';
-import { CommandError } from '../classes/errors/CommandError';
 
 export function replacePlaceholders(message: string, ...placeholders: RestOrArray<string>) {
     placeholders = normalizeArray(placeholders);
@@ -23,7 +22,5 @@ export function getCommandBuilderName(command: AnyCommandBuilder|AnyCommandData|
             return 'MessageCommand';
         case CommandType.SlashCommand:
             return 'SlashCommand';
-        default:
-            throw new CommandError('UnknownCommand', command);
     }
 }

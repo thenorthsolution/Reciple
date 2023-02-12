@@ -45,7 +45,7 @@ export class Config {
             let configData = yml.parse(configYaml) as IConfig;
 
             if (configData.token === 'TOKEN') {
-                configData.token = await this.askToken() || 'TOKEN';
+                configData.token = flags.token || await this.askToken() || 'TOKEN';
                 configYaml = replaceAll(configYaml, 'token: TOKEN', `token: ${configData.token}`);
             }
 
