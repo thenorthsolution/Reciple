@@ -1,0 +1,11 @@
+{
+  "name": "reciple-app",
+  "private": true,
+  "scripts": {
+    "start": "npx reciple"
+  },
+  "dependencies": {
+    "discord.js": "^14",
+    "reciple": "^7"
+  }
+}

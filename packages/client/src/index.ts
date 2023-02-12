@@ -11,6 +11,7 @@ export * from './classes/managers/CommandManager';
 export * from './classes/managers/MessageCommandOptionManager';
 export * from './classes/managers/ModuleManager';
 export * from './classes/RecipleClient';
+export * from './classes/RecipleModule';
 export * from './types/commands';
 export * from './types/halt';
 export * from './types/options';

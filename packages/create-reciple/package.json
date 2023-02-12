@@ -1,0 +1,27 @@
+{
+  "name": "create-reciple",
+  "license": "GPL-3.0",
+  "version": "7.0.0-dev.13",
+  "type": "module",
+  "description": "Starter project for Reciple handler",
+  "types": "./bin/bin.d.ts",
+  "bin": "./bin/bin.js",
+  "scripts": {
+    "clean": "npx rimraf ./bin",
+    "build": "npm run clean && npx tsc"
+  },
+  "files": [
+    "bin",
+    "static",
+    "templates.json",
+    "assets",
+    "README.md"
+  ],
+  "dependencies": {
+    "chalk": "^5.2.0",
+    "prompts": "^2.4.2"
+  },
+  "devDependencies": {
+    "@types/prompts": "^2.4.2"
+  }
+}
