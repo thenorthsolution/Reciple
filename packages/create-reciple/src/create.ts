@@ -52,7 +52,7 @@ export function copyFile(from: string, to: string, rename?: (f: string) => strin
 
 
 export function runScript(command: string, cwd: string, options?: string[]) {
-    const child: ChildProcess = spawn(command, options ?? [], { cwd, env: { ...process.env, FORCE_COLOR: '1' }, stdio: ['inherit', 'inherit', 'inherit'] });
+    const child: ChildProcess = spawn(command, options ?? [], { cwd, shell: true, env: { ...process.env, FORCE_COLOR: '1' }, stdio: ['inherit', 'inherit', 'inherit'] });
 
     child.stdout?.pipe(process.stdout);
     child.stderr?.pipe(process.stderr);
