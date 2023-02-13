@@ -38,31 +38,31 @@ if (fs.existsSync(cwd)) {
 
     if (fs.readdirSync(cwd).length > 0) {
         const opts = await prompts({
-            name: 'confirm',
-            type: 'confirm',
-            message: 'Directory is not empty, would you like to continue?',
-            initial: false
+                name: 'confirm',
+                type: 'confirm',
+                message: 'Directory is not empty, would you like to continue?',
+                initial: false
         });
 
         if (!opts.confirm) exit(1);
     }
 }
 
-const template = path.join(root, (await prompts({
+const setup = await prompts([
+    {
         name: 'template',
         type: 'select',
         message: 'Which language would you like to use?',
         choices: (JSON.parse(fs.readFileSync(path.join(root, 'templates.json'), 'utf-8')) as { name: string; description: string; dir: string }[])
             .map(m => ({ title: m.name, description: m.description, value: m.dir })),
     },
-    { onCancel: () => exit() })).template);
-
-const opts = await prompts({
+    {
         name: 'esm',
         type: 'confirm',
         message: 'Would u like to use ES Modules? (ES modules uses import instead of require)',
         initial: false
-    });
+    },
+], { onCancel: () => exit() });
 
 
-create(cwd, template, opts.esm);
+create(cwd, path.join(root, setup.template), setup.esm);
