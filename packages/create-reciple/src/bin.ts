@@ -57,5 +57,12 @@ const template = path.join(root, (await prompts({
     },
     { onCancel: () => exit() })).template);
 
+const opts = await prompts({
+        name: 'esm',
+        type: 'confirm',
+        message: 'Would u like to use ES Modules? (ES modules uses import instead of require)',
+        initial: false
+    });
 
-create(cwd, template);
+
+create(cwd, template, opts.esm);

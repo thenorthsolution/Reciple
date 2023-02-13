@@ -7,7 +7,10 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const root = path.join(__dirname, '../');
 
-export async function create(cwd: string, templateDir: string): Promise<void> {
+export async function create(cwd: string, templateDir: string, esm: boolean): Promise<void> {
+    if (esm) templateDir = templateDir + `-esm`;
+    if (!existsSync(templateDir)) return;
+
     mkdirSync(cwd, { recursive: true });
 
     copyFile(templateDir, cwd);

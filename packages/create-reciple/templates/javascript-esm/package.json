@@ -1,0 +1,12 @@
+{
+  "name": "reciple-app",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "npx reciple"
+  },
+  "dependencies": {
+    "discord.js": "DISCORDJS",
+    "reciple": "RECIPLE"
+  }
+}
