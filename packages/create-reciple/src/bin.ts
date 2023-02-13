@@ -59,7 +59,7 @@ const setup = await prompts([
     {
         name: 'esm',
         type: 'confirm',
-        message: 'Would u like to use ES Modules? (ES modules uses import instead of require)',
+        message: 'Would you like to use ES Modules? (ES modules uses import instead of require)',
         initial: false
     },
 ], { onCancel: () => exit() });
