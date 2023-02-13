@@ -5,7 +5,7 @@
     "start": "npx reciple"
   },
   "dependencies": {
-    "discord.js": "^14",
-    "reciple": "^7.0.0-dev.14"
+    "discord.js": "DISCORDJS",
+    "reciple": "RECIPLE"
   }
 }
