@@ -57,6 +57,34 @@ const setup = await prompts([
             .map(m => ({ title: m.name, description: m.description, value: m.dir })),
     },
     {
+        name: 'packageManager',
+        type: 'select',
+        message: 'Select your preferred package manager',
+        choices: [
+            {
+                title: 'npm',
+                description: 'Uses npm as package manager',
+                value: 'npm'
+            },
+            {
+                title: 'yarn',
+                description: 'Uses yarn as package manager',
+                value: 'yarn'
+            },
+            {
+                title: 'pnpm',
+                description: 'Uses pnpm as package manager',
+                value: 'pnpm'
+            },
+            {
+                title: 'None',
+                description: 'Setup package manager later',
+                value: undefined,
+                selected: true
+            }
+        ]
+    },
+    {
         name: 'esm',
         type: 'confirm',
         message: 'Would you like to use ES Modules? (ES modules uses import instead of require)',
@@ -65,4 +93,4 @@ const setup = await prompts([
 ], { onCancel: () => exit() });
 
 
-create(cwd, path.join(root, setup.template), setup.esm);
+create(cwd, path.join(root, setup.template), setup.esm, setup.packageManager);

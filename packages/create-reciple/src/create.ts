@@ -7,7 +7,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const root = path.join(__dirname, '../');
 
-export async function create(cwd: string, templateDir: string, esm: boolean): Promise<void> {
+export async function create(cwd: string, templateDir: string, esm: boolean, pm?: 'npm'|'yarn'|'pnpm'): Promise<void> {
     if (esm) templateDir = templateDir + `-esm`;
     if (!existsSync(templateDir)) return;
 
@@ -25,10 +25,11 @@ export async function create(cwd: string, templateDir: string, esm: boolean): Pr
 
     writeFileSync(path.join(cwd, 'package.json'), packageJSON);
 
-    await runScript('npm', cwd, ['install']);
+    if (!pm) return;
 
-    if (templateDir.includes(`typescript`)) await runScript('npm', cwd, ['run', 'build']);
+    await runScript(pm, cwd, ['install']);
 
+    if (templateDir.includes(`typescript`)) await runScript(pm, cwd, ['run', 'build']);
     await runScript('npx', cwd, ['reciple', '-y']);
 }
 
