@@ -79,7 +79,7 @@ const setup = await prompts([
             {
                 title: 'None',
                 description: 'Setup package manager later',
-                value: undefined,
+                value: null,
                 selected: true
             }
         ]
