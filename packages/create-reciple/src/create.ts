@@ -26,6 +26,9 @@ export async function create(cwd: string, templateDir: string, esm: boolean): Pr
     writeFileSync(path.join(cwd, 'package.json'), packageJSON);
 
     await runScript('npm', cwd, ['install']);
+
+    if (templateDir.includes(`typescript`)) await runScript('npm', cwd, ['run', 'build']);
+
     await runScript('npx', cwd, ['reciple', '-y']);
 }
 
