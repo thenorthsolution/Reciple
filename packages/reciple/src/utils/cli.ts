@@ -1,11 +1,14 @@
 import { realVersion } from '@reciple/client';
 import { Command } from 'commander';
 import { path } from 'fallout-utility';
+import { readFileSync } from 'fs';
+
+const { version } = JSON.parse(readFileSync(path.join(__dirname, '../../package.json'), 'utf-8'));
 
 export const command = new Command()
     .name('reciple')
     .description('Reciple.js - Discord.js handler cli')
-    .version(`v${realVersion}`, '-v, --version')
+    .version(`Reciple CLI: ${version}\nReciple Client: ${realVersion}`, '-v, --version')
     .argument('[cwd]', 'Change the current working directory')
     .option('-t, --token <token>', 'Replace used bot token')
     .option('-c, --config <config>', 'Change path to config file')
