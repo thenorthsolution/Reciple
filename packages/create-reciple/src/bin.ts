@@ -16,9 +16,9 @@ const { version } = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 
 console.log(`${chalk.bold.cyan(`Welcome to Reciple!`)}`);
 console.log(`${chalk.gray(`create-reciple version `+ chalk.green(version))}`);
 
-let cwd = process.argv[2] || '.';
+let cwd = path.resolve(process.argv[2] || '.');
 
-if (cwd === '.') {
+if (cwd === process.cwd()) {
     const opts = await prompts({
         name: 'cwd',
         type: 'text',
@@ -27,8 +27,6 @@ if (cwd === '.') {
 
     if (opts.cwd) cwd = opts.cwd;
 }
-
-cwd = path.resolve(cwd);
 
 if (fs.existsSync(cwd)) {
     if (!fs.lstatSync(cwd).isDirectory()) {
