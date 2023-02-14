@@ -34,6 +34,8 @@ export class RecipleModule {
 
     public commands: AnyCommandBuilder[] = [];
 
+    get script() { return this._script; }
+
     constructor(options: RecipleModuleOptions) {
         this.filePath = options.filePath;
         this._script = options.script;
