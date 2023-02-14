@@ -13,8 +13,11 @@ export async function create(cwd: string, templateDir: string, esm: boolean, pm?
 
     mkdirSync(cwd, { recursive: true });
 
-    copyFile(templateDir, cwd);
-    copyFile(path.join(root, 'assets'), cwd, f => f.replace('dot.', '.'));
+    copyFile(templateDir, cwd, f => f.replace('dot.', '.'));
+
+    if (existsSync(path.join(root, 'assets'))) {
+        copyFile(path.join(root, 'assets'), cwd, f => f.replace('dot.', '.'));
+    }
 
     const { devDependencies } = JSON.parse(readFileSync(path.join(root, 'package.json'), 'utf-8'));
 
