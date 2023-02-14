@@ -1,12 +1,19 @@
 {
   "name": "reciple",
   "description": "Reciple is a Discord.js handler",
+  "homepage": "https://reciple.js.org/docs/reciple",
   "license": "GPL-3.0",
   "version": "7.0.0",
   "main": "./bin/index.js",
   "module": "./bin/esm.mjs",
   "types": "./bin/index.d.ts",
   "bin": "./bin/bin.mjs",
+  "keywords": ["reciple", "discord.js", "handler"],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/FalloutStudios",
+    "directory": "packages/reciple"
+  },
   "exports": {
     ".": {
       "types": "./bin/index.d.ts",

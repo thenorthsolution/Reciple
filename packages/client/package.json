@@ -1,11 +1,18 @@
 {
   "name": "@reciple/client",
-  "description": "Reciple builder classes",
+  "description": "Reciple client and builder classes",
+  "homepage": "https://reciple.js.org/docs/client",
   "license": "GPL-3.0",
   "version": "7.0.0",
   "main": "./dist/index.js",
   "module": "./dist/esm.mjs",
   "types": "./dist/index.d.ts",
+  "keywords": ["reciple", "discord.js", "handler"],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/FalloutStudios",
+    "directory": "packages/client"
+  },
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",

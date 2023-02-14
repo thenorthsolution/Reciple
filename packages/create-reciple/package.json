@@ -6,6 +6,11 @@
   "description": "Starter project for Reciple handler",
   "types": "./bin/bin.d.ts",
   "bin": "./bin/bin.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/FalloutStudios",
+    "directory": "packages/create-reciple"
+  },
   "scripts": {
     "clean": "npx rimraf ./bin",
     "build": "npm run clean && npx tsc"
