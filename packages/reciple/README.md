@@ -28,9 +28,19 @@
 -   Automatically register application commands
 -   [Highly configurable](#config)
 
-## Installation
+## Install From Templates
 
-To install the bot, run the following command in your terminal:
+To use templates use the following command in your terminal:
+
+```bash
+npm create reciple@latest
+```
+
+After that configure the template you want to use.
+
+## Manual Installation
+
+To install the handler, run the following command in your terminal:
 
 ```bash
 npm i reciple discord.js
