@@ -6,10 +6,11 @@ import { path } from 'fallout-utility';
 import micromatch from 'micromatch';
 import prompts from 'prompts';
 import { Config } from './classes/Config.js';
-import { ContextMenuCommandBuilder, MessageCommandBuilder, RecipleClient, SlashCommandBuilder, realVersion, version } from '@reciple/client';
+import { ContextMenuCommandBuilder, MessageCommandBuilder, SlashCommandBuilder, realVersion, version } from '@reciple/client';
 import { createLogger, eventLogger } from './utils/logger.js';
 import { getModules } from './utils/modules.js';
 import semver from 'semver';
+import { RecipleClient } from './index.js';
 
 const allowedFiles = ['node_modules', 'reciple.yml', 'package.json', '.*'];
 const configPath = flags.config ?? path.join(cwd, 'reciple.yml');
@@ -42,6 +43,8 @@ const client = new RecipleClient({
     ...config.client,
     logger
 });
+
+client.config;
 
 client.logger?.info(`Starting Reciple client v${realVersion} - ${new Date()}`);
 
