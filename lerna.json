@@ -4,6 +4,5 @@
   "version": "independent",
   "exact": false,
   "preid": "dev",
-  "preDistTag": "dev",
-  "createRelease": "github"
+  "preDistTag": "dev"
 }
