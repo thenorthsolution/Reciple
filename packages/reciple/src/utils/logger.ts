@@ -59,5 +59,5 @@ export function eventLogger(client: RecipleClient): void {
     client.modules.on('postUnloadModule', (module_) => client.logger?.log(`Unloaded module '${module_.displayName}'`));
     client.modules.on('unloadModuleError', (module_, err) => client.logger?.error(`An error occured while unloading module '${module_.displayName}'`, err));
 
-    client.on('recipleRegisterApplicationCommands', (commands: Collection<string, ApplicationCommand>, guild) => client.logger?.log(`Register ${commands?.size || 0} application commands ${guild ? ' to ' + guild : 'globally'}`));
+    client.on('recipleRegisterApplicationCommands', (commands: Collection<string, ApplicationCommand>, guild) => client.logger?.log(`Register ${commands?.size || 0} application commands ${guild ? 'to ' + guild : 'globally'}`));
 }
