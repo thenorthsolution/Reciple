@@ -30,7 +30,7 @@ if (readdirSync(cwd).filter(f => !micromatch.isMatch(f, allowedFiles)).length &&
 
 const configParser = await (new Config(configPath)).parseConfig();
 const config = configParser.getConfig();
-const logger = config.logger.enabled ? createLogger(config.logger) : undefined;
+const logger = config.logger?.enabled ? createLogger(config.logger) : undefined;
 
 if (!semver.satisfies(version, config.version)) {
     logger?.error(`Your config version doesn't support Reciple client v${version}`);

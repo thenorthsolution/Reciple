@@ -29,7 +29,6 @@ export async function create(cwd: string, templateDir: string, esm: boolean, pm?
     writeFileSync(path.join(cwd, 'package.json'), packageJSON);
 
     if (!pm) return;
-    console.log(pm);
 
     await runScript(pm, cwd, ['install']);
 
