@@ -17,6 +17,5 @@ export const command = new Command()
     .option('--env', '.env file location')
     .parse();
 
-
 export const flags = command.opts();
 export const cwd = command.args[0] ? path.resolve(command.args[0]) : process.cwd();
