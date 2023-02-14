@@ -1,9 +1,9 @@
 import { IConfig } from '../classes/Config';
 import { Logger, LoggerLevel, path } from 'fallout-utility';
-import chalk from 'chalk';
-import { RecipleClient } from '..';
-import { cwd } from './cli';
 import { ApplicationCommand, Collection } from 'discord.js';
+import { RecipleClient } from '../';
+import chalk from 'chalk';
+import { cwd } from './cli';
 
 export function formatLogMessage(message: string, logger: Logger, config: IConfig['logger'], level: LoggerLevel): string {
     const color = (msg: string) => {
