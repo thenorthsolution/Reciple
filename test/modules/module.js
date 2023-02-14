@@ -1,9 +1,9 @@
 const { CommandHaltReason, ContextMenuCommandBuilder, RecipleClient, version } = require('reciple');
 const { ApplicationCommandType } = require('discord.js');
 
-module.exports = {
-    versions: `^${version}`,
-    commands: [
+class Module {
+    versions = `^${version}`;
+    commands = [
         new ContextMenuCommandBuilder()
             .setName('Test')
             .setType(ApplicationCommandType.User)
@@ -63,7 +63,8 @@ module.exports = {
             description: 'A test command',
             execute: async ({interaction}) => interaction.reply('Test!')
         }
-    ],
+    ];
+
     /**
      * 
      * @param {RecipleClient} client 
@@ -72,9 +73,11 @@ module.exports = {
     onStart(client) {
         client.on('recipleCommandHalt', data => client.logger?.log(`Command halt ${data.executeData.builder.name}: `, data));
 
+        console.log(this);
+
         client.logger.warn(`Started module!`);
         return true;
-    },
+    }
 
     /**
      * 
@@ -83,4 +86,6 @@ module.exports = {
     onLoad(client) {
         client.logger.warn(`Loaded module!`);
     }
-};
+}
+
+module.exports = new Module();

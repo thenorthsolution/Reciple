@@ -44,23 +44,20 @@ export class RecipleModule {
     }
 
     get versions() { return this._script.versions; }
-    get onStart() { return this._script.onStart; }
-    get onLoad() { return this._script.onLoad; }
-    get onUnload() { return this._script.onUnload; }
     get displayName() { return this.filePath ?? this.id; }
     get isSupported() { return normalizeArray([this.versions] as RestOrArray<string>).some(v => semver.satisfies(this.client.version, v)); }
 
     public async start(): Promise<boolean> {
-        return Promise.resolve(this.onStart(this.client, this));
+        return Promise.resolve(this.script.onStart(this.client, this));
     }
 
     public async load(resolveCommands: boolean = true): Promise<void> {
-        if (this.onLoad) Promise.resolve(this.onLoad(this.client, this));
+        if (this.script.onLoad) Promise.resolve(this.script.onLoad(this.client, this));
         if (resolveCommands) this.resolveCommands();
     }
 
     public async unload(reason?: string): Promise<void> {
-        if (this.onUnload) await Promise.resolve(this.onUnload({
+        if (this.script.onUnload) await Promise.resolve(this.script.onUnload({
             client: this.client,
             module: this,
             reason
