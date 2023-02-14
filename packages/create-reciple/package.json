@@ -1,7 +1,7 @@
 {
   "name": "create-reciple",
   "license": "GPL-3.0",
-  "version": "7.0.0-dev.23",
+  "version": "7.0.0",
   "type": "module",
   "description": "Starter project for Reciple handler",
   "types": "./bin/bin.d.ts",
@@ -25,6 +25,6 @@
   "devDependencies": {
     "@types/prompts": "^2.4.2",
     "discord.js": "^14.7.1",
-    "reciple": "^7.0.0-dev.15"
+    "reciple": "^7.0.0"
   }
 }
