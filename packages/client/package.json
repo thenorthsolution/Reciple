@@ -3,7 +3,7 @@
   "description": "Reciple client and builder classes",
   "homepage": "https://reciple.js.org/docs/client",
   "license": "GPL-3.0",
-  "version": "7.0.2",
+  "version": "7.0.3",
   "main": "./dist/index.js",
   "module": "./dist/esm.mjs",
   "types": "./dist/index.d.ts",
