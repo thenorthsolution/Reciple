@@ -8,8 +8,8 @@ import { ContextMenuCommandBuilder, MessageCommandBuilder, SlashCommandBuilder }
 export interface RecipleModuleScript {
     versions: string|string[];
     commands?: (AnyCommandBuilder|AnyCommandData)[];
-    onStart(client: RecipleClient<true>, module: RecipleModule): boolean | Promise<boolean>;
-    onLoad?(client: RecipleClient<false>, module: RecipleModule): void | Promise<void>;
+    onStart(client: RecipleClient<false>, module: RecipleModule): boolean | Promise<boolean>;
+    onLoad?(client: RecipleClient<true>, module: RecipleModule): void | Promise<void>;
     onUnload?(unloadData: RecipleModuleScriptUnloadData): void | Promise<void>;
 }
 
