@@ -44,8 +44,6 @@ const client = new RecipleClient({
     logger
 });
 
-client.config;
-
 client.logger?.info(`Starting Reciple client v${realVersion} - ${new Date()}`);
 
 eventLogger(client);
