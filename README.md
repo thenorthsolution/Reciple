@@ -4,33 +4,33 @@
 </h1>
 
 <h3 align="center">
-    <a href="https://npmjs.org/package/reciple">
-        <img src="https://img.shields.io/npm/v/reciple?label=latest%20npm%20release%20">
-    </a>
-    <a href="https://github.com/FalloutStudios/Reciple/blob/main/LICENSE">
-        <img src="https://img.shields.io/github/license/FalloutStudios/Reciple">
-    </a>
-    <a href="https://www.codefactor.io/repository/github/falloutstudios/reciple/overview/main">
-        <img src="https://www.codefactor.io/repository/github/falloutstudios/reciple/badge/main">
-    </a>
-    <br>
     A simple Dicord.js handler that just works.
 </h3>
 
-# Features
+## Features
 
-* [CLI based handler](#cli-usage)
-* [Supports Context Menus](#context-menus)
-* [Supports Prefix/Message commands](#message-commands)
-* [Validate messsage command options](#validate-message-command-options)
-* [Supports Slash Commands](#slash-commands)
-* [Built-in command cooldowns](#command-cooldowns)
-* Automatically register application commands
-* [Highly configurable](#config)
+- [CLI based handler](#cli-usage)
+- [Supports Context Menus](#context-menus)
+- [Supports Prefix/Message commands](#message-commands)
+- [Validate messsage command options](#validate-message-command-options)
+- [Supports Slash Commands](#slash-commands)
+- [Built-in command cooldowns](#command-cooldowns)
+- Automatically register application commands
+- [Highly configurable](#config)
 
-## Installation
+## Using Templates
 
-To install the bot, run the following command in your terminal:
+To use templates use the following command in your terminal:
+
+```bash
+npm create reciple@latest
+```
+
+After that configure the template you want to use.
+
+## Manual Installation
+
+To install the handler, run the following command in your terminal:
 
 ```bash
 npm i reciple discord.js

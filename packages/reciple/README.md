@@ -17,7 +17,7 @@
     A simple Dicord.js handler that just works.
 </h3>
 
-# Features
+## Features
 
 -   [CLI based handler](#cli-usage)
 -   [Supports Context Menus](#context-menus)
@@ -28,7 +28,7 @@
 -   Automatically register application commands
 -   [Highly configurable](#config)
 
-## Install From Templates
+## Using Templates
 
 To use templates use the following command in your terminal:
 
