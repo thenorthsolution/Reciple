@@ -137,3 +137,6 @@ test/*.yml
 
 # docs
 docs/docs.json
+
+# files
+registry.json
