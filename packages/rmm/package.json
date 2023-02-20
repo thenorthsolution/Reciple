@@ -1,5 +1,6 @@
 {
   "name": "@reciple/rmm",
+  "private": true,
   "description": "Module manager for the default Reciple CLI",
   "homepage": "https://reciple.js.org/docs/rmm",
   "type": "module",
