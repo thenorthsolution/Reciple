@@ -2,7 +2,7 @@ name: Documentation
 on:
   push:
     branches: ['main']
-    paths: ['./packages/*/src/**']
+    paths: ['packages/*/src/**']
     tags: ['reciple@**', '@reciple/**']
   workflow_dispatch:
     inputs:
