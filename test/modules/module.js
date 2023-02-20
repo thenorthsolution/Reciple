@@ -88,4 +88,14 @@ class Module {
     }
 }
 
-module.exports = new Module();
+module.exports.default = {
+    default: {
+        default: {
+            default: {
+                default: {
+                    default: new Module()
+                }
+            }
+        }
+    }
+};

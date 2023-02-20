@@ -6,7 +6,7 @@ import semver from 'semver';
 import { TypedEmitter } from 'tiny-typed-emitter';
 import { inspect } from 'util';
 import { ModuleError } from '../errors/ModuleError';
-import { realVersion } from '../..';
+import { realVersion, recursiveDefaults } from '../..';
 
 export interface ModuleManagerEvents {
     resolveModuleFileError: (file: string, error: Error) => Awaitable<void>;
@@ -149,12 +149,7 @@ export class ModuleManager extends TypedEmitter<ModuleManagerEvents> {
             try {
                 const resolveFile = await import(filePath);
 
-                const script: RecipleModuleScript | RecipleModule | undefined =
-                    resolveFile instanceof RecipleModule || this.isRecipleModuleScript(resolveFile)
-                        ? resolveFile
-                        : resolveFile?.default?.default instanceof  RecipleModule || this.isRecipleModuleScript(resolveFile)
-                            ? resolveFile.default.default
-                            : resolveFile?.default;
+                const script = recursiveDefaults<RecipleModuleScript|RecipleModule>(resolveFile);
 
                 if (script instanceof RecipleModule) {
                     modules.push(script);
