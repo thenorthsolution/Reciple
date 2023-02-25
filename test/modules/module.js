@@ -9,6 +9,7 @@ class Module {
             .setType(ApplicationCommandType.User)
             .setCooldown(10000)
             .setExecute(async ({interaction}) => interaction.reply(`Context menu`))
+            .setRequiredMemberPermissions(['ManageChannels', 'ManageGuild'])
             .setHalt(
                 /**
                  * 
@@ -61,6 +62,7 @@ class Module {
             commandType: 3,
             name: 'test',
             description: 'A test command',
+            requiredMemberPermissions: 'Administrator',
             execute: async ({interaction}) => interaction.reply('Test!')
         }
     ];

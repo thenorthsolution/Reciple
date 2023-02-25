@@ -45,6 +45,12 @@ export class ContextMenuCommandBuilder extends Mixin(discordjs.ContextMenuComman
         if (data?.nameLocalizations !== undefined) this.setNameLocalizations(data.nameLocalizations);
     }
 
+    public setRequiredMemberPermissions(permissions?: discordjs.PermissionResolvable | null | undefined): this {
+        super.setRequiredMemberPermissions(permissions);
+        this.setDefaultMemberPermissions(this.requiredMemberPermissions);
+        return this;
+    }
+
     public static resolve(contextMenuCommandResolvable: ContextMenuCommandResolvable): ContextMenuCommandBuilder {
         return contextMenuCommandResolvable instanceof ContextMenuCommandBuilder ? contextMenuCommandResolvable : new ContextMenuCommandBuilder(contextMenuCommandResolvable);
     }

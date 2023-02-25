@@ -93,6 +93,12 @@ export class SlashCommandBuilder extends Mixin(discordjs.SlashCommandBuilder, Ba
         }
     }
 
+    public setRequiredMemberPermissions(permissions?: discordjs.PermissionResolvable | null | undefined): this {
+        super.setRequiredMemberPermissions(permissions);
+        this.setDefaultMemberPermissions(this.requiredMemberPermissions);
+        return this;
+    }
+
     public static addOption<Builder extends SharedSlashCommandOptions>(builder: Builder, option: AnySlashCommandOptionBuilder|SlashCommandSubcommandOptionsOnlyBuilder): Builder {
         if (option instanceof SlashCommandAttachmentOption) {
             builder.addAttachmentOption(option);
