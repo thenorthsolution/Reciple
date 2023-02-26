@@ -11,10 +11,13 @@ export const command = new Command()
     .version(`Reciple CLI: ${version}\nReciple Client: ${realVersion}`, '-v, --version')
     .argument('[cwd]', 'Change the current working directory')
     .option('-t, --token <token>', 'Replace used bot token')
-    .option('-c, --config <config>', 'Change path to config file')
+    .option('-c, --config <dir>', 'Change path to config file')
     .option('-D, --debugmode', 'Enable debug mode')
     .option('-y, --yes', 'Agree to all Reciple confirmation prompts')
     .option('--env', '.env file location')
+    .option('--ts', 'Resolve Typescript modules')
+    .option('--ts-cache-dir <dir>', 'Set cache dir for resolved Typescript modules (requires: @adonisjs/require-ts)', 'node_modules/.cache/')
+    .allowUnknownOption(true)
     .parse();
 
 export const flags = command.opts();

@@ -75,8 +75,6 @@ class Module {
     onStart(client) {
         client.on('recipleCommandHalt', data => client.logger?.log(`Command halt ${data.executeData.builder.name}: `, data));
 
-        console.log(this);
-
         client.logger.warn(`Started module!`);
         return true;
     }

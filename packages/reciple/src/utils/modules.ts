@@ -2,11 +2,24 @@ import { existsSync, lstatSync, mkdirSync, readdirSync } from 'fs';
 import { Awaitable, path } from 'fallout-utility';
 import { IConfig } from '../classes/Config';
 import micromatch from 'micromatch';
-import { cwd } from './cli';
+import { cwd, flags } from './cli';
 
 export async function getModules(config: IConfig['modules'], filter?: (filename: string) => Awaitable<boolean>): Promise<string[]> {
     const modules: string[] = [];
     const { globby, isDynamicPattern } = await import('globby');
+
+    if (flags?.ts) {
+        const tsRequire = await import('@adonisjs/require-ts').catch(() => null);
+
+        tsRequire?.register(cwd, {
+            cache: !!flags.tsCacheDir,
+            cachePath: flags.tsCacheDir
+                ? path.isAbsolute(flags.tsCacheDir)
+                    ? path.resolve(flags.tsCacheDir)
+                    : path.join(cwd, flags.tsCacheDir)
+                : undefined
+        });
+    }
 
     for (const folder of config.modulesFolders) {
         const dir = path.isAbsolute(folder) ? folder : path.join(cwd, folder);
@@ -36,4 +49,8 @@ export async function getModules(config: IConfig['modules'], filter?: (filename:
     }
 
     return modules;
+}
+
+export async function requireTypescriptFile(file: string): Promise<any> {
+    return require(file);
 }

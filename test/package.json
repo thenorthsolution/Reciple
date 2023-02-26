@@ -2,7 +2,10 @@
   "name": "@reciple/test",
   "private": true,
   "dependencies": {
-    "reciple": "^7.0.0-dev.3",
-    "discord.js": "^14.7.1"
+    "discord.js": "^14.7.1",
+    "reciple": "^7.0.0-dev.3"
+  },
+  "devDependencies": {
+    "@adonisjs/require-ts": "^2.0.13"
   }
 }

@@ -1,19 +1,22 @@
 #!/usr/bin/env node
 
+import { ContextMenuCommandBuilder, MessageCommandBuilder, SlashCommandBuilder, realVersion, RecipleClient, version } from '@reciple/client';
+import { getModules, requireTypescriptFile } from './utils/modules.js';
+import { createLogger, eventLogger } from './utils/logger.js';
 import { existsSync, mkdirSync, readdirSync } from 'fs';
+import { Config } from './classes/Config.js';
 import { flags, cwd } from './utils/cli.js';
 import { path } from 'fallout-utility';
 import micromatch from 'micromatch';
 import prompts from 'prompts';
-import { Config } from './classes/Config.js';
-import { ContextMenuCommandBuilder, MessageCommandBuilder, SlashCommandBuilder, realVersion, version } from '@reciple/client';
-import { createLogger, eventLogger } from './utils/logger.js';
-import { getModules } from './utils/modules.js';
 import semver from 'semver';
-import { RecipleClient } from './index.js';
 
 const allowedFiles = ['node_modules', 'reciple.yml', 'package.json', '.*'];
-const configPath = flags.config ?? path.join(cwd, 'reciple.yml');
+const configPath = flags.config
+    ? path.isAbsolute(flags.config)
+        ? path.resolve(flags.config)
+        : path.join(cwd, flags.config)
+    : path.join(cwd, 'reciple.yml');
 
 if (!existsSync(cwd)) mkdirSync(cwd, { recursive: true });
 if (readdirSync(cwd).filter(f => !micromatch.isMatch(f, allowedFiles)).length && !existsSync(configPath) && !flags.yes) {
@@ -48,8 +51,13 @@ client.logger?.info(`Starting Reciple client v${realVersion} - ${new Date()}`);
 
 eventLogger(client);
 
+const moduleFilesFilter = (file: string) => file.endsWith('.js') || file.endsWith('.mjs') || file.endsWith('.cjs') || (flags.ts ? file.endsWith('.ts') : false);
+
 await client.modules.startModules({
-    modules: await client.modules.resolveModuleFiles(await getModules(config.modules, file => file.endsWith('.js') || file.endsWith('.mjs') || file.endsWith('.cjs')), config.modules.disableModuleVersionCheck),
+    modules: await client.modules.resolveModuleFiles(await getModules(config.modules, (f) => moduleFilesFilter(f)), config.modules.disableModuleVersionCheck, async (filePath: string) => {
+        if (!filePath.endsWith('.ts')) return undefined;
+        return requireTypescriptFile(filePath);
+    }),
     addToModulesCollection: true
 });
 

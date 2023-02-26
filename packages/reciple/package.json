@@ -49,6 +49,7 @@
     "yaml": "^2.2.1"
   },
   "devDependencies": {
+    "@adonisjs/require-ts": "^2.0.13",
     "@types/micromatch": "^4.0.2",
     "@types/prompts": "^2.4.2",
     "@types/semver": "^7.3.13",
@@ -56,6 +57,9 @@
   },
   "peerDependencies": {
     "discord.js": "^14.7.1"
+  },
+  "optionalDependencies": {
+    "@adonisjs/require-ts": "^2.0.13"
   },
   "gitHead": "c5620aa5f046aa426b832c052a4f933817270573"
 }
