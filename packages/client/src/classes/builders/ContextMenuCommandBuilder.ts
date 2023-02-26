@@ -76,8 +76,7 @@ export class ContextMenuCommandBuilder extends Mixin(discordjs.ContextMenuComman
                 type: builder.commandType
             };
 
-            const isCooledDown = client.cooldowns.isCooledDown(cooldownData);
-            if (!isCooledDown) {
+            if (!client.cooldowns.isCooledDown(cooldownData)) {
                 client.cooldowns.add({ ...cooldownData, endsAt: new Date(Date.now() + builder.cooldown) });
             } else {
                 await client._haltCommand(builder, {
