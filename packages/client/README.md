@@ -31,3 +31,4 @@ client.on('interactionCreate', async interaction => {
     if (interaction.isChatInputCommand()) await SlashCommandBuilder.execute(client, interaction);
 });
 ```
+
