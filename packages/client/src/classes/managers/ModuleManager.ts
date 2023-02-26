@@ -6,7 +6,8 @@ import semver from 'semver';
 import { TypedEmitter } from 'tiny-typed-emitter';
 import { inspect } from 'util';
 import { ModuleError } from '../errors/ModuleError';
-import { realVersion, recursiveDefaults } from '../..';
+import { RecursiveDefault, recursiveDefaults } from '../../utils/functions';
+import { realVersion } from '../../utils/constants';
 
 export interface ModuleManagerEvents {
     resolveModuleFileError: (file: string, error: Error) => Awaitable<void>;
@@ -140,16 +141,17 @@ export class ModuleManager extends TypedEmitter<ModuleManagerEvents> {
         return unloadedModules;
     }
 
-    public async resolveModuleFiles(files: string[], disableVersionCheck: boolean = false): Promise<RecipleModule[]> {
+    public async resolveModuleFiles(files: string[], disableVersionCheck: boolean = false, fileResolver?: (filePath: string) => Awaitable<undefined|RecursiveDefault<RecipleModule|RecipleModuleScript>|RecipleModule|RecipleModuleScript>): Promise<RecipleModule[]> {
         const modules: RecipleModule[] = [];
 
         for (const file of files) {
             const filePath = path.resolve(file);
 
             try {
-                const resolveFile = await import(filePath);
+                let resolveFile = fileResolver ? await Promise.resolve(fileResolver(file)) : undefined;
+                    resolveFile = typeof resolveFile === 'undefined' ? await import(filePath) : {};
 
-                const script = recursiveDefaults<RecipleModuleScript|RecipleModule>(resolveFile);
+                const script = recursiveDefaults<RecipleModuleScript|RecipleModule|undefined>(resolveFile);
 
                 if (script instanceof RecipleModule) {
                     modules.push(script);
