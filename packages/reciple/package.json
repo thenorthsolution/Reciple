@@ -11,7 +11,8 @@
   "keywords": [
     "reciple",
     "discord.js",
-    "handler"
+    "handler",
+    "commands"
   ],
   "repository": {
     "type": "git",
