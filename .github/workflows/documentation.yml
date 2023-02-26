@@ -91,7 +91,7 @@ jobs:
           ref: 'docs'
           path: 'out'
 
-      - name: Move docs to correct directory
+      - name: Move docs to correct directory (Tag)
         if: ${{ github.ref_type == 'tag' && matrix.package == steps.format-tag.outputs.package }}
         env:
           PACKAGE: ${{ steps.format-tag.outputs.package }}
@@ -101,7 +101,7 @@ jobs:
           mkdir -p out/${PACKAGE}
           mv docs/${PACKAGE}/docs/docs.json out/${PACKAGE}/${SEMVER}.json
 
-      - name: Move docs to correct directory
+      - name: Move docs to correct directory (Branch)
         if: ${{ github.ref_type == 'branch' }}
         env:
           PACKAGE: ${{ matrix.package }}
