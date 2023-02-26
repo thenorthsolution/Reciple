@@ -2,19 +2,11 @@ name: Documentation
 on:
   push:
     branches: ['main']
-    # paths: ['./packages/*/src/**']
     tags: ['**']
   workflow_dispatch:
     inputs:
       ref:
         description: 'The branch, tag or SHA to checkout'
-        required: true
-      ref_type:
-        type: choice
-        description: 'Branch or tag'
-        options:
-          - branch
-          - tag
         required: true
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
@@ -35,6 +27,7 @@ jobs:
         with:
           node-version: 16
           cache: 'npm'
+          cache-dependency-path: package-lock.json
 
       - name: Install dependencies
         run: npm run bootstrap
@@ -67,6 +60,7 @@ jobs:
         with:
           node-version: 16
           cache: 'npm'
+          cache-dependency-path: package-lock.json
 
       - name: Download docgen artifacts
         uses: actions/download-artifact@v3
