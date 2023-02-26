@@ -3,9 +3,9 @@ import { AnySlashCommandBuilder, SlashCommandBuilder, SlashCommandExecuteData, S
 import { AnyCommandBuilder, AnyCommandData, AnyCommandExecuteData, ApplicationCommandBuilder, CommandType } from '../../types/commands';
 import { ContextMenuCommandBuilder, ContextMenuCommandExecuteData, ContextMenuCommandResolvable } from '../builders/ContextMenuCommandBuilder';
 import { MessageCommandBuilder, MessageCommandExecuteData, MessageCommandResovable } from '../builders/MessageCommandBuilder';
-import { RecipleClient } from '../RecipleClient';
-import { RecipleCommandsInteractionBasedConfigOptions, RecipleConfigOptions } from '../..';
+import { RecipleCommandsInteractionBasedConfigOptions } from '../../types/options';
 import { CommandError } from '../errors/CommandError';
+import { RecipleClient } from '../RecipleClient';
 
 export interface CommandManagerOptions {
     client: RecipleClient;
