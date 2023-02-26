@@ -4,5 +4,8 @@
   "dependencies": {
     "discord.js": "^14.7.1",
     "reciple": "^7.0.0-dev.3"
+  },
+  "devDependencies": {
+    "ts-interpreter.js": "^1.4.3"
   }
 }
