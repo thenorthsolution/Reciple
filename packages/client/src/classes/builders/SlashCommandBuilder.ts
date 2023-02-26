@@ -9,7 +9,7 @@ import { RecipleClient } from '../RecipleClient';
 import { isClass } from 'fallout-utility';
 import { Mixin } from 'ts-mixer';
 
-export interface SlashCommandExecuteData<Metadata = unknown> {
+export interface SlashCommandExecuteData {
     commandType: CommandType.SlashCommand;
     client: RecipleClient;
     interaction: ChatInputCommandInteraction;
