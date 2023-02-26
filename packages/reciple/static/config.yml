@@ -85,6 +85,9 @@ modules:
   exclude: []
   # If false, the client will still load unsupported modules
   disableModuleVersionCheck: false
+  # Resolve files in modules folder with ".ts" file extension
+  #   This feature is experimental
+  resolveTypescriptModules: false
 
 # Discord.js client options
 client:

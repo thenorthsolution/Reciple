@@ -24,6 +24,10 @@ export interface IConfig extends RecipleConfigOptions {
         modulesFolders: string[];
         exclude: string[];
         disableModuleVersionCheck: boolean;
+        /**
+         * @experimental
+         */
+        resolveTypescriptModules: boolean;
     };
     client: ClientOptions;
     version: string;

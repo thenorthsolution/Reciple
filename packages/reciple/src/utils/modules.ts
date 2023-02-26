@@ -8,7 +8,7 @@ export async function getModules(config: IConfig['modules'], filter?: (filename:
     const modules: string[] = [];
     const { globby, isDynamicPattern } = await import('globby');
 
-    if (flags?.ts) {
+    if (flags?.ts || config.resolveTypescriptModules) {
         require('ts-interpreter.js');
     }
 
