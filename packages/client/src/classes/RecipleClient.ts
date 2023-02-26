@@ -41,7 +41,7 @@ export interface RecipleClientEvents extends ClientEvents {
 }
 
 export class RecipleClient<Ready extends boolean = boolean> extends discordjs.Client<Ready> {
-    readonly config: RecipleConfigOptions;
+    readonly config: RecipleConfigOptions & { [key: string]: any; };
     readonly modules: ModuleManager = new ModuleManager({ client: this });
     readonly commands: CommandManager = new CommandManager({ client: this });
     readonly cooldowns: CommandCooldownManager = new CommandCooldownManager();
