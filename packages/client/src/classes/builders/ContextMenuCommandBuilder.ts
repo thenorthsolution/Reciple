@@ -42,6 +42,7 @@ export class ContextMenuCommandBuilder extends Mixin(discordjs.ContextMenuComman
         super(data);
 
         if (data?.name !== undefined) this.setName(data.name);
+        if (data?.type !== undefined) this.setType(data.type);
         if (data?.nameLocalizations !== undefined) this.setNameLocalizations(data.nameLocalizations);
     }
 
