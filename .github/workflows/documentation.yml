@@ -3,7 +3,7 @@ on:
   push:
     branches: ['main']
     paths: ['packages/*/src/**']
-    tags: ['reciple@**', '@reciple/**']
+    tags: ['**']
   workflow_dispatch:
     inputs:
       ref:
