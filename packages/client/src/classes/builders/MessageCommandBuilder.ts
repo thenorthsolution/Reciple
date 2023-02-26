@@ -1,6 +1,6 @@
 import { MessageCommandOptionBuilder, MessageCommandOptionResolvable } from './MessageCommandOptionBuilder';
-import { Awaitable, If, Message, RestOrArray, SlashCommandAssertions, isValidationEnabled, normalizeArray } from 'discord.js';
-import { botHasPermissionsToExecute, memberHasExecutePermissions } from '../../utils/permissions';
+import { Awaitable, If, Message, RestOrArray, isValidationEnabled, normalizeArray } from 'discord.js';
+import { botHasPermissionsToExecute, hasExecutePermissions } from '../../utils/permissions';
 import { MessageCommandOptionManager } from '../managers/MessageCommandOptionManager';
 import { BaseCommandBuilder, BaseCommandBuilderData } from './BaseCommandBuilder';
 import { CommandCooldownData } from '../managers/CommandCooldownManager';
@@ -226,7 +226,7 @@ export class MessageCommandBuilder extends BaseCommandBuilder implements Message
             }
         }
 
-        if (!message.inGuild() && message.member?.permissions && builder.requiredMemberPermissions && memberHasExecutePermissions({ builder, memberPermissions: message.member?.permissions })) {
+        if (!message.inGuild() && message.member?.permissions && builder.requiredMemberPermissions && hasExecutePermissions({ builder, memberPermissions: message.member?.permissions })) {
             await client._haltCommand(builder, {
                 commandType: builder.commandType,
                 reason: CommandHaltReason.MissingMemberPermissions,
