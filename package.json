@@ -1,6 +1,7 @@
 {
-  "name": "reciple-monorepo",
+  "name": "@reciple/monorepo",
   "license": "GPL-3.0",
+  "private": true,
   "workspaces": [
     "packages/*",
     "test"
@@ -16,7 +17,7 @@
   },
   "devDependencies": {
     "@discordjs/docgen": "^0.12.1",
-    "@types/node": "^18.13.0",
+    "@types/node": "^18.14.1",
     "lerna": "^6.5.1",
     "rimraf": "^4.1.2",
     "ts-mixer": "^6.0.3",
