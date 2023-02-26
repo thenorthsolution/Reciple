@@ -5,7 +5,7 @@ import { CommandCooldownData } from '../managers/CommandCooldownManager';
 import { CommandHaltData, CommandHaltReason } from '../../types/halt';
 import { botHasPermissionsToExecute } from '../../utils/permissions';
 import { RecipleClient } from '../RecipleClient';
-import { Mixin, mix } from 'ts-mixer';
+import { Mixin } from 'ts-mixer';
 
 export interface ContextMenuCommandExecuteData {
     commandType: CommandType.ContextMenuCommand;

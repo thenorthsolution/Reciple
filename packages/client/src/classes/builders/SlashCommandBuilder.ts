@@ -7,7 +7,7 @@ import { CommandHaltData, CommandHaltReason } from '../../types/halt';
 import { botHasPermissionsToExecute } from '../../utils/permissions';
 import { RecipleClient } from '../RecipleClient';
 import { isClass } from 'fallout-utility';
-import { Mixin, mix } from 'ts-mixer';
+import { Mixin } from 'ts-mixer';
 
 export interface SlashCommandExecuteData<Metadata = unknown> {
     commandType: CommandType.SlashCommand;
