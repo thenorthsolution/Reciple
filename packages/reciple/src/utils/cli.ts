@@ -15,8 +15,7 @@ export const command = new Command()
     .option('-D, --debugmode', 'Enable debug mode')
     .option('-y, --yes', 'Agree to all Reciple confirmation prompts')
     .option('--env', '.env file location')
-    .option('--ts', 'Resolve Typescript modules')
-    .option('--ts-cache-dir <dir>', 'Set cache dir for resolved Typescript modules (requires: @adonisjs/require-ts)', 'node_modules/.cache/')
+    .option('--ts', 'Resolve Typescript modules (requires: ts-interpreter.js)')
     .allowUnknownOption(true)
     .parse();
 

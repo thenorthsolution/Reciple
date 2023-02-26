@@ -9,16 +9,7 @@ export async function getModules(config: IConfig['modules'], filter?: (filename:
     const { globby, isDynamicPattern } = await import('globby');
 
     if (flags?.ts) {
-        const tsRequire = await import('@adonisjs/require-ts').catch(() => null);
-
-        tsRequire?.register(cwd, {
-            cache: !!flags.tsCacheDir,
-            cachePath: flags.tsCacheDir
-                ? path.isAbsolute(flags.tsCacheDir)
-                    ? path.resolve(flags.tsCacheDir)
-                    : path.join(cwd, flags.tsCacheDir)
-                : undefined
-        });
+        require('ts-interpreter.js');
     }
 
     for (const folder of config.modulesFolders) {
