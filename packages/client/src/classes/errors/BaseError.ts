@@ -16,7 +16,7 @@ export enum ErrorType {
 export abstract class BaseError<ErrorCodes extends BaseErrorCodes = {}> extends Error {
     abstract readonly errorType: ErrorType;
 
-    constructor(code: keyof BaseErrorCodes, errorCodes: ErrorCodes, ...placeholders: RestOrArray<string>) {
+    constructor(readonly code: keyof BaseErrorCodes, errorCodes: ErrorCodes, ...placeholders: RestOrArray<string>) {
         super(`[${code}]: ${replacePlaceholders(errorCodes[code], ...normalizeArray(placeholders))}`);
     }
 
