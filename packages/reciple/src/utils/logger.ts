@@ -1,7 +1,7 @@
 import { IConfig } from '../classes/Config';
 import { Logger, LoggerLevel, path } from 'fallout-utility';
 import { ApplicationCommand, Collection } from 'discord.js';
-import { RecipleClient } from '@reciple/client';
+import { RecipleClient } from '../';
 import chalk from 'chalk';
 import { cwd } from './cli';
 

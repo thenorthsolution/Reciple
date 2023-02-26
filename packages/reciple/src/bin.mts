@@ -1,11 +1,12 @@
 #!/usr/bin/env node
 
-import { ContextMenuCommandBuilder, MessageCommandBuilder, SlashCommandBuilder, realVersion, RecipleClient, version } from '@reciple/client';
+import { ContextMenuCommandBuilder, MessageCommandBuilder, SlashCommandBuilder, realVersion, version } from '@reciple/client';
 import { getModules, requireTypescriptFile } from './utils/modules.js';
 import { createLogger, eventLogger } from './utils/logger.js';
 import { existsSync, mkdirSync, readdirSync } from 'fs';
 import { Config } from './classes/Config.js';
 import { flags, cwd } from './utils/cli.js';
+import { RecipleClient } from './index.js';
 import { path } from 'fallout-utility';
 import micromatch from 'micromatch';
 import prompts from 'prompts';
