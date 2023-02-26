@@ -5,10 +5,6 @@ on:
     paths: ['**/src/**']
     tags: ['**']
   workflow_dispatch:
-    inputs:
-      ref:
-        description: 'The branch, tag or SHA to checkout'
-        required: true
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
   cancel-in-progress: true
@@ -21,7 +17,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
         with:
-          ref: ${{ inputs.ref || '' }}
+          ref: ${{ github.ref_name || '' }}
 
       - name: Install node.js v16
         uses: actions/setup-node@v3
@@ -54,7 +50,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
         with:
-          ref: ${{ inputs.ref || '' }}
+          ref: ${{ github.ref_name || '' }}
 
       - name: Install node.js v16
         uses: actions/setup-node@v3
@@ -77,7 +73,7 @@ jobs:
         if: ${{ github.ref_type == 'tag' }}
         uses: ./packages/actions/src/formatTag
         with:
-          tag: ${{ inputs.ref || github.ref_name }}
+          tag: ${{ github.ref_name }}
 
       - name: Checkout docs repository
         uses: actions/checkout@v3
