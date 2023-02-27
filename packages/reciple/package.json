@@ -38,6 +38,7 @@
   ],
   "dependencies": {
     "@reciple/client": "^7.0.8",
+    "@weichwarenprojekt/ts-importer": "^0.1.5",
     "chalk": "4.1.2",
     "commander": "^10.0.0",
     "dotenv": "^16.0.3",
@@ -52,14 +53,13 @@
     "@types/micromatch": "^4.0.2",
     "@types/prompts": "^2.4.2",
     "@types/semver": "^7.3.13",
-    "discord.js": "^14.7.1",
-    "ts-interpreter.js": "^1.4.3"
+    "discord.js": "^14.7.1"
   },
   "peerDependencies": {
     "discord.js": "^14.7.1"
   },
   "optionalDependencies": {
-    "ts-interpreter.js": "^1.4.3"
+    "@weichwarenprojekt/ts-importer": "^0.1.5"
   },
   "gitHead": "c5620aa5f046aa426b832c052a4f933817270573"
 }

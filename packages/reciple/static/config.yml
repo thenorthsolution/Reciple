@@ -87,7 +87,11 @@ modules:
   disableModuleVersionCheck: false
   # Resolve files in modules folder with ".ts" file extension
   #   This feature is experimental
-  resolveTypescriptModules: false
+  typescriptModules:
+    enabled: false
+    compilerOptions:
+      target: ESNext
+      module: NodeNext
 
 # Discord.js client options
 client:

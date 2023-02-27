@@ -52,12 +52,12 @@ client.logger?.info(`Starting Reciple client v${realVersion} - ${new Date()}`);
 
 eventLogger(client);
 
-const moduleFilesFilter = (file: string) => file.endsWith('.js') || file.endsWith('.mjs') || file.endsWith('.cjs') || (flags.ts ? file.endsWith('.ts') : false);
+const moduleFilesFilter = (file: string) => file.endsWith('.js') || file.endsWith('.cjs') || file.endsWith('.mjs') || ((flags.ts || config.modules?.typescriptModules?.enabled) ? (file.endsWith('.ts') || file.endsWith('.cts') || file.endsWith('.mts')) : false);
 
 await client.modules.startModules({
     modules: await client.modules.resolveModuleFiles(await getModules(config.modules, (f) => moduleFilesFilter(f)), config.modules.disableModuleVersionCheck, async (filePath: string) => {
-        if (!filePath.endsWith('.ts')) return undefined;
-        return requireTypescriptFile(filePath);
+        if (!(filePath.endsWith('.ts') || filePath.endsWith('.cts') || filePath.endsWith('.mts'))) return undefined;
+        return requireTypescriptFile(filePath, config.modules?.typescriptModules?.compilerOptions);
     }),
     addToModulesCollection: true
 });
