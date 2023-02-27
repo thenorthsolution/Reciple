@@ -2,7 +2,7 @@ name: Documentation
 on:
   push:
     branches: ['main']
-    paths: ['**/src/**']
+    paths: ['**/src/**', '**package.json']
     tags: ['**']
   workflow_dispatch:
 concurrency:
