@@ -1,9 +1,10 @@
 import { existsSync, lstatSync, mkdirSync, readdirSync } from 'fs';
-import { Awaitable, path } from 'fallout-utility';
+import { Awaitable } from 'fallout-utility';
 import { IConfig } from '../classes/Config';
 import micromatch from 'micromatch';
 import { cwd } from './cli';
 import { TranspileOptions } from 'typescript';
+import path from 'path';
 
 export async function getModules(config: IConfig['modules'], filter?: (filename: string) => Awaitable<boolean>): Promise<string[]> {
     const modules: string[] = [];
@@ -12,8 +13,8 @@ export async function getModules(config: IConfig['modules'], filter?: (filename:
     for (const folder of config.modulesFolders) {
         const dir = path.isAbsolute(folder) ? folder : path.join(cwd, folder);
 
-        if (isDynamicPattern(dir)) {
-            let modulesFolders = await globby(dir, {
+        if (isDynamicPattern(folder, { cwd })) {
+            let modulesFolders = await globby(folder, {
                     cwd,
                     onlyDirectories: true,
                     absolute: true

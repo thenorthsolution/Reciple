@@ -1,6 +1,6 @@
 import { Command, program } from 'commander';
-import { path } from 'fallout-utility';
 import { readFileSync } from 'fs';
+import path from 'path';
 import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);

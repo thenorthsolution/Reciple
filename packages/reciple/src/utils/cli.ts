@@ -1,7 +1,7 @@
 import { realVersion } from '@reciple/client';
 import { Command } from 'commander';
-import { path } from 'fallout-utility';
 import { readFileSync } from 'fs';
+import path from 'path';
 
 const { version } = JSON.parse(readFileSync(path.join(__dirname, '../../package.json'), 'utf-8'));
 

@@ -8,7 +8,6 @@ import { CommandCooldownManager } from './managers/CommandCooldownManager';
 import { version } from '../utils/constants';
 import { CommandManager } from './managers/CommandManager';
 import { CommandHaltReason } from '../types/halt';
-import defaultsDeep from 'lodash.defaultsdeep';
 import { Logger } from 'fallout-utility';
 import { ModuleManager } from './managers/ModuleManager';
 import { CommandError } from './errors/CommandError';

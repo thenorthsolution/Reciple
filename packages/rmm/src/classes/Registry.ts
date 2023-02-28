@@ -1,4 +1,4 @@
-import { path } from 'fallout-utility';
+import path from 'path';
 import { rootDir } from '../index.js';
 import { FileReader } from './base/FileReader.js';
 import axios from 'axios';

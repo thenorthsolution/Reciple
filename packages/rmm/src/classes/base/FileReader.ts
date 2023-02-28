@@ -1,5 +1,5 @@
-import { path } from 'fallout-utility';
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs';
+import path from 'path';
 
 export class FileReader<T> {
     public data?: T;

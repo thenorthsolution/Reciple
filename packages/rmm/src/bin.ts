@@ -2,9 +2,9 @@
 
 import { existsSync, mkdirSync, readdirSync } from 'fs';
 import { Registry, cacheDir, cli, commandsDir, packageJson } from './index.js';
-import { path } from 'fallout-utility';
 import chalk from 'chalk';
 import { logger } from './utils/logger.js';
+import path from 'path';
 
 if (!existsSync(commandsDir)) mkdirSync(commandsDir, { recursive: true });
 if (!existsSync(cacheDir)) mkdirSync(commandsDir, { recursive: true });

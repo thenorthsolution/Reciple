@@ -1,13 +1,13 @@
 import { ApplicationCommandType, Awaitable, Collection, RestOrArray, normalizeArray } from 'discord.js';
 import { RecipleClient } from '../RecipleClient';
 import { RecipleModule, RecipleModuleScript } from '../RecipleModule';
-import { path } from 'fallout-utility';
 import semver from 'semver';
 import { TypedEmitter } from 'tiny-typed-emitter';
 import { inspect } from 'util';
 import { ModuleError } from '../errors/ModuleError';
 import { RecursiveDefault, recursiveDefaults } from '../../utils/functions';
 import { realVersion } from '../../utils/constants';
+import path from 'path';
 
 export interface ModuleManagerEvents {
     resolveModuleFileError: (file: string, error: Error) => Awaitable<void>;
@@ -149,7 +149,7 @@ export class ModuleManager extends TypedEmitter<ModuleManagerEvents> {
 
             try {
                 let resolveFile = fileResolver ? await Promise.resolve(fileResolver(filePath)) : undefined;
-                    resolveFile = typeof resolveFile === 'undefined' ? await import(filePath) : resolveFile;
+                    resolveFile = typeof resolveFile === 'undefined' ? await import((path.isAbsolute(filePath) ? 'file://' : '') + filePath) : resolveFile;
 
                 const script = recursiveDefaults<RecipleModuleScript|RecipleModule|undefined>(resolveFile);
 

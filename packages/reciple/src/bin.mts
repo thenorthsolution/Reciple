@@ -7,10 +7,10 @@ import { existsSync, mkdirSync, readdirSync } from 'fs';
 import { Config } from './classes/Config.js';
 import { flags, cwd } from './utils/cli.js';
 import { RecipleClient } from './index.js';
-import { path } from 'fallout-utility';
 import micromatch from 'micromatch';
 import prompts from 'prompts';
 import semver from 'semver';
+import path from 'path';
 
 const allowedFiles = ['node_modules', 'reciple.yml', 'package.json', '.*'];
 const configPath = flags.config

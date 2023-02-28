@@ -1,11 +1,12 @@
 import { RecipleConfigOptions, version } from '@reciple/client';
-import { path, replaceAll } from 'fallout-utility';
+import { replaceAll } from 'fallout-utility';
 import { existsSync, readFileSync, writeFileSync } from 'fs';
 import { ClientOptions } from 'discord.js';
 import yml from 'yaml';
 import dotenv from 'dotenv';
 import { cwd, flags } from '../utils/cli';
 import { TranspileOptions } from 'typescript';
+import path from 'path';
 
 dotenv.config({
     path: flags.env ? path.resolve(flags.env) : path.join(cwd, '.env')
