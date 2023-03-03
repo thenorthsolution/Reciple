@@ -2,12 +2,12 @@ name: Documentation
 on:
   push:
     branches: ['main']
-    tags: ['**']
     paths:
       - '**/reciple/src/**'
       - '**/client/src/**'
       - '**/reciple/package.json'
       - '**/client/package.json'
+    tags: ['**']
   workflow_dispatch:
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
