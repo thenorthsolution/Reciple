@@ -1,8 +1,14 @@
+import { RecipleClient } from 'reciple';
+
 export default {
     versions: [`^7`],
     commands: [],
-    onStart() {
-        console.log(`Test`);
+    onStart(client: RecipleClient) {
+        client.logger?.log(`Started Typescript module`);
+        return true;
+    },
+    onLoad(client: RecipleClient) {
+        client.logger?.log(`Loaded Typescript module`);
         return true;
     }
 };
