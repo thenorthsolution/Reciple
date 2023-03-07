@@ -16,9 +16,11 @@ const { version } = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 
 console.log(`${chalk.bold.cyan(`Welcome to Reciple!`)}`);
 console.log(`${chalk.gray(`create-reciple version `+ chalk.green(version))}`);
 
+const isExplicitDir: boolean = !!process.argv[2];
+
 let cwd = path.resolve(process.argv[2] || '.');
 
-if (cwd === process.cwd()) {
+if (cwd === process.cwd() && !isExplicitDir) {
     const opts = await prompts({
         name: 'cwd',
         type: 'text',
