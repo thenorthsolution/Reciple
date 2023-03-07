@@ -51,7 +51,7 @@ export class Config {
     public async parseConfig(): Promise<this> {
         if (!existsSync(this.configPath)) {
             let configYaml = replaceAll(Config.defaultConfigYaml(), 'VERSION', version);
-            let configData = yml.parse(configYaml) as IConfig;
+            const configData = yml.parse(configYaml) as IConfig;
 
             if (configData.token === 'TOKEN') {
                 configData.token = flags.token || await this.askToken() || 'TOKEN';
@@ -87,7 +87,7 @@ export class Config {
     }
 
     public parseToken(): string|null {
-        let token = flags.token || this.config?.token || null;
+        const token = flags.token || this.config?.token || null;
         if (!token) return token;
 
         const env = String(token).split(':');
