@@ -3,7 +3,7 @@ import { Logger, LoggerLevel } from 'fallout-utility';
 import { ApplicationCommand, Collection } from 'discord.js';
 import { RecipleClient } from '../';
 import chalk from 'chalk';
-import { cwd } from './cli';
+import { cwd, flags } from './cli';
 import path from 'path';
 
 export function formatLogMessage(message: string, logger: Logger, config: IConfig['logger'], level: LoggerLevel): string {
@@ -27,7 +27,7 @@ export function formatLogMessage(message: string, logger: Logger, config: IConfi
 
 export function createLogger(config: IConfig['logger']): Logger {
     const logger = new Logger({
-        enableDebugmode: config.debugmode === true,
+        enableDebugmode: flags.debugmode || config.debugmode === true,
         forceEmitLogEvents: true,
         name: 'Client',
         formatMessageLines: {
