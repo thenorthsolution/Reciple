@@ -17,18 +17,4 @@
 
 ## About
 
-`create-reciple` is a tool used to easily create Reciple projects.
-
-## Installation
-
-```bash
-npm create reciple@latest
-yarn create reciple@latest
-pnpm create reciple@latest
-```
-
-## Templates
-- Javascript (CommonJS)
-- Javascript (ES Modules)
-- Typescript (CommonJS)
-- Typescript (ES Modules)
+`@reciple/actions` is used by our github workflow to generate docs.json
