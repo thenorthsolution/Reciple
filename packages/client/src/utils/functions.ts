@@ -36,5 +36,5 @@ export function recursiveDefaults<T = unknown>(data: RecursiveDefault<T>|T): T|u
 
     if (!isDefaults(data)) return data;
 
-    return recursiveDefaults(data?.default!);
+    return recursiveDefaults(data.default!);
 }

@@ -13,7 +13,7 @@ export enum ErrorType {
     CommandError,
 }
 
-export abstract class BaseError<ErrorCodes extends BaseErrorCodes = {}> extends Error {
+export abstract class BaseError<ErrorCodes extends BaseErrorCodes = BaseErrorCodes> extends Error {
     abstract readonly errorType: ErrorType;
 
     constructor(readonly code: keyof BaseErrorCodes, errorCodes: ErrorCodes, ...placeholders: RestOrArray<string>) {
