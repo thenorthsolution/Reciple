@@ -24,7 +24,7 @@ if (readdirSync(cwd).filter(f => !micromatch.isMatch(f, allowedFiles)).length &&
     const confirm = await prompts(
         {
             initial: false,
-            message: `Would you like to create Reciple instance ${cwd !== process.cwd() ? 'in your chosen directory': 'here'}?`,
+            message: `Would you like to initialize your Reciple app ${cwd !== process.cwd() ? 'in your chosen directory': 'here'}?`,
             name: 'confirm',
             type: 'confirm'
         }
