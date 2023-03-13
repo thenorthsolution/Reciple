@@ -8,10 +8,6 @@ import { cwd, flags } from '../utils/cli';
 import { TranspileOptions } from 'typescript';
 import path from 'path';
 
-dotenv.config({
-    path: flags.env ? path.resolve(flags.env) : path.join(cwd, '.env')
-});
-
 export interface IConfig extends RecipleConfigOptions {
     logger: {
         enabled: boolean;
@@ -87,6 +83,10 @@ export class Config {
     }
 
     public parseToken(): string|null {
+        dotenv.config({
+            path: flags.env ? path.resolve(flags.env) : path.join(cwd, '.env')
+        });
+
         const token = flags.token || this.config?.token || null;
         if (!token) return token;
 
