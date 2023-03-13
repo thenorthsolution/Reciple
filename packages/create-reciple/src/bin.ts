@@ -18,7 +18,11 @@ let cwd = path.resolve(process.argv[2] || '.');
 intro(`${chalk.bold.cyan(`Welcome to Reciple!`)}`);
 
 if (cwd === process.cwd() && !isExplicitDir) {
-    const newCwd = await text({ message: 'Set your project directory (Leave empty to use current dir)' });
+    const newCwd = await text({
+        message: 'Set your project directory (Leave empty to use current dir)',
+        placeholder: 'Project directory'
+    });
+
     if (isCancel(newCwd)) { cancel('Operation cancelled'); exit(1); }
     if (newCwd) cwd = newCwd;
 }
@@ -54,25 +58,25 @@ const setup = await group({
         message: 'Select your preferred package manager',
         options: [
             {
-                name: 'None',
+                label: 'None',
                 hint: 'Setup package manager later',
                 // @ts-expect-error cries
-                value: null
+                value: ''
             },
             {
-                name: 'npm',
+                label: 'npm',
                 hint: 'Uses npm as package manager',
                 // @ts-expect-error cries
                 value: 'npm'
             },
             {
-                name: 'yarn',
+                label: 'yarn',
                 hint: 'Uses yarn as package manager',
                 // @ts-expect-error cries
                 value: 'yarn'
             },
             {
-                name: 'pnpm',
+                label: 'pnpm',
                 hint: 'Uses pnpm as package manager',
                 // @ts-expect-error cries
                 value: 'pnpm'
@@ -87,4 +91,4 @@ const setup = await group({
 
 outro('Creating Reciple app...');
 
-create(cwd, path.join(root, setup.template), setup.esm, setup.packageManager);
+create(cwd, path.join(root, setup.template), setup.esm, setup.packageManager || null);
