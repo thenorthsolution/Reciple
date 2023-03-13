@@ -39,8 +39,7 @@ if (fs.existsSync(cwd)) {
             initialValue: false
         });
 
-        if (isCancel(acceptDir)) { cancel('Operation cancelled'); exit(1); }
-        if (!acceptDir) exit(1);
+        if (!acceptDir || isCancel(acceptDir)) { cancel('Operation cancelled'); exit(1); }
     }
 }
 
@@ -58,12 +57,6 @@ const setup = await group({
         message: 'Select your preferred package manager',
         options: [
             {
-                label: 'None',
-                hint: 'Setup package manager later',
-                // @ts-expect-error cries
-                value: ''
-            },
-            {
                 label: 'npm',
                 hint: 'Uses npm as package manager',
                 // @ts-expect-error cries
@@ -80,6 +73,12 @@ const setup = await group({
                 hint: 'Uses pnpm as package manager',
                 // @ts-expect-error cries
                 value: 'pnpm'
+            },
+            {
+                label: 'None',
+                hint: 'Setup package manager later',
+                // @ts-expect-error cries
+                value: null
             }
         ]
     }),
@@ -89,6 +88,6 @@ const setup = await group({
     })
 }, { onCancel: () => { cancel('Operation cancelled'); exit(1); } });
 
-outro('Creating Reciple app...');
+outro('Setup done!');
 
-create(cwd, path.join(root, setup.template), setup.esm, setup.packageManager || null);
+create(cwd, path.join(root, setup.template), setup.esm, setup.packageManager);

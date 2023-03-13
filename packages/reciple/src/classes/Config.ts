@@ -56,11 +56,9 @@ export class Config {
 
             writeFileSync(this.configPath, configYaml, 'utf-8');
             this.config = configData;
-
-            return this;
+        } else {
+            this.config = yml.parse(readFileSync(this.configPath, 'utf-8'));
         }
-
-        this.config = yml.parse(readFileSync(this.configPath, 'utf-8'));
 
         return this;
     }
@@ -83,15 +81,16 @@ export class Config {
     }
 
     public parseToken(): string|null {
-        dotenv.config({
-            path: flags.env ? path.resolve(flags.env) : path.join(cwd, '.env')
-        });
-
         const token = flags.token || this.config?.token || null;
         if (!token) return token;
 
         const env = String(token).split(':');
         if (env.length !== 2 || env[0].toLowerCase() !== 'env') return token;
+
+        dotenv.config({
+            path: flags.env ? path.resolve(flags.env) : path.join(cwd, '.env'),
+            override: true
+        });
 
         return process.env[env[1]] ?? null;
     }
