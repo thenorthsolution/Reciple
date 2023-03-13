@@ -24,12 +24,13 @@
     "README.md"
   ],
   "dependencies": {
+    "@clack/prompts": "^0.6.3",
     "chalk": "^5.2.0",
     "prompts": "^2.4.2"
   },
   "devDependencies": {
     "@types/prompts": "^2.4.2",
-    "discord.js": "^14.7.1",
+    "discord.js": "^14.8.0",
     "reciple": "^7.1.3"
   }
 }

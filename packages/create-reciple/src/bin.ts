@@ -2,32 +2,25 @@
 import chalk from 'chalk';
 import path from 'path';
 import fs from 'fs';
-import prompts from 'prompts';
 import { exit } from 'process';
 import { fileURLToPath } from 'url';
 import { create } from './create.js';
+import { cancel, confirm, group, intro, isCancel, outro, select, text } from '@clack/prompts';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const root = path.join(__dirname, '../');
 
-const { version } = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf-8'));
-
-console.log(`${chalk.bold.cyan(`Welcome to Reciple!`)}`);
-console.log(`${chalk.gray(`create-reciple version `+ chalk.green(version))}`);
-
 const isExplicitDir: boolean = !!process.argv[2];
 
 let cwd = path.resolve(process.argv[2] || '.');
 
-if (cwd === process.cwd() && !isExplicitDir) {
-    const opts = await prompts({
-        name: 'cwd',
-        type: 'text',
-        message: 'Set your project directory (Leave empty to use current dir)'
-    });
+intro(`${chalk.bold.cyan(`Welcome to Reciple!`)}`);
 
-    if (opts.cwd) cwd = opts.cwd;
+if (cwd === process.cwd() && !isExplicitDir) {
+    const newCwd = await text({ message: 'Set your project directory (Leave empty to use current dir)' });
+    if (isCancel(newCwd)) { cancel('Operation cancelled'); exit(1); }
+    if (newCwd) cwd = newCwd;
 }
 
 if (fs.existsSync(cwd)) {
@@ -37,60 +30,61 @@ if (fs.existsSync(cwd)) {
     }
 
     if (fs.readdirSync(cwd).length > 0) {
-        const opts = await prompts({
-                name: 'confirm',
-                type: 'confirm',
-                message: 'Directory is not empty, would you like to continue?',
-                initial: false
+        const acceptDir = await confirm({
+            message: 'Directory is not empty, would you like to continue?',
+            initialValue: false
         });
 
-        if (!opts.confirm) exit(1);
+        if (isCancel(acceptDir)) { cancel('Operation cancelled'); exit(1); }
+        if (!acceptDir) exit(1);
     }
 }
 
-const setup = await prompts([
-    {
-        name: 'template',
-        type: 'select',
+const setup = await group({
+    template: () => select({
         message: 'Which language would you like to use?',
-        choices: (JSON.parse(fs.readFileSync(path.join(root, 'templates.json'), 'utf-8')) as { name: string; description: string; dir: string }[])
-            .map(m => ({ title: m.name, description: m.description, value: m.dir })),
-    },
-    {
-        name: 'packageManager',
-        type: 'select',
+        // @ts-expect-error Idk why
+        options: (JSON.parse(fs.readFileSync(path.join(root, 'templates.json'), 'utf-8')) as { name: string; description: string; dir: string }[]).map(m => ({
+            label: m.name,
+            value: m.dir,
+            hint: m.description
+        }))
+    }),
+    packageManager: () => select({
         message: 'Select your preferred package manager',
-        choices: [
+        options: [
             {
-                title: 'npm',
-                description: 'Uses npm as package manager',
+                name: 'None',
+                hint: 'Setup package manager later',
+                // @ts-expect-error cries
+                value: null
+            },
+            {
+                name: 'npm',
+                hint: 'Uses npm as package manager',
+                // @ts-expect-error cries
                 value: 'npm'
             },
             {
-                title: 'yarn',
-                description: 'Uses yarn as package manager',
+                name: 'yarn',
+                hint: 'Uses yarn as package manager',
+                // @ts-expect-error cries
                 value: 'yarn'
             },
             {
-                title: 'pnpm',
-                description: 'Uses pnpm as package manager',
+                name: 'pnpm',
+                hint: 'Uses pnpm as package manager',
+                // @ts-expect-error cries
                 value: 'pnpm'
-            },
-            {
-                title: 'None',
-                description: 'Setup package manager later',
-                value: null,
-                selected: true
             }
         ]
-    },
-    {
-        name: 'esm',
-        type: 'confirm',
+    }),
+    esm: () => confirm({
         message: 'Would you like to use ES Modules? (ES modules uses import instead of require)',
-        initial: false
-    },
-], { onCancel: () => exit() });
+        initialValue: false
+    })
+}, { onCancel: () => { cancel('Operation cancelled'); exit(1); } });
 
+outro('Creating Reciple app...');
 
 create(cwd, path.join(root, setup.template), setup.esm, setup.packageManager);
