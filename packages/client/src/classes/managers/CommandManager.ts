@@ -85,8 +85,6 @@ export class CommandManager {
     }
 
     public async registerApplicationCommands(options?: { commands: Omit<RecipleConfigOptions['commands'], 'messageCommand'> } & Pick<RecipleConfigOptions, 'applicationCommandRegister'>): Promise<void> {
-        if (options?.applicationCommandRegister?.enabled === false) return;
-
         const commandConfig = {
             contextMenuCommand: {
                 ...this.client.config.commands?.contextMenuCommand,
@@ -105,6 +103,8 @@ export class CommandManager {
                 ...options?.applicationCommandRegister
             }
         };
+
+        if (commandConfig.applicationRegister?.enabled === false) return;
 
         const globalCommands: RESTPostAPIApplicationCommandsJSONBody[] = [];
         const guildCommands: Collection<string, RESTPostAPIApplicationCommandsJSONBody[]> = new Collection();

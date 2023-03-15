@@ -51,6 +51,8 @@ commands:
 
 # Application commands register config
 applicationCommandRegister:
+  # If false, any application commands will not be registered
+  enabled: true
   # Wether allow all application commands to be registered globally
   #   This ignores their specific configs
   allowRegisterGlobally: true
