@@ -32,6 +32,13 @@ commands:
       registerToGuilds: []
     # If enabled, the client will accept replied interactions of this type
     acceptRepliedInteractions: false
+  additionalApplicationCommands:
+    # Command register config
+    registerCommands:
+      # Allow commands to be registered globally
+      registerGlobally: true
+      # Allow commands to be registered a given guilds/servers
+      registerToGuilds: []
   messageCommand:
     # If false, the client will ignore this type of command when executed
     enabled: true
@@ -41,13 +48,6 @@ commands:
     commandArgumentSeparator: ' '
     # Command prefix
     prefix: '!'
-  additionalApplicationCommands:
-    # Command register config
-    registerCommands:
-      # Allow commands to be registered globally
-      registerGlobally: true
-      # Allow commands to be registered a given guilds/servers
-      registerToGuilds: []
 
 # Application commands register config
 applicationCommandRegister:
