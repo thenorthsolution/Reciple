@@ -59,6 +59,8 @@ applicationCommandRegister:
   allowRegisterOnGuilds: true
   # Register empty command list
   registerEmptyCommands: true
+  # Register all application commands to guilds/servers
+  registerToGuilds: []
 
 # Logger config
 logger:
