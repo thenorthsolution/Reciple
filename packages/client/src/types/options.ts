@@ -15,6 +15,8 @@ export interface RecipleConfigOptions {
         additionalApplicationCommands?: Pick<Partial<RecipleCommandsInteractionBasedConfigOptions>, 'registerCommands'>;
     };
     applicationCommandRegister?: {
+        enabled?: boolean;
+        registerToGuilds?: string[];
         allowRegisterGlobally?: boolean;
         allowRegisterOnGuilds?: boolean;
         registerEmptyCommands?: boolean;
