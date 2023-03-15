@@ -58,7 +58,7 @@ applicationCommandRegister:
   allowRegisterGlobally: true
   # Wether allow all application commands to be registered to guilds
   #   This ignores their specific configs
-  allowRegisterOnGuilds: true
+  allowRegisterToGuilds: true
   # Register empty command list
   registerEmptyCommands: true
   # Register all application commands to guilds/servers
