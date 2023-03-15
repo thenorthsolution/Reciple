@@ -18,7 +18,11 @@ export interface RecipleConfigOptions {
         enabled?: boolean;
         registerToGuilds?: string[];
         allowRegisterGlobally?: boolean;
+        /**
+         * @deprecated This sounds wrong so deprecated. use **allowRegisterToGuilds** property instead
+         */
         allowRegisterOnGuilds?: boolean;
+        allowRegisterToGuilds?: boolean;
         registerEmptyCommands?: boolean;
     };
 }

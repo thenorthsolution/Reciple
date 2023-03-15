@@ -135,7 +135,7 @@ export class CommandManager {
                 .catch(err => this.client._throwError(err));
         }
 
-        if (commandConfig.applicationRegister.allowRegisterGlobally === true) {
+        if (commandConfig.applicationRegister.allowRegisterToGuilds || commandConfig.applicationRegister.allowRegisterOnGuilds) {
             for (const guildBasedCommands of guildCommands.map((commands, guildId) => ({ guildId, commands }))) {
                 await this.client.application?.commands.set(guildBasedCommands.commands, guildBasedCommands.guildId)
                     .then(commands => this.client.emit('recipleRegisterApplicationCommands', commands, guildBasedCommands.guildId))
