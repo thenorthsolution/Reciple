@@ -39,10 +39,3 @@ export async function getModules(config: IConfig['modules'], filter?: (filename:
 
     return modules;
 }
-
-export async function requireTypescriptFile(file: string, compilerOptions?: Partial<TranspileOptions['compilerOptions']>): Promise<any> {
-    const tsLoader = await import('@weichwarenprojekt/ts-importer').catch(() => null);
-    if (!tsLoader) return null;
-
-    return tsLoader.loadModule(file, { compilerOptions });
-}

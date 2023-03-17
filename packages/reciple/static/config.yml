@@ -89,13 +89,6 @@ modules:
   exclude: []
   # If false, the client will still load unsupported modules
   disableModuleVersionCheck: false
-  # Resolve files in modules folder with ".ts" file extension
-  #   This feature is experimental
-  typescriptModules:
-    enabled: false
-    compilerOptions:
-      target: ESNext
-      module: NodeNext
 
 # Discord.js client options
 client:

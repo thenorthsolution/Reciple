@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import { ContextMenuCommandBuilder, MessageCommandBuilder, SlashCommandBuilder, realVersion, version } from '@reciple/client';
-import { getModules, requireTypescriptFile } from './utils/modules.js';
+import { getModules } from './utils/modules.js';
 import { createLogger, eventLogger } from './utils/logger.js';
 import { existsSync, mkdirSync, readdirSync } from 'fs';
 import { Config } from './classes/Config.js';
@@ -52,13 +52,10 @@ client.logger?.info(`Starting Reciple client v${realVersion} - ${new Date()}`);
 
 eventLogger(client);
 
-const moduleFilesFilter = (file: string) => file.endsWith('.js') || file.endsWith('.cjs') || file.endsWith('.mjs') || ((flags.ts || config.modules?.typescriptModules?.enabled) ? (file.endsWith('.ts') || file.endsWith('.cts') || file.endsWith('.mts')) : false);
+const moduleFilesFilter = (file: string) => file.endsWith('.js') || file.endsWith('.cjs') || file.endsWith('.mjs');
 
 await client.modules.startModules({
-    modules: await client.modules.resolveModuleFiles(await getModules(config.modules, (f) => moduleFilesFilter(f)), config.modules.disableModuleVersionCheck, async (filePath: string) => {
-        if (!(filePath.endsWith('.ts') || filePath.endsWith('.cts') || filePath.endsWith('.mts'))) return undefined;
-        return requireTypescriptFile(filePath, config.modules?.typescriptModules?.compilerOptions);
-    }),
+    modules: await client.modules.resolveModuleFiles(await getModules(config.modules, (f) => moduleFilesFilter(f)), config.modules.disableModuleVersionCheck),
     addToModulesCollection: true
 });
 
