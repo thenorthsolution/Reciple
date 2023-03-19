@@ -114,19 +114,35 @@ export class CommandManager {
         if (commandConfig.additionalApplicationCommands.registerCommands?.registerGlobally !== false) globalCommands.push(...this._parseApplicationCommands(this.additionalApplicationCommands));
 
         commandConfig.contextMenuCommand.registerCommands?.registerToGuilds.forEach(guildId => {
-            guildCommands.set(guildId, [...(guildCommands.get(guildId) ?? []), ...this._parseApplicationCommands(this.contextMenuCommands.toJSON())]);
+            const data = guildCommands.get(guildId) ?? guildCommands.set(guildId, []).get(guildId);
+
+            data?.push(...this._parseApplicationCommands(this.contextMenuCommands.toJSON()));
         });
 
         commandConfig.slashCommand.registerCommands?.registerToGuilds.forEach(guildId => {
-            guildCommands.set(guildId, [...(guildCommands.get(guildId) ?? []), ...this._parseApplicationCommands(this.slashCommands.toJSON())]);
+            const data = guildCommands.get(guildId) ?? guildCommands.set(guildId, []).get(guildId);
+
+            data?.push(...this._parseApplicationCommands(this.slashCommands.toJSON()));
         });
 
         commandConfig.additionalApplicationCommands.registerCommands?.registerToGuilds.forEach(guildId => {
-            guildCommands.set(guildId, [...(guildCommands.get(guildId) ?? []), ...this._parseApplicationCommands(this.additionalApplicationCommands)]);
+            const data = guildCommands.get(guildId) ?? guildCommands.set(guildId, []).get(guildId);
+
+            data?.push(...this._parseApplicationCommands(this.additionalApplicationCommands));
         });
 
         commandConfig.applicationRegister.registerToGuilds?.forEach(guildId => {
-            guildCommands.set(guildId, [...(guildCommands.get(guildId) ?? []), ...this._parseApplicationCommands(this.additionalApplicationCommands)]);
+            const data = guildCommands.get(guildId) ?? guildCommands.set(guildId, []).get(guildId);
+
+            let commands = [...this._parseApplicationCommands([
+                    ...this.contextMenuCommands.toJSON(),
+                    ...this.slashCommands.toJSON(),
+                    ...this.additionalApplicationCommands
+                ])];
+
+                commands = commands.filter(c => !data?.some(d => d.name === c.name));
+
+            data?.push(...commands);
         });
 
         if (commandConfig.applicationRegister.allowRegisterGlobally !== false) {

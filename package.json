@@ -9,11 +9,12 @@
   "scripts": {
     "bootstrap": "npx lerna bootstrap",
     "clean": "npx rimraf ./packages/bin ./packages/dist",
-    "build": "npx lerna run build --no-private && npm run bootstrap",
+    "build": "npx lerna run build --no-private",
     "watch": "npx tsc --watch --noEmit",
     "test": "node ./packages/reciple/bin/bin.mjs ./test -t env:TOKEN",
     "publish:dev": "npx lerna publish prerelease --no-private",
-    "docs": "npx lerna run docs --no-private"
+    "docs": "npx lerna run docs --no-private",
+    "postinstall": "npm run bootstrap"
   },
   "devDependencies": {
     "@discordjs/docgen": "^0.12.1",
