@@ -35,7 +35,7 @@
     "README.md"
   ],
   "dependencies": {
-    "fallout-utility": "^2.2.1",
+    "fallout-utility": "^2.3.0",
     "lodash.defaultsdeep": "^4.6.1",
     "semver": "^7.3.8",
     "tiny-typed-emitter": "^2.1.0",
