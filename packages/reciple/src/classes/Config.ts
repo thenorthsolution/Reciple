@@ -7,6 +7,7 @@ import dotenv from 'dotenv';
 import { cwd, flags } from '../utils/cli';
 import { TranspileOptions } from 'typescript';
 import path from 'path';
+import { parseEnvString } from '../utils/parseEnvString';
 
 export interface IConfig extends RecipleConfigOptions {
     logger: {
@@ -77,15 +78,7 @@ export class Config {
         const token = flags.token || this.config?.token || null;
         if (!token) return token;
 
-        const env = String(token).split(':');
-        if (env.length !== 2 || env[0].toLowerCase() !== 'env') return token;
-
-        dotenv.config({
-            path: flags.env ? path.resolve(flags.env) : path.join(cwd, '.env'),
-            override: true
-        });
-
-        return process.env[env[1]] ?? null;
+        return parseEnvString(token, flags.env ? path.resolve(flags.env) : path.join(cwd, '.env')) || null;
     }
 
     public static defaultConfig(): IConfig {

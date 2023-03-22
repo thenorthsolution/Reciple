@@ -22,7 +22,11 @@ export function formatLogMessage(message: string, logger: Logger, config: IConfi
         }
     };
 
-    return `[${color(new Date().toLocaleTimeString(undefined, { hour12: false }))}][${color((logger.name ? logger.name + '/' : '') + LoggerLevel[level])}] ${color(message)}`;
+    return `[${
+                color(new Date().toLocaleTimeString(undefined, { hour12: false }))
+            }][${
+                color((!flags.shardmode ? '' : process.pid + '/') + (logger.name ? logger.name + '/' : '') + LoggerLevel[level])
+            }] ${color(message)}`;
 }
 
 export function createLogger(config: IConfig['logger']): Logger {
@@ -38,7 +42,7 @@ export function createLogger(config: IConfig['logger']): Logger {
         }
     });
 
-    if (config.logToFile.enabled) logger.logToFile(path.join(cwd, config.logToFile.logsFolder, 'latest.log'));
+    if (config.logToFile.enabled) logger.logToFile(path.join(cwd, config.logToFile.logsFolder, !flags.shardmode ? 'latest.log' : `${process.pid}.log`));
     return logger;
 }
 

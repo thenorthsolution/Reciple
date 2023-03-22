@@ -3,11 +3,11 @@ import { Command } from 'commander';
 import { readFileSync } from 'fs';
 import path from 'path';
 
-const { version } = JSON.parse(readFileSync(path.join(__dirname, '../../package.json'), 'utf-8'));
+const { version, description } = JSON.parse(readFileSync(path.join(__dirname, '../../package.json'), 'utf-8'));
 
 export const command = new Command()
     .name('reciple')
-    .description('Reciple.js - Discord.js handler cli')
+    .description(description)
     .version(`Reciple CLI: ${version}\nReciple Client: ${realVersion}`, '-v, --version')
     .argument('[cwd]', 'Change the current working directory')
     .option('-t, --token <token>', 'Replace used bot token')
@@ -15,7 +15,7 @@ export const command = new Command()
     .option('-D, --debugmode', 'Enable debug mode')
     .option('-y, --yes', 'Agree to all Reciple confirmation prompts')
     .option('--env', '.env file location')
-    .option('--ts', 'Resolve Typescript modules (requires: ts-interpreter.js)')
+    .option('--shardmode', 'Modifies some functionalities to support sharding')
     .allowUnknownOption(true)
     .parse();
 
