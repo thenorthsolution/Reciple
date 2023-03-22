@@ -1,5 +1,6 @@
 {
   "name": "@reciple/test",
+  "type": "module",
   "private": true,
   "dependencies": {
     "discord.js": "^14.8.0",

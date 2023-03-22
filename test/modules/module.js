@@ -1,5 +1,5 @@
-const { CommandHaltReason, ContextMenuCommandBuilder, RecipleClient, version } = require('reciple');
-const { ApplicationCommandType } = require('discord.js');
+import { CommandHaltReason, ContextMenuCommandBuilder, RecipleClient, version } from 'reciple';
+import { ApplicationCommandType } from 'discord.js';
 
 class Module {
     versions = `^${version}`;
@@ -88,7 +88,7 @@ class Module {
     }
 }
 
-module.exports.default = {
+export default {
     default: {
         default: {
             default: {
