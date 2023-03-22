@@ -9,11 +9,11 @@
   "scripts": {
     "bootstrap": "npx lerna bootstrap",
     "clean": "npx rimraf ./packages/bin ./packages/dist ./node_modules/.bin",
-    "build": "npx lerna run build --no-private",
+    "build": "npx lerna run build",
     "watch": "npx tsc --watch --noEmit",
-    "test": "node ./packages/reciple/bin/bin.mjs ./test -t env:TOKEN",
-    "publish:dev": "npx lerna publish prerelease --no-private",
-    "docs": "npx lerna run docs --no-private",
+    "test": "npx lerna run test",
+    "publish:dev": "npx lerna publish prerelease",
+    "docs": "npx lerna run docs",
     "postinstall": "npm run bootstrap"
   },
   "devDependencies": {

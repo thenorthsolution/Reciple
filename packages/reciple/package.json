@@ -1,6 +1,6 @@
 {
   "name": "reciple",
-  "description": "Reciple is a Discord.js handler",
+  "description": "Reciple is a Discord.js bot framework",
   "homepage": "https://reciple.js.org/docs/reciple",
   "license": "GPL-3.0",
   "version": "7.1.7",
