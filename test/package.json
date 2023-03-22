@@ -7,6 +7,6 @@
   },
   "dependencies": {
     "discord.js": "^14.8.0",
-    "reciple": "^7.0.0-dev.3"
+    "reciple": "^7.1.8"
   }
 }
