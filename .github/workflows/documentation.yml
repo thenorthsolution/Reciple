@@ -7,7 +7,7 @@ on:
       - '**/client/src/**'
       - '**/reciple/package.json'
       - '**/client/package.json'
-    tags: ['**']
+    tags: ['reciple@*', '@reciple/client@*']
   workflow_dispatch:
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
