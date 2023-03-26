@@ -18,9 +18,9 @@
   },
   "devDependencies": {
     "@discordjs/docgen": "^0.12.1",
-    "@types/node": "^18.15.0",
-    "lerna": "^6.5.1",
-    "rimraf": "^4.4.0",
+    "@types/node": "^18.15.10",
+    "lerna": "^6.6.1",
+    "rimraf": "^4.4.1",
     "ts-mixer": "^6.0.3",
     "typescript": "^5.0.2"
   }
