@@ -53,6 +53,10 @@ const setup = await group({
             hint: m.description
         }))
     }),
+    esm: () => confirm({
+        message: 'Would you like to use ES Modules? (ES modules uses import instead of require)',
+        initialValue: false
+    }),
     packageManager: () => select({
         message: 'Select your preferred package manager',
         options: [
@@ -82,10 +86,6 @@ const setup = await group({
             }
         ]
     }),
-    esm: () => confirm({
-        message: 'Would you like to use ES Modules? (ES modules uses import instead of require)',
-        initialValue: false
-    })
 }, { onCancel: () => { cancel('Operation cancelled'); exit(1); } });
 
 outro('Setup done!');

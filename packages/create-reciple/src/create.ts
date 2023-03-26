@@ -7,6 +7,15 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const root = path.join(__dirname, '../');
 
+const { devDependencies } = JSON.parse(readFileSync(path.join(root, 'package.json'), 'utf-8'));
+
+const packages = {
+    'TYPESCRIPT': '^5.0.2',
+    'RIMRAF': '^4.4.1',
+    'RECIPLE': devDependencies.reciple,
+    'DISCORDJS': devDependencies['discord.js']
+};
+
 export async function create(cwd: string, templateDir: string, esm: boolean, pm?: 'npm'|'yarn'|'pnpm'): Promise<void> {
     if (esm) templateDir = templateDir + `-esm`;
     if (!existsSync(templateDir)) return;
@@ -19,12 +28,11 @@ export async function create(cwd: string, templateDir: string, esm: boolean, pm?
         copyFile(path.join(root, 'assets'), cwd, f => f.replace('dot.', '.'));
     }
 
-    const { devDependencies } = JSON.parse(readFileSync(path.join(root, 'package.json'), 'utf-8'));
-
     let packageJSON = readFileSync(path.join(cwd, 'package.json'), 'utf-8');
 
-    packageJSON = packageJSON.replace('RECIPLE', devDependencies.reciple);
-    packageJSON = packageJSON.replace('DISCORDJS', devDependencies['discord.js']);
+    for (const pkg of (Object.keys(packages) as (keyof typeof packages)[])) {
+        packageJSON = packageJSON.replace(pkg, packages[pkg]);
+    }
 
     writeFileSync(path.join(cwd, 'package.json'), packageJSON);
 
