@@ -14,7 +14,7 @@ export const command = new Command()
     .option('-c, --config <dir>', 'Change path to config file')
     .option('-D, --debugmode', 'Enable debug mode')
     .option('-y, --yes', 'Agree to all Reciple confirmation prompts')
-    .option('--env', '.env file location')
+    .option('--env <file>', '.env file location')
     .option('--shardmode', 'Modifies some functionalities to support sharding')
     .allowUnknownOption(true)
     .parse();
