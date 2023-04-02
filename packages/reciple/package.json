@@ -3,7 +3,7 @@
   "description": "Reciple is a Discord.js bot framework",
   "homepage": "https://reciple.js.org/docs/reciple",
   "license": "GPL-3.0",
-  "version": "7.1.9",
+  "version": "7.1.10",
   "main": "./bin/index.js",
   "module": "./bin/esm.mjs",
   "types": "./bin/index.d.ts",
