@@ -28,13 +28,13 @@ export type MessageCommandResovable = MessageCommandBuilder|MessageCommandData;
 
 export interface MessageCommandData extends BaseCommandBuilderData, BaseCommandData {
     commandType: CommandType.MessageCommand;
-    aliases: string[];
+    aliases?: string[];
     halt?: MessageCommandHaltFunction;
     execute?: MessageCommandExecuteFunction;
-    validateOptions: boolean;
-    dmPermission: boolean;
-    userBotPermission: boolean;
-    options: MessageCommandOptionResolvable[];
+    validateOptions?: boolean;
+    dmPermission?: boolean;
+    userBotPermission?: boolean;
+    options?: MessageCommandOptionResolvable[];
 }
 
 export interface MessageCommandBuilder extends BaseCommandBuilder {
@@ -158,6 +158,7 @@ export class MessageCommandBuilder extends BaseCommandBuilder implements Message
 
     public static async validateCommandOptions(options: MessageCommandValidateOptionData): Promise<MessageCommandOptionManager> {
         const validated: MessageCommandOptionManager = new MessageCommandOptionManager();
+        if (!options.command.options) return validated;
 
         for (let i = 0; i < options.command.options.length; i++) {
             const arg = options.args[i];

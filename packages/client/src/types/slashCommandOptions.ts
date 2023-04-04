@@ -89,7 +89,7 @@ export interface SlashCommandUserOptionData extends Omit<BaseSlashCommandOptionD
 
 export interface SlashCommandSubcommandData extends Omit<BaseSlashCommandOptionData, 'choices'|'autocomplete'> {
     type: ApplicationCommandOptionType.Subcommand;
-    options: SlashCommandOptionResolvable[];
+    options?: SlashCommandOptionResolvable[];
 }
 
 export interface SlashCommandSubcommandGroupData extends Omit<BaseSlashCommandOptionData, 'choices'|'autocomplete'> {

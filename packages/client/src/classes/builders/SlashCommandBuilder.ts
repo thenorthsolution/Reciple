@@ -30,7 +30,7 @@ export interface SlashCommandData extends BaseCommandBuilderData, BaseInteractio
     commandType: CommandType.SlashCommand;
     halt?: SlashCommandHaltFunction;
     execute?: SlashCommandExecuteFunction;
-    options: SlashCommandOptionResolvable[]|SlashCommandSubcommandsOnlyResolvable[];
+    options?: SlashCommandOptionResolvable[]|SlashCommandSubcommandsOnlyResolvable[];
 }
 
 export interface SlashCommandBuilder extends discordjs.SlashCommandBuilder, BaseCommandBuilder {
@@ -177,7 +177,7 @@ export class SlashCommandBuilder extends Mixin(discordjs.SlashCommandBuilder, Ba
             case ApplicationCommandOptionType.Subcommand:
                 builder = new SlashCommandSubcommandBuilder();
 
-                for (const optionData of option.options) {
+                for (const optionData of option.options ?? []) {
                     this.addOption(builder, this.resolveOption<AnySlashCommandOptionBuilder>(optionData));
                 }
 
