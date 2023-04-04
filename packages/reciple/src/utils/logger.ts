@@ -22,18 +22,17 @@ export function formatLogMessage(message: string, logger: Logger, config: IConfi
         }
     };
 
-    return `[${
-                color(new Date().toLocaleTimeString(undefined, { hour12: false }))
-            }][${
-                color((!flags.shardmode ? '' : process.pid + '/') + (logger.name ? logger.name + '/' : '') + LoggerLevel[level])
-            }] ${color(message)}`;
+    return color(
+                `[${new Date().toLocaleTimeString(undefined, { hour12: false })} ${LoggerLevel[level]}]` +
+                (flags.shardmode && process.pid ? `[${process.pid}]` : '') +
+                (logger.name ? `[${logger.name}]` : '')
+            ) + `: ${message}`;
 }
 
 export function createLogger(config: IConfig['logger']): Logger {
     const logger = new Logger({
         enableDebugmode: flags.debugmode || config.debugmode === true,
         forceEmitLogEvents: true,
-        name: 'Client',
         formatMessageLines: {
             [LoggerLevel.INFO]: (message, logger) => formatLogMessage(message, logger, config, LoggerLevel.INFO),
             [LoggerLevel.WARN]: (message, logger) => formatLogMessage(message, logger, config, LoggerLevel.WARN),
