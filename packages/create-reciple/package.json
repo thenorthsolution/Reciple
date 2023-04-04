@@ -29,8 +29,7 @@
     "prompts": "^2.4.2"
   },
   "devDependencies": {
-    "@types/prompts": "^2.4.2",
-    "discord.js": "^14.8.0",
+    "discord.js": "^14.9.0",
     "reciple": "^7.1.10"
   }
 }

@@ -38,7 +38,6 @@
   ],
   "dependencies": {
     "@reciple/client": "^7.1.2",
-    "@types/prompts": "^2.4.3",
     "chalk": "4.1.2",
     "commander": "^10.0.0",
     "dotenv": "^16.0.3",
@@ -51,8 +50,9 @@
   },
   "devDependencies": {
     "@types/micromatch": "^4.0.2",
+    "@types/prompts": "^2.4.4",
     "@types/semver": "^7.3.13",
-    "discord.js": "^14.8.0"
+    "discord.js": "^14.9.0"
   },
   "peerDependencies": {
     "discord.js": "^14.7.1"

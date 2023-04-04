@@ -18,10 +18,10 @@
   },
   "devDependencies": {
     "@discordjs/docgen": "^0.12.1",
-    "@types/node": "^18.15.10",
+    "@types/node": "^18.15.11",
     "lerna": "^6.6.1",
     "rimraf": "^4.4.1",
     "ts-mixer": "^6.0.3",
-    "typescript": "^5.0.2"
+    "typescript": "^5.0.3"
   }
 }
