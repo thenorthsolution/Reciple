@@ -26,7 +26,7 @@ export function formatLogMessage(message: string, logger: Logger, config: IConfi
                 `[${new Date().toLocaleTimeString(undefined, { hour12: false })} ${LoggerLevel[level]}]` +
                 (flags.shardmode && process.pid ? `[${process.pid}]` : '') +
                 (logger.name ? `[${logger.name}]` : '')
-            ) + `: ${message}`;
+            ) + ` ${message}`;
 }
 
 export function createLogger(config: IConfig['logger']): Logger {
