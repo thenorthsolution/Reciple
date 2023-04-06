@@ -1,23 +1,28 @@
 import { existsSync, readFileSync } from 'fs';
+import merge from 'lodash.merge';
 import path from 'path';
 import yml from 'yaml';
-import merge from 'lodash.merge';
 
-export function getConfigExtensions<T extends { extends?: string; }>(config: T, configPath?: string): T {
-    if (!config.extends) return config; 
+export function getConfigExtensions<T extends { extends?: string|string[]; }>(config: T, configPath?: string): T {
+    if (!config.extends || Array.isArray(config.extends) && !config.extends.length) return config; 
 
-    const configExtensionPath = configPath
-        ? path.isAbsolute(config.extends)
-            ? config.extends
-            : path.join(path.dirname(configPath), config.extends)
-        : config.extends;
+    const extensions = typeof config.extends === 'string' ? [config.extends] : config.extends;
 
-    if (!existsSync(configExtensionPath)) throw new Error(`Config extension file doesn't exists: ${configExtensionPath}`);
+    for (const extension of extensions) {
+        const configExtensionPath = configPath
+            ? path.isAbsolute(extension)
+                ? extension
+                : path.join(path.dirname(configPath), extension)
+            : extension;
 
-    const configExtension = getConfigExtensions(yml.parse(readFileSync(configExtensionPath, 'utf-8')), configExtensionPath);
+        if (!existsSync(configExtensionPath)) throw new Error(`Config extension file doesn't exists: ${configExtensionPath}`);
 
-    config = merge(config, configExtension);
-    config.extends = configExtensionPath;
+        const configExtension = getConfigExtensions(yml.parse(readFileSync(configExtensionPath, 'utf-8')), configExtensionPath);
+
+        config = merge(configExtension, config);
+    }
+
+    config.extends = extensions;
 
     return config;
 }

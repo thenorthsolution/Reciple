@@ -9,7 +9,7 @@ import path from 'path';
 import yml from 'yaml';
 
 export interface IConfig extends RecipleConfigOptions {
-    extends?: string;
+    extends?: string|string[];
     logger: {
         enabled: boolean;
         debugmode: boolean;
