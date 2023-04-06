@@ -16,6 +16,21 @@ const packages = {
     'DISCORDJS': devDependencies['discord.js']
 };
 
+const packageManagerPlaceholders = {
+    'npm': {
+        'SCRIPT_RUN': 'npm run',
+        'BIN_EXEC': 'npx'
+    },
+    'pnpm': {
+        'SCRIPT_RUN': 'pnpm run',
+        'BIN_EXEC': 'pnpm exec'
+    },
+    'yarn': {
+        'SCRIPT_RUN': 'yarn run',
+        'BIN_EXEC': 'yarn exec'
+    }
+};
+
 export async function create(cwd: string, templateDir: string, esm: boolean, pm?: 'npm'|'yarn'|'pnpm'): Promise<void> {
     if (esm) templateDir = templateDir + `-esm`;
     if (!existsSync(templateDir)) return;
@@ -29,6 +44,7 @@ export async function create(cwd: string, templateDir: string, esm: boolean, pm?
     }
 
     let packageJSON = readFileSync(path.join(cwd, 'package.json'), 'utf-8');
+    let placeholders = pm ? packageManagerPlaceholders[pm] : packageManagerPlaceholders['npm'];
 
     for (const pkg of (Object.keys(packages) as (keyof typeof packages)[])) {
         packageJSON = packageJSON.replace(pkg, packages[pkg]);
