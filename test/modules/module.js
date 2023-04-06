@@ -1,12 +1,11 @@
 import { CommandHaltReason, ContextMenuCommandBuilder, RecipleClient, version } from 'reciple';
-import { ApplicationCommandType } from 'discord.js';
 
 class Module {
     versions = `^${version}`;
     commands = [
         new ContextMenuCommandBuilder()
             .setName('Test')
-            .setType(ApplicationCommandType.User)
+            .setType('User')
             .setCooldown(10000)
             .setExecute(async ({interaction}) => interaction.reply(`Context menu`))
             .setRequiredMemberPermissions(['ManageChannels', 'ManageGuild'])

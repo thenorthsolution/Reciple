@@ -1,4 +1,4 @@
-import discordjs, { Awaitable, ContextMenuCommandInteraction, ContextMenuCommandType } from 'discord.js';
+import discordjs, { ApplicationCommandType, Awaitable, ContextMenuCommandInteraction, ContextMenuCommandType } from 'discord.js';
 import { BaseInteractionBasedCommandData, CommandType } from '../../types/commands';
 import { BaseCommandBuilder, BaseCommandBuilderData } from './BaseCommandBuilder';
 import { CommandCooldownData } from '../managers/CommandCooldownManager';
@@ -54,6 +54,11 @@ export class ContextMenuCommandBuilder extends Mixin(discordjs.ContextMenuComman
 
     public static resolve(contextMenuCommandResolvable: ContextMenuCommandResolvable): ContextMenuCommandBuilder {
         return contextMenuCommandResolvable instanceof ContextMenuCommandBuilder ? contextMenuCommandResolvable : new ContextMenuCommandBuilder(contextMenuCommandResolvable);
+    }
+
+    public override setType(type: ContextMenuCommandType|'User'|'Message'): this {
+        super.setType(typeof type === 'number' ? type : ApplicationCommandType[type]);
+        return this;
     }
 
     public static async execute(client: RecipleClient, interaction: ContextMenuCommandInteraction): Promise<ContextMenuCommandExecuteData|undefined> {
