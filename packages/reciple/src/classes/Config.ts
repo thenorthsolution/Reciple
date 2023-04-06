@@ -1,15 +1,15 @@
+import { getConfigExtensions } from '../utils/getConfigExtensions';
 import { RecipleConfigOptions, version } from '@reciple/client';
-import { replaceAll } from 'fallout-utility';
 import { existsSync, readFileSync, writeFileSync } from 'fs';
-import { ClientOptions } from 'discord.js';
-import yml from 'yaml';
-import dotenv from 'dotenv';
-import { cwd, flags } from '../utils/cli';
-import { TranspileOptions } from 'typescript';
-import path from 'path';
 import { parseEnvString } from '../utils/parseEnvString';
+import { replaceAll } from 'fallout-utility';
+import { ClientOptions } from 'discord.js';
+import { cwd, flags } from '../utils/cli';
+import path from 'path';
+import yml from 'yaml';
 
 export interface IConfig extends RecipleConfigOptions {
+    extends?: string;
     logger: {
         enabled: boolean;
         debugmode: boolean;
@@ -44,14 +44,14 @@ export class Config {
             const configData = yml.parse(configYaml) as IConfig;
 
             if (configData.token === 'TOKEN') {
-                configData.token = flags.token || await this.askToken() || 'TOKEN';
+                configData.token = flags.token || (await this.askToken()) || 'TOKEN';
                 configYaml = replaceAll(configYaml, 'token: TOKEN', `token: ${configData.token}`);
             }
 
             writeFileSync(this.configPath, configYaml, 'utf-8');
             this.config = configData;
         } else {
-            this.config = yml.parse(readFileSync(this.configPath, 'utf-8'));
+            this.config = getConfigExtensions(yml.parse(readFileSync(this.configPath, 'utf-8')), this.configPath);
         }
 
         return this;

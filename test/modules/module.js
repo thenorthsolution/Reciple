@@ -1,4 +1,4 @@
-import { CommandHaltReason, ContextMenuCommandBuilder, RecipleClient, version } from 'reciple';
+import { CommandHaltReason, ContextMenuCommandBuilder, version } from 'reciple';
 
 class Module {
     versions = `^${version}`;
@@ -84,6 +84,7 @@ class Module {
      */
     onLoad(client) {
         client.logger.warn(`Loaded module!`);
+        client.logger.log(client.config);
     }
 }
 

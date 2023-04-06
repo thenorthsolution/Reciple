@@ -110,4 +110,4 @@ client.once('ready', async () => {
     });
 });
 
-client.login(config.token);
+await client.login(config.token).catch(err => client.logger?.error(err));
