@@ -23,7 +23,7 @@ export type ContextMenuCommandResolvable = ContextMenuCommandBuilder|ContextMenu
 
 export interface ContextMenuCommandData extends BaseCommandBuilderData, BaseInteractionBasedCommandData<false> {
     commandType: CommandType.ContextMenuCommand;
-    type: ContextMenuCommandType;
+    type: ContextMenuCommandType|'User'|'Message';
     halt?: ContextMenuCommandHaltFunction;
     execute?: ContextMenuCommandExecuteFunction;
 }
