@@ -6,18 +6,17 @@ import yml from 'yaml';
 export function getConfigExtensions<T extends { extends?: string|string[]; }>(config: T, configPath?: string): T {
     if (!config.extends || Array.isArray(config.extends) && !config.extends.length) return config; 
 
-    const extensions = typeof config.extends === 'string' ? [config.extends] : config.extends;
+    let extensions = typeof config.extends === 'string' ? [config.extends] : config.extends;
+        extensions = extensions.map(e => configPath
+            ? path.isAbsolute(e)
+                ? e
+                : path.join(path.dirname(configPath), e)
+            : e);
 
     for (const extension of extensions) {
-        const configExtensionPath = configPath
-            ? path.isAbsolute(extension)
-                ? extension
-                : path.join(path.dirname(configPath), extension)
-            : extension;
+        if (!existsSync(extension)) throw new Error(`Config extension file doesn't exists: ${extension}`);
 
-        if (!existsSync(configExtensionPath)) throw new Error(`Config extension file doesn't exists: ${configExtensionPath}`);
-
-        const configExtension = getConfigExtensions(yml.parse(readFileSync(configExtensionPath, 'utf-8')), configExtensionPath);
+        const configExtension = getConfigExtensions(yml.parse(readFileSync(extension, 'utf-8')), extension);
 
         config = merge(configExtension, config);
     }
