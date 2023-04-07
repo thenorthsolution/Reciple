@@ -47,11 +47,11 @@ export async function create(cwd: string, templateDir: string, esm: boolean, pm?
     let placeholders = pm ? packageManagerPlaceholders[pm] : packageManagerPlaceholders['npm'];
 
     for (const pkg of (Object.keys(packages) as (keyof typeof packages)[])) {
-        packageJSON = packageJSON.replace(pkg, packages[pkg]);
+        packageJSON = packageJSON.replaceAll(pkg, packages[pkg]);
     }
 
     for (const placeholder of (Object.keys(placeholders) as (keyof typeof placeholders)[])) {
-        packageJSON = packageJSON.replace(placeholder, placeholders[placeholder]);
+        packageJSON = packageJSON.replaceAll(placeholder, placeholders[placeholder]);
     }
 
     writeFileSync(path.join(cwd, 'package.json'), packageJSON);
