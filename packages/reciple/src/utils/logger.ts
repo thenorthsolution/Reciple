@@ -2,9 +2,9 @@ import { IConfig } from '../classes/Config';
 import { Logger, LoggerLevel } from 'fallout-utility';
 import { ApplicationCommand, Collection } from 'discord.js';
 import { RecipleClient } from '../';
-import chalk from 'chalk';
 import { cwd, flags } from './cli';
 import path from 'path';
+import kleur from 'kleur';
 
 export function formatLogMessage(message: string, logger: Logger, config: IConfig['logger'], level: LoggerLevel): string {
     const color = (msg: string) => {
@@ -12,11 +12,11 @@ export function formatLogMessage(message: string, logger: Logger, config: IConfi
 
         switch (level) {
             case LoggerLevel.WARN:
-                return chalk.yellow(msg);
+                return kleur.yellow(msg);
             case LoggerLevel.ERROR:
-                return chalk.red(msg);
+                return kleur.red(msg);
             case LoggerLevel.DEBUG:
-                return chalk.cyan(msg);
+                return kleur.cyan(msg);
             default:
                 return msg;
         }

@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import chalk from 'chalk';
+import kleur from 'kleur';
 import path from 'path';
 import fs from 'fs';
 import { exit } from 'process';
@@ -15,7 +15,7 @@ const isExplicitDir: boolean = !!process.argv[2];
 
 let cwd = path.resolve(process.argv[2] || '.');
 
-intro(`${chalk.bold.cyan(`Welcome to Reciple!`)}`);
+intro(`${kleur.bold().cyan(`Welcome to Reciple!`)}`);
 
 if (cwd === process.cwd() && !isExplicitDir) {
     const newCwd = await text({
@@ -29,7 +29,7 @@ if (cwd === process.cwd() && !isExplicitDir) {
 
 if (fs.existsSync(cwd)) {
     if (!fs.lstatSync(cwd).isDirectory()) {
-        console.log(`${chalk.gray(cwd)} ${chalk.green(`is not a directory`)}`);
+        console.log(`${kleur.gray(cwd)} ${kleur.green(`is not a directory`)}`);
         exit(1);
     }
 
