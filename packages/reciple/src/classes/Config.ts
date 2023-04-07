@@ -71,7 +71,7 @@ export class Config {
             mask: '*',
             message: 'Bot token:',
             validate: value => !value.length ? `Enter a valid bot token` : true
-        })).token;
+        }, { onCancel: () => process.exit(1) })).token;
     }
 
     public parseToken(): string|null {

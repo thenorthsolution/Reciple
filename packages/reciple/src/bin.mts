@@ -81,7 +81,7 @@ client.once('ready', async () => {
 
 
         client.logger?.warn(`Process exited: ${signal === 'SIGINT' ? 'keyboard interrupt' : signal === 'SIGTERM' ? 'terminate' : signal}`);
-        process.exit();
+        process.exit(0);
     };
 
     process.once('SIGINT', signal => unloadModulesAndStopProcess(signal));
