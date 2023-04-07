@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "start": "npx reciple"
+    "start": "BIN_EXEC reciple"
   },
   "dependencies": {
     "discord.js": "DISCORDJS",

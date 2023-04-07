@@ -3,8 +3,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "npx rimraf ./modules && npx tsc",
-    "start": "npx reciple"
+    "build": "BIN_EXEC rimraf ./modules && BIN_EXEC tsc",
+    "start": "BIN_EXEC reciple"
   },
   "dependencies": {
     "discord.js": "DISCORDJS",

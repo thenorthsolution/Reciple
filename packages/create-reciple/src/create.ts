@@ -50,6 +50,10 @@ export async function create(cwd: string, templateDir: string, esm: boolean, pm?
         packageJSON = packageJSON.replace(pkg, packages[pkg]);
     }
 
+    for (const placeholder of (Object.keys(placeholders) as (keyof typeof placeholders)[])) {
+        packageJSON = packageJSON.replace(placeholder, placeholders[placeholder]);
+    }
+
     writeFileSync(path.join(cwd, 'package.json'), packageJSON);
 
     if (!pm) return;

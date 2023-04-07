@@ -2,7 +2,7 @@
   "name": "reciple-app",
   "private": true,
   "scripts": {
-    "start": "npx reciple"
+    "start": "BIN_EXEC reciple"
   },
   "dependencies": {
     "discord.js": "DISCORDJS",
