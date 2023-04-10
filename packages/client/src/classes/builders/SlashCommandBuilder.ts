@@ -6,8 +6,8 @@ import { CommandCooldownData } from '../managers/CommandCooldownManager';
 import { CommandHaltData, CommandHaltReason } from '../../types/halt';
 import { botHasPermissionsToExecute } from '../../utils/permissions';
 import { RecipleClient } from '../RecipleClient';
-import { isClass } from 'fallout-utility';
 import { Mixin } from 'ts-mixer';
+import { isSlashCommandOption } from '../..';
 
 export interface SlashCommandExecuteData {
     commandType: CommandType.SlashCommand;
@@ -88,7 +88,7 @@ export class SlashCommandBuilder extends Mixin(discordjs.SlashCommandBuilder, Ba
         if (data?.requiredBotPermissions !== undefined) this.setRequiredBotPermissions(data.requiredBotPermissions);
         if (data?.options) {
             for (const option of data.options) {
-                SlashCommandBuilder.addOption(this, isClass<AnySlashCommandOptionBuilder>(option) ? option : SlashCommandBuilder.resolveOption(option as AnySlashCommandOptionData));
+                SlashCommandBuilder.addOption(this, isSlashCommandOption(option) ? option : SlashCommandBuilder.resolveOption(option));
             }
         }
     }
@@ -255,6 +255,6 @@ export class SlashCommandBuilder extends Mixin(discordjs.SlashCommandBuilder, Ba
             }
         }
 
-        return await client._executeCommand(builder, executeData) ? executeData : undefined;
+        return (await client._executeCommand(builder, executeData)) ? executeData : undefined;
     }
 }

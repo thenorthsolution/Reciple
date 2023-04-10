@@ -1,6 +1,7 @@
 import { AnyCommandBuilder, AnyCommandData, CommandType } from '../types/commands';
-import { RestOrArray, normalizeArray } from 'discord.js';
+import { RestOrArray, SlashCommandAttachmentOption, SlashCommandBooleanOption, SlashCommandChannelOption, SlashCommandIntegerOption, SlashCommandMentionableOption, SlashCommandNumberOption, SlashCommandRoleOption, SlashCommandStringOption, SlashCommandSubcommandBuilder, SlashCommandSubcommandGroupBuilder, SlashCommandUserOption, normalizeArray } from 'discord.js';
 import { replaceAll } from 'fallout-utility';
+import { AnySlashCommandOptionBuilder } from '../types/slashCommandOptions';
 
 export interface RecursiveDefault<T = unknown> {
     default?: T|RecursiveDefault<T>;
@@ -37,4 +38,18 @@ export function recursiveDefaults<T = unknown>(data: RecursiveDefault<T>|T): T|u
     if (!isDefaults(data)) return data;
 
     return recursiveDefaults(data.default!);
+}
+
+export function isSlashCommandOption(data: any): data is AnySlashCommandOptionBuilder|SlashCommandSubcommandBuilder|SlashCommandSubcommandGroupBuilder {
+    return data instanceof SlashCommandAttachmentOption ||
+    data instanceof SlashCommandBooleanOption ||
+    data instanceof SlashCommandChannelOption ||
+    data instanceof SlashCommandIntegerOption ||
+    data instanceof SlashCommandMentionableOption ||
+    data instanceof SlashCommandNumberOption ||
+    data instanceof SlashCommandRoleOption ||
+    data instanceof SlashCommandStringOption ||
+    data instanceof SlashCommandUserOption ||
+    data instanceof SlashCommandSubcommandBuilder ||
+    data instanceof SlashCommandSubcommandGroupBuilder;
 }
