@@ -153,7 +153,11 @@ export class MessageCommandBuilder extends BaseCommandBuilder implements Message
     }
 
     public static resolve(messageCommandResolvable: MessageCommandResovable): MessageCommandBuilder {
-        return messageCommandResolvable instanceof MessageCommandBuilder ? messageCommandResolvable : new MessageCommandBuilder(messageCommandResolvable);
+        return this.isMessageCommandBuilder(messageCommandResolvable) ? messageCommandResolvable : new MessageCommandBuilder(messageCommandResolvable);
+    }
+
+    public static isMessageCommandBuilder(data: any): data is MessageCommandBuilder {
+        return data instanceof MessageCommandBuilder;
     }
 
     public static async validateCommandOptions(options: MessageCommandValidateOptionData): Promise<MessageCommandOptionManager> {
@@ -270,6 +274,6 @@ export class MessageCommandBuilder extends BaseCommandBuilder implements Message
             }
         }
 
-        return await client._executeCommand(builder, executeData) ? executeData : undefined;
+        return (await client._executeCommand(builder, executeData)) ? executeData : undefined;
     }
 }

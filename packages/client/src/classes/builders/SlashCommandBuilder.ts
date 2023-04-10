@@ -7,7 +7,7 @@ import { CommandHaltData, CommandHaltReason } from '../../types/halt';
 import { botHasPermissionsToExecute } from '../../utils/permissions';
 import { RecipleClient } from '../RecipleClient';
 import { Mixin } from 'ts-mixer';
-import { isSlashCommandOption } from '../..';
+import { isSlashCommandOption } from '../../utils/functions';
 
 export interface SlashCommandExecuteData {
     commandType: CommandType.SlashCommand;
@@ -205,8 +205,12 @@ export class SlashCommandBuilder extends Mixin(discordjs.SlashCommandBuilder, Ba
             .setDescriptionLocalizations(option.descriptionLocalizations ?? null) as T;
     }
 
-    public static resolve(slashCommandResolvable: SlashCommandResolvable): SlashCommandBuilder {
-        return slashCommandResolvable instanceof SlashCommandBuilder ? slashCommandResolvable : new SlashCommandBuilder(slashCommandResolvable as SlashCommandData);
+    public static resolve(slashCommandResolvable: SlashCommandResolvable): AnySlashCommandBuilder {
+        return this.isSlashCommandBuilder(slashCommandResolvable) ? slashCommandResolvable : new SlashCommandBuilder(slashCommandResolvable);
+    }
+
+    public static isSlashCommandBuilder<T extends AnySlashCommandBuilder = AnySlashCommandBuilder>(data: any): data is T {
+        return data instanceof SlashCommandBuilder;
     }
 
     public static async execute(client: RecipleClient, interaction: ChatInputCommandInteraction): Promise<SlashCommandExecuteData|undefined> {

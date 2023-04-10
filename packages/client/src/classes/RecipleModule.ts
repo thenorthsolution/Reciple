@@ -3,7 +3,9 @@ import { RecipleClient } from '../classes/RecipleClient';
 import { randomUUID } from 'crypto';
 import semver from 'semver';
 import { RestOrArray, normalizeArray } from 'discord.js';
-import { ContextMenuCommandBuilder, MessageCommandBuilder, SlashCommandBuilder } from '..';
+import { ContextMenuCommandBuilder } from './builders/ContextMenuCommandBuilder';
+import { MessageCommandBuilder } from './builders/MessageCommandBuilder';
+import { SlashCommandBuilder } from './builders/SlashCommandBuilder';
 
 export interface RecipleModuleScript {
     versions: string|string[];
@@ -82,8 +84,7 @@ export class RecipleModule {
                     break;
             }
 
-            if (!command) continue;
-            commands.push(command);
+            if (command) commands.push(command);
         }
 
         this.commands = commands;

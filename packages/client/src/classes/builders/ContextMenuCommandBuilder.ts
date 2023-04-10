@@ -52,13 +52,17 @@ export class ContextMenuCommandBuilder extends Mixin(discordjs.ContextMenuComman
         return this;
     }
 
-    public static resolve(contextMenuCommandResolvable: ContextMenuCommandResolvable): ContextMenuCommandBuilder {
-        return contextMenuCommandResolvable instanceof ContextMenuCommandBuilder ? contextMenuCommandResolvable : new ContextMenuCommandBuilder(contextMenuCommandResolvable);
-    }
-
     public override setType(type: ContextMenuCommandType|'User'|'Message'): this {
         super.setType(typeof type === 'number' ? type : ApplicationCommandType[type]);
         return this;
+    }
+
+    public static resolve(contextMenuCommandResolvable: ContextMenuCommandResolvable): ContextMenuCommandBuilder {
+        return this.isContextMenuCommandBuilder(contextMenuCommandResolvable) ? contextMenuCommandResolvable : new ContextMenuCommandBuilder(contextMenuCommandResolvable);
+    }
+
+    public static isContextMenuCommandBuilder(data: any): data is ContextMenuCommandBuilder {
+        return data instanceof ContextMenuCommandBuilder;
     }
 
     public static async execute(client: RecipleClient, interaction: ContextMenuCommandInteraction): Promise<ContextMenuCommandExecuteData|undefined> {
@@ -107,6 +111,6 @@ export class ContextMenuCommandBuilder extends Mixin(discordjs.ContextMenuComman
             }
         }
 
-        return await client._executeCommand(builder, executeData) ? executeData : undefined;
+        return (await client._executeCommand(builder, executeData)) ? executeData : undefined;
     }
 }
