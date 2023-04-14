@@ -37,7 +37,6 @@
   "dependencies": {
     "fallout-utility": "^2.3.0",
     "semver": "^7.4.0",
-    "tiny-typed-emitter": "^2.1.0",
     "ts-mixer": "^6.0.2"
   },
   "devDependencies": {

@@ -2,7 +2,7 @@ import { ApplicationCommandType, Awaitable, Collection, RestOrArray, normalizeAr
 import { RecipleClient } from '../RecipleClient';
 import { RecipleModule, RecipleModuleScript } from '../RecipleModule';
 import semver from 'semver';
-import { TypedEmitter } from 'tiny-typed-emitter';
+import { TypedEmitter } from 'fallout-utility';
 import { inspect } from 'util';
 import { ModuleError } from '../errors/ModuleError';
 import { RecursiveDefault, recursiveDefaults } from '../../utils/functions';
@@ -10,20 +10,20 @@ import { realVersion } from '../../utils/constants';
 import path from 'path';
 
 export interface ModuleManagerEvents {
-    resolveModuleFileError: (file: string, error: Error) => Awaitable<void>;
+    resolveModuleFileError: [file: string, error: Error];
 
-    startModuleFailed: (module: RecipleModule) => Awaitable<void>;
-    preStartModule: (module: RecipleModule) => Awaitable<void>;
-    postStartModule: (module: RecipleModule) => Awaitable<void>;
-    startModuleError: (module: RecipleModule, error: Error) => Awaitable<void>;
+    startModuleFailed: [module: RecipleModule];
+    preStartModule: [module: RecipleModule];
+    postStartModule: [module: RecipleModule];
+    startModuleError: [module: RecipleModule, error: Error];
 
-    preLoadModule: (module: RecipleModule) => Awaitable<void>;
-    postLoadModule: (module: RecipleModule) => Awaitable<void>;
-    loadModuleError: (module: RecipleModule, error: Error) => Awaitable<void>;
+    preLoadModule: [module: RecipleModule];
+    postLoadModule: [module: RecipleModule];
+    loadModuleError: [module: RecipleModule, error: Error];
 
-    preUnloadModule: (module: RecipleModule) => Awaitable<void>;
-    postUnloadModule: (module: RecipleModule) => Awaitable<void>;
-    unloadModuleError: (module: RecipleModule, error: Error) => Awaitable<void>;
+    preUnloadModule: [module: RecipleModule];
+    postUnloadModule: [module: RecipleModule];
+    unloadModuleError: [module: RecipleModule, error: Error];
 }
 
 export interface ModuleManagerOptions {
@@ -198,7 +198,7 @@ export class ModuleManager extends TypedEmitter<ModuleManagerEvents> {
         if (s.onUnload && typeof s.onUnload !== 'function') return this.client._throwError(new ModuleError('InvalidOnUnloadEvent'));
     }
 
-    public _throwError<E extends keyof ModuleManagerEvents>(error: Error, event: { name: E; values: Parameters<ModuleManagerEvents[E]>; }, throwWhenNoListener: boolean = true): void {
+    public _throwError<E extends keyof ModuleManagerEvents>(error: Error, event: { name: E; values: ModuleManagerEvents[E]; }, throwWhenNoListener: boolean = true): void {
         if (!this.listenerCount(event.name)) {
             if (!throwWhenNoListener) return;
             throw error;
