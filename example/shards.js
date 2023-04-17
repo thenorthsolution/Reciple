@@ -12,8 +12,6 @@ const console = createLogger({
     .setName('ShardManager')
     .logToFile(path.join(cwd, 'logs/shards.log'), false, 'old.shards.log');
 
-console.log(console.writeStream);
-
 if (!import.meta.resolve) throw new Error(`Missing node option "--experimental-import-meta-resolve"`);
 
 // @ts-expect-error We need to modify readonly command options
