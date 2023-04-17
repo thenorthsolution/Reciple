@@ -5,22 +5,24 @@ import { getModules } from './utils/modules.js';
 import { createLogger, eventLogger } from './utils/logger.js';
 import { existsSync, mkdirSync, readdirSync } from 'fs';
 import { Config } from './classes/Config.js';
-import { flags, cwd } from './utils/cli.js';
+import { cwd, command, argvOptions } from './utils/cli.js';
 import { RecipleClient } from './index.js';
 import micromatch from 'micromatch';
 import prompts from 'prompts';
 import semver from 'semver';
 import path from 'path';
 
+command.parse();
+
 const allowedFiles = ['node_modules', 'reciple.yml', 'package.json', '.*'];
-const configPath = flags.config
-    ? path.isAbsolute(flags.config)
-        ? path.resolve(flags.config)
-        : path.join(cwd, flags.config)
+const configPath = argvOptions().config
+    ? path.isAbsolute(argvOptions().config)
+        ? path.resolve(argvOptions().config)
+        : path.join(cwd, argvOptions().config)
     : path.join(cwd, 'reciple.yml');
 
 if (!existsSync(cwd)) mkdirSync(cwd, { recursive: true });
-if (readdirSync(cwd).filter(f => !micromatch.isMatch(f, allowedFiles)).length && !existsSync(configPath) && !flags.yes) {
+if (readdirSync(cwd).filter(f => !micromatch.isMatch(f, allowedFiles)).length && !existsSync(configPath) && !argvOptions().yes) {
     const confirm = await prompts(
         {
             initial: false,
@@ -36,6 +38,8 @@ if (readdirSync(cwd).filter(f => !micromatch.isMatch(f, allowedFiles)).length &&
 const configParser = await (new Config(configPath)).parseConfig();
 const config = configParser.getConfig();
 const logger = config.logger?.enabled ? createLogger(config.logger) : undefined;
+
+if (argvOptions().shardmode) config.applicationCommandRegister = { ...config.applicationCommandRegister, enabled: false };
 
 /**
  * !! BREAKING !!

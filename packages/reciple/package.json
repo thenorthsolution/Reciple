@@ -38,7 +38,7 @@
   ],
   "dependencies": {
     "@reciple/client": "^7.3.0",
-    "commander": "^10.0.0",
+    "commander": "^10.0.1",
     "dotenv": "^16.0.3",
     "fallout-utility": "^2.4.0",
     "globby": "^13.1.4",

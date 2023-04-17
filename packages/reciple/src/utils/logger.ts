@@ -1,12 +1,12 @@
 import { IConfig } from '../classes/Config';
-import { Logger, LoggerLevel } from 'fallout-utility';
+import { Logger, LoggerLevel, PartialDeep } from 'fallout-utility';
 import { ApplicationCommand, Collection } from 'discord.js';
 import { RecipleClient } from '../';
-import { cwd, flags } from './cli';
+import { argvOptions, cwd } from './cli';
 import path from 'path';
 import kleur from 'kleur';
 
-export function formatLogMessage(message: string, logger: Logger, config: IConfig['logger'], level: LoggerLevel): string {
+export function formatLogMessage(message: string, logger: Logger, config: PartialDeep<IConfig['logger']>, level: LoggerLevel): string {
     const color = (msg: string) => {
         if (!config.coloredMessages || level === LoggerLevel.INFO) return msg;
 
@@ -24,14 +24,14 @@ export function formatLogMessage(message: string, logger: Logger, config: IConfi
 
     return color(
                 `[${new Date().toLocaleTimeString(undefined, { hour12: false })} ${LoggerLevel[level]}]` +
-                (flags.shardmode && process.pid ? `[${process.pid}]` : '') +
+                (argvOptions().shardmode && process.pid ? `[${process.pid}]` : '') +
                 (logger.name ? `[${logger.name}]` : '')
             ) + ` ${message}`;
 }
 
-export function createLogger(config: IConfig['logger']): Logger {
+export function createLogger(config: PartialDeep<IConfig['logger']>): Logger {
     const logger = new Logger({
-        enableDebugmode: flags.debugmode || config.debugmode === true,
+        enableDebugmode: argvOptions().debugmode || config.debugmode === true,
         forceEmitLogEvents: true,
         formatMessageLines: {
             [LoggerLevel.INFO]: (message, logger) => formatLogMessage(message, logger, config, LoggerLevel.INFO),
@@ -41,7 +41,7 @@ export function createLogger(config: IConfig['logger']): Logger {
         }
     });
 
-    if (config.logToFile.enabled) logger.logToFile(path.join(cwd, config.logToFile.logsFolder, !flags.shardmode ? 'latest.log' : `${process.pid}.log`));
+    if (config.logToFile?.enabled) logger.logToFile(path.join(cwd, config.logToFile?.logsFolder ?? path.join(cwd, 'logs'), !argvOptions().shardmode ? (config.logToFile?.file ?? 'latest.log') : `${process.pid}.log`));
     return logger;
 }
 

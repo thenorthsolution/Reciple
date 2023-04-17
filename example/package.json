@@ -1,0 +1,13 @@
+{
+  "name": "reciple-app",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "npx reciple",
+    "test": "node ../node_modules/reciple/bin/bin.mjs"
+  },
+  "dependencies": {
+    "discord.js": "^14.9.0",
+    "reciple": "^7.3.0"
+  }
+}

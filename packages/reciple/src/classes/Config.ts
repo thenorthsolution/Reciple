@@ -4,7 +4,7 @@ import { existsSync, readFileSync, writeFileSync } from 'fs';
 import { parseEnvString } from '../utils/parseEnvString';
 import { replaceAll } from 'fallout-utility';
 import { ClientOptions } from 'discord.js';
-import { cwd, flags } from '../utils/cli';
+import { argvOptions, cwd } from '../utils/cli';
 import path from 'path';
 import yml from 'yaml';
 
@@ -17,6 +17,7 @@ export interface IConfig extends RecipleConfigOptions {
         logToFile: {
             enabled: boolean;
             logsFolder: string;
+            file: string;
         };
     };
     modules: {
@@ -44,7 +45,7 @@ export class Config {
             const configData = yml.parse(configYaml) as IConfig;
 
             if (configData.token === 'TOKEN') {
-                configData.token = flags.token || (await this.askToken()) || 'TOKEN';
+                configData.token = argvOptions().token || (await this.askToken()) || 'TOKEN';
                 configYaml = replaceAll(configYaml, 'token: TOKEN', `token: ${configData.token}`);
             }
 
@@ -75,10 +76,10 @@ export class Config {
     }
 
     public parseToken(): string|null {
-        const token = flags.token || this.config?.token || null;
+        const token = argvOptions().token || this.config?.token || null;
         if (!token) return token;
 
-        return parseEnvString(token, flags.env ? path.resolve(flags.env) : path.join(cwd, '.env')) || null;
+        return parseEnvString(token, argvOptions().env ? path.resolve(argvOptions().env) : path.join(cwd, '.env')) || null;
     }
 
     public static defaultConfig(): IConfig {

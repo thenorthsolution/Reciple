@@ -5,7 +5,7 @@ import path from 'path';
 
 const { version, description } = JSON.parse(readFileSync(path.join(__dirname, '../../package.json'), 'utf-8'));
 
-export const command = new Command()
+export let command = new Command()
     .name('reciple')
     .description(description)
     .version(`Reciple CLI: ${version}\nReciple Client: ${realVersion}`, '-v, --version')
@@ -16,8 +16,12 @@ export const command = new Command()
     .option('-y, --yes', 'Agree to all Reciple confirmation prompts')
     .option('--env <file>', '.env file location')
     .option('--shardmode', 'Modifies some functionalities to support sharding')
-    .allowUnknownOption(true)
-    .parse();
+    .allowUnknownOption(true);
 
+/**
+ * @deprecated Use `argvOptions` function instead
+ */
 export const flags = command.opts();
+export const argvOptions = () => command.opts();
+
 export const cwd = command.args[0] ? path.resolve(command.args[0]) : process.cwd();
