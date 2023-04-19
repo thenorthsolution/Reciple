@@ -5,7 +5,7 @@ import { getModules } from './utils/modules.js';
 import { createLogger, eventLogger } from './utils/logger.js';
 import { existsSync, mkdirSync, readdirSync } from 'fs';
 import { Config } from './classes/Config.js';
-import { cwd, command, argvOptions } from './utils/cli.js';
+import { command, cli } from './utils/cli.js';
 import { RecipleClient } from './index.js';
 import micromatch from 'micromatch';
 import prompts from 'prompts';
@@ -15,18 +15,18 @@ import path from 'path';
 command.parse();
 
 const allowedFiles = ['node_modules', 'reciple.yml', 'package.json', '.*'];
-const configPath = argvOptions().config
-    ? path.isAbsolute(argvOptions().config)
-        ? path.resolve(argvOptions().config)
-        : path.join(cwd, argvOptions().config)
-    : path.join(cwd, 'reciple.yml');
+const configPath = cli.options.config
+    ? path.isAbsolute(cli.options.config)
+        ? path.resolve(cli.options.config)
+        : path.join(cli.cwd, cli.options.config)
+    : path.join(cli.cwd, 'reciple.yml');
 
-if (!existsSync(cwd)) mkdirSync(cwd, { recursive: true });
-if (readdirSync(cwd).filter(f => !micromatch.isMatch(f, allowedFiles)).length && !existsSync(configPath) && !argvOptions().yes) {
+if (!existsSync(cli.cwd)) mkdirSync(cli.cwd, { recursive: true });
+if (readdirSync(cli.cwd).filter(f => !micromatch.isMatch(f, allowedFiles)).length && !existsSync(configPath) && !cli.options.yes) {
     const confirm = await prompts(
         {
             initial: false,
-            message: `Would you like to initialize your Reciple app ${cwd !== process.cwd() ? 'in your chosen directory': 'here'}?`,
+            message: `Would you like to initialize your Reciple app ${cli.cwd !== process.cwd() ? 'in your chosen directory': 'here'}?`,
             name: 'confirm',
             type: 'confirm'
         }
@@ -39,7 +39,7 @@ const configParser = await (new Config(configPath)).parseConfig();
 const config = configParser.getConfig();
 const logger = config.logger?.enabled ? createLogger(config.logger) : undefined;
 
-if (argvOptions().shardmode) config.applicationCommandRegister = { ...config.applicationCommandRegister, enabled: false };
+if (cli.options.shardmode) config.applicationCommandRegister = { ...config.applicationCommandRegister, enabled: false };
 
 /**
  * !! BREAKING !!

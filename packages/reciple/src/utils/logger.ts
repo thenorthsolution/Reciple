@@ -2,7 +2,7 @@ import { IConfig } from '../classes/Config';
 import { Logger, LoggerLevel, PartialDeep } from 'fallout-utility';
 import { ApplicationCommand, Collection } from 'discord.js';
 import { RecipleClient } from '../';
-import { argvOptions, cwd } from './cli';
+import { cli } from './cli';
 import path from 'path';
 import kleur from 'kleur';
 
@@ -24,14 +24,14 @@ export function formatLogMessage(message: string, logger: Logger, config: Partia
 
     return color(
                 `[${new Date().toLocaleTimeString(undefined, { hour12: false })} ${LoggerLevel[level]}]` +
-                (argvOptions().shardmode && process.pid ? `[${process.pid}]` : '') +
+                (cli.options.shardmode && process.pid ? `[${process.pid}]` : '') +
                 (logger.name ? `[${logger.name}]` : '')
             ) + ` ${message}`;
 }
 
 export function createLogger(config: PartialDeep<IConfig['logger']>): Logger {
     const logger = new Logger({
-        enableDebugmode: argvOptions().debugmode || config.debugmode === true,
+        enableDebugmode: cli.options.debugmode || config.debugmode === true,
         forceEmitLogEvents: true,
         formatMessageLines: {
             [LoggerLevel.INFO]: (message, logger) => formatLogMessage(message, logger, config, LoggerLevel.INFO),
@@ -41,7 +41,7 @@ export function createLogger(config: PartialDeep<IConfig['logger']>): Logger {
         }
     });
 
-    if (config.logToFile?.enabled) logger.logToFile(path.join(cwd, config.logToFile?.logsFolder ?? path.join(cwd, 'logs'), !argvOptions().shardmode ? (config.logToFile?.file ?? 'latest.log') : `${process.pid}.log`));
+    if (config.logToFile?.enabled) logger.logToFile(path.join(cli.cwd, config.logToFile?.logsFolder ?? path.join(cli.cwd, 'logs'), !cli.options.shardmode ? (config.logToFile?.file ?? 'latest.log') : `${process.pid}.log`));
     return logger;
 }
 

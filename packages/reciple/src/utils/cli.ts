@@ -18,10 +18,23 @@ export let command = new Command()
     .option('--shardmode', 'Modifies some functionalities to support sharding')
     .allowUnknownOption(true);
 
-/**
- * @deprecated Use `argvOptions` function instead
- */
-export const flags = command.opts();
-export const argvOptions = () => command.opts();
+export const cli = {
+    get args() { return command.args; },
+    get options() { return command.opts(); },
+    get cwd() { return this.args[0] ? path.resolve(this.args[0]) : process.cwd(); }
+};
 
-export const cwd = command.args[0] ? path.resolve(command.args[0]) : process.cwd();
+/**
+ * @deprecated Use `cli` object instead
+ */
+export const flags = cli.options;
+
+/**
+ * @deprecated Use `cli` object instead
+ */
+export const argvOptions = () => cli.options;
+
+/**
+ * @deprecated Use `cli` object instead
+ */
+export const cwd = cli.args[0] ? path.resolve(cli.args[0]) : process.cwd();

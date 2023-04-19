@@ -4,7 +4,7 @@ import { existsSync, readFileSync, writeFileSync } from 'fs';
 import { parseEnvString } from '../utils/parseEnvString';
 import { replaceAll } from 'fallout-utility';
 import { ClientOptions } from 'discord.js';
-import { argvOptions, cwd } from '../utils/cli';
+import { cli } from '../utils/cli';
 import path from 'path';
 import yml from 'yaml';
 
@@ -45,7 +45,7 @@ export class Config {
             const configData = yml.parse(configYaml) as IConfig;
 
             if (configData.token === 'TOKEN') {
-                configData.token = argvOptions().token || (await this.askToken()) || 'TOKEN';
+                configData.token = cli.options.token || (await this.askToken()) || 'TOKEN';
                 configYaml = replaceAll(configYaml, 'token: TOKEN', `token: ${configData.token}`);
             }
 
@@ -76,10 +76,10 @@ export class Config {
     }
 
     public parseToken(): string|null {
-        const token = argvOptions().token || this.config?.token || null;
+        const token = cli.options.token || this.config?.token || null;
         if (!token) return token;
 
-        return parseEnvString(token, argvOptions().env ? path.resolve(argvOptions().env) : path.join(cwd, '.env')) || null;
+        return parseEnvString(token, cli.options.env ? path.resolve(cli.options.env) : path.join(cli.cwd, '.env')) || null;
     }
 
     public static defaultConfig(): IConfig {
