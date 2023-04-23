@@ -44,7 +44,7 @@ export async function create(cwd: string, templateDir: string, esm: boolean, pm?
     }
 
     let packageJSON = readFileSync(path.join(cwd, 'package.json'), 'utf-8');
-    let placeholders = pm ? packageManagerPlaceholders[pm] : packageManagerPlaceholders['npm'];
+    const placeholders = pm ? packageManagerPlaceholders[pm] : packageManagerPlaceholders['npm'];
 
     for (const pkg of (Object.keys(packages) as (keyof typeof packages)[])) {
         packageJSON = packageJSON.replaceAll(pkg, packages[pkg]);
