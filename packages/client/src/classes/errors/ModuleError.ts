@@ -3,7 +3,7 @@ import { BaseError, ErrorType } from './BaseError';
 import kleur from 'kleur';
 
 export const ModuleErrorCodes = {
-    'LoadModuleFail': () => `Failed to load module ${kleur.blue('%0%')}:\n  ${kleur.red('%1%')}`,
+    'LoadModuleFail': () => `Failed to load module ${kleur.blue('%0%')}:\n  %1%`,
     'UnsupportedModule': () => `module ${kleur.blue('%0%')} does not support Reciple ${kleur.green('%1%')}`,
     'InvalidScript': () => 'Invalid Reciple module script',
     'NoSupportedVersions': () => `Module script is missing the required ${kleur.blue('(versions: string|string[])')} property`,
