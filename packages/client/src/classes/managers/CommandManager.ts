@@ -3,7 +3,7 @@ import { AnySlashCommandBuilder, SlashCommandBuilder, SlashCommandExecuteData, S
 import { AnyCommandBuilder, AnyCommandData, AnyCommandExecuteData, ApplicationCommandBuilder, CommandType } from '../../types/commands';
 import { ContextMenuCommandBuilder, ContextMenuCommandExecuteData, ContextMenuCommandResolvable } from '../builders/ContextMenuCommandBuilder';
 import { MessageCommandBuilder, MessageCommandExecuteData, MessageCommandResovable } from '../builders/MessageCommandBuilder';
-import { RecipleCommandsInteractionBasedConfigOptions, RecipleConfigOptions } from '../../types/options';
+import { RecipleConfigOptions } from '../../types/options';
 import { CommandError } from '../errors/CommandError';
 import { RecipleClient } from '../RecipleClient';
 
@@ -53,7 +53,7 @@ export class CommandManager {
                     this.slashCommands.set(command.name, SlashCommandBuilder.resolve(command));
                     break;
                 default:
-                    throw new CommandError('UnknownCommand');
+                    throw new CommandError('UnknownCommand', String(command));
             }
         }
 

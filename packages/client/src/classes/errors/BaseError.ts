@@ -2,6 +2,7 @@ import { RestOrArray, normalizeArray } from 'discord.js';
 import { CommandError } from './CommandError';
 import { ModuleError } from './ModuleError';
 import { replacePlaceholders } from '../../utils/functions';
+import kleur from 'kleur';
 
 export interface BaseErrorCodes {
     [code: string|number]: string;
@@ -17,7 +18,7 @@ export abstract class BaseError<ErrorCodes extends BaseErrorCodes = BaseErrorCod
     abstract readonly errorType: ErrorType;
 
     constructor(readonly code: keyof BaseErrorCodes, errorCodes: ErrorCodes, ...placeholders: RestOrArray<string>) {
-        super(`[${code}]: ${replacePlaceholders(errorCodes[code], ...normalizeArray(placeholders))}`);
+        super(`${kleur.red().bold(code)} ${replacePlaceholders(errorCodes[code], ...normalizeArray(placeholders))}`);
     }
 
     public isCommandError(): this is CommandError {

@@ -36,6 +36,7 @@
   ],
   "dependencies": {
     "fallout-utility": "^2.3.0",
+    "kleur": "^4.1.5",
     "semver": "^7.4.0",
     "ts-mixer": "^6.0.2"
   },
