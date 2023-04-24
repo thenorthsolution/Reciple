@@ -3,8 +3,8 @@ import { BaseError, ErrorType } from './BaseError';
 
 export const CommandErrorCodes = {
     'UnknownCommand': 'Unknown Reciple command',
-    'CommandExecuteError': 'An error occured while executing [%0%: %1%]: %2%',
-    'CommandHaltError': 'An error occured while executing halt for [%0%: %1%]: %2%'
+    'CommandExecuteError': 'An error occured while executing %0% "%1%": \n  %2%',
+    'CommandHaltError': 'An error occured while executing halt for %0% "%1%": \n  %2%'
 }
 
 export type CommandErrorCodes = typeof CommandErrorCodes;
