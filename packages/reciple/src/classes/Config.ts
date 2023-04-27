@@ -5,6 +5,7 @@ import { parseEnvString } from '../utils/parseEnvString';
 import { replaceAll } from 'fallout-utility';
 import { ClientOptions } from 'discord.js';
 import { cli } from '../utils/cli';
+import dotenv from 'dotenv';
 import path from 'path';
 import yml from 'yaml';
 
@@ -62,7 +63,7 @@ export class Config {
         if (!this.config) throw new Error(`Config is not parsed`);
         this.config.token = this.parseToken() || 'TOKEN';
 
-        return this.config;
+        return Config.resolveEnvValues(this.config);
     }
 
     public async askToken(): Promise<string> {
@@ -80,6 +81,31 @@ export class Config {
         if (!token) return token;
 
         return parseEnvString(token, cli.options.env ? path.resolve(cli.options.env) : path.join(cli.cwd, '.env')) || null;
+    }
+
+    public static resolveEnvValues<T extends Record<any, any>|string|Array<any>>(object: T, envFile?: string): T {
+        if (envFile) dotenv.config({ path: envFile, override: true });
+        if (typeof object !== 'object') return (typeof object === 'string' ? parseEnvString(object) : object) as T;
+        if (Array.isArray(object)) return object.map(v => parseEnvString(v)) as T;
+
+        const keys = object ? Object.keys(object) : [];
+        const values = Object.values(object!);
+
+        let newObject = {};
+        let i = 0;
+
+        for (const value of values) {
+            newObject = {
+                ...newObject,
+                [keys[i]]: typeof value === 'string' || typeof value === 'object'
+                    ? this.resolveEnvValues(value)
+                    : value
+            };
+
+            i++;
+        }
+
+        return newObject as T;
     }
 
     public static defaultConfig(): IConfig {
