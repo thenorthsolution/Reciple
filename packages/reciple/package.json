@@ -47,7 +47,7 @@
     "micromatch": "^4.0.5",
     "prompts": "^2.4.2",
     "semver": "^7.5.0",
-    "yaml": "^2.2.1"
+    "yaml": "^2.2.2"
   },
   "devDependencies": {
     "@types/lodash.merge": "^4.6.7",
