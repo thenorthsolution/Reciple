@@ -4,7 +4,8 @@
   "type": "module",
   "scripts": {
     "build": "BIN_EXEC rimraf ./modules && BIN_EXEC tsc",
-    "start": "BIN_EXEC reciple"
+    "start": "BIN_EXEC reciple",
+    "dev": "tsc-watch -p ./tsconfig.json --onCompilationStarted \"BIN_EXEC rimraf ./modules\" --onSuccess \"SCRIPT_RUN start\""
   },
   "dependencies": {
     "discord.js": "DISCORDJS",
@@ -12,6 +13,7 @@
   },
   "devDependencies": {
     "@types/node": "^18.15.3",
+    "tsc-watch": "TSC_WATCH",
     "typescript": "TYPESCRIPT",
     "rimraf": "RIMRAF"
   }

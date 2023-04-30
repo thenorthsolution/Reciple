@@ -3,10 +3,14 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "start": "BIN_EXEC reciple"
+    "start": "BIN_EXEC reciple",
+    "dev": "npx nodemon --exec \"SCRIPT_RUN start\" ./modules"
   },
   "dependencies": {
     "discord.js": "DISCORDJS",
     "reciple": "RECIPLE"
+  },
+  "devDependencies": {
+    "nodemon": "NODEMON"
   }
 }

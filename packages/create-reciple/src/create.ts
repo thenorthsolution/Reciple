@@ -13,7 +13,9 @@ const packages = {
     'TYPESCRIPT': '^5.0.2',
     'RIMRAF': '^4.4.1',
     'RECIPLE': devDependencies.reciple,
-    'DISCORDJS': devDependencies['discord.js']
+    'DISCORDJS': devDependencies['discord.js'],
+    'NODEMON': devDependencies['nodemon'],
+    'TSC_WATCH': devDependencies['tsc-watch']
 };
 
 const packageManagerPlaceholders = {
