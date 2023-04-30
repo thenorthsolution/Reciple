@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "start": "BIN_EXEC reciple",
-    "dev": "npx nodemon --exec \"SCRIPT_RUN start\" ./modules"
+    "dev": "npx nodemon --exec \"SCRIPT_RUN start\" --watch ./modules"
   },
   "dependencies": {
     "discord.js": "DISCORDJS",
