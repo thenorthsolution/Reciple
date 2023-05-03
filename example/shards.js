@@ -1,6 +1,6 @@
 // @ts-check
 import { ShardingManager } from 'discord.js';
-import { Config, argvOptions, command, cwd, createLogger } from 'reciple';
+import { Config, cli, command, createLogger } from 'reciple';
 import { fileURLToPath } from 'url';
 import path from 'path';
 
@@ -10,7 +10,7 @@ const console = createLogger({
         coloredMessages: true,
     })
     .setName('ShardManager')
-    .logToFile(path.join(cwd, 'logs/shards.log'), false, 'old.shards.log');
+    .logToFile(path.join(cli.cwd, 'logs/shards.log'), false, 'old.shards.log');
 
 if (!import.meta.resolve) throw new Error(`Missing node option "--experimental-import-meta-resolve"`);
 
@@ -19,11 +19,11 @@ command.options = command.options.filter(o => !['shardmode', 'version', 'yes'].i
 
 command.name('').description('The options below are passed to reciple cli shards').parse();
 
-const configPath = argvOptions().config
-    ? path.isAbsolute(argvOptions().config)
-        ? path.resolve(argvOptions().config)
-        : path.join(cwd, argvOptions().config)
-    : path.join(cwd, 'reciple.yml');
+const configPath = cli.options.config
+    ? path.isAbsolute(cli.options.config)
+        ? path.resolve(cli.options.config)
+        : path.join(cli.cwd, cli.options.config)
+    : path.join(cli.cwd, 'reciple.yml');
 
 const config = (await new Config(configPath).parseConfig()).getConfig();
 
