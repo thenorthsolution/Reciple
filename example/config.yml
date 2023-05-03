@@ -47,7 +47,7 @@ commands:
     # String separator for command options
     commandArgumentSeparator: ' '
     # Command prefix
-    prefix: ENV:PREFIX
+    prefix: '!'
 
 # Application commands register config
 applicationCommandRegister:
