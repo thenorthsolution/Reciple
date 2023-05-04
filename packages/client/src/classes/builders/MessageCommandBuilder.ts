@@ -173,7 +173,7 @@ export class MessageCommandBuilder extends BaseCommandBuilder implements Message
     }
 
     public static async execute(client: RecipleClient, message: Message, prefix?: string, separator?: string): Promise<MessageCommandExecuteData|undefined> {
-        if (!client.config.commands?.messageCommand?.enabled !== false || !message.content) return;
+        if (client.config.commands?.messageCommand?.enabled === false || !message.content) return;
 
         const commandData = getCommand(message.content, prefix ?? client.config.commands?.messageCommand?.prefix ?? '!', separator ?? client.config.commands?.messageCommand?.commandArgumentSeparator ?? ' ');
         if (!commandData || !commandData.name) return;
