@@ -4,7 +4,8 @@
   "scripts": {
     "build": "BIN_EXEC rimraf ./modules && BIN_EXEC tsc",
     "start": "BIN_EXEC reciple",
-    "dev": "BIN_EXEC tsc-watch -p ./tsconfig.json --onCompilationStarted \"BIN_EXEC rimraf ./modules\" --onSuccess \"SCRIPT_RUN start\""
+    "build:start": "SCRIPT_RUN build && SCRIPT_RUN start",
+    "dev": "BIN_EXEC nodemon --watch src --ext ts,mts,cts --exec 'SCRIPT_RUN build:start'"
   },
   "dependencies": {
     "discord.js": "DISCORDJS",
@@ -12,7 +13,7 @@
   },
   "devDependencies": {
     "@types/node": "^18.15.3",
-    "tsc-watch": "TSC_WATCH",
+    "nodemon": "NODEMON",
     "typescript": "TYPESCRIPT",
     "rimraf": "RIMRAF"
   }

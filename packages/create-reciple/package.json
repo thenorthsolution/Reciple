@@ -31,7 +31,6 @@
   "devDependencies": {
     "discord.js": "^14.10.2",
     "nodemon": "^2.0.22",
-    "reciple": "^7.4.3",
-    "tsc-watch": "^6.0.4"
+    "reciple": "^7.4.3"
   }
 }

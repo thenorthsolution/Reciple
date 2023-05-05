@@ -14,8 +14,7 @@ const packages = {
     'RIMRAF': '^4.4.1',
     'RECIPLE': devDependencies.reciple,
     'DISCORDJS': devDependencies['discord.js'],
-    'NODEMON': devDependencies['nodemon'],
-    'TSC_WATCH': devDependencies['tsc-watch']
+    'NODEMON': devDependencies['nodemon']
 };
 
 const packageManagerPlaceholders = {
