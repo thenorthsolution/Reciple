@@ -3,7 +3,7 @@
   "private": true,
   "scripts": {
     "start": "BIN_EXEC reciple",
-    "dev": "npx nodemon --exec \"SCRIPT_RUN start\" --watch ./modules"
+    "dev": "BIN_EXEC nodemon --exec \"SCRIPT_RUN start\" --watch ./modules"
   },
   "dependencies": {
     "discord.js": "DISCORDJS",
