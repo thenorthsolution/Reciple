@@ -39,6 +39,7 @@ const configParser = await (new Config(configPath)).parseConfig();
 const config = configParser.getConfig();
 const logger = config.logger?.enabled ? createLogger(config.logger) : undefined;
 
+if (cli.options.setup) process.exit(0);
 if (cli.options.shardmode) config.applicationCommandRegister = { ...config.applicationCommandRegister, enabled: false };
 
 /**
@@ -88,8 +89,8 @@ client.once('ready', async () => {
         process.exit(0);
     };
 
-    process.once('SIGINT', signal => unloadModulesAndStopProcess(signal));
-    process.once('SIGTERM', signal => unloadModulesAndStopProcess(signal));
+    process.once('SIGINT', async signal => unloadModulesAndStopProcess(signal));
+    process.once('SIGTERM', async signal => unloadModulesAndStopProcess(signal));
 
     client.on('cacheSweep', () => client.cooldowns.clean());
 

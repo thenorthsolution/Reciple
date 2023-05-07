@@ -1,5 +1,6 @@
 import { ChildProcess, spawn } from 'child_process';
 import { copyFileSync, existsSync, lstatSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from 'fs';
+import kleur from 'kleur';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
@@ -45,6 +46,8 @@ export async function create(cwd: string, templateDir: string, esm: boolean, pm?
     }
 
     let packageJSON = readFileSync(path.join(cwd, 'package.json'), 'utf-8');
+
+
     const placeholders = pm ? packageManagerPlaceholders[pm] : packageManagerPlaceholders['npm'];
 
     for (const pkg of (Object.keys(packages) as (keyof typeof packages)[])) {
@@ -57,12 +60,25 @@ export async function create(cwd: string, templateDir: string, esm: boolean, pm?
 
     writeFileSync(path.join(cwd, 'package.json'), packageJSON);
 
-    if (!pm) return;
+    if (pm) {
+        await runScript(pm, cwd, ['install']);
 
-    await runScript(pm, cwd, ['install']);
+        if (templateDir.includes(`typescript`)) await runScript(pm, cwd, ['run', 'build']);
+        await runScript('npx', cwd, ['reciple', '-y', '--setup']);
+    }
 
-    if (templateDir.includes(`typescript`)) await runScript(pm, cwd, ['run', 'build']);
-    await runScript('npx', cwd, ['reciple', '-y']);
+    console.log(`${kleur.bold(kleur.green('✔') + ' Your project is ready!')}`);
+    console.log(`\nStart developing:`);
+    console.log(`  • ${kleur.cyan().bold('cd ' + path.relative(process.cwd(), cwd))}`);
+
+    if (!pm) {
+        console.log(`  • ${kleur.cyan().bold(`npm install`)} (or pnpm install, etc)`);
+        console.log(`  • ${kleur.cyan().bold(`npx reciple --setup`)}`);
+    }
+
+    console.log(`  • ${kleur.cyan().bold(`${placeholders.SCRIPT_RUN} dev`)}`);
+
+    console.log(`\nTo close the bot process, press ${kleur.cyan().bold(`Ctrl + C`)}`)
 }
 
 

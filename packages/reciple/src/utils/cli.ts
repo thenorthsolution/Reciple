@@ -16,6 +16,7 @@ export let command = new Command()
     .option('-y, --yes', 'Agree to all Reciple confirmation prompts')
     .option('--env <file>', '.env file location')
     .option('--shardmode', 'Modifies some functionalities to support sharding')
+    .option('--setup', 'Create required config without starting the bot')
     .allowUnknownOption(true);
 
 export const cli = {
