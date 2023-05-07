@@ -61,19 +61,21 @@ It will ask you to continue if the directory is not empty. Type `y` to continue.
 ```yml
 Usage: reciple [options] [cwd]
 
-Reciple.js - Discord.js handler cli
+Reciple is a Discord.js bot framework
 
 Arguments:
-  cwd                    Change the current working directory
+  cwd                  Change the current working directory
 
 Options:
-  -v, --version          output the version number
-  -t, --token <token>    Replace used bot token
-  -c, --config <config>  Change path to config file
-  -D, --debugmode        Enable debug mode
-  -y, --yes              Agree to all Reciple confirmation prompts
-  --env                  .env file location
-  -h, --help             display help for command
+  -v, --version        output the version number
+  -t, --token <token>  Replace used bot token
+  -c, --config <dir>   Change path to config file
+  -D, --debugmode      Enable debug mode
+  -y, --yes            Agree to all Reciple confirmation prompts
+  --env <file>         .env file location
+  --shardmode          Modifies some functionalities to support sharding
+  --setup              Create required config without starting the bot
+  -h, --help           display help for command
 ```
 
 ## Message Commands

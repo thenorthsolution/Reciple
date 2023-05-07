@@ -69,7 +69,10 @@ export async function create(cwd: string, templateDir: string, esm: boolean, pm?
 
     console.log(`${kleur.bold(kleur.green('✔') + ' Your project is ready!')}`);
     console.log(`\nStart developing:`);
-    console.log(`  • ${kleur.cyan().bold('cd ' + path.relative(process.cwd(), cwd))}`);
+
+    if (path.relative(process.cwd(), cwd) !== '') {
+        console.log(`  • ${kleur.cyan().bold('cd ' + path.relative(process.cwd(), cwd))}`);
+    }
 
     if (!pm) {
         console.log(`  • ${kleur.cyan().bold(`npm install`)} (or pnpm install, etc)`);
