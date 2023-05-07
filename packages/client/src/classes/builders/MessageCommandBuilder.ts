@@ -11,11 +11,29 @@ import { CommandData, getCommand } from 'fallout-utility';
 import { RecipleClient } from '../RecipleClient';
 
 export interface MessageCommandExecuteData<Options extends boolean = true> {
+    /**
+     * Command type
+     */
     commandType: CommandType.MessageCommand;
+    /**
+     * Current bot client
+     */
     client: RecipleClient;
+    /**
+     * Command message
+     */
     message: Message;
+    /**
+     * Parsed command options
+     */
     options: If<Options, MessageCommandOptionManager>;
+    /**
+     * Raw command data
+     */
     command: CommandData;
+    /**
+     * Command builder
+     */
     builder: MessageCommandBuilder;
 }
 
@@ -28,12 +46,27 @@ export type MessageCommandResovable = MessageCommandBuilder|MessageCommandData;
 
 export interface MessageCommandData extends BaseCommandBuilderData, BaseCommandData {
     commandType: CommandType.MessageCommand;
+    /**
+     * Command aliases
+     */
     aliases?: string[];
     halt?: MessageCommandHaltFunction;
     execute?: MessageCommandExecuteFunction;
+    /**
+     * Validates every command options
+     */
     validateOptions?: boolean;
+    /**
+     * Allow execute in DM channels
+     */
     dmPermission?: boolean;
+    /**
+     * Allow execute by bot users
+     */
     userBotPermission?: boolean;
+    /**
+     * Command options
+     */
     options?: MessageCommandOptionResolvable[];
 }
 

@@ -5,13 +5,13 @@ import { SlashCommandExecuteData, SlashCommandHaltData, SlashCommandResolvable }
 import discordjs, { ApplicationCommand, Awaitable, ClientEvents, Collection } from 'discord.js';
 import { RecipleClientOptions, RecipleConfigOptions } from '../types/options';
 import { CommandCooldownManager } from './managers/CommandCooldownManager';
-import { version } from '../utils/constants';
 import { CommandManager } from './managers/CommandManager';
-import { CommandHaltReason } from '../types/halt';
-import { Logger } from 'fallout-utility';
+import { getCommandBuilderName } from '../utils/functions';
 import { ModuleManager } from './managers/ModuleManager';
 import { CommandError } from './errors/CommandError';
-import { getCommandBuilderName } from '../utils/functions';
+import { CommandHaltReason } from '../types/halt';
+import { version } from '../utils/constants';
+import { Logger } from 'fallout-utility';
 import { inspect } from 'util';
 
 export interface RecipleClient<Ready extends boolean = boolean> extends discordjs.Client<Ready> {
@@ -29,6 +29,9 @@ export interface RecipleClient<Ready extends boolean = boolean> extends discordj
 
     removeAllListeners<E extends keyof RecipleClientEvents>(event?: E): this;
     removeAllListeners(event?: string | symbol): this;
+
+    removeListener<E extends keyof RecipleClientEvents>(event: E, listener: Function): this;
+    removeListener(event: string | symbol, listener: Function): this;
 }
 
 export interface RecipleClientEvents extends ClientEvents {

@@ -8,9 +8,21 @@ import { RecipleClient } from '../RecipleClient';
 import { Mixin } from 'ts-mixer';
 
 export interface ContextMenuCommandExecuteData {
+    /**
+     * Type of command
+     */
     commandType: CommandType.ContextMenuCommand;
+    /**
+     * Current bot client
+     */
     client: RecipleClient;
+    /**
+     * Command interaction
+     */
     interaction: ContextMenuCommandInteraction;
+    /**
+     * Command builder
+     */
     builder: ContextMenuCommandBuilder;
 }
 

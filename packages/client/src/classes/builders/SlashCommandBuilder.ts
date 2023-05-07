@@ -10,9 +10,21 @@ import { Mixin } from 'ts-mixer';
 import { isSlashCommandOption } from '../../utils/functions';
 
 export interface SlashCommandExecuteData {
+    /**
+     * Command type
+     */
     commandType: CommandType.SlashCommand;
+    /**
+     * Current bot client
+     */
     client: RecipleClient;
+    /**
+     * Command interaction
+     */
     interaction: ChatInputCommandInteraction;
+    /**
+     * Command builder
+     */
     builder: AnySlashCommandBuilder;
 }
 

@@ -42,7 +42,7 @@
   },
   "devDependencies": {
     "@types/semver": "^7.3.13",
-    "discord.js": "^14.10.2"
+    "discord.js": "^14.11.0"
   },
   "peerDependencies": {
     "discord.js": "^14.9.0"

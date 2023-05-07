@@ -4,15 +4,36 @@ import { Awaitable, Message } from 'discord.js';
 export type MessageCommandOptionResolvable = MessageCommandOptionData|MessageCommandOptionBuilder;
 
 export interface MessageCommandOptionData extends BaseCommandData {
+    /**
+     * Makes the option required
+     */
     required: boolean;
+    /**
+     * Option validator function
+     */
     validator?: MessageCommandOptionValidatorFunction;
 }
 
 export interface MessageCommandOptionValue {
+    /**
+     * Option name
+     */
     name: string;
+    /**
+     * Option value
+     */
     value?: string;
+    /**
+     * Option is missing
+     */
     missing: boolean;
+    /**
+     * Option is invalid
+     */
     invalid: boolean;
+    /**
+     * Command option builder
+     */
     builder: MessageCommandOptionBuilder;
 }
 

@@ -2,11 +2,29 @@ import { Guild, RestOrArray, TextBasedChannel, User, normalizeArray } from 'disc
 import { CommandType } from '../../types/commands';
 
 export interface CommandCooldownData {
+    /**
+     * Cooled-down user
+     */
     user: User;
+    /**
+     * Command name
+     */
     command?: string;
+    /**
+     * Command type
+     */
     type?: CommandType;
+    /**
+     * Command cooldown guild
+     */
     guild?: Guild;
+    /**
+     * Command cooldown channel
+     */
     channel?: TextBasedChannel;
+    /**
+     * Cooldown end date
+     */
     endsAt: Date;
 }
 

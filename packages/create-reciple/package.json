@@ -29,7 +29,7 @@
     "prompts": "^2.4.2"
   },
   "devDependencies": {
-    "discord.js": "^14.10.2",
+    "discord.js": "^14.11.0",
     "nodemon": "^2.0.22",
     "reciple": "^7.4.3"
   }

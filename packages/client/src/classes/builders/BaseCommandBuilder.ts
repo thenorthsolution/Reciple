@@ -3,11 +3,29 @@ import { AnyCommandExecuteFunction, AnyCommandHaltFunction, CommandType } from '
 import { MessageCommandBuilder } from './MessageCommandBuilder';
 
 export interface BaseCommandBuilderData {
+    /**
+     * Type of command
+     */
     commandType: CommandType;
+    /**
+     * Cooldown in milliseconds
+     */
     cooldown?: number;
+    /**
+     * Required bot permissions to execute the command
+     */
     requiredBotPermissions?: PermissionResolvable;
+    /**
+     * Required member permissions to execute the command
+     */
     requiredMemberPermissions?: PermissionResolvable;
+    /**
+     * Halt execute function
+     */
     halt?: AnyCommandHaltFunction;
+    /**
+     * Command execute function
+     */
     execute?: AnyCommandExecuteFunction;
 }
 
