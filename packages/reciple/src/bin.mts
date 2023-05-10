@@ -11,6 +11,7 @@ import micromatch from 'micromatch';
 import prompts from 'prompts';
 import semver from 'semver';
 import path from 'path';
+import kleur from 'kleur';
 
 command.parse();
 
@@ -84,21 +85,23 @@ client.once('ready', async () => {
             removeFromModulesCollection: true
         });
 
+        const signalString = signal === 'SIGINT' ? 'keyboard interrupt' : signal === 'SIGTERM' ? 'terminate' : String(signal);
 
-        client.logger?.warn(`Process exited: ${signal === 'SIGINT' ? 'keyboard interrupt' : signal === 'SIGTERM' ? 'terminate' : signal}`);
+        client.logger?.warn(`Process exited: ${kleur.yellow(signalString)}`);
         process.exit(0);
     };
 
-    process.once('SIGINT', async signal => unloadModulesAndStopProcess(signal));
-    process.once('SIGTERM', async signal => unloadModulesAndStopProcess(signal));
+    process.on('SIGINT', signal => unloadModulesAndStopProcess(signal));
+    process.on('SIGTERM', signal => unloadModulesAndStopProcess(signal));
+    process.on('SIGHUP', signal => unloadModulesAndStopProcess(signal));
 
     await client.commands.registerApplicationCommands();
 
-    client.logger?.warn(`Logged in as ${client.user?.tag} (${client.user?.id})`);
+    client.logger?.warn(`Logged in as ${kleur.bold().cyan(client.user!.tag)} ${kleur.magenta('(' + client.user!.id + ')')}`);
 
-    client.logger?.log(`Loaded ${client.commands.contextMenuCommands.size} context menu commands`);
-    client.logger?.log(`Loaded ${client.commands.messageCommands.size} message commands`);
-    client.logger?.log(`Loaded ${client.commands.slashCommands.size} slash commands`);
+    client.logger?.log(`Loaded ${client.commands.contextMenuCommands.size} context menu command(s)`);
+    client.logger?.log(`Loaded ${client.commands.messageCommands.size} message command(s)`);
+    client.logger?.log(`Loaded ${client.commands.slashCommands.size} slash command(s)`);
 
     client.on('interactionCreate', interaction => {
         if (interaction.isContextMenuCommand()) {

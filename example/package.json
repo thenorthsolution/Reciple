@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "start": "npx reciple -c config.yml",
-    "test": "node ../node_modules/reciple/bin/bin.mjs -c config.yml",
+    "test": "node ../packages/reciple/bin/bin.mjs -c config.yml",
     "shards": "node --experimental-import-meta-resolve shards.js -c config.yml"
   },
   "dependencies": {
