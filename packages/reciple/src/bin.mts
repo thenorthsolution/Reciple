@@ -51,13 +51,13 @@ if (!semver.satisfies(version, config.version)) {
     process.exit(1);
 }
 
+logger?.info(`Starting Reciple client v${realVersion} - ${new Date()}`);
+
 const client = new RecipleClient({
     recipleOptions: config,
     ...config.client,
     logger
 });
-
-client.logger?.info(`Starting Reciple client v${realVersion} - ${new Date()}`);
 
 eventLogger(client);
 
