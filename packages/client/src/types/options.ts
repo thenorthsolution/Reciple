@@ -5,6 +5,10 @@ import discordjs, { Message } from 'discord.js';
 
 export interface RecipleConfigOptions {
     token: string;
+    cooldownSweeper?: {
+        enabled?: boolean;
+        interval?: number;
+    };
     commands?: {
         contextMenuCommand?: Partial<RecipleCommandsInteractionBasedConfigOptions>;
         messageCommand?: Partial<RecipleCommandsConfigOptions & {

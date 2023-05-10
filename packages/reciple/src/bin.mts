@@ -92,8 +92,6 @@ client.once('ready', async () => {
     process.once('SIGINT', async signal => unloadModulesAndStopProcess(signal));
     process.once('SIGTERM', async signal => unloadModulesAndStopProcess(signal));
 
-    client.on('cacheSweep', () => client.cooldowns.clean());
-
     await client.commands.registerApplicationCommands();
 
     client.logger?.warn(`Logged in as ${client.user?.tag} (${client.user?.id})`);

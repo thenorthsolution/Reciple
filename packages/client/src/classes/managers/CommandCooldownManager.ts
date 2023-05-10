@@ -29,6 +29,8 @@ export interface CommandCooldownData {
 }
 
 export class CommandCooldownManager extends Array<CommandCooldownData> {
+    private _sweeperTimer?: NodeJS.Timer;
+
     constructor(...data: RestOrArray<CommandCooldownData>) {
         super(...normalizeArray(data));
     }
@@ -79,6 +81,18 @@ export class CommandCooldownManager extends Array<CommandCooldownData> {
             if (this[index].endsAt.getTime() > Date.now()) return;
             this.slice(Number(index));
         }
+    }
+
+    public setSweeperTimer(timer?: number|null): void {
+        if (this._sweeperTimer) {
+            clearInterval(this._sweeperTimer);
+            this._sweeperTimer = undefined;
+        }
+
+        if (!timer) return;
+
+        this._sweeperTimer = setInterval(() => this.clean(), timer);
+        this._sweeperTimer.unref();
     }
 
     public static checkOptions(options: Partial<Omit<CommandCooldownData, 'endsAt'>>, data: CommandCooldownData): boolean {
