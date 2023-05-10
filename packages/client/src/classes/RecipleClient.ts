@@ -58,6 +58,8 @@ export class RecipleClient<Ready extends boolean = boolean> extends discordjs.Cl
 
         if (options.recipleOptions.cooldownSweeper?.enabled !== false) {
             this.cooldowns.setSweeperTimer(options.recipleOptions.cooldownSweeper?.interval ?? 3600000);
+        } else {
+            this.logger?.warn(`Cooldown sweeper is disabled! Some unused cooldowns will not be removed.`);
         }
     }
 

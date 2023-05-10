@@ -93,6 +93,13 @@ modules:
   # If false, the client will still load unsupported modules
   disableModuleVersionCheck: false
 
+# Cooldown sweeper
+cooldownSweeper:
+  # Enables cooldown sweeper
+  enabled: true
+  # Run sweeper every given milleseconds
+  interval: 3600000
+
 # Discord.js client options
 client:
   intents:
