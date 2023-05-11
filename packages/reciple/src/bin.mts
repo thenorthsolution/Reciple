@@ -12,6 +12,7 @@ import prompts from 'prompts';
 import semver from 'semver';
 import path from 'path';
 import kleur from 'kleur';
+import { setTimeout } from 'timers/promises';
 
 command.parse();
 
@@ -88,6 +89,8 @@ client.once('ready', async () => {
         const signalString = signal === 'SIGINT' ? 'keyboard interrupt' : signal === 'SIGTERM' ? 'terminate' : String(signal);
 
         client.logger?.warn(`Process exited: ${kleur.yellow(signalString)}`);
+
+        await setTimeout(10);
         process.exit(0);
     };
 
