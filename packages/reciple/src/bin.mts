@@ -89,13 +89,21 @@ client.once('ready', async () => {
 
     client.modules.modules.sweep(m => !loadedModules.some(s => s.id == m.id));
 
+    let stopping = false;
+
     const unloadModulesAndStopProcess = async (signal: NodeJS.Signals) => {
+        if (stopping) return;
+
+        stopping = true;
+
         await client.modules.unloadModules({
             reason: 'ProcessExit',
             modules: client.modules.modules.toJSON(),
             removeCommandsFromClient: false,
             removeFromModulesCollection: true
         });
+
+        client.destroy();
 
         const signalString = signal === 'SIGINT' ? 'keyboard interrupt' : signal === 'SIGTERM' ? 'terminate' : String(signal);
 
@@ -105,9 +113,9 @@ client.once('ready', async () => {
         process.exit(0);
     };
 
-    process.on('SIGINT', signal => unloadModulesAndStopProcess(signal));
-    process.on('SIGTERM', signal => unloadModulesAndStopProcess(signal));
-    process.on('SIGHUP', signal => unloadModulesAndStopProcess(signal));
+    process.once('SIGINT', signal => unloadModulesAndStopProcess(signal));
+    process.once('SIGTERM', signal => unloadModulesAndStopProcess(signal));
+    process.once('SIGHUP', signal => unloadModulesAndStopProcess(signal));
 
     await client.commands.registerApplicationCommands();
 
