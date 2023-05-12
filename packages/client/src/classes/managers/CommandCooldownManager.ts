@@ -65,21 +65,21 @@ export class CommandCooldownManager extends Array<CommandCooldownData> {
 
         for (let i = 0; i < this.length; i++) {
             if (!CommandCooldownManager.checkOptions(options, this[i])) continue;
-            if (options.endsAt && this[i].endsAt.getTime() > Date.now()) continue;
+            if (this[i].endsAt.getTime() > Date.now()) continue;
             if (limit && i >= limit) continue;
 
             removed.push(this[i]);
-            this.splice(Number(i));
+            this.splice(i, 1);
         }
 
         return removed;
     }
 
     public clean(options?: Partial<Omit<CommandCooldownData, 'expireTime'>>): void {
-        for (const index in this) {
-            if (options && !CommandCooldownManager.checkOptions(options, this[index])) return;
-            if (!this[index] || this[index].endsAt.getTime() > Date.now()) return;
-            this.slice(Number(index));
+        for (let i = 0; i < this.length; i++) {
+            if (!this[i] || options && !CommandCooldownManager.checkOptions(options, this[i])) return;
+            if (this[i].endsAt.getTime() > Date.now()) return;
+            this.splice(i, 1);
         }
     }
 
