@@ -54,7 +54,7 @@ export class RecipleModule {
     }
 
     public async load(resolveCommands: boolean = true): Promise<void> {
-        if (this.script.onLoad) Promise.resolve(this.script.onLoad(this.client, this));
+        if (this.script.onLoad) await Promise.resolve(this.script.onLoad(this.client, this));
         if (resolveCommands) this.resolveCommands();
     }
 
