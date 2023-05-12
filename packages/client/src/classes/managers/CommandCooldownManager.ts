@@ -78,7 +78,7 @@ export class CommandCooldownManager extends Array<CommandCooldownData> {
     public clean(options?: Partial<Omit<CommandCooldownData, 'expireTime'>>): void {
         for (const index in this) {
             if (options && !CommandCooldownManager.checkOptions(options, this[index])) return;
-            if (this[index].endsAt.getTime() > Date.now()) return;
+            if (!this[index] || this[index].endsAt.getTime() > Date.now()) return;
             this.slice(Number(index));
         }
     }
