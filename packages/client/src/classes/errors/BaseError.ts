@@ -3,6 +3,7 @@ import { CommandError } from './CommandError';
 import { ModuleError } from './ModuleError';
 import { replacePlaceholders } from '../../utils/functions';
 import kleur from 'kleur';
+import stripAnsi from 'strip-ansi';
 
 export interface BaseErrorCodes {
     [code: string|number]: (() => string)|string;
@@ -29,5 +30,9 @@ export abstract class BaseError<ErrorCodes extends BaseErrorCodes = BaseErrorCod
 
     public isModuleError(): this is ModuleError {
         return this.errorType === ErrorType.ModuleError;
+    }
+
+    public toString(): string {
+        return stripAnsi(super.toString());
     }
 }
