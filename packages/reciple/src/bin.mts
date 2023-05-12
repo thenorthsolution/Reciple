@@ -1,18 +1,19 @@
 #!/usr/bin/env node
 
 import { ContextMenuCommandBuilder, MessageCommandBuilder, SlashCommandBuilder, realVersion, version } from '@reciple/client';
-import { getModules } from './utils/modules.js';
+import { getJsConfig, getModules } from './utils/modules.js';
 import { createLogger, eventLogger } from './utils/logger.js';
+import { CacheFactory, SweeperOptions } from 'discord.js';
 import { existsSync, mkdirSync, readdirSync } from 'fs';
-import { Config } from './classes/Config.js';
 import { command, cli } from './utils/cli.js';
+import { setTimeout } from 'timers/promises';
+import { Config } from './classes/Config.js';
 import { RecipleClient } from './index.js';
 import micromatch from 'micromatch';
 import prompts from 'prompts';
 import semver from 'semver';
 import path from 'path';
 import kleur from 'kleur';
-import { setTimeout } from 'timers/promises';
 
 command.parse();
 
@@ -44,6 +45,11 @@ const logger = config.logger?.enabled ? createLogger(config.logger) : undefined;
 if (cli.options.setup) process.exit(0);
 if (cli.options.shardmode) config.applicationCommandRegister = { ...config.applicationCommandRegister, enabled: false };
 
+const processErrorHandler = (err: any) => logger?.error(err);
+
+process.once('uncaughtException', processErrorHandler);
+process.once('unhandledRejection', processErrorHandler);
+
 /**
  * !! BREAKING !!
  * TODO: use reciple cli version instead of client version when checking
@@ -58,7 +64,9 @@ logger?.info(`Starting Reciple client v${realVersion} - ${new Date()}`);
 const client = new RecipleClient({
     recipleOptions: config,
     ...config.client,
-    logger
+    logger,
+    makeCache: cli.options.cacheConfig ? await getJsConfig<CacheFactory>(cli.options.cacheConfig) : undefined,
+    sweepers: cli.options.sweeperConfig ? await getJsConfig<SweeperOptions>(cli.options.sweeperConfig) : undefined,
 });
 
 eventLogger(client);
@@ -71,6 +79,9 @@ await client.modules.startModules({
 });
 
 client.once('ready', async () => {
+    process.removeListener('uncaughtException', processErrorHandler);
+    process.removeListener('unhandledRejection', processErrorHandler);
+
     const loadedModules = await client.modules.loadModules({
         modules: client.modules.modules.toJSON(),
         resolveCommands: true

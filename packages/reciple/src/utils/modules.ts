@@ -1,4 +1,5 @@
 import { existsSync, lstatSync, mkdirSync, readdirSync } from 'fs';
+import { recursiveDefaults } from '@reciple/client';
 import { Awaitable } from 'fallout-utility';
 import { IConfig } from '../classes/Config';
 import micromatch from 'micromatch';
@@ -37,4 +38,10 @@ export async function getModules(config: IConfig['modules'], filter?: (filename:
     }
 
     return modules;
+}
+
+export async function getJsConfig<T>(file: string): Promise<T|undefined> {
+    file = path.resolve(path.isAbsolute(file) ? file : path.join(cli.cwd, file));
+
+    return recursiveDefaults<T>(await import(`file://${file}`));
 }

@@ -149,7 +149,7 @@ export class ModuleManager extends TypedEmitter<ModuleManagerEvents> {
 
             try {
                 let resolveFile = fileResolver ? await Promise.resolve(fileResolver(filePath)) : undefined;
-                    resolveFile = typeof resolveFile === 'undefined' ? await import((path.isAbsolute(filePath) ? 'file://' : '') + filePath) : resolveFile;
+                    resolveFile = resolveFile === undefined ? await import(`file://${filePath}`) : resolveFile;
 
                 const script = recursiveDefaults<RecipleModuleScript|RecipleModule|undefined>(resolveFile);
 

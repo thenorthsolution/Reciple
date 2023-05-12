@@ -32,7 +32,7 @@ export function getCommandBuilderName(command: AnyCommandBuilder|AnyCommandData|
 
 export function recursiveDefaults<T = unknown>(data: RecursiveDefault<T>|T): T|undefined {
     function isDefaults(object: any): object is RecursiveDefault<T> {
-        return typeof object?.default !== 'undefined';
+        return object?.default !== undefined;
     }
 
     if (!isDefaults(data)) return data;
