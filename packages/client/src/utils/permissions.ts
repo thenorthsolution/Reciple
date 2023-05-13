@@ -1,5 +1,6 @@
 import { Guild, GuildTextBasedChannel, PermissionResolvable, PermissionsBitField } from 'discord.js';
 import { AnyCommandBuilder } from '../types/commands';
+import { deprecate } from 'util';
 
 export interface hasExecutePermissionsOptions {
     builder: AnyCommandBuilder;
@@ -21,11 +22,10 @@ export interface userHasExecutePermissionsOptions extends hasExecutePermissionsO
 /**
  * @deprecated Use hashasExecutePermissions instead
  */
-export function memberHasExecutePermissions(options: userHasExecutePermissionsOptions) {
+export const memberHasExecutePermissions = deprecate(function memberHasExecutePermissions(options: userHasExecutePermissionsOptions) {
     // TODO: Remove deprecated
-    process.emitWarning('memberHasExecutePermissions() is deprecated! Use hasExecutePermissions() instead', 'DeprecationWarning');
     return hasExecutePermissions(options);
-}
+}, 'memberHasExecutePermissions() is deprecated. Use hasExecutePermissions() instead.');
 
 export function botHasPermissionsToExecute(guildOrChannel: Guild|GuildTextBasedChannel, requiredPermissions: PermissionResolvable): boolean {
     let permissions: PermissionsBitField|null = null;
