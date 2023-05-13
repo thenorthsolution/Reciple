@@ -50,6 +50,8 @@ const processErrorHandler = (err: any) => logger?.error(err);
 process.once('uncaughtException', processErrorHandler);
 process.once('unhandledRejection', processErrorHandler);
 
+process.on('warning', warn => logger?.warn(warn));
+
 /**
  * !! BREAKING !!
  * TODO: use reciple cli version instead of client version when checking
