@@ -2,6 +2,7 @@ import { realVersion } from '@reciple/client';
 import { Command } from 'commander';
 import { readFileSync } from 'fs';
 import path from 'path';
+import { deprecate } from 'util';
 
 const { version, description } = JSON.parse(readFileSync(path.join(__dirname, '../../package.json'), 'utf-8'));
 
@@ -35,7 +36,7 @@ export const flags = cli.options;
 /**
  * @deprecated Use `cli` object instead
  */
-export const argvOptions = () => cli.options;
+export const argvOptions = deprecate(() => cli.options, 'argvOptions() is deprecated. Use the cli.args instead.');
 
 /**
  * @deprecated Use `cli` object instead
