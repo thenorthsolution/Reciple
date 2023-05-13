@@ -1,7 +1,6 @@
 name: Github Release
 on:
   push:
-    branches: ['main']
     tags: ['*reciple@*', '@reciple/*@*']
   workflow_dispatch:
 concurrency:
