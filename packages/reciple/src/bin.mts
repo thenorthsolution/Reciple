@@ -40,7 +40,7 @@ if (readdirSync(cli.cwd).filter(f => !micromatch.isMatch(f, allowedFiles)).lengt
 
 const configParser = await (new Config(configPath)).parseConfig();
 const config = configParser.getConfig();
-const logger = config.logger?.enabled ? createLogger(config.logger) : undefined;
+const logger = config.logger?.enabled ? await createLogger(config.logger) : undefined;
 
 if (cli.options.setup) process.exit(0);
 if (cli.options.shardmode) config.applicationCommandRegister = { ...config.applicationCommandRegister, enabled: false };

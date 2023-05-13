@@ -29,19 +29,19 @@ export function formatLogMessage(message: string, logger: Logger, config: Partia
             ) + ` ${message}`;
 }
 
-export function createLogger(config: PartialDeep<IConfig['logger']>): Logger {
+export async function createLogger(config: PartialDeep<IConfig['logger']>): Promise<Logger> {
     const logger = new Logger({
         enableDebugmode: cli.options.debugmode || config.debugmode === true,
         forceEmitLogEvents: true,
-        formatMessageLines: {
-            [LoggerLevel.INFO]: (message, logger) => formatLogMessage(message, logger, config, LoggerLevel.INFO),
-            [LoggerLevel.WARN]: (message, logger) => formatLogMessage(message, logger, config, LoggerLevel.WARN),
-            [LoggerLevel.ERROR]: (message, logger) => formatLogMessage(message, logger, config, LoggerLevel.ERROR),
-            [LoggerLevel.DEBUG]: (message, logger) => formatLogMessage(message, logger, config, LoggerLevel.DEBUG),
-        }
+        formatMessage: (message, level, logger) => formatLogMessage(message, logger, config, level)
     });
 
-    if (config.logToFile?.enabled) logger.logToFile(path.join(cli.cwd, config.logToFile?.logsFolder ?? path.join(cli.cwd, 'logs'), !cli.options.shardmode ? (config.logToFile?.file ?? 'latest.log') : `${process.pid}.log`));
+    if (config.logToFile?.enabled) {
+        await logger.createFileWriteStream({
+            file: path.join(cli.cwd, config.logToFile?.logsFolder ?? path.join(cli.cwd, 'logs'), !cli.options.shardmode ? (config.logToFile?.file ?? 'latest.log') : `${process.pid}.log`)
+        });
+    }
+
     return logger;
 }
 
