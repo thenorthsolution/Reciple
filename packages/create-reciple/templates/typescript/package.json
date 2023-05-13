@@ -5,7 +5,7 @@
     "build": "BIN_EXEC rimraf ./modules && BIN_EXEC tsc",
     "start": "BIN_EXEC reciple",
     "build:start": "SCRIPT_RUN build && SCRIPT_RUN start",
-    "dev": "BIN_EXEC nodemon --watch src --ext ts,mts,cts --exec \"SCRIPT_RUN build:start\""
+    "dev": "BIN_EXEC nodemon --watch src --ext ts,mts,cts --exec \"SCRIPT_RUN build:start\" --signal SIGHUP"
   },
   "dependencies": {
     "discord.js": "DISCORDJS",
