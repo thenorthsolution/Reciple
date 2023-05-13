@@ -217,6 +217,10 @@ export class SlashCommandBuilder extends Mixin(discordjs.SlashCommandBuilder, Ba
             .setDescriptionLocalizations(option.descriptionLocalizations ?? null) as T;
     }
 
+    /**
+     * Resolves a slash command data and return a builder
+     * @param slashCommandResolvable Slash command data
+     */
     public static resolve(slashCommandResolvable: SlashCommandResolvable): AnySlashCommandBuilder {
         return this.isSlashCommandBuilder(slashCommandResolvable) ? slashCommandResolvable : new SlashCommandBuilder(slashCommandResolvable);
     }
@@ -225,6 +229,11 @@ export class SlashCommandBuilder extends Mixin(discordjs.SlashCommandBuilder, Ba
         return data instanceof SlashCommandBuilder;
     }
 
+    /**
+     * Execute a slash command
+     * @param client Current bot client
+     * @param interaction Command interaction
+     */
     public static async execute(client: RecipleClient, interaction: ChatInputCommandInteraction): Promise<SlashCommandExecuteData|undefined> {
         if (client.config?.commands?.slashCommand?.enabled === false) return;
         if (client.config?.commands?.slashCommand?.acceptRepliedInteractions === false && (interaction.replied || interaction.deferred)) return;

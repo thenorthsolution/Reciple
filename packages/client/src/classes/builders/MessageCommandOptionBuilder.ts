@@ -52,21 +52,37 @@ export class MessageCommandOptionBuilder implements MessageCommandOptionData {
         if (data?.validator !== undefined) this.setValidator(data.validator);
     }
 
+    /**
+     * Sets the option name
+     * @param name The option name
+     */
     public setName(name: string): this {
         this.name = name;
         return this;
     }
 
+    /**
+     * Sets the option description
+     * @param description The option description
+     */
     public setDescription(description: string): this {
         this.description = description;
         return this;
     }
 
+    /**
+     * Sets whether the option is required
+     * @param required Is the option required
+     */
     public setRequired(required: boolean): this {
         this.required = required;
         return this;
     }
 
+    /**
+     * Sets the option value validator function
+     * @param validator The validate function
+     */
     public setValidator(validator: MessageCommandOptionValidatorFunction): this {
         this.validator = validator;
         return this;
@@ -81,10 +97,20 @@ export class MessageCommandOptionBuilder implements MessageCommandOptionData {
         };
     }
 
+    /**
+     * Resolve a message command option data and return a builder
+     * @param optionResolvable Message command data
+     */
     public static resolve(optionResolvable: MessageCommandOptionResolvable): MessageCommandOptionBuilder {
         return optionResolvable instanceof MessageCommandOptionBuilder ? optionResolvable : new MessageCommandOptionBuilder(optionResolvable); 
     }
 
+    /**
+     * Validates a message command option value
+     * @param option The option data
+     * @param message The command message
+     * @param value The option value
+     */
     public static async validateOptionValue(option: MessageCommandOptionResolvable, message: Message, value?: string): Promise<MessageCommandOptionValue> {
         const validatedOption: MessageCommandOptionValue = {
             name: option.name,

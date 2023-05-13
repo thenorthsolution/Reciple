@@ -100,11 +100,19 @@ export class MessageCommandBuilder extends BaseCommandBuilder implements Message
         if (data?.options !== undefined) this.setOptions(data.options);
     }
 
+    /**
+     * Sets the command name
+     * @param name The command name
+     */
     public setName(name: string): this {
         this.name = name;
         return this;
     }
 
+    /**
+     * Adds command aliases
+     * @param aliases The command aliases
+     */
     public addAliases(...aliases: RestOrArray<string>): this {
         aliases = normalizeArray(aliases);
 
@@ -115,32 +123,56 @@ export class MessageCommandBuilder extends BaseCommandBuilder implements Message
         return this;
     }
 
+    /**
+     * Sets command aliases
+     * @param aliases The command aliases
+     */
     public setAliases(...aliases: RestOrArray<string>): this {
         this.aliases = [];
 
         return this.addAliases(...aliases);
     }
 
+    /**
+     * Sets whether the command is usable in DM channels
+     * @param dmPermission Is allowed in DM
+     */
     public setDmPermission(dmPermission: boolean): this {
         this.dmPermission = dmPermission;
         return this;
     }
 
+    /**
+     * Sets whether the command could be executed by bots
+     * @param userBotPermission Is executable by bots
+     */
     public setUserBotPermission(userBotPermission: boolean): this {
         this.userBotPermission = userBotPermission;
         return this;
     }
 
+    /**
+     * Validates given options and execute options' `validate` function if exists
+     * @param validateOptions Is command options validate enabled
+     */
     public setValidateOptions(validateOptions: boolean): this {
         this.validateOptions = validateOptions;
         return this;
     }
 
+    /**
+     * Sets the command description
+     * @param description The command description
+     */
     public setDescription(description: string): this {
         this.description = description;
         return this;
     }
 
+    /**
+     * Adds command options
+     * @param options The command options
+     */
     public addOptions(...options: RestOrArray<MessageCommandOptionResolvable | ((builder: MessageCommandOptionBuilder) => MessageCommandOptionBuilder)>): this {
         for (const optionResolvable of normalizeArray(options)) {
             this.addOption(optionResolvable);
@@ -149,11 +181,19 @@ export class MessageCommandBuilder extends BaseCommandBuilder implements Message
         return this;
     }
 
+    /**
+     * Sets command options
+     * @param options The command options
+     */
     public setOptions(...options: RestOrArray<MessageCommandOptionResolvable | ((builder: MessageCommandOptionBuilder) => MessageCommandOptionBuilder)>): this {
         this.options = [];
         return this.addOptions(normalizeArray(options));
     }
 
+    /**
+     * Add a single option
+     * @param optionResolvable The command option
+     */
     public addOption(optionResolvable: MessageCommandOptionResolvable | ((builder: MessageCommandOptionBuilder) => MessageCommandOptionBuilder)): this {
         const option = typeof optionResolvable === 'function'
             ? optionResolvable(new MessageCommandOptionBuilder())
@@ -185,6 +225,10 @@ export class MessageCommandBuilder extends BaseCommandBuilder implements Message
         };
     }
 
+    /**
+     * Resolve message command data and returns a builder
+     * @param messageCommandResolvable The message command data
+     */
     public static resolve(messageCommandResolvable: MessageCommandResovable): MessageCommandBuilder {
         return this.isMessageCommandBuilder(messageCommandResolvable) ? messageCommandResolvable : new MessageCommandBuilder(messageCommandResolvable);
     }
@@ -193,6 +237,10 @@ export class MessageCommandBuilder extends BaseCommandBuilder implements Message
         return data instanceof MessageCommandBuilder;
     }
 
+    /**
+     * Get validated command option values
+     * @param options Validate options data
+     */
     public static async validateCommandOptions(options: MessageCommandValidateOptionData): Promise<MessageCommandOptionManager> {
         const validated: MessageCommandOptionManager = new MessageCommandOptionManager();
         if (!options.command.options) return validated;
@@ -205,6 +253,13 @@ export class MessageCommandBuilder extends BaseCommandBuilder implements Message
         return validated;
     }
 
+    /**
+     * Execute a message command
+     * @param client Current bot client
+     * @param message The command message
+     * @param prefix The command prefix
+     * @param separator The command args separator
+     */
     public static async execute(client: RecipleClient, message: Message, prefix?: string, separator?: string): Promise<MessageCommandExecuteData|undefined> {
         if (client.config.commands?.messageCommand?.enabled === false || !message.content) return;
 

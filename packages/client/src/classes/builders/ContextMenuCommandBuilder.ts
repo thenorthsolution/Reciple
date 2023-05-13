@@ -69,6 +69,10 @@ export class ContextMenuCommandBuilder extends Mixin(discordjs.ContextMenuComman
         return this;
     }
 
+    /**
+     * Resolve a context menu command data and return a builder
+     * @param contextMenuCommandResolvable Context menu command data
+     */
     public static resolve(contextMenuCommandResolvable: ContextMenuCommandResolvable): ContextMenuCommandBuilder {
         return this.isContextMenuCommandBuilder(contextMenuCommandResolvable) ? contextMenuCommandResolvable : new ContextMenuCommandBuilder(contextMenuCommandResolvable);
     }
@@ -77,6 +81,11 @@ export class ContextMenuCommandBuilder extends Mixin(discordjs.ContextMenuComman
         return data instanceof ContextMenuCommandBuilder;
     }
 
+    /**
+     * Execute a context menu command
+     * @param client Current bot client
+     * @param interaction Context menu command interaction
+     */
     public static async execute(client: RecipleClient, interaction: ContextMenuCommandInteraction): Promise<ContextMenuCommandExecuteData|undefined> {
         if (client.config.commands?.contextMenuCommand?.enabled === false) return;
         if (client.config.commands?.contextMenuCommand?.acceptRepliedInteractions === false && (interaction.replied || interaction.deferred)) return;

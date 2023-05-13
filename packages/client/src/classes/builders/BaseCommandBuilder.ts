@@ -42,25 +42,47 @@ export abstract class BaseCommandBuilder implements BaseCommandBuilderData {
         this.from(data);
     }
 
+    /**
+     * Sets the command halt execute function
+     * @param halt The function executed when a command is halted
+     */
     public setHalt(halt?: AnyCommandHaltFunction|null): this {
         this.halt = halt || undefined;
         return this;
     }
+
+    /**
+     * Sets the execute function
+     * @param execute The function executed when the command is triggered
+     */
     public setExecute(execute?: AnyCommandExecuteFunction|null): this {
         this.execute = execute || undefined;
         return this;
     }
 
+    /**
+     * Sets command execute cooldown
+     * @param cooldown Command cooldown in milliseconds
+     */
     public setCooldown(cooldown?: number|null): this {
         this.cooldown = cooldown || undefined;
         return this;
     }
 
+    /**
+     * Sets the required bot permissions to execute this command
+     * @param permissions Permission resolvable
+     */
     public setRequiredBotPermissions(permissions?: PermissionResolvable|null): this {
         this.requiredBotPermissions = permissions ? new PermissionsBitField(permissions).bitfield : undefined;
         return this;
     }
 
+    /**
+     * Sets the required member permissions to execute this command.
+     * Unlike `.setDefaultMemberPermissions` it accepts string, array, and number permissions
+     * @param permissions Permission resolvable
+     */
     public setRequiredMemberPermissions(permissions?: PermissionResolvable|null): this {
         this.requiredMemberPermissions = permissions ? new PermissionsBitField(permissions).bitfield : undefined;
         return this;
