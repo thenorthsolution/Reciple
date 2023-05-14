@@ -34,7 +34,7 @@
     "README.md"
   ],
   "devDependencies": {
-    "@reciple/client": "^7.5.3"
+    "@reciple/client": "^7.5.4"
   },
   "peerDependencies": {
     "@reciple/client": "^7.5.3"
