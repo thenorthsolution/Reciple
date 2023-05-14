@@ -75,7 +75,6 @@ export class RecipleNPMLoader implements RecipleModuleScript {
             const packageJson: { name: string; keywords: string[]; recipleModule: string; } = JSON.parse(readFileSync(path.join(folder, 'package.json'), 'utf-8'));
             const moduleFile: string = path.join(folder, packageJson.recipleModule);
 
-            if (this.ignoredPackages.includes(packageJson.name)) continue;
             moduleFiles.push(moduleFile);
         }
 
@@ -91,7 +90,6 @@ export class RecipleNPMLoader implements RecipleModuleScript {
                 const packageJson: { name: string; keywords: string[]; recipleModule: string; } = JSON.parse(readFileSync(path.join(subFolder, 'package.json'), 'utf-8'));
                 const moduleFile: string = path.join(subFolder, packageJson.recipleModule);
 
-                if (this.ignoredPackages.includes(packageJson.name)) continue;
                 moduleFiles.push(moduleFile);
             }
         }
@@ -105,7 +103,8 @@ export class RecipleNPMLoader implements RecipleModuleScript {
         const packageJsonPath = path.join(folder, 'package.json');
         if (!existsSync(packageJsonPath)) return false;
 
-        const packageJson: { keywords?: string[]; recipleModule?: string; } = JSON.parse(readFileSync(packageJsonPath, 'utf-8'));
+        const packageJson: { name: string; keywords?: string[]; recipleModule?: string; } = JSON.parse(readFileSync(packageJsonPath, 'utf-8'));
+        if (this.ignoredPackages.includes(packageJson.name)) return false;
         if (!packageJson.recipleModule || !existsSync(path.join(folder, packageJson.recipleModule))) return false;
         if (!packageJson.keywords?.includes('reciple-module')) return false;
 
