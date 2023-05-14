@@ -1,4 +1,4 @@
-import { RecipleClient, RecipleModule, RecipleModuleScript, RecipleModuleScriptUnloadData } from '@reciple/client';
+import { RecipleClient, RecipleModule, RecipleModuleScript } from '@reciple/client';
 import { existsSync, lstatSync, readFileSync, readdirSync, readlinkSync } from 'fs';
 import { Logger } from '@reciple/client';
 import path from 'path';
@@ -36,22 +36,6 @@ export class RecipleNPMLoader implements RecipleModuleScript {
         return true;
     }
 
-    public async onLoad(): Promise<void> {
-        await this.client.modules.loadModules({
-            modules: this.modules,
-            resolveCommands: true
-        });
-    }
-
-    public async onUnload(unloadData: RecipleModuleScriptUnloadData): Promise<void> {
-        await this.client.modules.unloadModules({
-            modules: this.modules,
-            reason: unloadData.reason,
-            removeCommandsFromClient: true,
-            removeFromModulesCollection: true
-        });
-    }
-
     public async getModules(npmModules: string): Promise<RecipleModule[]> {
         if (!existsSync(npmModules)) return [];
 
@@ -69,7 +53,7 @@ export class RecipleNPMLoader implements RecipleModuleScript {
         for (const folder of folders) {
             const isValid = await this.isValidModuleFolder(folder);
 
-            this.logger?.debug(`VALID: ${isValid}; FOLDER:`, folder);
+            this.logger?.debug(isValid, folder);
             if (!isValid) continue;
 
             const packageJson: { name: string; keywords: string[]; recipleModule: string; } = JSON.parse(readFileSync(path.join(folder, 'package.json'), 'utf-8'));
@@ -84,7 +68,7 @@ export class RecipleNPMLoader implements RecipleModuleScript {
             for (const subFolder of subFolders) {
                 const isValid = await this.isValidModuleFolder(subFolder);
 
-                this.logger?.debug(`VALID: ${isValid}; FOLDER:`, subFolder);
+                this.logger?.debug(isValid, subFolder);
                 if (!isValid) continue;
 
                 const packageJson: { name: string; keywords: string[]; recipleModule: string; } = JSON.parse(readFileSync(path.join(subFolder, 'package.json'), 'utf-8'));
