@@ -4,6 +4,8 @@ import path from 'path';
 import { RecipleClient, cli } from 'reciple';
 
 export class NPMLoader extends RecipleNPMLoader {
+    get cwd() { return cli.cwd; }
+
     /**
      * 
      * @param {RecipleClient<false>} client
