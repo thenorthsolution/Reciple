@@ -4,11 +4,12 @@
   "type": "module",
   "scripts": {
     "start": "npx reciple -c config.yml",
-    "test": "node ../packages/reciple/bin/bin.mjs -c config.yml",
+    "test": "node ../packages/reciple/bin/bin.mjs -c config.yml --debugmode",
     "shards": "node --experimental-import-meta-resolve shards.js -c config.yml"
   },
   "dependencies": {
     "discord.js": "^14.10.2",
-    "reciple": "^7.3.0"
+    "reciple": "^7.3.0",
+    "@reciple/npm-loader": "^7.0.0"
   }
 }

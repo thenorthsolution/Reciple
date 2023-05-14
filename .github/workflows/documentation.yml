@@ -5,9 +5,11 @@ on:
     paths:
       - '**/reciple/src/**'
       - '**/client/src/**'
+      - '**/npm-loader/src/**'
       - '**/reciple/package.json'
       - '**/client/package.json'
-    tags: ['reciple@*', '@reciple/client@*']
+      - '**/npm-loader/package.json'
+    tags: ['reciple@*', '@reciple/client@*', '@reciple/npm-loader@*']
   workflow_dispatch:
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
@@ -49,7 +51,7 @@ jobs:
       max-parallel: 1
       fail-fast: false
       matrix:
-        package: ['reciple', 'client']
+        package: ['reciple', 'client', 'npm-loader']
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3

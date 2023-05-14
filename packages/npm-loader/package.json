@@ -1,0 +1,42 @@
+{
+  "name": "@reciple/npm-loader",
+  "description": "Load Reciple modules from node_modules",
+  "license": "GPL-3.0",
+  "version": "7.0.0",
+  "main": "./dist/module.js",
+  "module": "./dist/module.mjs",
+  "types": "./dist/module.d.ts",
+  "keywords": [
+    "reciple",
+    "discord.js",
+    "handler",
+    "client"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/FalloutStudios",
+    "directory": "packages/npm-loader"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/module.d.ts",
+      "import": "./dist/module.mjs",
+      "require": "./dist/module.js"
+    }
+  },
+  "scripts": {
+    "clean": "npx rimraf ./dist",
+    "build": "npm run clean && npx tsc",
+    "docs": "npx docgen -i ./src/index.ts -c ./docs/custom.json -o ./docs/docs.json --typescript"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "devDependencies": {
+    "@reciple/client": "^7.5.3"
+  },
+  "peerDependencies": {
+    "@reciple/client": "^7.5.3"
+  }
+}

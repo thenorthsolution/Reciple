@@ -19,3 +19,5 @@ export * from './types/slashCommandOptions';
 export * from './utils/constants';
 export * from './utils/functions';
 export * from './utils/permissions';
+
+export { Logger, CommandData } from 'fallout-utility';
