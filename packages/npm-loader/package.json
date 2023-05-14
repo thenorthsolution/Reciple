@@ -2,7 +2,7 @@
   "name": "@reciple/npm-loader",
   "description": "Load Reciple modules from node_modules",
   "license": "GPL-3.0",
-  "version": "7.0.1",
+  "version": "7.0.2",
   "main": "./dist/module.js",
   "module": "./dist/module.mjs",
   "types": "./dist/module.d.ts",
