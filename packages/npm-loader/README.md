@@ -18,3 +18,30 @@
 ## About
 
 `@reciple/npm-loader` will load Reciple modules from node_modules
+
+## Usage
+
+```js
+import { RecipleNPMLoader } from '@reciple/npm-loader';
+
+export default new RecipleNPMLoader();
+```
+
+You can set your custom node_modules folder by extending the class
+```js
+import { RecipleNPMLoader } from '@reciple/npm-loader';
+import path from 'path';
+
+export class NPMLoader extends RecipleNPMLoader {
+    async onStart(client) {
+        // Change the node_modules path
+        this.nodeModulesFolder = path.join(cli.cwd, 'node_modules');
+        // Use config value of disableVersionChecks
+        this.disableVersionChecks = !!client.config.modules?.disableModuleVersionCheck;
+
+        return super.onStart(client);
+    }
+}
+
+export default new NPMLoader();
+```
