@@ -13,6 +13,8 @@ export class RecipleNPMLoader implements RecipleModuleScript {
     public disableVersionChecks: boolean = false;
     public ignoredPackages: string[] = [];
 
+    get cwd() { return process.cwd(); }
+
     constructor(options?: { nodeModulesFolder?: string; disableVersionChecks?: boolean; }) {
         if (options?.nodeModulesFolder) this.nodeModulesFolder = options.nodeModulesFolder;
         if (options?.disableVersionChecks) this.disableVersionChecks = options.disableVersionChecks;
@@ -56,8 +58,8 @@ export class RecipleNPMLoader implements RecipleModuleScript {
         this.logger?.debug(`Loading modules from '${npmModules}'`);
 
         const contents = readdirSync(npmModules).map(f => path.join(npmModules, f)).filter(f => lstatSync(f).isDirectory() || lstatSync(f).isSymbolicLink());
-        const folders = contents.filter(f => !path.basename(f).startsWith('@')).map(f => lstatSync(f).isSymbolicLink() ? readlinkSync(f) : f);
-        const withSubfolders = contents.filter(f => path.basename(f).startsWith('@')).map(f => lstatSync(f).isSymbolicLink() ? readlinkSync(f) : f);
+        const folders = contents.filter(f => !path.basename(f).startsWith('@')).map(f => lstatSync(f).isSymbolicLink() ? path.join(this.cwd, readlinkSync(f)) : f);
+        const withSubfolders = contents.filter(f => path.basename(f).startsWith('@')).map(f => lstatSync(f).isSymbolicLink() ? path.join(this.cwd, readlinkSync(f)) : f);
 
         this.logger?.debug(`Found (${folders.length}) node_modules package folders.`);
         this.logger?.debug(`Found (${withSubfolders.length}) node_modules folders with package subfolders.`);
