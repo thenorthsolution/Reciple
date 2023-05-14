@@ -11,6 +11,7 @@ export class RecipleNPMLoader implements RecipleModuleScript {
     public logger?: Logger;
     public nodeModulesFolder: string = path.join(process.cwd(), 'node_modules');
     public disableVersionChecks: boolean = false;
+    public ignoredPackages: string[] = [];
 
     constructor(options?: { nodeModulesFolder?: string; disableVersionChecks?: boolean; }) {
         if (options?.nodeModulesFolder) this.nodeModulesFolder = options.nodeModulesFolder;
@@ -66,9 +67,10 @@ export class RecipleNPMLoader implements RecipleModuleScript {
         for (const folder of folders) {
             if (!await this.isValidModuleFolder(folder)) continue;
 
-            const packageJson: { keywords: string[]; recipleModule: string; } = JSON.parse(readFileSync(path.join(folder, 'package.json'), 'utf-8'));
+            const packageJson: { name: string; keywords: string[]; recipleModule: string; } = JSON.parse(readFileSync(path.join(folder, 'package.json'), 'utf-8'));
             const moduleFile: string = path.join(folder, packageJson.recipleModule);
 
+            if (this.ignoredPackages.includes(packageJson.name)) continue;
             moduleFiles.push(moduleFile);
         }
 
@@ -78,9 +80,10 @@ export class RecipleNPMLoader implements RecipleModuleScript {
             for (const subFolder of subFolders) {
                 if (!await this.isValidModuleFolder(subFolder)) continue;
 
-                const packageJson: { keywords: string[]; recipleModule: string; } = JSON.parse(readFileSync(path.join(subFolder, 'package.json'), 'utf-8'));
+                const packageJson: { name: string; keywords: string[]; recipleModule: string; } = JSON.parse(readFileSync(path.join(subFolder, 'package.json'), 'utf-8'));
                 const moduleFile: string = path.join(subFolder, packageJson.recipleModule);
 
+                if (this.ignoredPackages.includes(packageJson.name)) continue;
                 moduleFiles.push(moduleFile);
             }
         }
