@@ -1,6 +1,6 @@
-import { Logger } from '@reciple/client';
 import { RecipleClient, RecipleModule, RecipleModuleScript, RecipleModuleScriptUnloadData } from '@reciple/client';
 import { existsSync, lstatSync, readFileSync, readdirSync } from 'fs';
+import { Logger } from '@reciple/client';
 import path from 'path';
 
 export class RecipleNPMLoader implements RecipleModuleScript {
