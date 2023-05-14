@@ -67,7 +67,10 @@ export class RecipleNPMLoader implements RecipleModuleScript {
         const moduleFiles: string[] = [];
 
         for (const folder of folders) {
-            if (!await this.isValidModuleFolder(folder)) continue;
+            const isValid = await this.isValidModuleFolder(folder);
+
+            this.logger?.debug(isValid, folder);
+            if (!isValid) continue;
 
             const packageJson: { name: string; keywords: string[]; recipleModule: string; } = JSON.parse(readFileSync(path.join(folder, 'package.json'), 'utf-8'));
             const moduleFile: string = path.join(folder, packageJson.recipleModule);
@@ -80,7 +83,10 @@ export class RecipleNPMLoader implements RecipleModuleScript {
             const subFolders = readdirSync(folder).map(f => path.join(folder, f)).filter(f => lstatSync(f).isDirectory());
 
             for (const subFolder of subFolders) {
-                if (!await this.isValidModuleFolder(subFolder)) continue;
+                const isValid = await this.isValidModuleFolder(subFolder);
+
+                this.logger?.debug(isValid, subFolder);
+                if (!isValid) continue;
 
                 const packageJson: { name: string; keywords: string[]; recipleModule: string; } = JSON.parse(readFileSync(path.join(subFolder, 'package.json'), 'utf-8'));
                 const moduleFile: string = path.join(subFolder, packageJson.recipleModule);
