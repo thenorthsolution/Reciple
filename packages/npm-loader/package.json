@@ -38,5 +38,8 @@
   },
   "peerDependencies": {
     "@reciple/client": "^7.5.3"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
