@@ -1,5 +1,5 @@
 import { RecipleClient, RecipleModule, RecipleModuleScript, RecipleModuleScriptUnloadData } from '@reciple/client';
-import { existsSync, lstatSync, readFileSync, readdirSync } from 'fs';
+import { existsSync, lstatSync, readFileSync, readdirSync, readlinkSync } from 'fs';
 import { Logger } from '@reciple/client';
 import path from 'path';
 
@@ -55,9 +55,9 @@ export class RecipleNPMLoader implements RecipleModuleScript {
 
         this.logger?.debug(`Loading modules from '${npmModules}'`);
 
-        const contents = readdirSync(npmModules).map(f => path.join(npmModules, f)).filter(f => lstatSync(f).isDirectory());
-        const folders = contents.filter(f => !path.basename(f).startsWith('@'));
-        const withSubfolders = contents.filter(f => path.basename(f).startsWith('@'));
+        const contents = readdirSync(npmModules).map(f => path.join(npmModules, f)).filter(f => lstatSync(f).isDirectory() || lstatSync(f).isSymbolicLink());
+        const folders = contents.filter(f => !path.basename(f).startsWith('@')).map(f => lstatSync(f).isSymbolicLink() ? readlinkSync(f) : f);
+        const withSubfolders = contents.filter(f => path.basename(f).startsWith('@')).map(f => lstatSync(f).isSymbolicLink() ? readlinkSync(f) : f);
 
         this.logger?.debug(`Found (${folders.length}) node_modules package folders.`);
         this.logger?.debug(`Found (${withSubfolders.length}) node_modules folders with package subfolders.`);
