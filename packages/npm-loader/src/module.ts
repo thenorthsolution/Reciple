@@ -21,7 +21,7 @@ export class RecipleNPMLoader implements RecipleModuleScript {
         this.client = client;
         this.logger = client.logger?.clone({ name: 'NPMLoader' });
 
-        this.modules.push(...await this.getModules());
+        this.modules.push(...await this.getModules(this.nodeModulesFolder));
 
         this.logger?.log(`Found (${this.modules.length}) NPM Reciple modules`);
 
@@ -49,12 +49,12 @@ export class RecipleNPMLoader implements RecipleModuleScript {
         });
     }
 
-    public async getModules(): Promise<RecipleModule[]> {
-        this.logger?.debug(`Scanning: ${this.nodeModulesFolder}`);
+    public async getModules(npmModules: string): Promise<RecipleModule[]> {
+        if (!existsSync(npmModules)) return [];
 
-        if (!existsSync(this.nodeModulesFolder)) return [];
+        this.logger?.debug(`Loading modules from '${npmModules}'`);
 
-        const contents = readdirSync(this.nodeModulesFolder).map(f => path.join(this.nodeModulesFolder, f)).filter(f => lstatSync(f).isDirectory());
+        const contents = readdirSync(npmModules).map(f => path.join(npmModules, f)).filter(f => lstatSync(f).isDirectory());
         const folders = contents.filter(f => !path.basename(f).startsWith('@'));
         const withSubfolders = contents.filter(f => path.basename(f).startsWith('@'));
 
@@ -84,6 +84,8 @@ export class RecipleNPMLoader implements RecipleModuleScript {
                 moduleFiles.push(moduleFile);
             }
         }
+
+        if (moduleFiles.length) this.logger?.debug(`Loading modules:\n  `, moduleFiles.join('\n  '));
 
         return this.client.modules.resolveModuleFiles(moduleFiles, this.disableVersionChecks);
     }
