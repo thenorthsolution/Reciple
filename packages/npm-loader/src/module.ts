@@ -3,6 +3,10 @@ import { existsSync, lstatSync, readFileSync, readdirSync, readlinkSync } from '
 import { Logger } from '@reciple/client';
 import path from 'path';
 
+export interface RecipleNPMModuleScript extends RecipleModuleScript {
+    moduleName?: string;
+}
+
 export interface PartialPackageJson {
     name: string;
     description?: string;
@@ -35,8 +39,8 @@ export interface RecipleNPMLoaderOptions {
 
 export class RecipleNPMLoader implements RecipleModuleScript, RecipleNPMLoaderOptions {
     readonly versions: string = JSON.parse(readFileSync(path.join(__dirname, '../package.json'), 'utf-8')).peerDependencies['@reciple/client'];
-    readonly modules: RecipleModule[] = [];
 
+    public modules: RecipleModule[] = [];
     public client!: RecipleClient;
     public logger?: Logger;
 
@@ -58,7 +62,9 @@ export class RecipleNPMLoader implements RecipleModuleScript, RecipleNPMLoaderOp
         this.client = client;
         this.logger = client.logger?.clone({ name: 'NPMLoader' });
 
-        this.modules.push(...await this.getModules(this.nodeModulesFolder));
+        this.modules = await this.getModules(this.nodeModulesFolder);
+        this.modules = this.modules.filter(m => this.moduleScriptHasName(m.script) && !this.isModuleNameLoaded(m.script.moduleName));
+
 
         this.logger?.log(`Found (${this.modules.length}) NPM Reciple modules`);
 
@@ -165,5 +171,17 @@ export class RecipleNPMLoader implements RecipleModuleScript, RecipleNPMLoaderOp
     public getPackageJson(file: string, isRecipleModule: true): PartialPackageJson & { recipleModule: string; keywords: string[]; };
     public getPackageJson(file: string, _isRecipleModule?: boolean): PartialPackageJson {
         return JSON.parse(readFileSync(file, 'utf-8'));
+    }
+
+    /**
+     * Check if module script contains moduleName property
+     * @param mdule Module script
+     */
+    public moduleScriptHasName(mdule: RecipleModuleScript): mdule is RecipleModuleScript & { moduleName: string; } {
+        return this.client.modules.isRecipleModuleScript(this.moduleScriptHasName) && !!(mdule as RecipleNPMModuleScript).moduleName;
+    }
+
+    public isModuleNameLoaded(moduleName: string): boolean {
+        return this.client.modules.modules.some(m => this.moduleScriptHasName(m.script) && m.script.moduleName === moduleName);
     }
 }
