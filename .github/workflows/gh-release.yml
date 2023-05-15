@@ -1,7 +1,7 @@
 name: Github Release
 on:
   push:
-    tags: ['*']
+    tags: ['**']
   workflow_dispatch:
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
