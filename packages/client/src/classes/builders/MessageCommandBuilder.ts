@@ -12,27 +12,27 @@ import { RecipleClient } from '../RecipleClient';
 
 export interface MessageCommandExecuteData<Options extends boolean = true> {
     /**
-     * Command type
+     * The type of command.
      */
     commandType: CommandType.MessageCommand;
     /**
-     * Current bot client
+     * The current bot client. This is the client that the command is being executed on.
      */
     client: RecipleClient;
     /**
-     * Command message
+     * The command message. This is the message that triggered the command.
      */
     message: Message;
     /**
-     * Parsed command options
+     * The options object can be used to access the values of the command options.
      */
     options: If<Options, MessageCommandOptionManager>;
     /**
-     * Raw command data
+     * This is an object that contains the raw data for the command.
      */
     command: CommandData;
     /**
-     * Command builder
+     * This is the builder that was used to create the command.
      */
     builder: MessageCommandBuilder;
 }
@@ -101,7 +101,7 @@ export class MessageCommandBuilder extends BaseCommandBuilder implements Message
     }
 
     /**
-     * Sets the command name
+     * Sets the name of the command.
      * @param name The command name
      */
     public setName(name: string): this {
@@ -110,7 +110,7 @@ export class MessageCommandBuilder extends BaseCommandBuilder implements Message
     }
 
     /**
-     * Adds command aliases
+     * Adds aliases to the command.
      * @param aliases The command aliases
      */
     public addAliases(...aliases: RestOrArray<string>): this {
@@ -124,7 +124,7 @@ export class MessageCommandBuilder extends BaseCommandBuilder implements Message
     }
 
     /**
-     * Sets command aliases
+     * Sets the aliases for the command
      * @param aliases The command aliases
      */
     public setAliases(...aliases: RestOrArray<string>): this {
@@ -134,7 +134,7 @@ export class MessageCommandBuilder extends BaseCommandBuilder implements Message
     }
 
     /**
-     * Sets whether the command is usable in DM channels
+     * Sets whether the command can be used in direct messages.
      * @param dmPermission Is allowed in DM
      */
     public setDmPermission(dmPermission: boolean): this {
@@ -143,7 +143,7 @@ export class MessageCommandBuilder extends BaseCommandBuilder implements Message
     }
 
     /**
-     * Sets whether the command could be executed by bots
+     * Sets whether the command can be executed by bots.
      * @param userBotPermission Is executable by bots
      */
     public setUserBotPermission(userBotPermission: boolean): this {
@@ -152,7 +152,7 @@ export class MessageCommandBuilder extends BaseCommandBuilder implements Message
     }
 
     /**
-     * Validates given options and execute options' `validate` function if exists
+     * Sets whether the command options should be validated.
      * @param validateOptions Is command options validate enabled
      */
     public setValidateOptions(validateOptions: boolean): this {
@@ -161,7 +161,7 @@ export class MessageCommandBuilder extends BaseCommandBuilder implements Message
     }
 
     /**
-     * Sets the command description
+     * Sets the description of the command.
      * @param description The command description
      */
     public setDescription(description: string): this {
@@ -170,7 +170,7 @@ export class MessageCommandBuilder extends BaseCommandBuilder implements Message
     }
 
     /**
-     * Adds command options
+     * Adds options to the command.
      * @param options The command options
      */
     public addOptions(...options: RestOrArray<MessageCommandOptionResolvable | ((builder: MessageCommandOptionBuilder) => MessageCommandOptionBuilder)>): this {
@@ -182,7 +182,7 @@ export class MessageCommandBuilder extends BaseCommandBuilder implements Message
     }
 
     /**
-     * Sets command options
+     * Sets options to the command.
      * @param options The command options
      */
     public setOptions(...options: RestOrArray<MessageCommandOptionResolvable | ((builder: MessageCommandOptionBuilder) => MessageCommandOptionBuilder)>): this {
@@ -191,7 +191,7 @@ export class MessageCommandBuilder extends BaseCommandBuilder implements Message
     }
 
     /**
-     * Add a single option
+     * Add a single option to the command.
      * @param optionResolvable The command option
      */
     public addOption(optionResolvable: MessageCommandOptionResolvable | ((builder: MessageCommandOptionBuilder) => MessageCommandOptionBuilder)): this {

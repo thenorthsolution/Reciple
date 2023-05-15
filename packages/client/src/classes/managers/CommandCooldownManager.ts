@@ -3,27 +3,27 @@ import { CommandType } from '../../types/commands';
 
 export interface CommandCooldownData {
     /**
-     * Cooled-down user
+     * The user who is on cooldown.
      */
     user: User;
     /**
-     * Command name
+     * The name of the command that is on cooldown.
      */
     command?: string;
     /**
-     * Command type
+     * The type of command that is on cooldown.
      */
     type?: CommandType;
     /**
-     * Command cooldown guild
+     * The guild where the command cooldown is active.
      */
     guild?: Guild;
     /**
-     * Command cooldown channel
+     * The channel where the command cooldown is active.
      */
     channel?: TextBasedChannel;
     /**
-     * Cooldown end date
+     * The date and time when the command cooldown will expire.
      */
     endsAt: Date;
 }

@@ -4,27 +4,27 @@ import { MessageCommandBuilder } from './MessageCommandBuilder';
 
 export interface BaseCommandBuilderData {
     /**
-     * Type of command
+     * The type of command.
      */
     commandType: CommandType;
     /**
-     * Cooldown in milliseconds
+     * The cooldown in milliseconds. This is the amount of time that must elapse before the command can be executed again.
      */
     cooldown?: number;
     /**
-     * Required bot permissions to execute the command
+     * The required bot permissions to execute the command. This can be a permission resolvable or an array of permission resolvable.
      */
     requiredBotPermissions?: PermissionResolvable;
     /**
-     * Required member permissions to execute the command
+     * The required member permissions to execute the command.This can be a permission resolvable or an array of permission resolvable.
      */
     requiredMemberPermissions?: PermissionResolvable;
     /**
-     * Halt execute function
+     * The halt execute function. This is a function that is called if the command is halted.
      */
     halt?: AnyCommandHaltFunction;
     /**
-     * Command execute function
+     * The command execute function. This is the function that is called when the command is executed.
      */
     execute?: AnyCommandExecuteFunction;
 }

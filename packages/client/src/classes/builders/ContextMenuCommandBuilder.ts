@@ -9,19 +9,19 @@ import { Mixin } from 'ts-mixer';
 
 export interface ContextMenuCommandExecuteData {
     /**
-     * Type of command
+     * The type of command.
      */
     commandType: CommandType.ContextMenuCommand;
     /**
-     * Current bot client
+     * The current bot client. This is the client that the command is being executed on.
      */
     client: RecipleClient;
     /**
-     * Command interaction
+     * The command interaction. This is the interaction that triggered the command.
      */
     interaction: ContextMenuCommandInteraction;
     /**
-     * Command builder
+     * The command builder. This is the builder that was used to create the command.
      */
     builder: ContextMenuCommandBuilder;
 }

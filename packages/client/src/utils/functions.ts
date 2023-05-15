@@ -7,6 +7,11 @@ export interface RecursiveDefault<T = unknown> {
     default?: T|RecursiveDefault<T>;
 }
 
+/**
+ * Replace placeholders in a string.
+ * @param message The string that contains the placeholders.
+ * @param placeholders An array of strings that represent the placeholders.
+ */
 export function replacePlaceholders(message: string, ...placeholders: RestOrArray<string>) {
     placeholders = normalizeArray(placeholders);
 
@@ -17,6 +22,10 @@ export function replacePlaceholders(message: string, ...placeholders: RestOrArra
     return message;
 }
 
+/**
+ * Get the name of a command builder.
+ * @param command The command builder to get the name of.
+ */
 export function getCommandBuilderName(command: AnyCommandBuilder|AnyCommandData|CommandType): keyof typeof CommandType {
     command = typeof command === 'number' ? command : command.commandType;
 
@@ -30,6 +39,10 @@ export function getCommandBuilderName(command: AnyCommandBuilder|AnyCommandData|
     }
 }
 
+/**
+ * Recursively get the default value of a value.
+ * @param data The value to get the default value of.
+ */
 export function recursiveDefaults<T = unknown>(data: RecursiveDefault<T>|T): T|undefined {
     function isDefaults(object: any): object is RecursiveDefault<T> {
         return object?.default !== undefined;

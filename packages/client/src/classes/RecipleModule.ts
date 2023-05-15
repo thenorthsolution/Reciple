@@ -8,16 +8,45 @@ import { MessageCommandBuilder } from './builders/MessageCommandBuilder';
 import { SlashCommandBuilder } from './builders/SlashCommandBuilder';
 
 export interface RecipleModuleScript {
+    /**
+     * The versions of the Reciple client that the module script is compatible with. The versions can be a string or an array of strings.
+     */
     versions: string|string[];
+    /**
+     * The commands that are defined by the module script.
+     */
     commands?: (AnyCommandBuilder|AnyCommandData)[];
+    /**
+     * The function that is called when the module script is started. The function must return a boolean value or a promise that resolves to a boolean value. The boolean value indicates whether the module script was started successfully.
+     * @param client The client that the module script is running on
+     * @param module The module that the module script is associated with
+     */
     onStart(client: RecipleClient<false>, module: RecipleModule): boolean | Promise<boolean>;
+    /**
+     * The function that is called when the module script is loaded.
+     * @param client The client that the module script is running on
+     * @param module The module that the module script is associated with
+     */
     onLoad?(client: RecipleClient<true>, module: RecipleModule): void | Promise<void>;
+    /**
+     * The function that is called when the module script is unloaded.
+     * @param unloadData The unload data contains information about why the module script is being unloaded.
+     */
     onUnload?(unloadData: RecipleModuleScriptUnloadData): void | Promise<void>;
 }
 
 export interface RecipleModuleScriptUnloadData {
+    /**
+     * The client that the module script was running on.
+     */
     client: RecipleClient<true>;
+    /**
+     * The reason why the module script was unloaded.
+     */
     reason?: string;
+    /**
+     * The module that was unloaded.
+     */
     module: RecipleModule;
 }
 
