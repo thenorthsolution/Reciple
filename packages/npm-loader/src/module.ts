@@ -14,38 +14,44 @@ export interface PartialPackageJson {
     devDependencies?: Record<string, string>;
 }
 
-export class RecipleNPMLoader implements RecipleModuleScript {
+export interface RecipleNPMLoaderOptions {
+    /**
+     * The node_modules folder path
+     */
+    nodeModulesFolder: string;
+    /**
+     * Define to only use modules that are in package.json dependencies and dev dependencies
+     */
+    packageJsonPath?: string;
+    /**
+     * Disables version check when starting modules
+     */
+    disableVersionChecks: boolean;
+    /**
+     * Ignored package names
+     */
+    ignoredPackages: string[];
+}
+
+export class RecipleNPMLoader implements RecipleModuleScript, RecipleNPMLoaderOptions {
     readonly versions: string = JSON.parse(readFileSync(path.join(__dirname, '../package.json'), 'utf-8')).peerDependencies['@reciple/client'];
     readonly modules: RecipleModule[] = [];
 
     public client!: RecipleClient;
     public logger?: Logger;
 
-    /**
-     * The node_modules folder path
-     */
-    public nodeModulesFolder: string = path.join(process.cwd(), 'node_modules');
-
-    /**
-     * Define to only use modules that are in package.json dependencies and dev dependencies
-     */
+    public nodeModulesFolder: string;
     public packageJsonPath?: string;
-
-    /**
-     * Disables version check when starting modules
-     */
-    public disableVersionChecks: boolean = false;
-
-    /**
-     * Ignored package names
-     */
-    public ignoredPackages: string[] = [];
+    public disableVersionChecks: boolean;
+    public ignoredPackages: string[];
 
     get cwd() { return process.cwd(); }
 
-    constructor(options?: { nodeModulesFolder?: string; disableVersionChecks?: boolean; }) {
-        if (options?.nodeModulesFolder) this.nodeModulesFolder = options.nodeModulesFolder;
-        if (options?.disableVersionChecks) this.disableVersionChecks = options.disableVersionChecks;
+    constructor(options?: RecipleNPMLoaderOptions) {
+        this.nodeModulesFolder = options?.nodeModulesFolder ?? path.join(process.cwd(), 'node_modules');
+        this.packageJsonPath = options?.packageJsonPath;
+        this.disableVersionChecks = options?.disableVersionChecks ?? false;
+        this.ignoredPackages = options?.ignoredPackages ?? [];
     }
 
     public async onStart(client: RecipleClient<false>): Promise<boolean> {
