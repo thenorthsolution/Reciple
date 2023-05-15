@@ -82,7 +82,21 @@ export class RecipleNPMLoader implements RecipleModuleScript, RecipleNPMLoaderOp
         const packageJson = this.packageJsonPath ? this.getPackageJson(this.packageJsonPath) : null;
         const dependencies = packageJson ? { ...packageJson?.dependencies, ...packageJson?.devDependencies } : null;
 
-        const contents = readdirSync(node_modules).map(f => path.join(node_modules, f)).filter(f => lstatSync(f).isDirectory() || lstatSync(f).isSymbolicLink());
+        let contents: string[] = [];
+
+            if (!packageJson) {
+                contents = readdirSync(node_modules).map(f => path.join(node_modules, f));
+            } else {
+                for (const dependency of Object.keys(dependencies ?? {})) {
+                    const location = path.join(node_modules, dependency);
+                    if (!existsSync(location)) continue;
+
+                    contents.push(location);
+                }
+            }
+
+            contents = contents.filter(f => lstatSync(f).isDirectory() || lstatSync(f).isSymbolicLink());
+
         const folders = contents.filter(f => !path.basename(f).startsWith('@')).map(f => lstatSync(f).isSymbolicLink() ? path.join(this.cwd, readlinkSync(f)) : f);
         const withSubfolders = contents.filter(f => path.basename(f).startsWith('@')).map(f => lstatSync(f).isSymbolicLink() ? path.join(this.cwd, readlinkSync(f)) : f);
 
