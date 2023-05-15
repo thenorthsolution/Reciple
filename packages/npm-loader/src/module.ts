@@ -3,14 +3,42 @@ import { existsSync, lstatSync, readFileSync, readdirSync, readlinkSync } from '
 import { Logger } from '@reciple/client';
 import path from 'path';
 
+export interface PartialPackageJson {
+    name: string;
+    description?: string;
+    keywords?: string[];
+    recipleModule?: string;
+    type?: "module"|"commonjs";
+    main?: string;
+    dependencies?: Record<string, string>;
+    devDependencies?: Record<string, string>;
+}
+
 export class RecipleNPMLoader implements RecipleModuleScript {
     readonly versions: string = JSON.parse(readFileSync(path.join(__dirname, '../package.json'), 'utf-8')).peerDependencies['@reciple/client'];
     readonly modules: RecipleModule[] = [];
 
     public client!: RecipleClient;
     public logger?: Logger;
+
+    /**
+     * The node_modules folder path
+     */
     public nodeModulesFolder: string = path.join(process.cwd(), 'node_modules');
+
+    /**
+     * Define to only use modules that are in package.json dependencies and dev dependencies
+     */
+    public packageJsonPath?: string;
+
+    /**
+     * Disables version check when starting modules
+     */
     public disableVersionChecks: boolean = false;
+
+    /**
+     * Ignored package names
+     */
     public ignoredPackages: string[] = [];
 
     get cwd() { return process.cwd(); }
@@ -36,12 +64,19 @@ export class RecipleNPMLoader implements RecipleModuleScript {
         return true;
     }
 
-    public async getModules(npmModules: string): Promise<RecipleModule[]> {
-        if (!existsSync(npmModules)) return [];
+    /**
+     * Get valid modules from given node_modules folder
+     * @param node_modules The node_modules folder
+     */
+    public async getModules(node_modules: string): Promise<RecipleModule[]> {
+        if (!existsSync(node_modules)) return [];
 
-        this.logger?.debug(`Loading modules from '${npmModules}'`);
+        this.logger?.debug(`Loading modules from '${node_modules}'`);
 
-        const contents = readdirSync(npmModules).map(f => path.join(npmModules, f)).filter(f => lstatSync(f).isDirectory() || lstatSync(f).isSymbolicLink());
+        const packageJson = this.packageJsonPath ? this.getPackageJson(this.packageJsonPath) : null;
+        const dependencies = packageJson ? { ...packageJson?.dependencies, ...packageJson?.devDependencies } : null;
+
+        const contents = readdirSync(node_modules).map(f => path.join(node_modules, f)).filter(f => lstatSync(f).isDirectory() || lstatSync(f).isSymbolicLink());
         const folders = contents.filter(f => !path.basename(f).startsWith('@')).map(f => lstatSync(f).isSymbolicLink() ? path.join(this.cwd, readlinkSync(f)) : f);
         const withSubfolders = contents.filter(f => path.basename(f).startsWith('@')).map(f => lstatSync(f).isSymbolicLink() ? path.join(this.cwd, readlinkSync(f)) : f);
 
@@ -51,12 +86,12 @@ export class RecipleNPMLoader implements RecipleModuleScript {
         const moduleFiles: string[] = [];
 
         for (const folder of folders) {
-            const isValid = await this.isValidModuleFolder(folder);
+            const isValid = await this.isValidModuleFolder(folder, dependencies || undefined);
 
             this.logger?.debug(isValid, folder);
             if (!isValid) continue;
 
-            const packageJson: { name: string; keywords: string[]; recipleModule: string; } = JSON.parse(readFileSync(path.join(folder, 'package.json'), 'utf-8'));
+            const packageJson = this.getPackageJson(path.join(folder, 'package.json'), true);
             const moduleFile: string = path.join(folder, packageJson.recipleModule);
 
             moduleFiles.push(moduleFile);
@@ -66,7 +101,7 @@ export class RecipleNPMLoader implements RecipleModuleScript {
             const subFolders = readdirSync(folder).map(f => path.join(folder, f)).filter(f => lstatSync(f).isDirectory());
 
             for (const subFolder of subFolders) {
-                const isValid = await this.isValidModuleFolder(subFolder);
+                const isValid = await this.isValidModuleFolder(subFolder, dependencies || undefined);
 
                 this.logger?.debug(isValid, subFolder);
                 if (!isValid) continue;
@@ -83,15 +118,32 @@ export class RecipleNPMLoader implements RecipleModuleScript {
         return this.client.modules.resolveModuleFiles(moduleFiles, this.disableVersionChecks);
     }
 
-    public async isValidModuleFolder(folder: string): Promise<boolean> {
+    /**
+     * Check if folder is a contains valid reciple module
+     * @param folder The module folder
+     * @param packageJsonDependencies Define to check if the module is in dependencies
+     */
+    public async isValidModuleFolder(folder: string, packageJsonDependencies?: Record<string, string>): Promise<boolean> {
         const packageJsonPath = path.join(folder, 'package.json');
         if (!existsSync(packageJsonPath)) return false;
 
-        const packageJson: { name: string; keywords?: string[]; recipleModule?: string; } = JSON.parse(readFileSync(packageJsonPath, 'utf-8'));
+        const packageJson = this.getPackageJson(packageJsonPath);
         if (this.ignoredPackages.includes(packageJson.name)) return false;
+        if (packageJsonDependencies && !packageJsonDependencies[packageJson.name]) return false;
         if (!packageJson.recipleModule || !existsSync(path.join(folder, packageJson.recipleModule))) return false;
         if (!packageJson.keywords?.includes('reciple-module')) return false;
 
         return true;
+    }
+
+    /**
+     * Get package.json partial contents
+     * @param file The package.json path
+     * @param isRecipleModule Reciple module type guard
+     */
+    public getPackageJson(file: string, isRecipleModule?: false): PartialPackageJson;
+    public getPackageJson(file: string, isRecipleModule: true): PartialPackageJson & { recipleModule: string; keywords: string[]; };
+    public getPackageJson(file: string, _isRecipleModule?: boolean): PartialPackageJson {
+        return JSON.parse(readFileSync(file, 'utf-8'));
     }
 }
