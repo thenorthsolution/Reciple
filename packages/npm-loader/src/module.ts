@@ -178,7 +178,7 @@ export class RecipleNPMLoader implements RecipleModuleScript, RecipleNPMLoaderOp
      * @param mdule Module script
      */
     public moduleScriptHasName(mdule: RecipleModuleScript): mdule is RecipleModuleScript & { moduleName: string; } {
-        return this.client.modules.isRecipleModuleScript(this.moduleScriptHasName) && !!(mdule as RecipleNPMModuleScript).moduleName;
+        return this.client.modules.isRecipleModuleScript(mdule) && !!(mdule as RecipleNPMModuleScript).moduleName;
     }
 
     /**
