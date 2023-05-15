@@ -30,6 +30,7 @@ export default new RecipleNPMLoader();
 You can set your custom node_modules folder by extending the class
 ```js
 import { RecipleNPMLoader } from '@reciple/npm-loader';
+import { cli } from 'reciple';
 import path from 'path';
 
 export class NPMLoader extends RecipleNPMLoader {
