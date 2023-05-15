@@ -181,6 +181,10 @@ export class RecipleNPMLoader implements RecipleModuleScript, RecipleNPMLoaderOp
         return this.client.modules.isRecipleModuleScript(this.moduleScriptHasName) && !!(mdule as RecipleNPMModuleScript).moduleName;
     }
 
+    /**
+     * Check if the give module name is already used in loaded client modules
+     * @param moduleName The module name
+     */
     public isModuleNameLoaded(moduleName: string): boolean {
         return this.client.modules.modules.some(m => this.moduleScriptHasName(m.script) && m.script.moduleName === moduleName);
     }
