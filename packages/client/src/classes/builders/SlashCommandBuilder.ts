@@ -5,9 +5,9 @@ import { BaseCommandBuilder, BaseCommandBuilderData } from './BaseCommandBuilder
 import { CommandCooldownData } from '../managers/CommandCooldownManager';
 import { CommandHaltData, CommandHaltReason } from '../../types/halt';
 import { botHasPermissionsToExecute } from '../../utils/permissions';
+import { isSlashCommandOption } from '../../utils/functions';
 import { RecipleClient } from '../RecipleClient';
 import { Mixin } from 'ts-mixer';
-import { isSlashCommandOption } from '../../utils/functions';
 
 export interface SlashCommandExecuteData {
     /**

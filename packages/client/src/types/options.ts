@@ -1,7 +1,7 @@
-import { Logger } from 'fallout-utility';
 import { MessageCommandResovable } from '../classes/builders/MessageCommandBuilder';
 import { RecipleClient } from '../classes/RecipleClient';
 import discordjs, { Message } from 'discord.js';
+import { Logger } from 'fallout-utility';
 
 export interface RecipleConfigOptions {
     token: string;

@@ -3,9 +3,13 @@ import { AnySlashCommandBuilder, SlashCommandBuilder, SlashCommandExecuteData, S
 import { ContextMenuCommandBuilder, ContextMenuCommandExecuteData, ContextMenuCommandResolvable } from '../builders/ContextMenuCommandBuilder';
 import { AnyCommandBuilder, AnyCommandData, AnyCommandExecuteData, ApplicationCommandBuilder, CommandType } from '../../types/commands';
 import { MessageCommandBuilder, MessageCommandExecuteData, MessageCommandResovable } from '../builders/MessageCommandBuilder';
+import { validateCommand } from '../../utils/assertions/commands/assertions';
+import { getCommandBuilderName } from '../../utils/functions';
 import { RecipleConfigOptions } from '../../types/options';
 import { CommandError } from '../errors/CommandError';
+import { ModuleError } from '../errors/ModuleError';
 import { RecipleClient } from '../RecipleClient';
+import { inspect } from 'util';
 
 export interface CommandManagerOptions {
     client: RecipleClient;
@@ -35,7 +39,17 @@ export class CommandManager {
     }
 
     public add(...commands: RestOrArray<AnyCommandBuilder|AnyCommandData>): this {
-        for (const command of normalizeArray(commands)) {
+        commands = normalizeArray(commands);
+
+        commands.forEach(command => {
+            try {
+                validateCommand(command);
+            } catch(err) {
+                this.client._throwError(new ModuleError('UnableToAddCommand', getCommandBuilderName(command), command?.name, inspect(err)));
+            }
+        })
+
+        for (const command of commands) {
             switch (command.commandType) {
                 case CommandType.ContextMenuCommand:
                     if (this.client.config.commands?.contextMenuCommand?.enabled === false) break;

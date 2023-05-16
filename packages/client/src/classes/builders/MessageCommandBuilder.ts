@@ -1,8 +1,8 @@
 import { MessageCommandOptionBuilder, MessageCommandOptionResolvable } from './MessageCommandOptionBuilder';
-import { Awaitable, If, Message, RestOrArray, normalizeArray } from 'discord.js';
 import { botHasPermissionsToExecute, hasExecutePermissions } from '../../utils/permissions';
 import { MessageCommandOptionManager } from '../managers/MessageCommandOptionManager';
 import { BaseCommandBuilder, BaseCommandBuilderData } from './BaseCommandBuilder';
+import { Awaitable, If, Message, RestOrArray, normalizeArray } from 'discord.js';
 import { CommandCooldownData } from '../managers/CommandCooldownManager';
 import { MessageCommandValidateOptionData } from '../../types/options';
 import { CommandHaltData, CommandHaltReason } from '../../types/halt';

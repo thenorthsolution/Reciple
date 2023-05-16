@@ -1,7 +1,7 @@
-import { AnyCommandBuilder, AnyCommandData, CommandType } from '../types/commands';
 import { RestOrArray, SlashCommandAttachmentOption, SlashCommandBooleanOption, SlashCommandChannelOption, SlashCommandIntegerOption, SlashCommandMentionableOption, SlashCommandNumberOption, SlashCommandRoleOption, SlashCommandStringOption, SlashCommandSubcommandBuilder, SlashCommandSubcommandGroupBuilder, SlashCommandUserOption, normalizeArray } from 'discord.js';
-import { replaceAll } from 'fallout-utility';
+import { AnyCommandBuilder, AnyCommandData, CommandType } from '../types/commands';
 import { AnySlashCommandOptionBuilder } from '../types/slashCommandOptions';
+import { replaceAll } from 'fallout-utility';
 
 export interface RecursiveDefault<T = unknown> {
     default?: T|RecursiveDefault<T>;

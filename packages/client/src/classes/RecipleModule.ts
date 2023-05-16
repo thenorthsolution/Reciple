@@ -1,11 +1,15 @@
 import { AnyCommandBuilder, AnyCommandData, CommandType } from '../types/commands';
-import { RecipleClient } from '../classes/RecipleClient';
-import { randomUUID } from 'crypto';
-import semver from 'semver';
-import { RestOrArray, normalizeArray } from 'discord.js';
 import { ContextMenuCommandBuilder } from './builders/ContextMenuCommandBuilder';
+import { validateCommand } from '../utils/assertions/commands/assertions';
 import { MessageCommandBuilder } from './builders/MessageCommandBuilder';
 import { SlashCommandBuilder } from './builders/SlashCommandBuilder';
+import { getCommandBuilderName } from '../utils/functions';
+import { RecipleClient } from '../classes/RecipleClient';
+import { RestOrArray, normalizeArray } from 'discord.js';
+import { ModuleError } from './errors/ModuleError';
+import { randomUUID } from 'crypto';
+import { inspect } from 'util';
+import semver from 'semver';
 
 export interface RecipleModuleScript {
     /**
@@ -100,6 +104,13 @@ export class RecipleModule {
 
         for (const commandData of (this._script.commands ?? [])) {
             let command: AnyCommandBuilder;
+
+            try {
+                validateCommand(commandData);
+            } catch(err) {
+                this.client._throwError(new ModuleError('UnableToAddCommand', getCommandBuilderName(commandData), commandData?.name, inspect(err)));
+                continue;
+            }
 
             switch (commandData.commandType) {
                 case CommandType.ContextMenuCommand:

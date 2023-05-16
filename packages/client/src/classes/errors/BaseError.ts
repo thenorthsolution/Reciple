@@ -1,9 +1,9 @@
+import { replacePlaceholders } from '../../utils/functions';
 import { RestOrArray, normalizeArray } from 'discord.js';
 import { CommandError } from './CommandError';
 import { ModuleError } from './ModuleError';
-import { replacePlaceholders } from '../../utils/functions';
-import kleur from 'kleur';
 import stripAnsi from 'strip-ansi';
+import kleur from 'kleur';
 
 export interface BaseErrorCodes {
     [code: string|number]: (() => string)|string;
