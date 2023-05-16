@@ -16,10 +16,12 @@ export * from './types/commands';
 export * from './types/halt';
 export * from './types/options';
 export * from './types/slashCommandOptions';
-export * from './utils/assertions';
+export * from './utils/assertions/commands/assertions';
+export * from './utils/assertions/commands/predicates';
+export * from './utils/assertions/module/assertions';
+export * from './utils/assertions/module/predicates';
 export * from './utils/constants';
 export * from './utils/functions';
 export * from './utils/permissions'
-export * from './utils/predicates';
 
 export { Logger, CommandData } from 'fallout-utility';

@@ -1,13 +1,14 @@
+import { RecipleModuleScript } from '../../../classes/RecipleModule';
+import { commandResolvablePredicate } from '../commands/predicates';
+import { recipleModuleVersionsPredicate } from './predicates';
 import { s } from '@sapphire/shapeshift';
-import { RecipleModuleScript } from '../classes/RecipleModule';
-import { anyCommandBuilderPredicate, anyCommandDataPredicate, stringOrArrayOfStringPredicate } from './predicates';
 
 export function validateModuleScriptVersions(versions: unknown): asserts versions is RecipleModuleScript['versions'] {
-    stringOrArrayOfStringPredicate.parse(versions);
+    recipleModuleVersionsPredicate.parse(versions);
 }
 
 export function validateModuleScriptCommands(commands: unknown): asserts commands is RecipleModuleScript['commands'] {
-    s.union(anyCommandBuilderPredicate, anyCommandDataPredicate).array.optional.parse(commands);
+    commandResolvablePredicate.array.optional.parse(commands);
 }
 
 export function validateModuleOnStart(onStart: unknown): asserts onStart is RecipleModuleScript['onLoad'] {

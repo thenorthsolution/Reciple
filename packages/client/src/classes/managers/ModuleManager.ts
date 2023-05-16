@@ -8,7 +8,7 @@ import { ModuleError } from '../errors/ModuleError';
 import { RecursiveDefault, recursiveDefaults } from '../../utils/functions';
 import { realVersion } from '../../utils/constants';
 import path from 'path';
-import { validateModuleScript } from '../../utils/assertions';
+import { validateModuleScript } from '../../utils/assertions/module/assertions';
 
 export interface ModuleManagerEvents {
     resolveModuleFileError: [file: string, error: Error];
