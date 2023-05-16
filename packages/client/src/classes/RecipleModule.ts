@@ -3,12 +3,10 @@ import { ContextMenuCommandBuilder } from './builders/ContextMenuCommandBuilder'
 import { validateCommand } from '../utils/assertions/commands/assertions';
 import { MessageCommandBuilder } from './builders/MessageCommandBuilder';
 import { SlashCommandBuilder } from './builders/SlashCommandBuilder';
-import { getCommandBuilderName } from '../utils/functions';
 import { RecipleClient } from '../classes/RecipleClient';
 import { RestOrArray, normalizeArray } from 'discord.js';
-import { ModuleError } from './errors/ModuleError';
+import { ValidationError } from '@sapphire/shapeshift';
 import { randomUUID } from 'crypto';
-import { inspect } from 'util';
 import semver from 'semver';
 
 export interface RecipleModuleScript {
@@ -108,7 +106,7 @@ export class RecipleModule {
             try {
                 validateCommand(commandData);
             } catch(err) {
-                this.client._throwError(new ModuleError('UnableToAddCommand', getCommandBuilderName(commandData), commandData?.name, inspect(err)));
+                this.client._throwError(err as ValidationError);
                 continue;
             }
 

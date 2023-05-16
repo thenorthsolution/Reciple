@@ -4,12 +4,9 @@ import { ContextMenuCommandBuilder, ContextMenuCommandExecuteData, ContextMenuCo
 import { AnyCommandBuilder, AnyCommandData, AnyCommandExecuteData, ApplicationCommandBuilder, CommandType } from '../../types/commands';
 import { MessageCommandBuilder, MessageCommandExecuteData, MessageCommandResovable } from '../builders/MessageCommandBuilder';
 import { validateCommand } from '../../utils/assertions/commands/assertions';
-import { getCommandBuilderName } from '../../utils/functions';
 import { RecipleConfigOptions } from '../../types/options';
 import { CommandError } from '../errors/CommandError';
-import { ModuleError } from '../errors/ModuleError';
 import { RecipleClient } from '../RecipleClient';
-import { inspect } from 'util';
 
 export interface CommandManagerOptions {
     client: RecipleClient;
@@ -41,13 +38,7 @@ export class CommandManager {
     public add(...commands: RestOrArray<AnyCommandBuilder|AnyCommandData>): this {
         commands = normalizeArray(commands);
 
-        commands.forEach(command => {
-            try {
-                validateCommand(command);
-            } catch(err) {
-                this.client._throwError(new ModuleError('UnableToAddCommand', getCommandBuilderName(command), command?.name, inspect(err)));
-            }
-        })
+        commands.forEach(command => validateCommand(command));
 
         for (const command of commands) {
             switch (command.commandType) {
