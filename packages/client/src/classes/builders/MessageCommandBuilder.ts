@@ -1,8 +1,8 @@
 import { MessageCommandOptionBuilder, MessageCommandOptionResolvable } from './MessageCommandOptionBuilder';
-import { Awaitable, If, Message, RestOrArray, isValidationEnabled, normalizeArray } from 'discord.js';
 import { botHasPermissionsToExecute, hasExecutePermissions } from '../../utils/permissions';
 import { MessageCommandOptionManager } from '../managers/MessageCommandOptionManager';
 import { BaseCommandBuilder, BaseCommandBuilderData } from './BaseCommandBuilder';
+import { Awaitable, If, Message, RestOrArray, normalizeArray } from 'discord.js';
 import { CommandCooldownData } from '../managers/CommandCooldownManager';
 import { MessageCommandValidateOptionData } from '../../types/options';
 import { CommandHaltData, CommandHaltReason } from '../../types/halt';
@@ -199,10 +199,8 @@ export class MessageCommandBuilder extends BaseCommandBuilder implements Message
             ? optionResolvable(new MessageCommandOptionBuilder())
             : MessageCommandOptionBuilder.resolve(optionResolvable);
 
-        if (isValidationEnabled()) {
-            if (this.options.find(o => o.name === option.name)) throw new TypeError('An option with name "' + option.name + '" already exists.');
-            if (this.options.length > 0 && !this.options[this.options.length - 1 < 0 ? 0 : this.options.length - 1].required && option.required) throw new TypeError('All required options must be before optional options.');
-        }
+        if (this.options.find(o => o.name === option.name)) throw new TypeError('An option with name "' + option.name + '" already exists.');
+        if (this.options.length > 0 && !this.options[this.options.length - 1 < 0 ? 0 : this.options.length - 1].required && option.required) throw new TypeError('All required options must be before optional options.');
 
         this.options.push(option);
 

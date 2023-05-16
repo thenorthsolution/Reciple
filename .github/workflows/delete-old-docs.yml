@@ -1,0 +1,32 @@
+name: 'Delete Old Docs'
+on:
+  delete:
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+jobs:
+  remove-docs:
+    name: Delete Docs Data
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          ref: 'docs'
+
+      - name: Delete @reciple/client docs data
+        run: rm ./client/${{ github.ref_name }}.json
+
+      - name: Delete reciple docs data
+        run: rm ./reciple/${{ github.ref_name }}.json
+
+      - name: Delete @reciple/npm-loader docs data
+        run: rm ./npm-loader/${{ github.ref_name }}.json
+
+      - name: Update branch
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add .
+          git commit -m "Deleted docs data for ${{ github.ref_name }}"
+          git push

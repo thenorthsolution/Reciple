@@ -3,9 +3,9 @@ import { BaseError, ErrorType } from './BaseError';
 import kleur from 'kleur';
 
 export const CommandErrorCodes = {
-    'UnknownCommand': () => `Unknown Reciple command type ${kleur.red('%0%')}`,
-    'CommandExecuteError': () => `An error occured while executing ${kleur.gray('%0%')}:${kleur.blue('%1%')}:\n  ${kleur.red('%2%')}`,
-    'CommandHaltError': () => `An error occured while executing halt for ${kleur.gray('%0%')}:${kleur.blue('%1%')}:\n  ${kleur.red('%2%')}`
+    UnknownCommand: () => `Unknown Reciple command type ${kleur.red('%0%')}`,
+    CommandExecuteError: () => `An error occured while executing ${kleur.gray('%0%')} ${kleur.blue('%1%')}:\n  ${kleur.red('%2%')}`,
+    CommandHaltError: () => `An error occured while executing halt for ${kleur.gray('%0%')} ${kleur.blue('%1%')}:\n  ${kleur.red('%2%')}`
 }
 
 export type CommandErrorCodes = typeof CommandErrorCodes;

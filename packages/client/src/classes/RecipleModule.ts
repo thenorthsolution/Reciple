@@ -1,11 +1,13 @@
 import { AnyCommandBuilder, AnyCommandData, CommandType } from '../types/commands';
-import { RecipleClient } from '../classes/RecipleClient';
-import { randomUUID } from 'crypto';
-import semver from 'semver';
-import { RestOrArray, normalizeArray } from 'discord.js';
 import { ContextMenuCommandBuilder } from './builders/ContextMenuCommandBuilder';
+import { validateCommand } from '../utils/assertions/commands/assertions';
 import { MessageCommandBuilder } from './builders/MessageCommandBuilder';
 import { SlashCommandBuilder } from './builders/SlashCommandBuilder';
+import { RecipleClient } from '../classes/RecipleClient';
+import { RestOrArray, normalizeArray } from 'discord.js';
+import { ValidationError } from '@sapphire/shapeshift';
+import { randomUUID } from 'crypto';
+import semver from 'semver';
 
 export interface RecipleModuleScript {
     /**
@@ -100,6 +102,13 @@ export class RecipleModule {
 
         for (const commandData of (this._script.commands ?? [])) {
             let command: AnyCommandBuilder;
+
+            try {
+                validateCommand(commandData);
+            } catch(err) {
+                this.client._throwError(err as ValidationError);
+                continue;
+            }
 
             switch (commandData.commandType) {
                 case CommandType.ContextMenuCommand:

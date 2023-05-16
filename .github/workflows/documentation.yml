@@ -1,4 +1,4 @@
-name: Documentation
+name: Generate Docs
 on:
   push:
     branches: ['!docs', '!v*']
@@ -84,7 +84,6 @@ jobs:
       - name: Checkout docs repository
         uses: actions/checkout@v3
         with:
-          repository: 'FalloutStudios/Reciple'
           ref: 'docs'
           path: 'out'
 
