@@ -157,13 +157,14 @@ export class ModuleManager extends TypedEmitter<ModuleManagerEvents> {
                 const script = recursiveDefaults<RecipleModuleScript|RecipleModule|undefined>(resolveFile);
 
                 if (script instanceof RecipleModule) {
+                    if (!disableVersionCheck && !script.isSupported) throw new ModuleError('UnsupportedModule', filePath, realVersion);
                     modules.push(script);
                     continue;
                 }
 
                 validateModuleScript(script);
 
-                if (!disableVersionCheck && !normalizeArray([script.versions] as RestOrArray<string>)?.some(v => semver.satisfies(this.client.version, v))) {
+                if (!disableVersionCheck && !normalizeArray([script.versions] as RestOrArray<string>)?.some(v => v === "latest" || semver.satisfies(this.client.version, v))) {
                     throw new ModuleError('UnsupportedModule', filePath, realVersion);
                 }
 
