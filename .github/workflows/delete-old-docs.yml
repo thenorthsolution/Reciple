@@ -17,13 +17,13 @@ jobs:
           ref: 'docs'
 
       - name: Delete @reciple/client docs data
-        run: rm ./client/${REF_NAME}.json
+        run: rm -f ./client/${REF_NAME}.json
 
       - name: Delete reciple docs data
-        run: rm ./reciple/${REF_NAME}.json
+        run: rm -f ./reciple/${REF_NAME}.json
 
       - name: Delete @reciple/npm-loader docs data
-        run: rm ./npm-loader/${REF_NAME}.json
+        run: rm -f ./npm-loader/${REF_NAME}.json
 
       - name: Update branch
         run: |
