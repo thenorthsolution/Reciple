@@ -6,7 +6,7 @@ export function validateModuleScript(moduleScript: unknown): asserts moduleScrip
     const script = moduleScript as RecipleModuleScript;
 
     stringOrArrayOfStringPredicate.parse(script?.versions);
-    s.union(anyCommandBuilderPredicate, anyCommandDataPredicate).optional.array.parse(script?.commands);
+    s.union(anyCommandBuilderPredicate, anyCommandDataPredicate).array.optional.parse(script?.commands);
     s.instance(Function).parse(script?.onStart);
     s.instance(Function).optional.parse(script?.onLoad);
     s.instance(Function).optional.parse(script?.onUnload);
