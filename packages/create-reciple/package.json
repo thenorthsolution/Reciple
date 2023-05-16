@@ -17,7 +17,6 @@
   },
   "files": [
     "bin",
-    "static",
     "templates.json",
     "templates",
     "assets",

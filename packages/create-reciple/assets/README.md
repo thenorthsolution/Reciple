@@ -1,14 +1,14 @@
-# Structure
+# Introduction
 
-This uses `discord.js` as Discord API library and `reciple` as handler framework.
+Reciple is a discord.js command handler framework.
 
 ## Reciple Modules
 
-The reciple scans the directory assigned in `reciple.yml` under `modules.modulesFolders` property. `modules.modulesFolders` can be the path of the folder of modules or glob pattern
+Reciple scans the directory assigned in `reciple.yml` under `modules.modulesFolders` property. `modules.modulesFolders` can be the path of the folder of modules or glob pattern
 
 ### Folder Structure
 
-#### Example Structure
+##### Example Structure
 ```yml
 # Modules config
 
@@ -25,7 +25,7 @@ modules/
 ├─ Module2.js
 ```
 
-#### Example Structure + Glob path patterns
+##### Example Structure with Glob patterns
 ```yml
 # Modules config
 
@@ -52,7 +52,7 @@ Module files can be ES Modules or CommonJs.
 
 ##### Supported module file types
 
-- `.js` *This can be a ESM or CJS*
+- `.js` *This can be an ESM or CJS*
 - `.mjs`
 - `.cjs`
 
@@ -60,11 +60,11 @@ Module files can be ES Modules or CommonJs.
 
 | Property | type | Required | Description |
 |---|---|:---:|---|
-| `versions` | `string\|string[]` | `true` | The module's supported version of reciple client |
-| `commands` | `(AnyCommandBuilder\|AnyCommandData)[]]` | `false` | The commands of this module |
-| `onStart`  | `(client: RecipleClient, module: RecipleModule) => Awaitable<boolean>` | `true` | The method executed when the module is resolved |
-| `onLoad`   | `(client: RecipleClient, module: RecipleModule) => Awaitable<void>` | `false` | The method executed when the client is ready |
-| `onUnload` | `(unloadData: RecipleModuleUnloadData) => Awaitable<void>` | `false` | The method executed when the module is being unloaded |
+| `versions` | `string\|string[]` | `true` | The versions of the Reciple client that the module script is compatible with. The versions can be a string or an array of strings. |
+| `commands` | `(AnyCommandBuilder\|AnyCommandData)[]]` | `false` | The commands that are defined by the module script. |
+| `onStart`  | `(client: RecipleClient, module: RecipleModule) => Awaitable<boolean>` | `true` | The function that is called when the module script is started. The function must return a boolean value or a promise that resolves to a boolean value. The boolean value indicates whether the module script was started successfully. |
+| `onLoad`   | `(client: RecipleClient, module: RecipleModule) => Awaitable<void>` | `false` | The function that is called when the module script is loaded. |
+| `onUnload` | `(unloadData: RecipleModuleUnloadData) => Awaitable<void>` | `false` | The function that is called when the module script is unloaded. |
 
 #### ESM module example
 
