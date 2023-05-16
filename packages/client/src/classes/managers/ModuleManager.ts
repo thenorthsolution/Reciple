@@ -3,11 +3,12 @@ import { RecipleClient } from '../RecipleClient';
 import { RecipleModule, RecipleModuleScript } from '../RecipleModule';
 import semver from 'semver';
 import { TypedEmitter } from 'fallout-utility';
-import { inspect } from 'util';
+import { deprecate, inspect } from 'util';
 import { ModuleError } from '../errors/ModuleError';
 import { RecursiveDefault, recursiveDefaults } from '../../utils/functions';
 import { realVersion } from '../../utils/constants';
 import path from 'path';
+import { validateModuleScript } from '../../utils/assertions';
 
 export interface ModuleManagerEvents {
     resolveModuleFileError: [file: string, error: Error];
@@ -43,7 +44,9 @@ export class ModuleManager extends TypedEmitter<ModuleManagerEvents> {
         super();
 
         this.client = options.client;
-        options.modules?.forEach(m => m instanceof RecipleModule ? this.modules.set(m.id, m) : new RecipleModule({ client: this.client, script: m }))
+        options.modules?.forEach(m => m instanceof RecipleModule ? this.modules.set(m.id, m) : new RecipleModule({ client: this.client, script: m }));
+
+        this.validateScript = deprecate(this.validateScript, '<ModuleManager>.validateScript() is deprecated. Use validateModuleScript() function instead.');
     }
 
     public async startModules(options: ModuleManagerModulesActionOptions & { addToModulesCollection?: boolean; }): Promise<RecipleModule[]> {
@@ -158,7 +161,7 @@ export class ModuleManager extends TypedEmitter<ModuleManagerEvents> {
                     continue;
                 }
 
-                this.validateScript(script);
+                validateModuleScript(script);
 
                 if (!disableVersionCheck && !normalizeArray([script.versions] as RestOrArray<string>)?.some(v => semver.satisfies(this.client.version, v))) {
                     throw new ModuleError('UnsupportedModule', filePath, realVersion);
@@ -181,13 +184,16 @@ export class ModuleManager extends TypedEmitter<ModuleManagerEvents> {
 
     public isRecipleModuleScript(script: unknown): script is RecipleModuleScript {
         try {
-            this.validateScript(script);
+            validateModuleScript(script);
             return true;
         } catch(err) {
             return false;
         }
     }
 
+    /**
+     * @deprecated Use the assertion function `validateModuleScript`
+     */
     public validateScript(script: unknown): asserts script is RecipleModuleScript {
         const s = script as Partial<RecipleModuleScript>;
 

@@ -35,6 +35,7 @@
     "README.md"
   ],
   "dependencies": {
+    "@sapphire/shapeshift": "^3.9.0",
     "fallout-utility": "^2.5.0",
     "kleur": "^4.1.5",
     "semver": "^7.5.1",
