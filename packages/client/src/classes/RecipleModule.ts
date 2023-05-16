@@ -76,9 +76,9 @@ export class RecipleModule {
         this.id = randomUUID();
     }
 
-    get versions() { return this._script.versions; }
+    get versions() { return normalizeArray([this.script.versions] as RestOrArray<string>); }
     get displayName() { return this.filePath ?? this.id; }
-    get isSupported() { return normalizeArray([this.versions] as RestOrArray<string>).some(v => semver.satisfies(this.client.version, v)); }
+    get isSupported() { return this.versions.some(v => v === "latest" || semver.satisfies(this.client.version, v)); }
 
     public async start(): Promise<boolean> {
         return Promise.resolve(this.script.onStart(this.client, this));
