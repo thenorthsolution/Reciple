@@ -15,6 +15,7 @@ export interface IConfig extends RecipleConfigOptions {
         enabled: boolean;
         debugmode: boolean;
         coloredMessages: boolean;
+        disableLogPrefix: boolean;
         logToFile: {
             enabled: boolean;
             logsFolder: string;

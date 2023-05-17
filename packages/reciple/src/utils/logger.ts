@@ -22,10 +22,13 @@ export function formatLogMessage(message: string, logger: Logger, config: Partia
         }
     };
 
-    return color(
-                `[${new Date().toLocaleTimeString(undefined, { hour12: false })} ${LoggerLevel[level]}]` +
-                (cli.options.shardmode && process.pid ? `[${process.pid}]` : '') +
-                (logger.name ? `[${logger.name}]` : '')
+    return (config.disableLogPrefix !== false
+                ? color(
+                        `[${new Date().toLocaleTimeString(undefined, { hour12: false })} ${LoggerLevel[level]}]` +
+                        (cli.options.shardmode && process.pid ? `[${process.pid}]` : '') +
+                        (logger.name ? `[${logger.name}]` : '')
+                    )
+                : ''
             ) + ` ${message}`;
 }
 
