@@ -89,7 +89,9 @@ client.once('ready', async () => {
         resolveCommands: true
     });
 
-    client.modules.modules.sweep(m => !loadedModules.some(s => s.id == m.id));
+    const unloaded = client.modules.modules.sweep(m => !loadedModules.some(s => s.id == m.id));
+
+    client.logger?.debug(`Failed to load (${unloaded}) modules.`);
 
     let stopping = false;
 
@@ -119,6 +121,7 @@ client.once('ready', async () => {
     process.once('SIGTERM', signal => unloadModulesAndStopProcess(signal));
     process.once('SIGHUP', signal => unloadModulesAndStopProcess(signal));
 
+    client.logger?.debug(`Deploying application commands...`);
     await client.commands.registerApplicationCommands();
 
     client.logger?.warn(`Logged in as ${kleur.bold().cyan(client.user!.tag)} ${kleur.magenta('(' + client.user!.id + ')')}`);
