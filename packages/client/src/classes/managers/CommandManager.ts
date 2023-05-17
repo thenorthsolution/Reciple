@@ -1,8 +1,8 @@
 import { ApplicationCommandDataResolvable, ChatInputCommandInteraction, Collection, ContextMenuCommandInteraction, Message, RESTPostAPIApplicationCommandsJSONBody, RestOrArray, normalizeArray } from 'discord.js';
-import { AnySlashCommandBuilder, SlashCommandBuilder, SlashCommandExecuteData, SlashCommandResolvable } from '../builders/SlashCommandBuilder';
-import { ContextMenuCommandBuilder, ContextMenuCommandExecuteData, ContextMenuCommandResolvable } from '../builders/ContextMenuCommandBuilder';
+import { AnySlashCommandBuilder, SlashCommandBuilder, SlashCommandResolvable } from '../builders/SlashCommandBuilder';
+import { ContextMenuCommandBuilder, ContextMenuCommandResolvable } from '../builders/ContextMenuCommandBuilder';
 import { AnyCommandBuilder, AnyCommandData, AnyCommandExecuteData, ApplicationCommandBuilder, CommandType } from '../../types/commands';
-import { MessageCommandBuilder, MessageCommandExecuteData, MessageCommandResovable } from '../builders/MessageCommandBuilder';
+import { MessageCommandBuilder, MessageCommandResovable } from '../builders/MessageCommandBuilder';
 import { validateCommand } from '../../utils/assertions/commands/assertions';
 import { RecipleConfigOptions } from '../../types/options';
 import { CommandError } from '../errors/CommandError';
@@ -165,9 +165,6 @@ export class CommandManager {
         }
     }
 
-    public async execute(trigger: ContextMenuCommandInteraction): Promise<ContextMenuCommandExecuteData|undefined>;
-    public async execute(trigger: Message): Promise<MessageCommandExecuteData|undefined>
-    public async execute(trigger: ChatInputCommandInteraction): Promise<SlashCommandExecuteData|undefined>
     public async execute(trigger: ContextMenuCommandInteraction|Message|ChatInputCommandInteraction): Promise<AnyCommandExecuteData|undefined> {
         if (trigger instanceof ContextMenuCommandInteraction) {
             return ContextMenuCommandBuilder.execute(this.client, trigger);
