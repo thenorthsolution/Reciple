@@ -72,6 +72,8 @@ logger:
   debugmode: false
   # Enables colored console logs
   coloredMessages: true
+  # Disables the log prefix to logged messages
+  disableLogPrefix: false
   # File file config
   logToFile:
     # Enables log file
