@@ -165,28 +165,16 @@ export class CommandManager {
         }
     }
 
-    public async execute(command: string, type: CommandType.ContextMenuCommand, trigger: ContextMenuCommandInteraction): Promise<ContextMenuCommandExecuteData|undefined>;
-    public async execute(command: string, type: CommandType.MessageCommand, trigger: Message): Promise<MessageCommandExecuteData|undefined>
-    public async execute(command: string, type: CommandType.SlashCommand, trigger: ChatInputCommandInteraction): Promise<SlashCommandExecuteData|undefined>
-    public async execute(command: string, type: CommandType, trigger: any): Promise<AnyCommandExecuteData|undefined> {
-        let builder: AnyCommandBuilder|undefined;
-
-        switch(type) {
-            case CommandType.ContextMenuCommand:
-                builder = this.contextMenuCommands.get(command);
-                if (!builder) return;
-
-                return ContextMenuCommandBuilder.execute(this.client, trigger);
-            case CommandType.MessageCommand:
-                builder = this.messageCommands.get(command);
-                if (!builder) return;
-
-                return MessageCommandBuilder.execute(this.client, trigger);
-            case CommandType.SlashCommand:
-                builder = this.slashCommands.get(command);
-                if (!builder) return;
-
-                return SlashCommandBuilder.execute(this.client, trigger);
+    public async execute(trigger: ContextMenuCommandInteraction): Promise<ContextMenuCommandExecuteData|undefined>;
+    public async execute(trigger: Message): Promise<MessageCommandExecuteData|undefined>
+    public async execute(trigger: ChatInputCommandInteraction): Promise<SlashCommandExecuteData|undefined>
+    public async execute(trigger: ContextMenuCommandInteraction|Message|ChatInputCommandInteraction): Promise<AnyCommandExecuteData|undefined> {
+        if (trigger instanceof ContextMenuCommandInteraction) {
+            return ContextMenuCommandBuilder.execute(this.client, trigger);
+        } else if (trigger instanceof Message) {
+            return MessageCommandBuilder.execute(this.client, trigger);
+        } else if (trigger instanceof ChatInputCommandInteraction) {
+            return SlashCommandBuilder.execute(this.client, trigger);
         }
     } 
 

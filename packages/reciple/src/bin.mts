@@ -143,4 +143,8 @@ client.once('ready', async () => {
     });
 });
 
-await client.login(config.token).catch(err => client.logger?.error(err));
+client.logger?.debug(`Logging in...`);
+
+await client.login(config.token)
+    .then(() => client.logger?.debug(`Login successful`))
+    .catch(err => client.logger?.error(err));
