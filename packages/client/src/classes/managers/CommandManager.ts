@@ -1,4 +1,4 @@
-import { ApplicationCommandDataResolvable, Collection, RESTPostAPIApplicationCommandsJSONBody, RestOrArray, normalizeArray } from 'discord.js';
+import { ApplicationCommandDataResolvable, ChatInputCommandInteraction, Collection, ContextMenuCommandInteraction, Message, RESTPostAPIApplicationCommandsJSONBody, RestOrArray, normalizeArray } from 'discord.js';
 import { AnySlashCommandBuilder, SlashCommandBuilder, SlashCommandExecuteData, SlashCommandResolvable } from '../builders/SlashCommandBuilder';
 import { ContextMenuCommandBuilder, ContextMenuCommandExecuteData, ContextMenuCommandResolvable } from '../builders/ContextMenuCommandBuilder';
 import { AnyCommandBuilder, AnyCommandData, AnyCommandExecuteData, ApplicationCommandBuilder, CommandType } from '../../types/commands';
@@ -165,19 +165,29 @@ export class CommandManager {
         }
     }
 
-    public async execute(command: string, type: CommandType.ContextMenuCommand): Promise<ContextMenuCommandExecuteData|undefined>;
-    public async execute(command: string, type: CommandType.MessageCommand): Promise<MessageCommandExecuteData|undefined>
-    public async execute(command: string, type: CommandType.SlashCommand): Promise<SlashCommandExecuteData|undefined>
-    public async execute(command: string, type: CommandType): Promise<AnyCommandExecuteData|undefined> {
-        const builder = type === CommandType.ContextMenuCommand
-            ? this.contextMenuCommands.get(command)
-            : type === CommandType.MessageCommand
-                ? this.messageCommands.get(command)
-                : type === CommandType.SlashCommand
-                    ? this.slashCommands.get(command)
-                    : undefined;
+    public async execute(command: string, type: CommandType.ContextMenuCommand, trigger: ContextMenuCommandInteraction): Promise<ContextMenuCommandExecuteData|undefined>;
+    public async execute(command: string, type: CommandType.MessageCommand, trigger: Message): Promise<MessageCommandExecuteData|undefined>
+    public async execute(command: string, type: CommandType.SlashCommand, trigger: ChatInputCommandInteraction): Promise<SlashCommandExecuteData|undefined>
+    public async execute(command: string, type: CommandType, trigger: any): Promise<AnyCommandExecuteData|undefined> {
+        let builder: AnyCommandBuilder|undefined;
 
-        if (!builder) return;
+        switch(type) {
+            case CommandType.ContextMenuCommand:
+                builder = this.contextMenuCommands.get(command);
+                if (!builder) return;
+
+                return ContextMenuCommandBuilder.execute(this.client, trigger);
+            case CommandType.MessageCommand:
+                builder = this.messageCommands.get(command);
+                if (!builder) return;
+
+                return MessageCommandBuilder.execute(this.client, trigger);
+            case CommandType.SlashCommand:
+                builder = this.slashCommands.get(command);
+                if (!builder) return;
+
+                return SlashCommandBuilder.execute(this.client, trigger);
+        }
     } 
 
     private _parseApplicationCommands(commands: (ApplicationCommandDataResolvable | ApplicationCommandBuilder)[]): RESTPostAPIApplicationCommandsJSONBody[] {
