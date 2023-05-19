@@ -5,8 +5,9 @@ import { AnyCommandBuilder, AnyCommandData, AnyCommandExecuteData, ApplicationCo
 import { MessageCommandBuilder, MessageCommandResovable } from '../builders/MessageCommandBuilder';
 import { validateCommand } from '../../utils/assertions/commands/assertions';
 import { RecipleConfigOptions } from '../../types/options';
-import { CommandError } from '../errors/CommandError';
 import { RecipleClient } from '../RecipleClient';
+import { RecipleError } from '../errors/RecipleError';
+import { createUnknownCommandTypeErrorOptions } from '../../utils/errorCodes';
 
 export interface CommandManagerOptions {
     client: RecipleClient;
@@ -58,7 +59,7 @@ export class CommandManager {
                     this.slashCommands.set(command.name, SlashCommandBuilder.resolve(command));
                     break;
                 default:
-                    throw new CommandError('UnknownCommand', String(command));
+                    throw new RecipleError(createUnknownCommandTypeErrorOptions(command));
             }
         }
 

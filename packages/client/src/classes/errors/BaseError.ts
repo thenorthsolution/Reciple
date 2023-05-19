@@ -5,16 +5,27 @@ import { ModuleError } from './ModuleError';
 import stripAnsi from 'strip-ansi';
 import kleur from 'kleur';
 
+// TODO: Remove this class
+
+/**
+ * @deprecated
+ */
 export interface BaseErrorCodes {
     [code: string|number]: (() => string)|string;
 }
 
+/**
+ * @deprecated
+ */
 export enum ErrorType {
     ClientError = 1,
     ModuleError,
     CommandError,
 }
 
+/**
+ * @deprecated
+ */
 export abstract class BaseError<ErrorCodes extends BaseErrorCodes = BaseErrorCodes> extends Error {
     abstract readonly errorType: ErrorType;
 

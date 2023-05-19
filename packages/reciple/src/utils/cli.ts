@@ -28,6 +28,8 @@ export const cli = {
     get cwd() { return this.args[0] ? path.resolve(this.args[0]) : process.cwd(); }
 };
 
+// TODO: Remove deprecated
+
 /**
  * @deprecated Use `cli` object instead
  */

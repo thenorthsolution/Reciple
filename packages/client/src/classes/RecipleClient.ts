@@ -6,13 +6,12 @@ import discordjs, { ApplicationCommand, Awaitable, ClientEvents, Collection } fr
 import { RecipleClientOptions, RecipleConfigOptions } from '../types/options';
 import { CommandCooldownManager } from './managers/CommandCooldownManager';
 import { CommandManager } from './managers/CommandManager';
-import { getCommandBuilderName } from '../utils/functions';
 import { ModuleManager } from './managers/ModuleManager';
-import { CommandError } from './errors/CommandError';
 import { CommandHaltReason } from '../types/halt';
 import { version } from '../utils/constants';
 import { Logger } from 'fallout-utility';
-import { inspect } from 'util';
+import { RecipleError } from './errors/RecipleError';
+import { createCommandExecuteErrorOptions, createCommandHaltErrorOptions } from '../utils/errorCodes';
 
 export interface RecipleClient<Ready extends boolean = boolean> extends discordjs.Client<Ready> {
     on<E extends keyof RecipleClientEvents>(event: E, listener: (...args: RecipleClientEvents[E]) => Awaitable<void>): this;
@@ -89,7 +88,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends discordjs.Cl
                         ? command.halt(haltData as SlashCommandHaltData)
                         : false
             : false)
-            .catch(err => this._throwError(new CommandError('CommandHaltError', getCommandBuilderName(command), command.name, inspect(err))));
+            .catch(err => this._throwError(new RecipleError(createCommandHaltErrorOptions(command, err))));
 
         return haltResolve ?? true;
     }
@@ -116,7 +115,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends discordjs.Cl
         .catch(async err => {
             // @ts-expect-error Types is not usable here
             const isHandled = await this._haltCommand(command, { commandType: command.commandType, reason: CommandHaltReason.Error, executeData, error: err });
-            if (!isHandled) this._throwError(new CommandError('CommandExecuteError', getCommandBuilderName(command), command.name, inspect(err)));
+            if (!isHandled) this._throwError(new RecipleError(createCommandExecuteErrorOptions(command, err)));
         });
     }
 

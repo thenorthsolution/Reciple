@@ -21,15 +21,15 @@ export interface RecipleModuleScript {
     /**
      * The function that is called when the module script is started. The function must return a boolean value or a promise that resolves to a boolean value. The boolean value indicates whether the module script was started successfully.
      * @param client The client that the module script is running on
-     * @param module The module that the module script is associated with
+     * @param _module The module that the module script is associated with
      */
-    onStart(client: RecipleClient<false>, module: RecipleModule): boolean | Promise<boolean>;
+    onStart(client: RecipleClient<false>, _module: RecipleModule): boolean | Promise<boolean>;
     /**
      * The function that is called when the module script is loaded.
      * @param client The client that the module script is running on
-     * @param module The module that the module script is associated with
+     * @param _module The module that the module script is associated with
      */
-    onLoad?(client: RecipleClient<true>, module: RecipleModule): void | Promise<void>;
+    onLoad?(client: RecipleClient<true>, _module: RecipleModule): void | Promise<void>;
     /**
      * The function that is called when the module script is unloaded.
      * @param unloadData The unload data contains information about why the module script is being unloaded.

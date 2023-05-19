@@ -6,6 +6,7 @@ export * from './classes/builders/SlashCommandBuilder';
 export * from './classes/errors/BaseError';
 export * from './classes/errors/CommandError';
 export * from './classes/errors/ModuleError';
+export * from './classes/errors/RecipleError';
 export * from './classes/managers/CommandCooldownManager';
 export * from './classes/managers/CommandManager';
 export * from './classes/managers/MessageCommandOptionManager';
@@ -21,6 +22,7 @@ export * from './utils/assertions/commands/predicates';
 export * from './utils/assertions/module/assertions';
 export * from './utils/assertions/module/predicates';
 export * from './utils/constants';
+export * from './utils/errorCodes';
 export * from './utils/functions';
 export * from './utils/permissions'
 
