@@ -8,6 +8,10 @@ export interface RecipleErrorOptions {
 }
 
 export class RecipleError extends Error {
+    get cleanStack() {
+        return this.stack && stripAnsi(this.stack);
+    }
+
     constructor(options: RecipleErrorOptions) {
         super(options.message, { ...options });
 
