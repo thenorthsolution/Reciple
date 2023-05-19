@@ -3,12 +3,13 @@ import { validateModuleScript } from '../../utils/assertions/module/assertions';
 import { RecursiveDefault, recursiveDefaults } from '../../utils/functions';
 import { RecipleModule, RecipleModuleScript } from '../RecipleModule';
 import { ModuleError } from '../errors/ModuleError';
-import { realVersion } from '../../utils/constants';
 import { RecipleClient } from '../RecipleClient';
 import { TypedEmitter } from 'fallout-utility';
-import { deprecate, inspect } from 'util';
+import { deprecate } from 'util';
 import semver from 'semver';
 import path from 'path';
+import { RecipleError } from '../errors/RecipleError';
+import { createLoadModuleFailErrorOptions, createUnsupportedModuleErrorOptions } from '../../utils/errorCodes';
 
 export interface ModuleManagerEvents {
     resolveModuleFileError: [file: string, error: Error];
@@ -63,7 +64,7 @@ export class ModuleManager extends TypedEmitter<ModuleManagerEvents> {
                     return false;
                 });
 
-                if (error) throw new ModuleError('LoadModuleFail', module_.displayName, inspect(error));
+                if (error) throw new RecipleError(createLoadModuleFailErrorOptions(module_.displayName, error));
                 if (!start) {
                     this.emit('startModuleFailed', module_);
                     continue;
@@ -157,7 +158,7 @@ export class ModuleManager extends TypedEmitter<ModuleManagerEvents> {
                 const script = recursiveDefaults<RecipleModuleScript|RecipleModule|undefined>(resolveFile);
 
                 if (script instanceof RecipleModule) {
-                    if (!disableVersionCheck && !script.isSupported) throw new ModuleError('UnsupportedModule', filePath, realVersion);
+                    if (!disableVersionCheck && !script.isSupported) throw new RecipleError(createUnsupportedModuleErrorOptions(script.displayName));
                     modules.push(script);
                     continue;
                 }
@@ -165,7 +166,7 @@ export class ModuleManager extends TypedEmitter<ModuleManagerEvents> {
                 validateModuleScript(script);
 
                 if (!disableVersionCheck && !normalizeArray([script.versions] as RestOrArray<string>)?.some(v => v === "latest" || semver.satisfies(this.client.version, v))) {
-                    throw new ModuleError('UnsupportedModule', filePath, realVersion);
+                    throw new RecipleError(createUnsupportedModuleErrorOptions(filePath));
                 }
 
                 modules.push(
@@ -191,6 +192,8 @@ export class ModuleManager extends TypedEmitter<ModuleManagerEvents> {
             return false;
         }
     }
+
+    // TODO: Remove deprecated
 
     /**
      * @deprecated Use the assertion function `validateModuleScript`

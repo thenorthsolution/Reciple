@@ -25,19 +25,6 @@ export function hasExecutePermissions(options: hasExecutePermissionsOptions): bo
 }
 
 /**
- * @deprecated Use hasExecutePermissionsOptions instead
- */
-export interface userHasExecutePermissionsOptions extends hasExecutePermissionsOptions {}
-
-/**
- * @deprecated Use hashasExecutePermissions instead
- */
-export const memberHasExecutePermissions = deprecate(function memberHasExecutePermissions(options: userHasExecutePermissionsOptions) {
-    // TODO: Remove deprecated
-    return hasExecutePermissions(options);
-}, 'memberHasExecutePermissions() is deprecated. Use hasExecutePermissions() instead.');
-
-/**
  * Check if a bot has the permissions to execute a command in a guild or channel.
  * @param guildOrChannel The guild or channel where the command is being executed.
  * @param requiredPermissions The required permissions for the command.
@@ -53,3 +40,17 @@ export function botHasPermissionsToExecute(guildOrChannel: Guild|GuildTextBasedC
 
     return !!permissions?.has(requiredPermissions);
 }
+
+// TODO: Remove deprecated
+
+/**
+ * @deprecated Use hasExecutePermissionsOptions instead
+ */
+export interface userHasExecutePermissionsOptions extends hasExecutePermissionsOptions {}
+
+/**
+ * @deprecated Use hashasExecutePermissions instead
+ */
+export const memberHasExecutePermissions = deprecate(function memberHasExecutePermissions(options: userHasExecutePermissionsOptions) {
+    return hasExecutePermissions(options);
+}, 'memberHasExecutePermissions() is deprecated. Use hasExecutePermissions() instead.');
