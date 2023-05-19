@@ -1,4 +1,5 @@
 import stripAnsi from 'strip-ansi';
+import kleur from 'kleur';
 
 export interface RecipleErrorOptions {
     message: string;
@@ -10,7 +11,7 @@ export class RecipleError extends Error {
     constructor(options: RecipleErrorOptions) {
         super(options.message, { ...options });
 
-        this.name = options.name ?? this.name;
+        if (options.name) this.name = kleur.bold().red(options.name);
     }
 
     public toString() {
