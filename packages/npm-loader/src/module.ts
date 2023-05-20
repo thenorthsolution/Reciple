@@ -37,8 +37,9 @@ export interface RecipleNPMLoaderOptions {
     ignoredPackages: string[];
 }
 
-export class RecipleNPMLoader implements RecipleModuleScript, RecipleNPMLoaderOptions {
+export class RecipleNPMLoader implements RecipleNPMModuleScript, RecipleNPMLoaderOptions {
     readonly versions: string = JSON.parse(readFileSync(path.join(__dirname, '../package.json'), 'utf-8')).peerDependencies['@reciple/client'];
+    readonly moduleName: string = '@reciple/npm-loader';
 
     public modules: RecipleModule[] = [];
     public client!: RecipleClient;
