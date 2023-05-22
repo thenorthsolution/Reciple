@@ -1,4 +1,5 @@
 import { ContextMenuCommandExecuteData, ContextMenuCommandHaltData, ContextMenuCommandResolvable } from './builders/ContextMenuCommandBuilder';
+import { createCommandExecuteErrorOptions, createCommandHaltErrorOptions, createCommandPreconditionErrorOptions } from '../utils/errorCodes';
 import { MessageCommandExecuteData, MessageCommandHaltData, MessageCommandResovable } from './builders/MessageCommandBuilder';
 import { AnyCommandBuilder, AnyCommandData, AnyCommandExecuteData, AnyCommandHaltData, CommandType } from '../types/commands';
 import { SlashCommandExecuteData, SlashCommandHaltData, SlashCommandResolvable } from './builders/SlashCommandBuilder';
@@ -11,7 +12,6 @@ import { CommandHaltReason } from '../types/halt';
 import { version } from '../utils/constants';
 import { Logger } from 'fallout-utility';
 import { RecipleError } from './errors/RecipleError';
-import { createCommandExecuteErrorOptions, createCommandHaltErrorOptions, createCommandPreconditionErrorOptions } from '../utils/errorCodes';
 
 export interface RecipleClient<Ready extends boolean = boolean> extends discordjs.Client<Ready> {
     on<E extends keyof RecipleClientEvents>(event: E, listener: (...args: RecipleClientEvents[E]) => Awaitable<void>): this;
@@ -125,7 +125,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends discordjs.Cl
     public async _executeCommandPrecondition(command: SlashCommandResolvable, executeData: SlashCommandExecuteData): Promise<boolean>;
     public async _executeCommandPrecondition(command: AnyCommandBuilder|AnyCommandData, executeData: AnyCommandExecuteData): Promise<boolean> {
         const commandModule = this.modules.findCommandModule(command);
-        const globalPrecondition = this.commands.getGlobalCommandPrecondition(command.commandType) as (e: typeof executeData) => Awaitable<boolean>;
+        const globalPrecondition = this.commands.getGlobalPrecondition(command.commandType) as (e: typeof executeData) => Awaitable<boolean>;
 
         try {
             let isTrue = false;
