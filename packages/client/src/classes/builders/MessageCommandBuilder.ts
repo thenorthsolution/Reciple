@@ -40,6 +40,7 @@ export interface MessageCommandExecuteData<Options extends boolean = true> {
 export type MessageCommandHaltData = CommandHaltData<CommandType.MessageCommand>;
 
 export type MessageCommandExecuteFunction = (executeData: MessageCommandExecuteData) => Awaitable<void>;
+export type MessageCommandPreconditionFunction = (executeData: MessageCommandExecuteData) => Awaitable<boolean>;
 export type MessageCommandHaltFunction = (haltData: MessageCommandHaltData) => Awaitable<boolean>;
 
 export type MessageCommandResovable = MessageCommandBuilder|MessageCommandData;
@@ -359,6 +360,9 @@ export class MessageCommandBuilder extends BaseCommandBuilder implements Message
                 return;
             }
         }
+
+        const precondition = await client._executeCommandPrecondition(builder, executeData);
+        if (!precondition) return;
 
         return (await client._executeCommand(builder, executeData)) ? executeData : undefined;
     }

@@ -27,6 +27,14 @@ export function createCommandHaltErrorOptions(builder: AnyCommandBuilder|AnyComm
     };
 }
 
+export function createCommandPreconditionErrorOptions(builder: AnyCommandBuilder|AnyCommandData, cause: unknown): RecipleErrorOptions {
+    return {
+        message: `An error occured while executing precondition for ${kleur.cyan(getCommandBuilderName(builder))} named ${kleur.red("'" + builder.name + "'")}`,
+        cause,
+        name: 'PreconditionError'
+    };
+}
+
 export function createLoadModuleFailErrorOptions(moduleDisplayName: string, cause: unknown): RecipleErrorOptions {
     return {
         message: `Failed to load ${kleur.red("'" + moduleDisplayName + "'")}`,

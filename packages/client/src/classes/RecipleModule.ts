@@ -1,8 +1,8 @@
-import { AnyCommandBuilder, AnyCommandData, CommandType } from '../types/commands';
-import { ContextMenuCommandBuilder } from './builders/ContextMenuCommandBuilder';
+import { AnyCommandBuilder, AnyCommandData, AnyCommandExecuteData, CommandType } from '../types/commands';
+import { ContextMenuCommandBuilder, ContextMenuCommandExecuteData } from './builders/ContextMenuCommandBuilder';
+import { MessageCommandBuilder, MessageCommandExecuteData } from './builders/MessageCommandBuilder';
+import { SlashCommandBuilder, SlashCommandExecuteData } from './builders/SlashCommandBuilder';
 import { validateCommand } from '../utils/assertions/commands/assertions';
-import { MessageCommandBuilder } from './builders/MessageCommandBuilder';
-import { SlashCommandBuilder } from './builders/SlashCommandBuilder';
 import { RecipleClient } from '../classes/RecipleClient';
 import { RestOrArray, normalizeArray } from 'discord.js';
 import { ValidationError } from '@sapphire/shapeshift';
@@ -35,6 +35,9 @@ export interface RecipleModuleScript {
      * @param unloadData The unload data contains information about why the module script is being unloaded.
      */
     onUnload?(unloadData: RecipleModuleScriptUnloadData): void | Promise<void>;
+    contextMenuCommandPrecondition?(executeData: ContextMenuCommandExecuteData): boolean | Promise<boolean>;
+    messageCommandPrecondition?(executeData: MessageCommandExecuteData): boolean | Promise<boolean>;
+    slashCommandPrecondition?(executeData: SlashCommandExecuteData): boolean | Promise<boolean>;
 }
 
 export interface RecipleModuleScriptUnloadData {
@@ -52,14 +55,14 @@ export interface RecipleModuleScriptUnloadData {
     module: RecipleModule;
 }
 
-export interface RecipleModuleOptions {
+export interface RecipleModuleOptions<S extends RecipleModuleScript = RecipleModuleScript> {
     client: RecipleClient;
-    script: RecipleModuleScript;
+    script: S;
     filePath?: string;
 }
 
-export class RecipleModule {
-    private _script: RecipleModuleScript;
+export class RecipleModule<S extends RecipleModuleScript = RecipleModuleScript> {
+    private _script: S;
 
     readonly id: string;
     readonly client: RecipleClient;
@@ -69,7 +72,7 @@ export class RecipleModule {
 
     get script() { return this._script; }
 
-    constructor(options: RecipleModuleOptions) {
+    constructor(options: RecipleModuleOptions<S>) {
         this.filePath = options.filePath;
         this._script = options.script;
         this.client = options.client;
@@ -95,6 +98,26 @@ export class RecipleModule {
             module: this,
             reason
         }));
+    }
+
+    public async contextMenuCommandPrecondition(execute: ContextMenuCommandExecuteData): Promise<boolean> {
+        return this._script.contextMenuCommandPrecondition ? await Promise.resolve(this._script.contextMenuCommandPrecondition(execute)) : true;
+    }
+
+    public async messageCommandPrecondition(execute: MessageCommandExecuteData): Promise<boolean> {
+        return this._script.messageCommandPrecondition ? await Promise.resolve(this._script.messageCommandPrecondition(execute)) : true;
+    }
+
+    public async slashCommandPrecondition(execute: SlashCommandExecuteData): Promise<boolean> {
+        return this._script.slashCommandPrecondition ? await Promise.resolve(this._script.slashCommandPrecondition(execute)) : true;
+    }
+
+    public async executePrecondition(executeData: AnyCommandExecuteData): Promise<boolean> {
+        return executeData.commandType === CommandType.ContextMenuCommand
+            ? this.contextMenuCommandPrecondition(executeData)
+            : executeData.commandType === CommandType.MessageCommand
+                ? this.messageCommandPrecondition(executeData)
+                : this.slashCommandPrecondition(executeData);
     }
 
     public resolveCommands(): AnyCommandBuilder[] {

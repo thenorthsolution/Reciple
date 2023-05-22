@@ -1,13 +1,13 @@
 import { ApplicationCommandDataResolvable, ChatInputCommandInteraction, Collection, ContextMenuCommandInteraction, Message, RESTPostAPIApplicationCommandsJSONBody, RestOrArray, normalizeArray } from 'discord.js';
-import { AnySlashCommandBuilder, SlashCommandBuilder, SlashCommandResolvable } from '../builders/SlashCommandBuilder';
-import { ContextMenuCommandBuilder, ContextMenuCommandResolvable } from '../builders/ContextMenuCommandBuilder';
-import { AnyCommandBuilder, AnyCommandData, AnyCommandExecuteData, ApplicationCommandBuilder, CommandType } from '../../types/commands';
-import { MessageCommandBuilder, MessageCommandResovable } from '../builders/MessageCommandBuilder';
+import { AnySlashCommandBuilder, SlashCommandBuilder, SlashCommandPreconditionFunction, SlashCommandResolvable } from '../builders/SlashCommandBuilder';
+import { ContextMenuCommandBuilder, ContextMenuCommandPreconditionFunction, ContextMenuCommandResolvable } from '../builders/ContextMenuCommandBuilder';
+import { AnyCommandBuilder, AnyCommandData, AnyCommandExecuteData, AnyCommandPreconditionFunction, ApplicationCommandBuilder, CommandType } from '../../types/commands';
+import { MessageCommandBuilder, MessageCommandPreconditionFunction, MessageCommandResovable } from '../builders/MessageCommandBuilder';
+import { createUnknownCommandTypeErrorOptions } from '../../utils/errorCodes';
 import { validateCommand } from '../../utils/assertions/commands/assertions';
 import { RecipleConfigOptions } from '../../types/options';
-import { RecipleClient } from '../RecipleClient';
 import { RecipleError } from '../errors/RecipleError';
-import { createUnknownCommandTypeErrorOptions } from '../../utils/errorCodes';
+import { RecipleClient } from '../RecipleClient';
 
 export interface CommandManagerOptions {
     client: RecipleClient;
@@ -23,6 +23,10 @@ export class CommandManager {
     readonly messageCommands: Collection<string, MessageCommandBuilder> = new Collection();
     readonly slashCommands: Collection<string, AnySlashCommandBuilder> = new Collection();
     readonly additionalApplicationCommands: ApplicationCommandDataResolvable[] = [];
+
+    public globalContextMenuCommandPrecondition?: ContextMenuCommandPreconditionFunction;
+    public globalMessageCommandPrecondition?: MessageCommandPreconditionFunction;
+    public globalSlashCommandPrecondition?: SlashCommandPreconditionFunction;
 
     get size() { return this.contextMenuCommands.size + this.messageCommands.size + this.slashCommands.size; }
 
@@ -72,6 +76,40 @@ export class CommandManager {
         }
 
         return this;
+    }
+
+    public setGlobalPrecondition(commandType: CommandType.ContextMenuCommand, precondition: null|undefined|ContextMenuCommandPreconditionFunction): void;
+    public setGlobalPrecondition(commandType: CommandType.MessageCommand, precondition: null|undefined|MessageCommandPreconditionFunction): void;
+    public setGlobalPrecondition(commandType: CommandType.SlashCommand, precondition: null|undefined|SlashCommandPreconditionFunction): void;
+    public setGlobalPrecondition(commandType: CommandType, precondition: null|undefined|AnyCommandPreconditionFunction): void {
+        precondition = precondition || undefined;
+
+        switch (commandType) {
+            case CommandType.ContextMenuCommand:
+                this.globalContextMenuCommandPrecondition = precondition as ContextMenuCommandPreconditionFunction;
+                break;
+            case CommandType.MessageCommand:
+                this.globalMessageCommandPrecondition = precondition as MessageCommandPreconditionFunction;
+                break;
+            case CommandType.SlashCommand:
+                this.globalSlashCommandPrecondition = precondition as SlashCommandPreconditionFunction;
+                break;
+        }
+    }
+
+    public getGlobalPrecondition(commandType: CommandType.ContextMenuCommand): ContextMenuCommandPreconditionFunction;
+    public getGlobalPrecondition(commandType: CommandType.MessageCommand): MessageCommandPreconditionFunction;
+    public getGlobalPrecondition(commandType: CommandType.SlashCommand): SlashCommandPreconditionFunction;
+    public getGlobalPrecondition(commandType: CommandType): AnyCommandPreconditionFunction;
+    public getGlobalPrecondition(commandType: CommandType): AnyCommandPreconditionFunction {
+        switch (commandType) {
+            case CommandType.ContextMenuCommand:
+                return this.globalContextMenuCommandPrecondition || (() => true);
+            case CommandType.MessageCommand:
+                return this.globalMessageCommandPrecondition || (() => true);
+            case CommandType.SlashCommand:
+                return this.globalSlashCommandPrecondition || (() => true);
+        }
     }
 
     public get(command: string, type: CommandType.ContextMenuCommand): ContextMenuCommandBuilder | undefined;

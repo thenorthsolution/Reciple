@@ -31,6 +31,7 @@ export interface SlashCommandExecuteData {
 export type SlashCommandHaltData = CommandHaltData<CommandType.SlashCommand>;
 
 export type SlashCommandExecuteFunction = (executeData: SlashCommandExecuteData) => Awaitable<void>;
+export type SlashCommandPreconditionFunction = (executeData: SlashCommandExecuteData) => Awaitable<boolean>;
 export type SlashCommandHaltFunction = (haltData: SlashCommandHaltData) => Awaitable<boolean>;
 
 export type SlashCommandResolvable = AnySlashCommandBuilder|SlashCommandData;
@@ -279,6 +280,9 @@ export class SlashCommandBuilder extends Mixin(discordjs.SlashCommandBuilder, Ba
                 return;
             }
         }
+
+        const precondition = await client._executeCommandPrecondition(builder, executeData);
+        if (!precondition) return;
 
         return (await client._executeCommand(builder, executeData)) ? executeData : undefined;
     }
