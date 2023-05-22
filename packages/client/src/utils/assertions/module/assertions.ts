@@ -18,6 +18,18 @@ export function validateModuleOnUnload(onUnload: unknown): asserts onUnload is R
     s.instance(Function).optional.parse(onUnload);
 }
 
+export function validateModuleContextMenuCommandPrecondition(precondition: unknown): asserts precondition is RecipleModuleScript['contextMenuCommandPrecondition'] {
+    s.instance(Function).optional.parse(precondition);
+}
+
+export function validateModuleMessageCommandPrecondition(precondition: unknown): asserts precondition is RecipleModuleScript['messageCommandPrecondition'] {
+    s.instance(Function).optional.parse(precondition);
+}
+
+export function validateModuleSlashCommandPrecondition(precondition: unknown): asserts precondition is RecipleModuleScript['slashCommandPrecondition'] {
+    s.instance(Function).optional.parse(precondition);
+}
+
 export function validateModuleScript(moduleScript: unknown): asserts moduleScript is RecipleModuleScript {
     const script = moduleScript as Partial<RecipleModuleScript>;
 
@@ -26,4 +38,7 @@ export function validateModuleScript(moduleScript: unknown): asserts moduleScrip
     validateModuleOnStart(script.onStart);
     validateModuleOnLoad(script?.onLoad);
     validateModuleOnUnload(script?.onUnload);
+    validateModuleContextMenuCommandPrecondition(script?.contextMenuCommandPrecondition);
+    validateModuleMessageCommandPrecondition(script?.messageCommandPrecondition);
+    validateModuleSlashCommandPrecondition(script?.slashCommandPrecondition);
 }

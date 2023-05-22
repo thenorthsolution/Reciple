@@ -29,6 +29,7 @@ export interface ContextMenuCommandExecuteData {
 export type ContextMenuCommandHaltData = CommandHaltData<CommandType.ContextMenuCommand>;
 
 export type ContextMenuCommandExecuteFunction = (executeData: ContextMenuCommandExecuteData) => Awaitable<void>;
+export type ContextMenuCommandPreconditionFunction = (executeData: ContextMenuCommandExecuteData) => Awaitable<boolean>;
 export type ContextMenuCommandHaltFunction = (haltData: ContextMenuCommandHaltData) => Awaitable<boolean>;
 
 export type ContextMenuCommandResolvable = ContextMenuCommandBuilder|ContextMenuCommandData;
@@ -131,6 +132,9 @@ export class ContextMenuCommandBuilder extends Mixin(discordjs.ContextMenuComman
                 return;
             }
         }
+
+        const precondition = await client._executeCommandPrecondition(builder, executeData);
+        if (!precondition) return;
 
         return (await client._executeCommand(builder, executeData)) ? executeData : undefined;
     }

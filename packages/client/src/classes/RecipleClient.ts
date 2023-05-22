@@ -11,7 +11,7 @@ import { CommandHaltReason } from '../types/halt';
 import { version } from '../utils/constants';
 import { Logger } from 'fallout-utility';
 import { RecipleError } from './errors/RecipleError';
-import { createCommandExecuteErrorOptions, createCommandHaltErrorOptions } from '../utils/errorCodes';
+import { createCommandExecuteErrorOptions, createCommandHaltErrorOptions, createCommandPreconditionErrorOptions } from '../utils/errorCodes';
 
 export interface RecipleClient<Ready extends boolean = boolean> extends discordjs.Client<Ready> {
     on<E extends keyof RecipleClientEvents>(event: E, listener: (...args: RecipleClientEvents[E]) => Awaitable<void>): this;
@@ -36,6 +36,7 @@ export interface RecipleClient<Ready extends boolean = boolean> extends discordj
 export interface RecipleClientEvents extends ClientEvents {
     recipleCommandExecute: [executeData: AnyCommandExecuteData];
     recipleCommandHalt: [haltData: AnyCommandHaltData];
+    recipleCommandPrecondition: [executeData: AnyCommandExecuteData];
     recipleRegisterApplicationCommands: [commands: Collection<string, ApplicationCommand>, guildId?: string];
     recipleError: [error: Error];
     recipleDebug: [message: string];
@@ -117,6 +118,32 @@ export class RecipleClient<Ready extends boolean = boolean> extends discordjs.Cl
             const isHandled = await this._haltCommand(command, { commandType: command.commandType, reason: CommandHaltReason.Error, executeData, error: err });
             if (!isHandled) this._throwError(new RecipleError(createCommandExecuteErrorOptions(command, err)));
         });
+    }
+
+    public async _executeCommandPrecondition(command: ContextMenuCommandResolvable, executeData: ContextMenuCommandExecuteData): Promise<boolean>;
+    public async _executeCommandPrecondition(command: MessageCommandResovable, executeData: MessageCommandExecuteData): Promise<boolean>;
+    public async _executeCommandPrecondition(command: SlashCommandResolvable, executeData: SlashCommandExecuteData): Promise<boolean>;
+    public async _executeCommandPrecondition(command: AnyCommandBuilder|AnyCommandData, executeData: AnyCommandExecuteData): Promise<boolean> {
+        const commandModule = this.modules.findCommandModule(command);
+        const globalPrecondition = this.commands.getGlobalCommandPrecondition(command.commandType) as (e: typeof executeData) => Awaitable<boolean>;
+
+        try {
+            let isTrue = false;
+
+            isTrue = await globalPrecondition(executeData);
+            if (!isTrue || !commandModule) return isTrue;
+
+            isTrue = await commandModule.executePrecondition(executeData);
+            if (!isTrue) return isTrue;
+
+            this.emit('recipleCommandPrecondition', executeData);
+            return true;
+        } catch (err) {
+            // @ts-expect-error Types is not usable here
+            const isHandled = await this._haltCommand(command, { commandType: command.commandType, reason: CommandHaltReason.PreconditionError, executeData, error: err });
+            if (!isHandled) this._throwError(new RecipleError(createCommandPreconditionErrorOptions(command, err)));
+            return false;
+        }
     }
 
     public login(token?: string): Promise<string> {

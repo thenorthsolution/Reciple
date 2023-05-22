@@ -10,6 +10,7 @@ import semver from 'semver';
 import path from 'path';
 import { RecipleError } from '../errors/RecipleError';
 import { createLoadModuleFailErrorOptions, createUnsupportedModuleErrorOptions } from '../../utils/errorCodes';
+import { AnyCommandBuilder, AnyCommandData } from '../../types/commands';
 
 export interface ModuleManagerEvents {
     resolveModuleFileError: [file: string, error: Error];
@@ -48,6 +49,10 @@ export class ModuleManager extends TypedEmitter<ModuleManagerEvents> {
         options.modules?.forEach(m => m instanceof RecipleModule ? this.modules.set(m.id, m) : new RecipleModule({ client: this.client, script: m }));
 
         this.validateScript = deprecate(this.validateScript, '<ModuleManager>.validateScript() is deprecated. Use validateModuleScript() function instead.');
+    }
+
+    public findCommandModule(command: AnyCommandData|AnyCommandBuilder): RecipleModule|undefined {
+        return this.modules.find(m => m.commands.some(c => c.commandType === command.commandType && c.name === command.name));
     }
 
     public async startModules(options: ModuleManagerModulesActionOptions & { addToModulesCollection?: boolean; }): Promise<RecipleModule[]> {

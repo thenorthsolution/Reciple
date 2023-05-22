@@ -13,7 +13,8 @@ export enum CommandHaltReason {
     ValidateOptionError,
     MissingMemberPermissions,
     MissingBotPermissions,
-    NoExecuteHandler
+    NoExecuteHandler,
+    PreconditionError
 }
 
 export type CommandHaltData<T extends CommandType> =
@@ -22,7 +23,8 @@ export type CommandHaltData<T extends CommandType> =
     | (T extends CommandType.MessageCommand ? CommandInvalidArgumentsHaltData<T> | CommandMissingArgumentsHaltData<T> | CommandValidateOptionErrorHaltData<T> : never)
     | CommandMissingMemberPermissionsHaltData<T>
     | CommandMissingBotPermissionsHaltData<T>
-    | CommandNoExecuteHandlerHaltData<T>;
+    | CommandNoExecuteHandlerHaltData<T>
+    | CommandPreconditionErrorHaltData<T>;
 
 export interface BaseCommandHaltData<T extends CommandType> {
     reason: CommandHaltReason;
@@ -71,4 +73,9 @@ export interface CommandMissingBotPermissionsHaltData<T extends CommandType> ext
 
 export interface CommandNoExecuteHandlerHaltData<T extends CommandType> extends BaseCommandHaltData<T> {
     reason: CommandHaltReason.NoExecuteHandler;
+}
+
+export interface CommandPreconditionErrorHaltData<T extends CommandType> extends BaseCommandHaltData<T> {
+    reason: CommandHaltReason.PreconditionError;
+    error: any;
 }
