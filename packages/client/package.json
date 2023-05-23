@@ -36,7 +36,7 @@
   ],
   "dependencies": {
     "@sapphire/shapeshift": "^3.9.0",
-    "fallout-utility": "^2.5.0",
+    "fallout-utility": "^2.5.1",
     "kleur": "^4.1.5",
     "semver": "^7.5.1",
     "strip-ansi": "^6.0.1",
