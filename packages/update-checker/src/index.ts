@@ -18,7 +18,7 @@ export interface UpdateData {
     updateType: UpdateType;
     currentVersion: string;
     updatedVersion: string;
-};
+}
 
 export async function fetchPackageData<T extends APIPartialPackageData = APIPartialPackageData>(pkg: string): Promise<T> {
     return axios.get<T>(`https://registry.npmjs.org/${pkg}`, { responseType: 'json' }).then(d => d.data);
