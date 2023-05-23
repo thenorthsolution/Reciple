@@ -1,14 +1,9 @@
 name: Generate Docs
 on:
   push:
-    branches: ['!docs', '!v*']
+    branches: ['main']
     paths:
-      - '**/reciple/src/**'
-      - '**/client/src/**'
-      - '**/npm-loader/src/**'
-      - '**/reciple/package.json'
-      - '**/client/package.json'
-      - '**/npm-loader/package.json'
+      - 'packages/*/src/**'
     tags: ['reciple@*', '@reciple/client@*', '@reciple/npm-loader@*']
   workflow_dispatch:
 concurrency:
