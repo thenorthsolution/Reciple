@@ -3,17 +3,18 @@
 import { ContextMenuCommandBuilder, MessageCommandBuilder, SlashCommandBuilder, realVersion, version } from '@reciple/client';
 import { getJsConfig, getModules } from './utils/modules.js';
 import { createLogger, eventLogger } from './utils/logger.js';
+import { checkLatestUpdate } from '@reciple/update-checker';
 import { CacheFactory, SweeperOptions } from 'discord.js';
 import { existsSync, mkdirSync, readdirSync } from 'fs';
-import { command, cli } from './utils/cli.js';
+import { command, cli, cliVersion } from './utils/cli.js';
 import { setTimeout } from 'timers/promises';
 import { Config } from './classes/Config.js';
 import { RecipleClient } from './index.js';
 import micromatch from 'micromatch';
 import prompts from 'prompts';
 import semver from 'semver';
-import path from 'path';
 import kleur from 'kleur';
+import path from 'path';
 
 command.parse();
 
@@ -62,6 +63,15 @@ if (!semver.satisfies(version, config.version)) {
 }
 
 logger?.info(`Starting Reciple client v${realVersion} - ${new Date()}`);
+
+if (config.checkForUpdates !== false) {
+    checkLatestUpdate('reciple', cliVersion)
+        .then(data => logger?.warn(
+            `A new updated version of Reciple is available! Update from ${kleur.red(data.currentVersion)} to ${kleur.green(data.updatedVersion)}:\n` +
+            `   ${kleur.bold().cyan('npm i reciple@' + data.updatedVersion)}`
+        ))
+        .catch(() => null);
+}
 
 const client = new RecipleClient({
     recipleOptions: config,

@@ -2,6 +2,7 @@ import { realVersion } from '@reciple/client';
 import { Command } from 'commander';
 import { readFileSync } from 'fs';
 import path from 'path';
+import { coerce } from 'semver';
 import { deprecate } from 'util';
 
 const { version, description } = JSON.parse(readFileSync(path.join(__dirname, '../../package.json'), 'utf-8'));
@@ -27,6 +28,8 @@ export const cli = {
     get options() { return command.opts(); },
     get cwd() { return this.args[0] ? path.resolve(this.args[0]) : process.cwd(); }
 };
+
+export const cliVersion = `${coerce(version)}`;
 
 // TODO: Remove deprecated
 

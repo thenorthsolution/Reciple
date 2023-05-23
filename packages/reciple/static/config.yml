@@ -109,5 +109,8 @@ client:
     - GuildMessages
     - MessageContent
 
+# Notifies you for package updates
+checkForUpdates: true
+
 # Don't change this value
 version: ^VERSION

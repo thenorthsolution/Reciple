@@ -28,6 +28,7 @@ export interface IConfig extends RecipleConfigOptions {
         disableModuleVersionCheck: boolean;
     };
     client: ClientOptions;
+    checkForUpdates: boolean;
     version: string;
 }
 
