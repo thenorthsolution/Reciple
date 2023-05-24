@@ -66,10 +66,10 @@ logger?.info(`Starting Reciple client v${realVersion} - ${new Date()}`);
 
 if (config.checkForUpdates !== false) {
     checkLatestUpdate('reciple', cliVersion)
-        .then(data => logger?.warn(
+        .then(data => data.currentVersion !== data.updatedVersion ? logger?.warn(
             `A new updated version of Reciple is available! Update from ${kleur.red(data.currentVersion)} to ${kleur.green(data.updatedVersion)}:\n` +
             `   ${kleur.bold().cyan('npm i reciple@' + data.updatedVersion)}`
-        ))
+        ) : null)
         .catch(() => null);
 }
 
