@@ -7,7 +7,6 @@
     "example"
   ],
   "scripts": {
-    "bootstrap": "npx lerna bootstrap",
     "clean": "npx rimraf ./packages/bin ./packages/dist ./node_modules/.bin",
     "build": "npx lerna run build",
     "watch": "npx tsc --watch --noEmit",
