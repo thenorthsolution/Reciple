@@ -23,7 +23,7 @@ export function getConfigExtensions<T extends { extends?: string|string[]; }>(co
 
         const configExtension = getConfigExtensions(yml.parse(readFileSync(extension, 'utf-8')), extension);
 
-        config = merge(config, configExtension, configMergeCostumizer);
+        config = merge(configExtension, config, configMergeCostumizer);
     }
 
     config.extends = extensions;
