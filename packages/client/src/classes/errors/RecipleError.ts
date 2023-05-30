@@ -12,7 +12,9 @@ export class RecipleError extends Error {
         return this.stack && stripAnsi(this.stack);
     }
 
-    constructor(options: RecipleErrorOptions) {
+    constructor(options: RecipleErrorOptions|string) {
+        options = typeof options === 'string' ? { message: options } : options;
+
         super(options.message, { ...options });
 
         if (options.name) this.name = kleur.bold().red(options.name);

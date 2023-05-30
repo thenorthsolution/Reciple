@@ -19,14 +19,13 @@ import path from 'path';
 command.parse();
 
 const allowedFiles = ['node_modules', 'reciple.yml', 'package.json', '.*'];
-const configPath = cli.options.config
-    ? path.isAbsolute(cli.options.config)
-        ? path.resolve(cli.options.config)
-        : path.join(cli.cwd, cli.options.config)
-    : path.join(cli.cwd, 'reciple.yml');
+let configPaths = cli.options?.config?.map(c => path.isAbsolute(c) ? path.resolve(c) : path.join(cli.cwd, c));
+    configPaths = !configPaths?.length ? [path.join(cli.cwd, 'reciple.yml')] : configPaths;
+
+const mainConfigPath = configPaths.shift()!;
 
 if (!existsSync(cli.cwd)) mkdirSync(cli.cwd, { recursive: true });
-if (readdirSync(cli.cwd).filter(f => !micromatch.isMatch(f, allowedFiles)).length && !existsSync(configPath) && !cli.options.yes) {
+if (readdirSync(cli.cwd).filter(f => !micromatch.isMatch(f, allowedFiles)).length && !existsSync(mainConfigPath) && !cli.options.yes) {
     const confirm = await prompts(
         {
             initial: false,
@@ -39,7 +38,7 @@ if (readdirSync(cli.cwd).filter(f => !micromatch.isMatch(f, allowedFiles)).lengt
     if (!confirm.confirm) process.exit(0);
 }
 
-const configParser = await (new Config(configPath)).parseConfig();
+const configParser = await (new Config(mainConfigPath, configPaths)).parseConfig();
 const config = configParser.getConfig();
 const logger = config.logger?.enabled ? await createLogger(config.logger) : undefined;
 

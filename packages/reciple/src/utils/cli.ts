@@ -13,7 +13,7 @@ export let command = new Command()
     .version(`Reciple CLI: ${version}\nReciple Client: ${realVersion}`, '-v, --version')
     .argument('[cwd]', 'Change the current working directory')
     .option('-t, --token <token>', 'Replace used bot token')
-    .option('-c, --config <dir>', 'Change path to config file')
+    .option('-c, --config <dir>', 'Set path to a config file', (v, p: string[]) => p.concat([v]), [])
     .option('-D, --debugmode', 'Enable debug mode')
     .option('-y, --yes', 'Agree to all Reciple confirmation prompts')
     .option('--env <file>', '.env file location')
@@ -23,9 +23,22 @@ export let command = new Command()
     .option('--sweeper-config <file>', 'Add custom sweeper config')
     .allowUnknownOption(true);
 
+export interface CLIOptions {
+    version?: string;
+    token?: string;
+    config?: string[];
+    debugmode?: boolean;
+    yes?: boolean;
+    env?: string;
+    shardmode?: boolean;
+    setup?: boolean;
+    cacheConfig?: string;
+    sweeperConfig?: string;
+}
+
 export const cli = {
     get args() { return command.args; },
-    get options() { return command.opts(); },
+    get options() { return command.opts<CLIOptions>(); },
     get cwd() { return this.args[0] ? path.resolve(this.args[0]) : process.cwd(); }
 };
 

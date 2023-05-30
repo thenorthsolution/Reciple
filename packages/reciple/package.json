@@ -44,14 +44,14 @@
     "fallout-utility": "^2.5.1",
     "globby": "^13.1.4",
     "kleur": "^4.1.5",
-    "lodash.merge": "^4.6.2",
+    "lodash.mergewith": "^4.6.2",
     "micromatch": "^4.0.5",
     "prompts": "^2.4.2",
     "semver": "^7.5.1",
     "yaml": "^2.2.2"
   },
   "devDependencies": {
-    "@types/lodash.merge": "^4.6.7",
+    "@types/lodash.mergewith": "^4.6.7",
     "@types/micromatch": "^4.0.2",
     "@types/prompts": "^2.4.4",
     "@types/semver": "^7.5.0",
