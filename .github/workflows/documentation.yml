@@ -28,7 +28,7 @@ jobs:
           cache-dependency-path: package-lock.json
 
       - name: Install dependencies
-        run: npm run bootstrap
+        run: npm install
 
       - name: Build docs.json
         run: npm run docs
@@ -67,7 +67,7 @@ jobs:
           path: docs
 
       - name: Install dependencies
-        run: npm run bootstrap
+        run: npm install
 
       - name: Format tag package semver
         id: format-tag
