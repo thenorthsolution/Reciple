@@ -47,8 +47,8 @@ export async function create(cwd: string, templateDir: string, esm: boolean, pm?
     }
 
     if (!pm) {
-        console.log(`  • ${kleur.cyan().bold(`npm install`)} (or pnpm install, etc)`);
-        console.log(`  • ${kleur.cyan().bold(`npx reciple --setup`)}`);
+        console.log(`  • ${kleur.cyan().bold(placeholders.INSTALL_ALL)} (or ${packageManagerPlaceholders.pnpm.INSTALL_ALL}, etc)`);
+        console.log(`  • ${kleur.cyan().bold(`${placeholders.BIN_EXEC} reciple --setup`)}`);
     }
 
     console.log(`  • ${kleur.cyan().bold(`${placeholders.SCRIPT_RUN} dev`)}`);
