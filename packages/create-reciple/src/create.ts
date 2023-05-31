@@ -1,4 +1,4 @@
-import { copyFile, resolvePackageManager, runScript } from './utils/functions.js';
+import { copyFile, runScript } from './utils/functions.js';
 import { packageManagerPlaceholders, packages, root } from './utils/constants.js';
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs';
 import { PackageManager } from './utils/types.js';
@@ -18,9 +18,8 @@ export async function create(cwd: string, templateDir: string, esm: boolean, pm?
     }
 
     let rawPackageJSON = readFileSync(join(cwd, 'package.json'), 'utf-8');
-    const detectedPackageManager = resolvePackageManager();
 
-    const placeholders = packageManagerPlaceholders[pm ?? detectedPackageManager ?? 'npm'];
+    const placeholders = packageManagerPlaceholders[pm ?? 'npm'];
 
     for (const pkg of (Object.keys(packages) as (keyof typeof packages)[])) {
         rawPackageJSON = rawPackageJSON.replaceAll(pkg, packages[pkg]);
