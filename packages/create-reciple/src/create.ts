@@ -18,7 +18,7 @@ export async function create(cwd: string, templateDir: string, esm: boolean, pm?
     }
 
     let rawPackageJSON = readFileSync(join(cwd, 'package.json'), 'utf-8');
-    let detectedPackageManager = resolvePackageManager();
+    const detectedPackageManager = resolvePackageManager();
 
     const placeholders = packageManagerPlaceholders[pm ?? detectedPackageManager ?? 'npm'];
 
