@@ -1,39 +1,11 @@
-import { ChildProcess, spawn } from 'child_process';
-import { copyFileSync, existsSync, lstatSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from 'fs';
+import { copyFile, resolvePackageManager, runScript } from './utils/functions.js';
+import { packageManagerPlaceholders, packages, root } from './utils/constants.js';
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs';
+import { PackageManager } from './utils/types.js';
+import { join, relative } from 'path';
 import kleur from 'kleur';
-import path from 'path';
-import { fileURLToPath } from 'url';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const root = path.join(__dirname, '../');
-
-const { devDependencies } = JSON.parse(readFileSync(path.join(root, 'package.json'), 'utf-8'));
-
-const packages = {
-    'TYPESCRIPT': '^5.0.2',
-    'RIMRAF': '^4.4.1',
-    'RECIPLE': devDependencies.reciple,
-    'DISCORDJS': devDependencies['discord.js'],
-    'NODEMON': devDependencies['nodemon']
-};
-
-const packageManagerPlaceholders = {
-    'npm': {
-        'SCRIPT_RUN': 'npm run',
-        'BIN_EXEC': 'npx'
-    },
-    'pnpm': {
-        'SCRIPT_RUN': 'pnpm run',
-        'BIN_EXEC': 'pnpm exec'
-    },
-    'yarn': {
-        'SCRIPT_RUN': 'yarn run',
-        'BIN_EXEC': 'yarn exec'
-    }
-};
-
-export async function create(cwd: string, templateDir: string, esm: boolean, pm?: 'npm'|'yarn'|'pnpm'): Promise<void> {
+export async function create(cwd: string, templateDir: string, esm: boolean, pm?: PackageManager): Promise<void> {
     if (esm) templateDir = templateDir + `-esm`;
     if (!existsSync(templateDir)) return;
 
@@ -41,37 +13,37 @@ export async function create(cwd: string, templateDir: string, esm: boolean, pm?
 
     copyFile(templateDir, cwd, f => f.replace('dot.', '.'));
 
-    if (existsSync(path.join(root, 'assets'))) {
-        copyFile(path.join(root, 'assets'), cwd, f => f.replace('dot.', '.'));
+    if (existsSync(join(root, 'assets'))) {
+        copyFile(join(root, 'assets'), cwd, f => f.replace('dot.', '.'));
     }
 
-    let packageJSON = readFileSync(path.join(cwd, 'package.json'), 'utf-8');
+    let rawPackageJSON = readFileSync(join(cwd, 'package.json'), 'utf-8');
+    let detectedPackageManager = resolvePackageManager();
 
-
-    const placeholders = pm ? packageManagerPlaceholders[pm] : packageManagerPlaceholders['npm'];
+    const placeholders = packageManagerPlaceholders[pm ?? detectedPackageManager ?? 'npm'];
 
     for (const pkg of (Object.keys(packages) as (keyof typeof packages)[])) {
-        packageJSON = packageJSON.replaceAll(pkg, packages[pkg]);
+        rawPackageJSON = rawPackageJSON.replaceAll(pkg, packages[pkg]);
     }
 
     for (const placeholder of (Object.keys(placeholders) as (keyof typeof placeholders)[])) {
-        packageJSON = packageJSON.replaceAll(placeholder, placeholders[placeholder]);
+        rawPackageJSON = rawPackageJSON.replaceAll(placeholder, placeholders[placeholder]);
     }
 
-    writeFileSync(path.join(cwd, 'package.json'), packageJSON);
+    writeFileSync(join(cwd, 'package.json'), rawPackageJSON);
 
     if (pm) {
-        await runScript(pm, cwd, ['install']);
+        await runScript(placeholders.INSTALL_ALL, cwd);
 
-        if (templateDir.includes(`typescript`)) await runScript(pm, cwd, ['run', 'build']);
-        await runScript('npx', cwd, ['reciple', '-y', '--setup']);
+        if (templateDir.includes(`typescript`)) await runScript(`${placeholders.SCRIPT_RUN} build`, cwd);
+        await runScript(`${placeholders.BIN_EXEC} reciple -y --setup`, cwd);
     }
 
     console.log(`${kleur.bold(kleur.green('✔') + ' Your project is ready!')}`);
     console.log(`\nStart developing:`);
 
-    if (path.relative(process.cwd(), cwd) !== '') {
-        console.log(`  • ${kleur.cyan().bold('cd ' + path.relative(process.cwd(), cwd))}`);
+    if (relative(process.cwd(), cwd) !== '') {
+        console.log(`  • ${kleur.cyan().bold('cd ' + relative(process.cwd(), cwd))}`);
     }
 
     if (!pm) {
@@ -82,34 +54,4 @@ export async function create(cwd: string, templateDir: string, esm: boolean, pm?
     console.log(`  • ${kleur.cyan().bold(`${placeholders.SCRIPT_RUN} dev`)}`);
 
     console.log(`\nTo close the bot process, press ${kleur.cyan().bold(`Ctrl + C`)}`)
-}
-
-
-export function copyFile(from: string, to: string, rename?: (f: string) => string): void {
-    const isDirectory = lstatSync(from).isDirectory();
-
-    if (isDirectory) {
-        const contents = readdirSync(from);
-
-        for (const content of contents) {
-            copyFile(path.join(from, content), path.join(to, rename ? rename(content) : content));
-        }
-
-        return;
-    }
-
-    mkdirSync(path.dirname(to), { recursive: true });
-    copyFileSync(from, to);
-}
-
-
-export function runScript(command: string, cwd: string, options?: string[]) {
-    const child: ChildProcess = spawn(command, options ?? [], { cwd, shell: true, env: { ...process.env, FORCE_COLOR: '1' }, stdio: ['inherit', 'inherit', 'inherit'] });
-
-    child.stdout?.pipe(process.stdout);
-    child.stderr?.pipe(process.stderr);
-
-    if (child.stdin) process.stdin.pipe(child.stdin);
-
-    return new Promise((res) => child.on('close', () => res(void 0)));
 }

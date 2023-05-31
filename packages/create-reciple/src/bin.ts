@@ -1,19 +1,21 @@
 #!/usr/bin/env node
-import kleur from 'kleur';
-import path from 'path';
-import fs from 'fs';
-import { exit } from 'process';
-import { fileURLToPath } from 'url';
-import { create } from './create.js';
 import { cancel, confirm, group, intro, isCancel, outro, select, text } from '@clack/prompts';
+import { PackageManager } from './utils/types.js';
+import { dirname, join, resolve } from 'path';
+import { create } from './create.js';
+import { fileURLToPath } from 'url';
+import { exit } from 'process';
+import kleur from 'kleur';
+import fs from 'fs';
+import { resolvePackageManager } from './utils/functions.js';
 
 const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const root = path.join(__dirname, '../');
+const __dirname = dirname(__filename);
+const root = join(__dirname, '../');
 
 const isExplicitDir: boolean = !!process.argv[2];
 
-let cwd = path.resolve(process.argv[2] || '.');
+let cwd = resolve(process.argv[2] || '.');
 
 intro(`${kleur.bold().cyan(`Welcome to Reciple!`)}`);
 
@@ -47,7 +49,7 @@ const setup = await group({
     template: () => select({
         message: 'Which language would you like to use?',
         // @ts-expect-error Idk why
-        options: (JSON.parse(fs.readFileSync(path.join(root, 'templates.json'), 'utf-8')) as { name: string; description: string; dir: string }[]).map(m => ({
+        options: (JSON.parse(fs.readFileSync(join(root, 'templates.json'), 'utf-8')) as { name: string; description: string; dir: string }[]).map(m => ({
             label: m.name,
             value: m.dir,
             hint: m.description
@@ -57,32 +59,33 @@ const setup = await group({
         message: 'Would you like to use ES Modules? (ES modules uses import instead of require)',
         initialValue: false
     }),
-    packageManager: () => select({
+    packageManager: () => select<{ label?: string; hint?: string; value: PackageManager|'none'; }[], PackageManager|'none'>({
         message: 'Select your preferred package manager',
         options: [
             {
+                label: 'auto',
+                hint: `Use detected package manager [${resolvePackageManager() || 'none'}]`,
+                value: resolvePackageManager() || 'none'
+            },
+            {
                 label: 'npm',
                 hint: 'Uses npm as package manager',
-                // @ts-expect-error cries
                 value: 'npm'
             },
             {
                 label: 'yarn',
                 hint: 'Uses yarn as package manager',
-                // @ts-expect-error cries
                 value: 'yarn'
             },
             {
                 label: 'pnpm',
                 hint: 'Uses pnpm as package manager',
-                // @ts-expect-error cries
                 value: 'pnpm'
             },
             {
                 label: 'None',
                 hint: 'Setup package manager later',
-                // @ts-expect-error cries
-                value: null
+                value: 'none'
             }
         ]
     }),
@@ -90,4 +93,4 @@ const setup = await group({
 
 outro('Setup done!');
 
-create(cwd, path.join(root, setup.template), setup.esm, setup.packageManager);
+create(cwd, join(root, setup.template), setup.esm, setup.packageManager !== 'none' ? setup.packageManager : undefined);
