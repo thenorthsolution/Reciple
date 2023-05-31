@@ -40,7 +40,7 @@
     "@reciple/client": "^7.6.2",
     "@reciple/update-checker": "^7.0.2",
     "commander": "^10.0.1",
-    "dotenv": "^16.0.3",
+    "dotenv": "^16.1.1",
     "fallout-utility": "^2.5.1",
     "globby": "^13.1.4",
     "kleur": "^4.1.5",
@@ -48,7 +48,7 @@
     "micromatch": "^4.0.5",
     "prompts": "^2.4.2",
     "semver": "^7.5.1",
-    "yaml": "^2.2.2"
+    "yaml": "^2.3.1"
   },
   "devDependencies": {
     "@types/lodash.mergewith": "^4.6.7",
