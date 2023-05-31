@@ -4,7 +4,7 @@ import merge from 'lodash.mergewith';
 import path from 'path';
 import yml from 'yaml';
 
-export function configMergeCostumizer(objValue: any, srcValue: any, key: string): any {
+export function configMergeCustomizer(objValue: any, srcValue: any, key: string): any {
     if (Array.isArray(objValue)) return srcValue;
 }
 
@@ -23,7 +23,7 @@ export function getConfigExtensions<T extends { extends?: string|string[]; }>(co
 
         const configExtension = getConfigExtensions(yml.parse(readFileSync(extension, 'utf-8')), extension);
 
-        config = merge(configExtension, config, configMergeCostumizer);
+        config = merge(configExtension, config, configMergeCustomizer);
     }
 
     config.extends = extensions;
