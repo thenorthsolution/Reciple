@@ -64,7 +64,7 @@ const setup = await group({
         options: [
             {
                 label: 'auto',
-                hint: `Use detected package manager [${resolvePackageManager() || 'none'}]`,
+                hint: `Use detected package manager: ${resolvePackageManager() || 'none'}`,
                 value: resolvePackageManager() || 'none'
             },
             {
