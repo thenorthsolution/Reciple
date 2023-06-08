@@ -5,12 +5,13 @@ import { getJsConfig, getModules } from './utils/modules.js';
 import { createLogger, eventLogger } from './utils/logger.js';
 import { checkLatestUpdate } from '@reciple/update-checker';
 import { CacheFactory, SweeperOptions } from 'discord.js';
-import { existsSync, mkdirSync, readdirSync } from 'fs';
 import { command, cli, cliVersion } from './utils/cli.js';
+import { mkdir, readdir } from 'fs/promises';
 import { setTimeout } from 'timers/promises';
 import { Config } from './classes/Config.js';
 import { RecipleClient } from './index.js';
 import micromatch from 'micromatch';
+import { existsSync } from 'fs';
 import prompts from 'prompts';
 import semver from 'semver';
 import kleur from 'kleur';
@@ -24,8 +25,8 @@ let configPaths = cli.options?.config?.map(c => path.isAbsolute(c) ? path.resolv
 
 const mainConfigPath = configPaths.shift()!;
 
-if (!existsSync(cli.cwd)) mkdirSync(cli.cwd, { recursive: true });
-if (readdirSync(cli.cwd).filter(f => !micromatch.isMatch(f, allowedFiles)).length && !existsSync(mainConfigPath) && !cli.options.yes) {
+if (!existsSync(cli.cwd)) await mkdir(cli.cwd, { recursive: true });
+if ((await readdir(cli.cwd)).filter(f => !micromatch.isMatch(f, allowedFiles)).length && !existsSync(mainConfigPath) && !cli.options.yes) {
     const confirm = await prompts(
         {
             initial: false,

@@ -1,8 +1,9 @@
-import { existsSync, lstatSync, mkdirSync, readdirSync } from 'fs';
 import { recursiveDefaults } from '@reciple/client';
+import { lstat, mkdir, readdir } from 'fs/promises';
 import { Awaitable } from 'fallout-utility';
 import { IConfig } from '../classes/Config';
 import micromatch from 'micromatch';
+import { existsSync } from 'fs';
 import { cli } from './cli';
 import path from 'path';
 
@@ -30,10 +31,10 @@ export async function getModules(config: IConfig['modules'], filter?: (filename:
             continue;
         }
 
-        if (!existsSync(dir)) mkdirSync(dir, { recursive: true });
-        if (!lstatSync(dir).isDirectory()) continue;
+        if (!existsSync(dir)) await mkdir(dir, { recursive: true });
+        if (!(await lstat(dir)).isDirectory()) continue;
 
-        const files = readdirSync(dir).map(file => path.join(dir, file)).filter(f => !micromatch.isMatch(path.basename(f), config.exclude));
+        const files = (await readdir(dir)).map(file => path.join(dir, file)).filter(f => !micromatch.isMatch(path.basename(f), config.exclude));
         modules.push(...files.filter(file => (filter ? filter(file) : file.endsWith('.js'))));
     }
 
