@@ -4,7 +4,7 @@ on:
     branches: ['main']
     paths:
       - 'packages/*/src/**'
-    tags: ['reciple@*', '@reciple/client@*', '@reciple/npm-loader@*', '@reciple/update-checker@*']
+    tags: ['**', '*']
   workflow_dispatch:
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
