@@ -4,7 +4,8 @@ on:
     branches: ['main']
     paths:
       - 'packages/*/src/**'
-    tags: ['**', '*']
+      - 'packages/*/package.json'
+    tags: ['**']
   workflow_dispatch:
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
