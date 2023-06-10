@@ -131,7 +131,6 @@ client.once('ready', async () => {
     process.once('SIGTERM', signal => unloadModulesAndStopProcess(signal));
     process.once('SIGHUP', signal => unloadModulesAndStopProcess(signal));
 
-    client.logger?.debug(`Deploying application commands...`);
     await client.commands.registerApplicationCommands();
 
     client.logger?.warn(`Logged in as ${kleur.bold().cyan(client.user!.tag)} ${kleur.magenta('(' + client.user!.id + ')')}`);

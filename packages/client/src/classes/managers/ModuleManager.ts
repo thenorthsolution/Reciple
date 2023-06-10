@@ -19,14 +19,17 @@ export interface ModuleManagerEvents {
     preStartModule: [module: RecipleModule];
     postStartModule: [module: RecipleModule];
     startModuleError: [module: RecipleModule, error: Error];
+    startedModules: [modules: RecipleModule[]];
 
     preLoadModule: [module: RecipleModule];
     postLoadModule: [module: RecipleModule];
     loadModuleError: [module: RecipleModule, error: Error];
+    loadedModules: [modules: RecipleModule[]];
 
     preUnloadModule: [module: RecipleModule];
     postUnloadModule: [module: RecipleModule];
     unloadModuleError: [module: RecipleModule, error: Error];
+    unloadedModules: [modules: RecipleModule[]];
 }
 
 export interface ModuleManagerOptions {
@@ -91,6 +94,7 @@ export class ModuleManager extends TypedEmitter<ModuleManagerEvents> {
             }
         }
 
+        this.emit('startedModules', startModules);
         return startModules;
     }
 
@@ -115,6 +119,7 @@ export class ModuleManager extends TypedEmitter<ModuleManagerEvents> {
             }
         }
 
+        this.emit('loadedModules', loadedModules);
         return loadedModules;
     }
 
@@ -161,6 +166,8 @@ export class ModuleManager extends TypedEmitter<ModuleManagerEvents> {
                 this._throwError(err as Error, { name: 'unloadModuleError', values: [module_, err as Error] });
             }
         }
+
+        this.emit('unloadedModules', unloadedModules);
 
         return unloadedModules;
     }
