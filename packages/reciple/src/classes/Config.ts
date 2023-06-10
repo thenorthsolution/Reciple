@@ -1,6 +1,6 @@
 import { getConfigExtensions } from '../utils/getConfigExtensions';
 import { RecipleConfigOptions, RecipleError, version } from '@reciple/client';
-import { existsSync, readFileSync, writeFileSync } from 'fs';
+import { existsSync, readFileSync } from 'fs';
 import { parseEnvString } from '../utils/parseEnvString';
 import { replaceAll } from 'fallout-utility';
 import { ClientOptions, RestOrArray, normalizeArray } from 'discord.js';
@@ -9,6 +9,7 @@ import dotenv from 'dotenv';
 import path from 'path';
 import yml from 'yaml';
 import kleur from 'kleur';
+import { readFile, writeFile } from 'fs/promises';
 
 export interface IConfig extends RecipleConfigOptions {
     extends?: string|string[];
@@ -56,10 +57,10 @@ export class Config {
                 configYaml = replaceAll(configYaml, 'token: TOKEN', `token: ${configData.token}`);
             }
 
-            writeFileSync(this.configPath, configYaml, 'utf-8');
+            await writeFile(this.configPath, configYaml, 'utf-8');
             this.config = configData;
         } else {
-            this.config = yml.parse(readFileSync(this.configPath, 'utf-8'));
+            this.config = yml.parse(await readFile(this.configPath, 'utf-8'));
         }
 
         this.config!.extends = normalizeArray([this.config?.extends ?? []] as RestOrArray<string>);

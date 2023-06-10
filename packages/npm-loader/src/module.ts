@@ -1,7 +1,8 @@
 import { RecipleClient, RecipleModule, RecipleModuleScript } from '@reciple/client';
-import { existsSync, lstatSync, readFileSync, readdirSync, readlinkSync } from 'fs';
+import { existsSync, readFileSync } from 'fs';
 import { Logger } from '@reciple/client';
 import path from 'path';
+import { readdir, readlink, stat } from 'fs/promises';
 
 export interface RecipleNPMModuleScript extends RecipleModuleScript {
     moduleName?: string;
@@ -92,7 +93,7 @@ export class RecipleNPMLoader implements RecipleNPMModuleScript, RecipleNPMLoade
         let contents: string[] = [];
 
             if (!packageJson) {
-                contents = readdirSync(node_modules).map(f => path.join(node_modules, f));
+                contents = (await readdir(node_modules)).map(f => path.join(node_modules, f));
             } else {
                 for (const dependency of Object.keys(dependencies ?? {})) {
                     const location = path.join(node_modules, dependency);
@@ -102,10 +103,10 @@ export class RecipleNPMLoader implements RecipleNPMModuleScript, RecipleNPMLoade
                 }
             }
 
-            contents = contents.filter(f => lstatSync(f).isDirectory() || lstatSync(f).isSymbolicLink());
+            contents = await Promise.all(contents.filter(async f => (await stat(f)).isDirectory() || (await stat(f)).isSymbolicLink()));
 
-        const folders = contents.filter(f => !path.basename(f).startsWith('@')).map(f => lstatSync(f).isSymbolicLink() ? path.join(this.cwd, readlinkSync(f)) : f);
-        const withSubfolders = contents.filter(f => path.basename(f).startsWith('@')).map(f => lstatSync(f).isSymbolicLink() ? path.join(this.cwd, readlinkSync(f)) : f);
+        const folders = await Promise.all(contents.filter(f => !path.basename(f).startsWith('@')).map(async f => (await stat(f)).isSymbolicLink() ? path.join(this.cwd, await readlink(f)) : f));
+        const withSubfolders = await Promise.all(contents.filter(f => path.basename(f).startsWith('@')).map(async f => (await stat(f)).isSymbolicLink() ? path.join(this.cwd, await readlink(f)) : f));
 
         this.logger?.debug(`Found (${folders.length}) node_modules package folders.`);
         this.logger?.debug(`Found (${withSubfolders.length}) node_modules folders with package subfolders.`);
@@ -125,7 +126,7 @@ export class RecipleNPMLoader implements RecipleNPMModuleScript, RecipleNPMLoade
         }
 
         for (const folder of withSubfolders) {
-            const subFolders = readdirSync(folder).map(f => path.join(folder, f)).filter(f => lstatSync(f).isDirectory());
+            const subFolders = await Promise.all((await readdir(folder)).map(f => path.join(folder, f)).filter(async f => (await stat(f)).isDirectory()));
 
             for (const subFolder of subFolders) {
                 const isValid = await this.isValidModuleFolder(subFolder, dependencies || undefined);

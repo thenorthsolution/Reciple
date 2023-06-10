@@ -1,15 +1,16 @@
 import { copyFile, runScript } from './utils/functions.js';
 import { packageManagerPlaceholders, packages, root } from './utils/constants.js';
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs';
+import { existsSync } from 'fs';
 import { PackageManager } from './utils/types.js';
 import { join, relative } from 'path';
 import kleur from 'kleur';
+import { mkdir, readFile, writeFile } from 'fs/promises';
 
 export async function create(cwd: string, templateDir: string, esm: boolean, pm?: PackageManager): Promise<void> {
     if (esm) templateDir = templateDir + `-esm`;
     if (!existsSync(templateDir)) return;
 
-    mkdirSync(cwd, { recursive: true });
+    await mkdir(cwd, { recursive: true });
 
     copyFile(templateDir, cwd, f => f.replace('dot.', '.'));
 
@@ -17,7 +18,7 @@ export async function create(cwd: string, templateDir: string, esm: boolean, pm?
         copyFile(join(root, 'assets'), cwd, f => f.replace('dot.', '.'));
     }
 
-    let rawPackageJSON = readFileSync(join(cwd, 'package.json'), 'utf-8');
+    let rawPackageJSON = await readFile(join(cwd, 'package.json'), 'utf-8');
 
     const placeholders = packageManagerPlaceholders[pm ?? 'npm'];
 
@@ -29,7 +30,7 @@ export async function create(cwd: string, templateDir: string, esm: boolean, pm?
         rawPackageJSON = rawPackageJSON.replaceAll(placeholder, placeholders[placeholder]);
     }
 
-    writeFileSync(join(cwd, 'package.json'), rawPackageJSON);
+    await writeFile(join(cwd, 'package.json'), rawPackageJSON);
 
     if (pm) {
         await runScript(placeholders.INSTALL_ALL, cwd);
