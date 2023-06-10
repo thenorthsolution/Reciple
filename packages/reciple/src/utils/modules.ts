@@ -11,7 +11,7 @@ export async function getModules(config: IConfig['modules'], filter?: (filename:
     const modules: string[] = [];
     const { globby, isDynamicPattern } = await import('globby');
 
-    await Promise.all(config.modulesFolders.map(async folder => {
+    for (const folder of config.modulesFolders) {
         const dir = path.isAbsolute(folder) ? folder : path.join(cli.cwd, folder);
 
         if (isDynamicPattern(folder, { cwd: cli.cwd })) {
@@ -28,15 +28,15 @@ export async function getModules(config: IConfig['modules'], filter?: (filename:
                 modulesFolders
             }));
 
-            return;
+            continue;
         }
 
         if (!existsSync(dir)) await mkdir(dir, { recursive: true });
-        if (!(await lstat(dir)).isDirectory()) return;
+        if (!(await lstat(dir)).isDirectory()) continue;
 
         const files = (await readdir(dir)).map(file => path.join(dir, file)).filter(f => !micromatch.isMatch(path.basename(f), config.exclude));
         modules.push(...files.filter(file => (filter ? filter(file) : file.endsWith('.js'))));
-    }));
+    }
 
     return modules;
 }
