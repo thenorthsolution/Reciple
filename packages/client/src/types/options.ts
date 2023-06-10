@@ -12,8 +12,8 @@ export interface RecipleConfigOptions {
     commands?: {
         contextMenuCommand?: Partial<RecipleCommandsInteractionBasedConfigOptions>;
         messageCommand?: Partial<RecipleCommandsConfigOptions & {
-            commandArgumentSeparator: string;
-            prefix: string;
+            commandArgumentSeparator?: string;
+            prefix?: string;
         }>;
         slashCommand?: Partial<RecipleCommandsInteractionBasedConfigOptions>;
         additionalApplicationCommands?: Pick<Partial<RecipleCommandsInteractionBasedConfigOptions>, 'registerCommands'>;

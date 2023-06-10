@@ -40,7 +40,7 @@
     "@reciple/client": "^7.7.0-dev.3",
     "@reciple/update-checker": "^7.0.2",
     "commander": "^10.0.1",
-    "dotenv": "^16.1.1",
+    "dotenv": "^16.1.4",
     "fallout-utility": "^2.5.1",
     "globby": "^13.1.4",
     "kleur": "^4.1.5",
