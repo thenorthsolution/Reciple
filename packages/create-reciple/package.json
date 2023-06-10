@@ -2,7 +2,7 @@
   "name": "create-reciple",
   "description": "A Reciple Discord bot project builder",
   "license": "GPL-3.0",
-  "version": "7.10.0-dev.2",
+  "version": "7.10.0-dev.3",
   "type": "module",
   "types": "./bin/bin.d.ts",
   "bin": "./bin/bin.js",
@@ -30,6 +30,6 @@
   "devDependencies": {
     "discord.js": "^14.11.0",
     "nodemon": "^2.0.22",
-    "reciple": "^7.8.0-dev.2"
+    "reciple": "^7.8.0-dev.3"
   }
 }
