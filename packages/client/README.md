@@ -46,6 +46,6 @@ await client.login();
 await client.commands.registerApplicationCommands();
 
 client.on('interactionCreate', async interaction => {
-    if (interaction.isChatInputCommand()) await SlashCommandBuilder.execute(client, interaction);
+    if (interaction.isChatInputCommand()) await client.commands.execute(interaction);
 });
 ```
