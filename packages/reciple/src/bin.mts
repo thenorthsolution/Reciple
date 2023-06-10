@@ -95,11 +95,11 @@ client.once('ready', async () => {
     process.removeListener('unhandledRejection', processErrorHandler);
 
     const loadedModules = await client.modules.loadModules({
-        modules: client.modules.modules.toJSON(),
+        modules: client.modules.cache.toJSON(),
         resolveCommands: true
     });
 
-    const unloaded = client.modules.modules.sweep(m => !loadedModules.some(s => s.id == m.id));
+    const unloaded = client.modules.cache.sweep(m => !loadedModules.some(s => s.id == m.id));
 
     client.logger?.debug(`Failed to load (${unloaded}) modules.`);
 
@@ -112,7 +112,7 @@ client.once('ready', async () => {
 
         await client.modules.unloadModules({
             reason: 'ProcessExit',
-            modules: client.modules.modules.toJSON(),
+            modules: client.modules.cache.toJSON(),
             removeCommandsFromClient: false,
             removeFromModulesCollection: true
         });

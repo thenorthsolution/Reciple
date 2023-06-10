@@ -187,6 +187,6 @@ export class RecipleNPMLoader implements RecipleNPMModuleScript, RecipleNPMLoade
      * @param moduleName The module name
      */
     public isModuleNameLoaded(moduleName: string): boolean {
-        return this.client.modules.modules.some(m => this.moduleScriptHasName(m.script) && m.script.moduleName === moduleName);
+        return this.client.modules.cache.some(m => this.moduleScriptHasName(m.script) && m.script.moduleName === moduleName);
     }
 }
