@@ -35,6 +35,14 @@ export function createCommandPreconditionErrorOptions(builder: AnyCommandBuilder
     };
 }
 
+export function createCommandRequiredOptionNotFoundErrorOptions(optionName: string, value: unknown): RecipleErrorOptions {
+    return {
+        message: `No value given from required option ${kleur.cyan("'" + optionName + "'")}`,
+        cause: { value },
+        name: 'RequiredOptionNotFound'
+    };
+}
+
 export function createLoadModuleFailErrorOptions(moduleDisplayName: string, cause: unknown): RecipleErrorOptions {
     return {
         message: `Failed to load ${kleur.red("'" + moduleDisplayName + "'")}`,
