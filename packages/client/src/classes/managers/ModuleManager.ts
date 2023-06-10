@@ -40,19 +40,19 @@ export interface ModuleManagerModulesActionOptions {
 
 export class ModuleManager extends TypedEmitter<ModuleManagerEvents> {
     readonly client: RecipleClient;
-    readonly modules: Collection<string, RecipleModule> = new Collection();
+    readonly cache: Collection<string, RecipleModule> = new Collection();
 
     constructor(options: ModuleManagerOptions) {
         super();
 
         this.client = options.client;
-        options.modules?.forEach(m => m instanceof RecipleModule ? this.modules.set(m.id, m) : new RecipleModule({ client: this.client, script: m }));
+        options.modules?.forEach(m => m instanceof RecipleModule ? this.cache.set(m.id, m) : new RecipleModule({ client: this.client, script: m }));
 
         this.validateScript = deprecate(this.validateScript, '<ModuleManager>.validateScript() is deprecated. Use validateModuleScript() function instead.');
     }
 
     public findCommandModule(command: AnyCommandData|AnyCommandBuilder): RecipleModule|undefined {
-        return this.modules.find(m => m.commands.some(c => c.commandType === command.commandType && c.name === command.name));
+        return this.cache.find(m => m.commands.some(c => c.commandType === command.commandType && c.name === command.name));
     }
 
     public async startModules(options: ModuleManagerModulesActionOptions & { addToModulesCollection?: boolean; }): Promise<RecipleModule[]> {
@@ -75,7 +75,7 @@ export class ModuleManager extends TypedEmitter<ModuleManagerEvents> {
                     continue;
                 }
 
-                if (options.addToModulesCollection !== false) this.modules.set(module_.id, module_);
+                if (options.addToModulesCollection !== false) this.cache.set(module_.id, module_);
 
                 startModules.push(module_);
                 this.emit('postStartModule', module_);
@@ -138,7 +138,7 @@ export class ModuleManager extends TypedEmitter<ModuleManagerEvents> {
                     }
                 }
 
-                if (options.removeFromModulesCollection !== false) this.modules.delete(module_.id);
+                if (options.removeFromModulesCollection !== false) this.cache.delete(module_.id);
 
                 this.emit('postUnloadModule', module_);
                 unloadedModules.push(module_);
@@ -212,6 +212,11 @@ export class ModuleManager extends TypedEmitter<ModuleManagerEvents> {
         if (s.onLoad && typeof s.onLoad !== 'function') return this.client._throwError(new ModuleError('InvalidOnLoadEvent'));
         if (s.onUnload && typeof s.onUnload !== 'function') return this.client._throwError(new ModuleError('InvalidOnUnloadEvent'));
     }
+
+    /**
+     * @deprecated Use the ModuleManager.cache property instead
+     */
+    get modules() { return this.cache; }
 
     public _throwError<E extends keyof ModuleManagerEvents>(error: Error, event: { name: E; values: ModuleManagerEvents[E]; }, throwWhenNoListener: boolean = true): void {
         if (!this.listenerCount(event.name)) {
