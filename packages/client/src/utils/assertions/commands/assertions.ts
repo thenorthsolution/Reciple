@@ -9,7 +9,7 @@ export function validateCommandType(commandType: unknown): asserts commandType i
 }
 
 export function validateCommandCooldown(cooldown: unknown): asserts cooldown is number {
-    s.number.positive.finite.optional.setValidationEnabled(isValidationEnabled).parse(cooldown);
+    s.number.positive.finite.positive.optional.setValidationEnabled(isValidationEnabled).parse(cooldown);
 }
 
 export function validateCommandRequiredBotPermissions(permissions: unknown): asserts permissions is PermissionResolvable {
