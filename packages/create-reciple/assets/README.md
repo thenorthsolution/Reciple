@@ -1,10 +1,11 @@
-# Introduction
+# Reciple
 
-Reciple is a discord.js command handler framework.
+Reciple is a discord.js command handler framework that just works.
 
 ## Reciple Modules
 
-Reciple scans the directory assigned in `reciple.yml` under `modules.modulesFolders` property. `modules.modulesFolders` can be the path of the folder of modules or glob pattern
+- Reciple scans the directory assigned in `reciple.yml` under `modules.modulesFolders` property.
+- `modules.modulesFolders` can be the path of the folder of modules or glob pattern
 
 ### Folder Structure
 
@@ -58,13 +59,7 @@ Module files can be ES Modules or CommonJs.
 
 #### Module file structure
 
-| Property | type | Required | Description |
-|---|---|:---:|---|
-| `versions` | `string\|string[]` | `true` | The versions of the Reciple client that the module script is compatible with. The versions can be a string or an array of strings. |
-| `commands` | `(AnyCommandBuilder\|AnyCommandData)[]]` | `false` | The commands that are defined by the module script. |
-| `onStart`  | `(client: RecipleClient, module: RecipleModule) => Awaitable<boolean>` | `true` | The function that is called when the module script is started. The function must return a boolean value or a promise that resolves to a boolean value. The boolean value indicates whether the module script was started successfully. |
-| `onLoad`   | `(client: RecipleClient, module: RecipleModule) => Awaitable<void>` | `false` | The function that is called when the module script is loaded. |
-| `onUnload` | `(unloadData: RecipleModuleUnloadData) => Awaitable<void>` | `false` | The function that is called when the module script is unloaded. |
+- [RecipleModuleScript](https://reciple.js.org/docs/client/main/typedefs/RecipleModuleScript)
 
 #### ESM module example
 
@@ -132,7 +127,7 @@ module.exports = new MyModule();
 
 ## Reciple Commands
 
-instead of importing builders from you'll need to import command builders from `reciple` or `@reciple/client`.
+instead of importing builders from `discord.js`, import command builders from `reciple` or `@reciple/client`.
 
 ```diff
 - const { SlashCommandBuilder, ContextMenuCommandBuilder } = require('discord.js');
@@ -162,22 +157,12 @@ export default {
 
 ### Interaction command execute params
 
-| Param | Type | Required | Description |
-|---|---|:---:|---|
-| `interaction` | `ChatInputCommandInteraction\|AnyContextMenuCommandInteraction` | `true` | The command interaction that triggers the command |
-| `client` | `RecipleCommand` | `true` | The current bot client |
-| `builder` | `AnySlashCommandBuilder\|ContextMenuCommandBuilder` | `true` | The builder of the executed command |
-| `commandType` | `CommandType` | `true` | The type of executed command |
+- [ContextMenuCommandExecuteData](https://reciple.js.org/docs/client/main/typedefs/ContextMenuCommandExecuteData)
+- [SlashCommandExecuteData](https://reciple.js.org/docs/client/main/typedefs/SlashCommandExecuteData)
 
 ### Message command execute params
 
-| Param | Type | Required | Description |
-|---|---|:---:|---|
-| `message` | `Message` | `true` | The message that triggers the command |
-| `client` | `RecipleCommand` | `true` | The current bot client |
-| `builder` | `AnySlashCommandBuilder\|ContextMenuCommandBuilder` | `true` | The builder of the executed command |
-| `commandType` | `CommandType` | `true` | The type of executed command |
-| `options` | `MessageCommandOptionManager` | `true` | The parsed options passed to this command |
+- [MessageCommandExecuteData](https://reciple.js.org/docs/client/main/typedefs/MessageCommandExecuteData)
 
 ### Handling command execute errors
 
@@ -193,7 +178,7 @@ new SlashCommandBuilder()
     .setHalt(async haltData => {
         switch (haltData.reason) {
             case CommandHaltReason.Cooldown:
-                await haltData.executeData.interaction.followUp('You\'ve been cooled-down');
+                await haltData.executeData.interaction.followUp(`You've been cooled-down`);
                 return true;
             case CommandHaltReason.Error:
                 await haltData.executeData.interaction.followUp('An error occured');
@@ -202,4 +187,71 @@ new SlashCommandBuilder()
 
         // The rest is unhandled
     })
+```
+
+### Using command preconditions
+
+Command preconditions are executed after the command is received and before executing the command's execute function.
+
+#### Module command preconditions
+
+You can define a precondition for all commands of a module.
+
+##### Valid module precondition methods
+
+- [Context meny command preconditions](https://reciple.js.org/docs/client/main/typedefs/RecipleModuleScript#contextMenuCommandPrecondition)
+- [Message command preconditions](https://reciple.js.org/docs/client/main/typedefs/RecipleModuleScript#messageCommandPrecondition)
+- [Slash command preconditions](https://reciple.js.org/docs/client/main/typedefs/RecipleModuleScript#slashCommandPrecondition)
+
+```js
+// Example module with slash commands precondition
+export default {
+    versions: '^7',
+    commands: [
+        new SlashCommandBuilder()
+            .setName('ping')
+            .setDescription('Just a ping command')
+            .setExecute(async ({ interaction }) => {
+                await interaction.reply('Pong');
+            })
+    ],
+    onStart: async client => true,
+
+    // creates a slash command precondition
+    slashCommandPrecondition: async (({ interaction })) => {
+        return !interaction.inCachedGuild() || interaction.guild.ownerId !== interaction.user.id; // Command can only be executed by the guild owner
+    }
+};
+```
+
+#### Global command preconditions
+
+Global preconditions are added to all commands along with the existing module preconditions.
+
+##### Set & Get global preconditions
+- [CommandManager#setGlobalPrecondition](https://reciple.js.org/docs/client/main/classes/CommandManager#setGlobalPrecondition)
+- [CommandManager#getGlobalPrecondition](https://reciple.js.org/docs/client/main/classes/CommandManager#getGlobalPrecondition)
+
+```js
+// Example module with global slash commands precondition
+export default {
+    versions: '^7',
+    commands: [
+        new SlashCommandBuilder()
+            .setName('ping')
+            .setDescription('Just a ping command')
+            .setExecute(async ({ interaction }) => {
+                await interaction.reply('Pong');
+            })
+    ],
+    onStart: async client => true,
+    onLoad: async client => {
+        client.commands.setGlobalPrecondition(
+            CommandType.SlashCommand,
+            async ({ interaction }) => {
+                return interaction.inCachedGuild(); // All slash commands can only be executed if in cached guild
+            }
+        );
+    }
+};
 ```
