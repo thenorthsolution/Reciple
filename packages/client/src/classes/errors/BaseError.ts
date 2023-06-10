@@ -31,7 +31,6 @@ export abstract class BaseError<ErrorCodes extends BaseErrorCodes = BaseErrorCod
 
     constructor(readonly code: keyof BaseErrorCodes, errorCodes: ErrorCodes, ...placeholders: RestOrArray<string>) {
         const message = errorCodes[code];
-
         super(`${kleur.red().bold(code)} ${replacePlaceholders(typeof message === 'function' ? message() : message, ...normalizeArray(placeholders))}`);
     }
 
