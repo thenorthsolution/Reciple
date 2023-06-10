@@ -15,10 +15,10 @@ import { RecipleError } from './errors/RecipleError';
 
 export interface RecipleClient<Ready extends boolean = boolean> extends discordjs.Client<Ready> {
     on<E extends keyof RecipleClientEvents>(event: E, listener: (...args: RecipleClientEvents[E]) => Awaitable<void>): this;
-    on<E extends string | symbol>(event: E, listener: (...args: any) => Awaitable<void>): this;
+    on<E extends string|symbol>(event: E, listener: (...args: any) => Awaitable<void>): this;
 
     once<E extends keyof RecipleClientEvents>(event: E, listener: (...args: RecipleClientEvents[E]) => Awaitable<void>): this;
-    once<E extends keyof string | symbol>(event: E, listener: (...args: any) => Awaitable<void>): this;
+    once<E extends string | symbol>(event: E, listener: (...args: any) => Awaitable<void>): this;
 
     emit<E extends keyof RecipleClientEvents>(event: E, ...args: RecipleClientEvents[E]): boolean;
     emit<E extends string | symbol>(event: E, ...args: any): boolean;
