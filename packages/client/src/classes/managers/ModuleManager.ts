@@ -34,8 +34,8 @@ export interface ModuleManagerOptions {
     modules?: (RecipleModule|RecipleModuleScript)[];
 }
 
-export interface ModuleManagerModulesActionOptions {
-    modules: RecipleModule[];
+export interface ModuleManagerModulesActionOptions<S extends RecipleModuleScript = RecipleModuleScript> {
+    modules: RecipleModule<S>[];
 }
 
 export class ModuleManager extends TypedEmitter<ModuleManagerEvents> {
@@ -51,12 +51,19 @@ export class ModuleManager extends TypedEmitter<ModuleManagerEvents> {
         this.validateScript = deprecate(this.validateScript, '<ModuleManager>.validateScript() is deprecated. Use validateModuleScript() function instead.');
     }
 
-    public findCommandModule(command: AnyCommandData|AnyCommandBuilder): RecipleModule|undefined {
-        return this.cache.find(m => m.commands.some(c => c.commandType === command.commandType && c.name === command.name));
+    /**
+     * This method takes a command object and returns the module that contains the command. If the command is not found, the function returns undefined.
+     */
+    public findCommandModule<S extends RecipleModuleScript = RecipleModuleScript>(command: AnyCommandData|AnyCommandBuilder): RecipleModule<S>|undefined {
+        return (this.cache as Collection<string, RecipleModule<S>>).find(m => m.commands.some(c => c.commandType === command.commandType && c.name === command.name));
     }
 
-    public async startModules(options: ModuleManagerModulesActionOptions & { addToModulesCollection?: boolean; }): Promise<RecipleModule[]> {
-        const startModules: RecipleModule[] = [];
+    /**
+     * This method starts the specified modules. The modules will be started in the order that they are specified.
+     * @returns The started modules
+     */
+    public async startModules<S extends RecipleModuleScript = RecipleModuleScript>(options: ModuleManagerModulesActionOptions<S> & { addToModulesCollection?: boolean; }): Promise<RecipleModule<S>[]> {
+        const startModules: RecipleModule<S>[] = [];
 
         for (const module_ of options.modules) {
             this.emit('preStartModule', module_);
@@ -87,8 +94,12 @@ export class ModuleManager extends TypedEmitter<ModuleManagerEvents> {
         return startModules;
     }
 
-    public async loadModules(options: ModuleManagerModulesActionOptions & { resolveCommands?: boolean; }): Promise<RecipleModule[]> {
-        const loadedModules: RecipleModule[] = [];
+    /**
+     * This method loads the specified modules. The modules will be loaded in the order that they are specified.
+     * @returns The loaded modules
+     */
+    public async loadModules<S extends RecipleModuleScript = RecipleModuleScript>(options: ModuleManagerModulesActionOptions<S> & { resolveCommands?: boolean; }): Promise<RecipleModule<S>[]> {
+        const loadedModules: RecipleModule<S>[] = [];
 
         for (const module_ of options.modules) {
             this.emit('preLoadModule', module_);
@@ -107,8 +118,12 @@ export class ModuleManager extends TypedEmitter<ModuleManagerEvents> {
         return loadedModules;
     }
 
-    public async unloadModules(options: ModuleManagerModulesActionOptions & { reason?: string; removeFromModulesCollection?: boolean; removeCommandsFromClient?: boolean; }): Promise<RecipleModule[]> {
-        const unloadedModules: RecipleModule[] = [];
+    /**
+     * This method unloads the specified modules. The modules will be unloaded in the reverse order that they were loaded.
+     * @returns The unloaded modules
+     */
+    public async unloadModules<S extends RecipleModuleScript = RecipleModuleScript>(options: ModuleManagerModulesActionOptions<S> & { reason?: string; removeFromModulesCollection?: boolean; removeCommandsFromClient?: boolean; }): Promise<RecipleModule<S>[]> {
+        const unloadedModules: RecipleModule<S>[] = [];
 
         for (const module_ of options.modules) {
             this.emit('preUnloadModule', module_);
@@ -150,8 +165,8 @@ export class ModuleManager extends TypedEmitter<ModuleManagerEvents> {
         return unloadedModules;
     }
 
-    public async resolveModuleFiles(files: string[], disableVersionCheck: boolean = false, fileResolver?: (filePath: string) => Awaitable<undefined|RecursiveDefault<RecipleModule|RecipleModuleScript>|RecipleModule|RecipleModuleScript>): Promise<RecipleModule[]> {
-        const modules: RecipleModule[] = [];
+    public async resolveModuleFiles<S extends RecipleModuleScript = RecipleModuleScript>(files: string[], disableVersionCheck: boolean = false, fileResolver?: (filePath: string) => Awaitable<undefined|RecursiveDefault<RecipleModule<S>|S>|RecipleModule<S>|S>): Promise<RecipleModule<S>[]> {
+        const modules: RecipleModule<S>[] = [];
 
         for (const file of files) {
             const filePath = path.resolve(file);
@@ -160,7 +175,7 @@ export class ModuleManager extends TypedEmitter<ModuleManagerEvents> {
                 let resolveFile = fileResolver ? await Promise.resolve(fileResolver(filePath)) : undefined;
                     resolveFile = resolveFile === undefined ? await import(`file://${filePath}`) : resolveFile;
 
-                const script = recursiveDefaults<RecipleModuleScript|RecipleModule|undefined>(resolveFile);
+                const script = recursiveDefaults<S|RecipleModule<S>|undefined>(resolveFile);
 
                 if (script instanceof RecipleModule) {
                     if (!disableVersionCheck && !script.isSupported) throw new RecipleError(createUnsupportedModuleErrorOptions(script.displayName));
@@ -203,7 +218,7 @@ export class ModuleManager extends TypedEmitter<ModuleManagerEvents> {
     /**
      * @deprecated Use the assertion function `validateModuleScript`
      */
-    public validateScript(script: unknown): asserts script is RecipleModuleScript {
+    public validateScript<S extends RecipleModuleScript = RecipleModuleScript>(script: unknown): asserts script is S {
         const s = script as Partial<RecipleModuleScript>;
 
         if (typeof s !== 'object') return this.client._throwError(new ModuleError('InvalidScript'));
