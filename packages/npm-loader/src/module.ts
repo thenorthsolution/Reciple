@@ -23,7 +23,7 @@ export interface RecipleNPMLoaderOptions {
     /**
      * The node_modules folder path
      */
-    nodeModulesFolder: string;
+    nodeModulesFolder?: string;
     /**
      * Define to only use modules that are in package.json dependencies and dev dependencies
      */
@@ -31,11 +31,11 @@ export interface RecipleNPMLoaderOptions {
     /**
      * Disables version check when starting modules
      */
-    disableVersionChecks: boolean;
+    disableVersionChecks?: boolean;
     /**
      * Ignored package names
      */
-    ignoredPackages: string[];
+    ignoredPackages?: string[];
 }
 
 export class RecipleNPMLoader implements RecipleNPMModuleScript, RecipleNPMLoaderOptions {
