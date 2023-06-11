@@ -14,6 +14,7 @@ export * from './classes/managers/ModuleManager';
 export * from './classes/RecipleClient';
 export * from './classes/RecipleModule';
 export * from './types/commands';
+export * from './types/enums';
 export * from './types/halt';
 export * from './types/options';
 export * from './types/slashCommandOptions';
