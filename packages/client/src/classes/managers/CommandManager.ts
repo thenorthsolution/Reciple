@@ -190,16 +190,20 @@ export class CommandManager {
         });
 
         if (commandConfig.applicationRegister.allowRegisterGlobally !== false) {
-            await this.client.application?.commands.set(globalCommands)
-                .then(commands => this.client.emit('recipleRegisterApplicationCommands', commands))
-                .catch(err => this.client._throwError(err));
+            if (commandConfig.applicationRegister.registerEmptyCommands || globalCommands.length) {
+                await this.client.application?.commands.set(globalCommands)
+                    .then(commands => this.client.emit('recipleRegisterApplicationCommands', commands))
+                    .catch(err => this.client._throwError(err));
+            }
         }
 
         if (commandConfig.applicationRegister.allowRegisterToGuilds || commandConfig.applicationRegister.allowRegisterOnGuilds) {
-            for (const guildBasedCommands of guildCommands.map((commands, guildId) => ({ guildId, commands }))) {
-                await this.client.application?.commands.set(guildBasedCommands.commands, guildBasedCommands.guildId)
-                    .then(commands => this.client.emit('recipleRegisterApplicationCommands', commands, guildBasedCommands.guildId))
-                    .catch(err => this.client._throwError(err));
+            for (const [guildId, commands] of guildCommands) {
+                if (commandConfig.applicationRegister.registerEmptyCommands || commands.length) {
+                    await this.client.application?.commands.set(commands, guildId)
+                        .then(commands => this.client.emit('recipleRegisterApplicationCommands', commands, guildId))
+                        .catch(err => this.client._throwError(err));
+                }
             }
         }
     }
