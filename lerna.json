@@ -4,6 +4,5 @@
   "exact": false,
   "preid": "dev",
   "preDistTag": "dev",
-  "gitTagVersion": true,
-  "useWorkspaces": true
+  "gitTagVersion": true
 }
