@@ -259,13 +259,13 @@ export class MessageCommandBuilder extends BaseCommandBuilder implements Message
      * @param prefix The command prefix
      * @param separator The command args separator
      */
-    public static async execute(client: RecipleClient, message: Message, prefix?: string, separator?: string): Promise<MessageCommandExecuteData|undefined> {
+    public static async execute(client: RecipleClient, message: Message, prefix?: string, separator?: string, command?: MessageCommandResovable): Promise<MessageCommandExecuteData|undefined> {
         if (client.config.commands?.messageCommand?.enabled === false || !message.content) return;
 
         const commandData = getCommand(message.content, prefix ?? client.config.commands?.messageCommand?.prefix ?? '!', separator ?? client.config.commands?.messageCommand?.commandArgumentSeparator ?? ' ');
         if (!commandData || !commandData.name) return;
 
-        const builder = client.commands.get(commandData.name, CommandType.MessageCommand);
+        const builder = command ? this.resolve(command) : client.commands.get(commandData.name, CommandType.MessageCommand);
         if (!builder || (!builder.dmPermission && !message.inGuild()) || (!builder.userBotPermission && (message.author.bot || message.author.system))) return;
 
         const executeData: MessageCommandExecuteData<boolean> = {

@@ -87,11 +87,11 @@ export class ContextMenuCommandBuilder extends Mixin(discordjs.ContextMenuComman
      * @param client Current bot client
      * @param interaction Context menu command interaction
      */
-    public static async execute(client: RecipleClient, interaction: ContextMenuCommandInteraction): Promise<ContextMenuCommandExecuteData|undefined> {
+    public static async execute(client: RecipleClient, interaction: ContextMenuCommandInteraction, command?: ContextMenuCommandResolvable): Promise<ContextMenuCommandExecuteData|undefined> {
         if (client.config.commands?.contextMenuCommand?.enabled === false) return;
         if (client.config.commands?.contextMenuCommand?.acceptRepliedInteractions === false && (interaction.replied || interaction.deferred)) return;
 
-        const builder = client.commands.get(interaction.commandName, CommandType.ContextMenuCommand);
+        const builder = command ? this.resolve(command) : client.commands.get(interaction.commandName, CommandType.ContextMenuCommand);
         if (!builder) return;
 
         const executeData: ContextMenuCommandExecuteData = {

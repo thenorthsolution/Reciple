@@ -235,11 +235,11 @@ export class SlashCommandBuilder extends Mixin(discordjs.SlashCommandBuilder, Ba
      * @param client Current bot client
      * @param interaction Command interaction
      */
-    public static async execute(client: RecipleClient, interaction: ChatInputCommandInteraction): Promise<SlashCommandExecuteData|undefined> {
+    public static async execute(client: RecipleClient, interaction: ChatInputCommandInteraction, command?: SlashCommandResolvable): Promise<SlashCommandExecuteData|undefined> {
         if (client.config?.commands?.slashCommand?.enabled === false) return;
         if (client.config?.commands?.slashCommand?.acceptRepliedInteractions === false && (interaction.replied || interaction.deferred)) return;
 
-        const builder = client.commands.get(interaction.commandName, CommandType.SlashCommand);
+        const builder = command ? this.resolve(command) : client.commands.get(interaction.commandName, CommandType.SlashCommand);
         if (!builder) return;
 
         const executeData: SlashCommandExecuteData = {
