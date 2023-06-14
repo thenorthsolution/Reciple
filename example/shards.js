@@ -1,37 +1,42 @@
 // @ts-check
-import { ShardingManager } from 'discord.js';
 import { Config, cli, command, createLogger } from 'reciple';
-import { fileURLToPath } from 'url';
 import path from 'path';
+import { ShardingManager } from 'discord.js';
 
-const console = createLogger({
+const console = await (await createLogger({
         enabled: true,
         debugmode: true,
         coloredMessages: true,
-    })
+    }))
+    .setDebugMode(true)
     .setName('ShardManager')
-    .logToFile(path.join(cli.cwd, 'logs/shards.log'), false, 'old.shards.log');
-
-if (!import.meta.resolve) throw new Error(`Missing node option "--experimental-import-meta-resolve"`);
+    .createFileWriteStream({
+        file: path.join(cli.cwd, 'sharder-logs/shards.log'),
+        renameOldFile: true
+    });
 
 // @ts-expect-error We need to modify readonly command options
 command.options = command.options.filter(o => !['shardmode', 'version', 'yes'].includes(o.name()));
 
 command.name('').description('The options below are passed to reciple cli shards').parse();
 
-const configPath = cli.options.config
-    ? path.isAbsolute(cli.options.config)
-        ? path.resolve(cli.options.config)
-        : path.join(cli.cwd, cli.options.config)
-    : path.join(cli.cwd, 'reciple.yml');
+let configPaths = cli.options?.config?.map(c => path.isAbsolute(c) ? path.resolve(c) : path.join(cli.cwd, c));
+    configPaths = !configPaths?.length ? [path.join(cli.cwd, 'reciple.yml')] : configPaths;
 
-const config = (await new Config(configPath).parseConfig()).getConfig();
+/**
+ * @type {string}
+ */
+// @ts-ignore
+const mainConfigPath = configPaths.shift();
 
-const recipleBin = path.join(path.dirname(fileURLToPath(await import.meta.resolve('reciple'))), 'bin.mjs');
-const shards = new ShardingManager(recipleBin, {
+const configParser = await (new Config(mainConfigPath, configPaths)).parseConfig();
+const config = configParser.getConfig();
+
+const shards = new ShardingManager(cli.binPath, {
     shardArgs: ['--shardmode', ...process.argv.slice(2)],
     token: config.token,
-    totalShards: 2
+    mode: 'process',
+    respawn: true,
 });
 
 shards.on('shardCreate', shard => {

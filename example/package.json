@@ -5,7 +5,7 @@
   "scripts": {
     "start": "npx reciple -c config.yml",
     "test": "node ../packages/reciple/bin/bin.mjs -c config.yml --debugmode",
-    "shards": "node --experimental-import-meta-resolve shards.js -c config.yml"
+    "shards": "node shards.js -c config.yml"
   },
   "dependencies": {
     "@reciple/npm-loader": "^7.2.1",
