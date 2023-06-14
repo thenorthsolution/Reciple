@@ -234,6 +234,7 @@ export class SlashCommandBuilder extends Mixin(discordjs.SlashCommandBuilder, Ba
      * Execute a slash command
      * @param client Current bot client
      * @param interaction Command interaction
+     * @param command Command builder resolvable of the command you wanna execute
      */
     public static async execute(client: RecipleClient, interaction: ChatInputCommandInteraction, command?: SlashCommandResolvable): Promise<SlashCommandExecuteData|undefined> {
         if (client.config?.commands?.slashCommand?.enabled === false) return;

@@ -258,6 +258,7 @@ export class MessageCommandBuilder extends BaseCommandBuilder implements Message
      * @param message The command message
      * @param prefix The command prefix
      * @param separator The command args separator
+     * @param command Command builder resolvable of the command you wanna execute
      */
     public static async execute(client: RecipleClient, message: Message, prefix?: string, separator?: string, command?: MessageCommandResovable): Promise<MessageCommandExecuteData|undefined> {
         if (client.config.commands?.messageCommand?.enabled === false || !message.content) return;

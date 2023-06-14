@@ -86,6 +86,7 @@ export class ContextMenuCommandBuilder extends Mixin(discordjs.ContextMenuComman
      * Execute a context menu command
      * @param client Current bot client
      * @param interaction Context menu command interaction
+     * @param command Command builder resolvable of the command you wanna execute
      */
     public static async execute(client: RecipleClient, interaction: ContextMenuCommandInteraction, command?: ContextMenuCommandResolvable): Promise<ContextMenuCommandExecuteData|undefined> {
         if (client.config.commands?.contextMenuCommand?.enabled === false) return;
