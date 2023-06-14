@@ -39,7 +39,8 @@ export interface CLIOptions {
 export const cli = {
     get args() { return command.args; },
     get options() { return command.opts<CLIOptions>(); },
-    get cwd() { return this.args[0] ? path.resolve(this.args[0]) : process.cwd(); }
+    get cwd() { return this.args[0] ? path.resolve(this.args[0]) : process.cwd(); },
+    get binPath() { return path.join(__dirname, '../bin.mjs'); }
 };
 
 export const cliVersion = `${coerce(version)}`;
