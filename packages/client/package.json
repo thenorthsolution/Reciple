@@ -38,7 +38,7 @@
     "@sapphire/shapeshift": "^3.9.2",
     "fallout-utility": "^2.5.1",
     "kleur": "^4.1.5",
-    "semver": "^7.5.1",
+    "semver": "^7.5.2",
     "strip-ansi": "^6.0.1",
     "ts-mixer": "^6.0.2"
   },
