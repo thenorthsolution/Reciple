@@ -141,7 +141,7 @@ export class ModuleManager extends TypedEmitter<ModuleManagerEvents> {
                         if (cmd.isContextMenu()) {
                             this.client.commands.contextMenuCommands.delete(cmd.name);
 
-                            const applicationCommands = this.client.application?.commands.cache.filter(c => c.name === cmd.name && (c.type === ApplicationCommandType.Message || c.type === ApplicationCommandType.User)).toJSON();
+                            const applicationCommands = this.client.application?.commands.cache.filter(c => c.name === cmd.name && (c.type === ApplicationCommandType.Message || c.type === ApplicationCommandType.User)).values();
                             for (const applicationCommand of (applicationCommands ?? [])) {
                                 await this.client.application?.commands.delete(applicationCommand, applicationCommand.guildId || undefined);
                             }
@@ -150,7 +150,7 @@ export class ModuleManager extends TypedEmitter<ModuleManagerEvents> {
                         } else if (cmd.isSlashCommand()) {
                             this.client.commands.slashCommands.delete(cmd.name);
 
-                            const applicationCommands = this.client.application?.commands.cache.filter(c => c.name === cmd.name && c.type === ApplicationCommandType.ChatInput).toJSON();
+                            const applicationCommands = this.client.application?.commands.cache.filter(c => c.name === cmd.name && c.type === ApplicationCommandType.ChatInput).values();
                             for (const applicationCommand of (applicationCommands ?? [])) {
                                 await this.client.application?.commands.delete(applicationCommand, applicationCommand.guildId || undefined);
                             }

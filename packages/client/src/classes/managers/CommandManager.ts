@@ -153,20 +153,20 @@ export class CommandManager {
         const globalCommands: RESTPostAPIApplicationCommandsJSONBody[] = [];
         const guildCommands: Collection<string, RESTPostAPIApplicationCommandsJSONBody[]> = new Collection();
 
-        if (commandConfig.contextMenuCommand.registerCommands?.registerGlobally !== false) globalCommands.push(...this._parseApplicationCommands(this.contextMenuCommands.toJSON()));
-        if (commandConfig.slashCommand.registerCommands?.registerGlobally !== false) globalCommands.push(...this._parseApplicationCommands(this.slashCommands.toJSON()));
+        if (commandConfig.contextMenuCommand.registerCommands?.registerGlobally !== false) globalCommands.push(...this._parseApplicationCommands([...this.contextMenuCommands.values()]));
+        if (commandConfig.slashCommand.registerCommands?.registerGlobally !== false) globalCommands.push(...this._parseApplicationCommands([...this.slashCommands.values()]));
         if (commandConfig.additionalApplicationCommands.registerCommands?.registerGlobally !== false) globalCommands.push(...this._parseApplicationCommands(this.additionalApplicationCommands));
 
         commandConfig.contextMenuCommand.registerCommands?.registerToGuilds.forEach(guildId => {
             const data = guildCommands.get(guildId) ?? guildCommands.set(guildId, []).get(guildId);
 
-            data?.push(...this._parseApplicationCommands(this.contextMenuCommands.toJSON()));
+            data?.push(...this._parseApplicationCommands([...this.contextMenuCommands.values()]));
         });
 
         commandConfig.slashCommand.registerCommands?.registerToGuilds.forEach(guildId => {
             const data = guildCommands.get(guildId) ?? guildCommands.set(guildId, []).get(guildId);
 
-            data?.push(...this._parseApplicationCommands(this.slashCommands.toJSON()));
+            data?.push(...this._parseApplicationCommands([...this.slashCommands.values()]));
         });
 
         commandConfig.additionalApplicationCommands.registerCommands?.registerToGuilds.forEach(guildId => {
@@ -179,8 +179,8 @@ export class CommandManager {
             const data = guildCommands.get(guildId) ?? guildCommands.set(guildId, []).get(guildId);
 
             let commands = [...this._parseApplicationCommands([
-                    ...this.contextMenuCommands.toJSON(),
-                    ...this.slashCommands.toJSON(),
+                    ...this.contextMenuCommands.values(),
+                    ...this.slashCommands.values(),
                     ...this.additionalApplicationCommands
                 ])];
 

@@ -95,7 +95,7 @@ client.once('ready', async () => {
     }
 
     const loadedModules = await client.modules.loadModules({
-        modules: client.modules.cache.toJSON(),
+        modules: [...client.modules.cache.values()],
         resolveCommands: true
     });
 
@@ -112,7 +112,7 @@ client.once('ready', async () => {
 
         await client.modules.unloadModules({
             reason: 'ProcessExit',
-            modules: client.modules.cache.toJSON(),
+            modules: [...client.modules.cache.values()],
             removeCommandsFromClient: false,
             removeFromModulesCollection: true
         });
