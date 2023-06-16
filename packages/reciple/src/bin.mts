@@ -82,6 +82,11 @@ await client.modules.startModules({
 });
 
 client.once('ready', async () => {
+    if (!client.isReady()) {
+        client.logger?.error(`Client did not start properly!`);
+        return process.exit(1);
+    }
+
     process.removeListener('uncaughtException', processErrorHandler);
     process.removeListener('unhandledRejection', processErrorHandler);
 
@@ -133,7 +138,7 @@ client.once('ready', async () => {
 
     await client.commands.registerApplicationCommands();
 
-    client.logger?.warn(`Logged in as ${kleur.bold().cyan(client.user!.tag)} ${kleur.magenta('(' + client.user!.id + ')')}`);
+    client.logger?.warn(`Logged in as ${kleur.bold().cyan(client.user.tag)} ${kleur.magenta('(' + client.user.id + ')')}`);
 
     client.logger?.log(`Loaded ${client.commands.contextMenuCommands.size} context menu command(s)`);
     client.logger?.log(`Loaded ${client.commands.messageCommands.size} message command(s)`);
