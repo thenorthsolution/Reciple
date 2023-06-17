@@ -46,11 +46,12 @@ if (existsSync(cwd)) {
     }
 }
 
+const templatesRawJSON = await readFile(join(root, 'templates.json'), 'utf-8');
 const setup = await group({
     template: () => select({
         message: 'Which language would you like to use?',
         // @ts-expect-error Idk why
-        options: (JSON.parse(await readFile(join(root, 'templates.json'), 'utf-8')) as { name: string; description: string; dir: string }[]).map(m => ({
+        options: (JSON.parse(templatesRawJSON) as { name: string; description: string; dir: string }[]).map(m => ({
             label: m.name,
             value: m.dir,
             hint: m.description
