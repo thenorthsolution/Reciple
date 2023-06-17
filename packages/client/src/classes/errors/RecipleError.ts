@@ -1,4 +1,4 @@
-import stripAnsi from 'strip-ansi';
+import { stripVTControlCharacters } from 'util';
 import kleur from 'kleur';
 
 export interface RecipleErrorOptions {
@@ -8,7 +8,7 @@ export interface RecipleErrorOptions {
 }
 
 export class RecipleError extends Error {
-    get cleanStack() { return this.stack && stripAnsi(this.stack); }
+    get cleanStack() { return this.stack && stripVTControlCharacters(this.stack); }
 
     constructor(options: RecipleErrorOptions|string) {
         options = typeof options === 'string' ? { message: options } : options;
@@ -19,6 +19,6 @@ export class RecipleError extends Error {
     }
 
     public toString() {
-        return stripAnsi(super.toString());
+        return stripVTControlCharacters(super.toString());
     }
 }
