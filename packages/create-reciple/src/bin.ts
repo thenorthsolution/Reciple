@@ -3,7 +3,7 @@ import { cancel, confirm, group, intro, isCancel, outro, select, text } from '@c
 import { resolvePackageManager } from './utils/functions.js';
 import { PackageManager } from './utils/types.js';
 import { dirname, join, resolve } from 'path';
-import { readdir, stat } from 'fs/promises';
+import { readFile, readdir, stat } from 'fs/promises';
 import { create } from './create.js';
 import { fileURLToPath } from 'url';
 import { existsSync } from 'fs';
@@ -50,7 +50,7 @@ const setup = await group({
     template: () => select({
         message: 'Which language would you like to use?',
         // @ts-expect-error Idk why
-        options: (JSON.parse(fs.readFileSync(join(root, 'templates.json'), 'utf-8')) as { name: string; description: string; dir: string }[]).map(m => ({
+        options: (JSON.parse(await readFile(join(root, 'templates.json'), 'utf-8')) as { name: string; description: string; dir: string }[]).map(m => ({
             label: m.name,
             value: m.dir,
             hint: m.description
