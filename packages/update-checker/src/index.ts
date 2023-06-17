@@ -1,8 +1,7 @@
 import { SemVer, satisfies } from 'semver';
-import { APIPartialPackageData } from './types/npmTypes';
-import axios from 'axios';
+import type { AbbreviatedMetadata, FullMetadataOptions, Options } from './types/types.js';
 
-export * from './types/npmTypes';
+export type { AbbreviatedMetadata, FullMetadataOptions, Options } from './types/types.js';
 
 export enum UpdateType {
     None,
@@ -15,13 +14,16 @@ export enum UpdateType {
 
 export interface UpdateData {
     package: string;
+    data: AbbreviatedMetadata;
     updateType: UpdateType;
     currentVersion: string;
     updatedVersion: string;
 }
 
-export async function fetchPackageData<T extends APIPartialPackageData = APIPartialPackageData>(pkg: string): Promise<T> {
-    return axios.get<T>(`https://registry.npmjs.org/${pkg}`, { responseType: 'json' }).then(d => d.data);
+export async function fetchPackageData<T extends AbbreviatedMetadata = AbbreviatedMetadata>(pkg: string, options?: Options): Promise<T>;
+export async function fetchPackageData<T extends FullMetadataOptions = FullMetadataOptions>(pkg: string, options?: FullMetadataOptions): Promise<T>;
+export async function fetchPackageData<T extends FullMetadataOptions|AbbreviatedMetadata = FullMetadataOptions|AbbreviatedMetadata>(pkg: string, options?: FullMetadataOptions|Options): Promise<T> {
+    return (await import('package-json')).default(pkg, options ?? { allVersions: true }) as Promise<T>;
 }
 
 export async function checkLatestUpdate(pkg: string, version: string, allowMajor: boolean = false): Promise<UpdateData> {
@@ -35,6 +37,7 @@ export async function checkLatestUpdate(pkg: string, version: string, allowMajor
 
     const response: UpdateData = {
         package: pkg,
+        data: updateData,
         currentVersion: currentSemver.format(),
         updatedVersion: latest.format(),
         updateType: UpdateType.None
