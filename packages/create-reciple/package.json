@@ -2,7 +2,7 @@
   "name": "create-reciple",
   "description": "A Reciple Discord bot project builder",
   "license": "GPL-3.0",
-  "version": "7.10.3",
+  "version": "7.10.4",
   "type": "module",
   "types": "./bin/bin.d.ts",
   "bin": "./bin/bin.js",
