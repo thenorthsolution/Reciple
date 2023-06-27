@@ -40,14 +40,14 @@
     "@reciple/client": "^7.7.2",
     "@reciple/update-checker": "^7.1.0",
     "commander": "^11.0.0",
-    "dotenv": "^16.2.0",
-    "fallout-utility": "^2.5.1",
-    "globby": "^13.1.4",
+    "dotenv": "^16.3.1",
+    "fallout-utility": "^2.5.2",
+    "globby": "^13.2.0",
     "kleur": "^4.1.5",
     "lodash.mergewith": "^4.6.2",
     "micromatch": "^4.0.5",
     "prompts": "^2.4.2",
-    "semver": "^7.5.2",
+    "semver": "^7.5.3",
     "yaml": "^2.3.1"
   },
   "devDependencies": {
