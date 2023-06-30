@@ -1,40 +1,54 @@
-import { PermissionResolvable, isValidationEnabled } from 'discord.js';
+import { PermissionResolvable } from 'discord.js';
 import { AnyCommandBuilder, AnyCommandData, AnyCommandExecuteFunction, CommandType } from '../../../types/commands';
-import { permissionResolvablePredicate } from './predicates';
-import { s } from '@sapphire/shapeshift';
-import { BaseCommandBuilderData } from '../../..';
+import { CommandAssertions } from '../../../classes/assertions/CommandAssertions';
 
+// TODO: Remove this file
+
+/**
+ * @deprecated Use `CommandAssertions` static methods instead
+ */
 export function validateCommandType(commandType: unknown): asserts commandType is CommandType {
-    s.nativeEnum(CommandType).setValidationEnabled(isValidationEnabled).parse(commandType);
-}
+    CommandAssertions.validateCommand(commandType);
+};
 
+/**
+ * @deprecated Use `CommandAssertions` static methods instead
+ */
 export function validateCommandCooldown(cooldown: unknown): asserts cooldown is number {
-    s.number.positive.finite.positive.optional.setValidationEnabled(isValidationEnabled).parse(cooldown);
-}
+    CommandAssertions.validateCommandCooldown(cooldown);
+};
 
+/**
+ * @deprecated Use `CommandAssertions` static methods instead
+ */
 export function validateCommandRequiredBotPermissions(permissions: unknown): asserts permissions is PermissionResolvable {
-    permissionResolvablePredicate.optional.parse(permissions);
-}
+    CommandAssertions.validateCommandRequiredBotPermissions(permissions);
+};
 
+/**
+ * @deprecated Use `CommandAssertions` static methods instead
+ */
 export function validateCommandRequiredMemberPermissions(permissions: unknown): asserts permissions is PermissionResolvable {
-    permissionResolvablePredicate.optional.parse(permissions);
-}
+    CommandAssertions.validateCommandRequiredMemberPermissions(permissions);
+};
 
+/**
+ * @deprecated Use `CommandAssertions` static methods instead
+ */
 export function validateCommandExecute(execute: unknown): asserts execute is AnyCommandExecuteFunction {
-    s.instance(Function).optional.setValidationEnabled(isValidationEnabled).parse(execute);
-}
+    CommandAssertions.validateCommandExecute(execute);
+};
 
+/**
+ * @deprecated Use `CommandAssertions` static methods instead
+ */
 export function validateCommandHalt(halt: unknown): asserts halt is AnyCommandExecuteFunction {
-    s.instance(Function).optional.setValidationEnabled(isValidationEnabled).parse(halt);
-}
+    CommandAssertions.validateCommandHalt(halt);
+};
 
+/**
+ * @deprecated Use `CommandAssertions` static methods instead
+ */
 export function validateCommand(command: unknown): asserts command is (AnyCommandData|AnyCommandBuilder) {
-    const cmd = command as Partial<BaseCommandBuilderData>;
-
-    validateCommandType(cmd?.commandType);
-    validateCommandCooldown(cmd?.commandType);
-    validateCommandRequiredBotPermissions(cmd?.requiredBotPermissions);
-    validateCommandRequiredMemberPermissions(cmd?.requiredMemberPermissions);
-    validateCommandExecute(cmd?.execute);
-    validateCommandHalt(cmd?.halt);
-}
+    CommandAssertions.validateCommand(command);
+};

@@ -1,5 +1,4 @@
 import { ApplicationCommandType, Awaitable, Collection, RestOrArray, normalizeArray } from 'discord.js';
-import { validateModuleScript } from '../../utils/assertions/module/assertions';
 import { RecursiveDefault, recursiveDefaults } from '../../utils/functions';
 import { RecipleModule, RecipleModuleScript } from '../RecipleModule';
 import { ModuleError } from '../errors/ModuleError';
@@ -11,6 +10,7 @@ import path from 'path';
 import { RecipleError } from '../errors/RecipleError';
 import { createLoadModuleFailErrorOptions, createUnsupportedModuleErrorOptions } from '../../utils/errorCodes';
 import { AnyCommandBuilder, AnyCommandData } from '../../types/commands';
+import { RecipleModuleAssertions } from '../assertions/RecipleModuleAssertions';
 
 export interface ModuleManagerEvents {
     resolveModuleFileError: [file: string, error: Error];
@@ -51,7 +51,7 @@ export class ModuleManager extends TypedEmitter<ModuleManagerEvents> {
         this.client = options.client;
         options.modules?.forEach(m => m instanceof RecipleModule ? this.cache.set(m.id, m) : new RecipleModule({ client: this.client, script: m }));
 
-        this.validateScript = deprecate(this.validateScript, '<ModuleManager>.validateScript() is deprecated. Use validateModuleScript() function instead.');
+        this.validateScript = deprecate(this.validateScript, '<ModuleManager>.validateScript() is deprecated. Use RecipleModuleAssertions.validateModuleScript() method instead.');
     }
 
     /**
@@ -190,7 +190,7 @@ export class ModuleManager extends TypedEmitter<ModuleManagerEvents> {
                     continue;
                 }
 
-                validateModuleScript(script);
+                RecipleModuleAssertions.validateModuleScript(script);
 
                 if (!disableVersionCheck && !normalizeArray([script.versions] as RestOrArray<string>)?.some(v => v === "latest" || semver.satisfies(this.client.version, v))) {
                     throw new RecipleError(createUnsupportedModuleErrorOptions(filePath));
@@ -213,7 +213,7 @@ export class ModuleManager extends TypedEmitter<ModuleManagerEvents> {
 
     public isRecipleModuleScript(script: unknown): script is RecipleModuleScript {
         try {
-            validateModuleScript(script);
+            RecipleModuleAssertions.validateModuleScript(script);
             return true;
         } catch(err) {
             return false;
@@ -223,7 +223,7 @@ export class ModuleManager extends TypedEmitter<ModuleManagerEvents> {
     // TODO: Remove deprecated
 
     /**
-     * @deprecated Use the assertion function `validateModuleScript`
+     * @deprecated Use the assertion method `RecipleModuleAssertions#validateModuleScript`
      */
     public validateScript<S extends RecipleModuleScript = RecipleModuleScript>(script: unknown): asserts script is S {
         const s = script as Partial<RecipleModuleScript>;
