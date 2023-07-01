@@ -76,10 +76,15 @@ eventLogger(client);
 
 const moduleFilesFilter = (file: string) => file.endsWith('.js') || file.endsWith('.cjs') || file.endsWith('.mjs');
 
-await client.modules.startModules({
-    modules: await client.modules.resolveModuleFiles(await getModules(config.modules, (f) => moduleFilesFilter(f)), config.modules.disableModuleVersionCheck),
+const modules = await client.modules.resolveModuleFiles(await getModules(config.modules, (f) => moduleFilesFilter(f)), config.modules.disableModuleVersionCheck);
+const startedModules = await client.modules.startModules({
+    modules,
     addToModulesCollection: true
 });
+
+const failedToStartModules = modules.length - startedModules.length;
+
+logger?.debug(`Failed to start (${failedToStartModules}) modules.`);
 
 client.once('ready', async () => {
     if (!client.isReady()) {
