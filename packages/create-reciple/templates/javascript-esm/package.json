@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "start": "BIN_EXEC reciple",
-    "dev": "BIN_EXEC nodemon --exec \"SCRIPT_RUN start\" --watch ./modules --signal SIGHUP"
+    "dev": "BIN_EXEC nodemon --ext js,mjs,cjs,json,yml,yaml --exec \"SCRIPT_RUN start\" --signal SIGHUP"
   },
   "dependencies": {
     "discord.js": "DISCORDJS",
