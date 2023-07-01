@@ -1,4 +1,4 @@
-import { ApplicationCommandDataResolvable, ChatInputCommandInteraction, Collection, ContextMenuCommandInteraction, Message, RESTPostAPIApplicationCommandsJSONBody, RestOrArray, normalizeArray } from 'discord.js';
+import { ApplicationCommand, ApplicationCommandDataResolvable, ChatInputCommandInteraction, Collection, ContextMenuCommandInteraction, Message, RESTPostAPIApplicationCommandsJSONBody, RestOrArray, normalizeArray } from 'discord.js';
 import { AnySlashCommandBuilder, SlashCommandBuilder, SlashCommandPreconditionFunction, SlashCommandResolvable } from '../builders/SlashCommandBuilder';
 import { ContextMenuCommandBuilder, ContextMenuCommandPreconditionFunction, ContextMenuCommandResolvable } from '../builders/ContextMenuCommandBuilder';
 import { AnyCommandBuilder, AnyCommandData, AnyCommandExecuteData, AnyCommandPreconditionFunction, ApplicationCommandBuilder, CommandType } from '../../types/commands';
@@ -216,7 +216,19 @@ export class CommandManager {
         } else if (trigger instanceof ChatInputCommandInteraction) {
             return SlashCommandBuilder.execute(this.client, trigger);
         }
-    } 
+    }
+
+    public getApplicationCommand(command: string|AnyCommandData|AnyCommandBuilder, guildId?: string): ApplicationCommand|undefined {
+        const name = typeof command === 'string' ? command : command.name;
+        return this.client.application?.commands.cache.find(c => c.name === name && (guildId ? c.guildId === guildId : c.guildId === null));
+    }
+
+    public async fetchApplicationCommand(command: string|AnyCommandData|AnyCommandBuilder, guildId?: string): Promise<ApplicationCommand|undefined> {
+        const name = typeof command === 'string' ? command : command.name;
+        const commands = await this.client.application?.commands.fetch({ guildId });
+
+        return commands?.find(c => c.name !== name);
+    }
 
     private _parseApplicationCommands(commands: (ApplicationCommandDataResolvable | ApplicationCommandBuilder)[]): RESTPostAPIApplicationCommandsJSONBody[] {
         return commands.map(cmd => {
