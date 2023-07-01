@@ -144,6 +144,7 @@ client.once('ready', async () => {
     process.once('SIGINT', signal => unloadModulesAndStopProcess(signal));
     process.once('SIGTERM', signal => unloadModulesAndStopProcess(signal));
     process.once('SIGHUP', signal => unloadModulesAndStopProcess(signal));
+    process.once('SIGUSR2', signal => unloadModulesAndStopProcess(signal));
 
     await client.commands.registerApplicationCommands();
 
