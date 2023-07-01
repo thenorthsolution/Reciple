@@ -92,6 +92,10 @@ client.once('ready', async () => {
 
     if (config.checkForUpdates !== false) {
         checkLatestUpdate('reciple', cliVersion)
+            .then(data => {
+                logger?.debug(`Update checked! `, data);
+                return data;
+            })
             .then(data => data.currentVersion !== data.updatedVersion ? logger?.warn(
                 `A new updated version of Reciple is available! Update from ${kleur.red(data.currentVersion)} to ${kleur.green(data.updatedVersion)}:\n` +
                 `   ${kleur.bold().cyan('npm i reciple@' + data.updatedVersion)}`
