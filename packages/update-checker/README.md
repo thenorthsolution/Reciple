@@ -25,6 +25,8 @@
 import { checkLatestUpdate } from '@reciple/update-checker';
 
 checkLatestUpdate('reciple', '0.0.0')
-    .then(data => console.log(`An update is available! ${data.currentVersion} => ${data.updatedVersion}`))
+    .then(data => {
+        if (data.updateType) console.log(`An update is available! ${data.currentVersion} => ${data.updatedVersion}`)
+    })
     .catch(() => {});
 ```
