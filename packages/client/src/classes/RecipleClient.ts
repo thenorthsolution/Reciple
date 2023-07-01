@@ -8,10 +8,10 @@ import { RecipleClientOptions, RecipleConfigOptions } from '../types/options';
 import { CommandCooldownManager } from './managers/CommandCooldownManager';
 import { CommandManager } from './managers/CommandManager';
 import { ModuleManager } from './managers/ModuleManager';
+import { RecipleError } from './errors/RecipleError';
 import { CommandHaltReason } from '../types/halt';
 import { version } from '../utils/constants';
 import { Logger } from 'fallout-utility';
-import { RecipleError } from './errors/RecipleError';
 
 export interface RecipleClient<Ready extends boolean = boolean> extends discordjs.Client<Ready> {
     on<E extends keyof RecipleClientEvents>(event: E, listener: (...args: RecipleClientEvents[E]) => Awaitable<void>): this;

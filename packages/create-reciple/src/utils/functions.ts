@@ -1,7 +1,7 @@
-import { execSync } from 'child_process';
+import { copyFileSync, lstatSync, mkdirSync, readdirSync } from 'node:fs';
+import { execSync } from 'node:child_process';
 import { PackageManager } from './types.js';
-import { copyFileSync, lstatSync, mkdirSync, readdirSync } from 'fs';
-import { dirname, join } from 'path';
+import { dirname, join } from 'node:path';
 
 export async function runScript(command: string, cwd: string, options?: string[]) {
     execSync(`${command}${options?.length ? (' ' + options.join(' ')) : ''}`, { cwd, env: { ...process.env, FORCE_COLOR: '1' }, stdio: ['inherit', 'inherit', 'inherit'] });

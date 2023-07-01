@@ -1,10 +1,10 @@
-import { copyFile, runScript } from './utils/functions.js';
 import { packageManagerPlaceholders, packages, root } from './utils/constants.js';
-import { existsSync } from 'fs';
+import { mkdir, readFile, writeFile } from 'node:fs/promises';
+import { copyFile, runScript } from './utils/functions.js';
 import { PackageManager } from './utils/types.js';
-import { join, relative } from 'path';
+import { join, relative } from 'node:path';
+import { existsSync } from 'node:fs';
 import kleur from 'kleur';
-import { mkdir, readFile, writeFile } from 'fs/promises';
 
 export async function create(cwd: string, templateDir: string, esm: boolean, pm?: PackageManager): Promise<void> {
     if (esm) templateDir = templateDir + `-esm`;

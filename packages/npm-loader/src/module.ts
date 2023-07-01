@@ -1,8 +1,8 @@
 import { RecipleClient, RecipleModule, RecipleModuleScript } from '@reciple/client';
-import { existsSync, readFileSync } from 'fs';
+import { readdir, readlink, stat } from 'node:fs/promises';
+import { existsSync, readFileSync } from 'node:fs';
 import { Logger } from '@reciple/client';
-import path from 'path';
-import { readdir, readlink, stat } from 'fs/promises';
+import path from 'node:path';
 
 export interface RecipleNPMModuleScript extends RecipleModuleScript {
     moduleName?: string;

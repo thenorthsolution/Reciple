@@ -1,16 +1,16 @@
+import { createLoadModuleFailErrorOptions, createUnsupportedModuleErrorOptions } from '../../utils/errorCodes';
 import { ApplicationCommandType, Awaitable, Collection, RestOrArray, normalizeArray } from 'discord.js';
+import { RecipleModuleAssertions } from '../assertions/RecipleModuleAssertions';
 import { RecursiveDefault, recursiveDefaults } from '../../utils/functions';
+import { AnyCommandBuilder, AnyCommandData } from '../../types/commands';
 import { RecipleModule, RecipleModuleScript } from '../RecipleModule';
+import { RecipleError } from '../errors/RecipleError';
 import { ModuleError } from '../errors/ModuleError';
 import { RecipleClient } from '../RecipleClient';
 import { TypedEmitter } from 'fallout-utility';
-import { deprecate } from 'util';
+import { deprecate } from 'node:util';
+import path from 'node:path';
 import semver from 'semver';
-import path from 'path';
-import { RecipleError } from '../errors/RecipleError';
-import { createLoadModuleFailErrorOptions, createUnsupportedModuleErrorOptions } from '../../utils/errorCodes';
-import { AnyCommandBuilder, AnyCommandData } from '../../types/commands';
-import { RecipleModuleAssertions } from '../assertions/RecipleModuleAssertions';
 
 export interface ModuleManagerEvents {
     resolveModuleFileError: [file: string, error: Error];

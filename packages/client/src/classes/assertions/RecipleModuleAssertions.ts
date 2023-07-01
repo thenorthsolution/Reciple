@@ -1,8 +1,8 @@
-import { s } from '@sapphire/shapeshift';
-import { RecipleModuleScript } from '../RecipleModule';
 import { recipleModuleVersionsPredicate } from '../../utils/predicates';
-import { isValidationEnabled } from 'discord.js';
 import { CommandAssertions } from './CommandAssertions';
+import { RecipleModuleScript } from '../RecipleModule';
+import { isValidationEnabled } from 'discord.js';
+import { s } from '@sapphire/shapeshift';
 
 export class RecipleModuleAssertions {
     public static validateModuleScriptVersions(versions: unknown): asserts versions is RecipleModuleScript['versions'] {

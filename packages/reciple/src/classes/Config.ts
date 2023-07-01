@@ -1,15 +1,15 @@
-import { getConfigExtensions } from '../utils/getConfigExtensions';
 import { RecipleConfigOptions, RecipleError, version } from '@reciple/client';
-import { existsSync, readFileSync } from 'fs';
-import { parseEnvString } from '../utils/parseEnvString';
-import { replaceAll } from 'fallout-utility';
 import { ClientOptions, RestOrArray, normalizeArray } from 'discord.js';
+import { getConfigExtensions } from '../utils/getConfigExtensions';
+import { parseEnvString } from '../utils/parseEnvString';
+import { readFile, writeFile } from 'node:fs/promises';
+import { existsSync, readFileSync } from 'node:fs';
+import { replaceAll } from 'fallout-utility';
 import { cli } from '../utils/cli';
+import path from 'node:path';
 import dotenv from 'dotenv';
-import path from 'path';
-import yml from 'yaml';
 import kleur from 'kleur';
-import { readFile, writeFile } from 'fs/promises';
+import yml from 'yaml';
 
 export interface IConfig extends RecipleConfigOptions {
     extends?: string|string[];

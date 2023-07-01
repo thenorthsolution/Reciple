@@ -1,6 +1,6 @@
 import { Guild, GuildTextBasedChannel, PermissionResolvable, PermissionsBitField } from 'discord.js';
 import { AnyCommandBuilder } from '../types/commands';
-import { deprecate } from 'util';
+import { deprecate } from 'node:util';
 
 export interface hasExecutePermissionsOptions {
     /**

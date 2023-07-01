@@ -1,11 +1,11 @@
+import { lstat, mkdir, readdir } from 'node:fs/promises';
 import { recursiveDefaults } from '@reciple/client';
-import { lstat, mkdir, readdir } from 'fs/promises';
 import { Awaitable } from 'fallout-utility';
 import { IConfig } from '../classes/Config';
+import { existsSync } from 'node:fs';
 import micromatch from 'micromatch';
-import { existsSync } from 'fs';
+import path from 'node:path';
 import { cli } from './cli';
-import path from 'path';
 
 export async function getModules(config: IConfig['modules'], filter?: (filename: string) => Awaitable<boolean>): Promise<string[]> {
     const modules: string[] = [];

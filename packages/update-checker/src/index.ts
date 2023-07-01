@@ -1,5 +1,5 @@
-import { SemVer, satisfies } from 'semver';
 import type { AbbreviatedMetadata, FullMetadataOptions, Options } from './types/types.js';
+import { SemVer, satisfies } from 'semver';
 
 export type { AbbreviatedMetadata, FullMetadataOptions, Options } from './types/types.js';
 

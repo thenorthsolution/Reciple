@@ -1,8 +1,8 @@
-import { s } from '@sapphire/shapeshift';
 import { AnyCommandBuilder, AnyCommandData, AnyCommandExecuteFunction, CommandType } from '../../types/commands';
-import { PermissionResolvable, isValidationEnabled } from 'discord.js';
 import { commandCooldownPredicate, permissionResolvablePredicate } from '../../utils/predicates';
 import { BaseCommandBuilderData } from '../../classes/builders/BaseCommandBuilder';
+import { PermissionResolvable, isValidationEnabled } from 'discord.js';
+import { s } from '@sapphire/shapeshift';
 
 export class CommandAssertions {
     public static validateCommandType(commandType: unknown): asserts commandType is CommandType {

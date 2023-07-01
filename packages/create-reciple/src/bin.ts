@@ -1,13 +1,13 @@
 #!/usr/bin/env node
 import { cancel, confirm, group, intro, isCancel, outro, select, text } from '@clack/prompts';
 import { resolvePackageManager } from './utils/functions.js';
+import { readFile, readdir, stat } from 'node:fs/promises';
+import { dirname, join, resolve } from 'node:path';
 import { PackageManager } from './utils/types.js';
-import { dirname, join, resolve } from 'path';
-import { readFile, readdir, stat } from 'fs/promises';
+import { fileURLToPath } from 'node:url';
 import { create } from './create.js';
-import { fileURLToPath } from 'url';
-import { existsSync } from 'fs';
-import { exit } from 'process';
+import { existsSync } from 'node:fs';
+import { exit } from 'node:process';
 import kleur from 'kleur';
 
 const __filename = fileURLToPath(import.meta.url);

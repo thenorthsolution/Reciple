@@ -1,21 +1,21 @@
 #!/usr/bin/env node
 
 import { ContextMenuCommandBuilder, MessageCommandBuilder, SlashCommandBuilder, realVersion, version } from '@reciple/client';
-import { getJsConfig, getModules } from './utils/modules.js';
 import { createLogger, eventLogger } from './utils/logger.js';
+import { getJsConfig, getModules } from './utils/modules.js';
 import { checkLatestUpdate } from '@reciple/update-checker';
 import { CacheFactory, SweeperOptions } from 'discord.js';
 import { command, cli, cliVersion } from './utils/cli.js';
-import { mkdir, readdir } from 'fs/promises';
-import { setTimeout } from 'timers/promises';
+import { mkdir, readdir } from 'node:fs/promises';
+import { setTimeout } from 'node:timers/promises';
 import { Config } from './classes/Config.js';
 import { RecipleClient } from './index.js';
+import { existsSync } from 'node:fs';
 import micromatch from 'micromatch';
-import { existsSync } from 'fs';
 import prompts from 'prompts';
+import path from 'node:path';
 import semver from 'semver';
 import kleur from 'kleur';
-import path from 'path';
 
 command.parse();
 

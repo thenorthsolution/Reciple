@@ -1,6 +1,6 @@
-import { BitField, PermissionFlagsBits, PermissionsBitField } from 'discord.js';
 import { MessageCommandOptionBuilder } from '../classes/builders/MessageCommandOptionBuilder';
 import { ContextMenuCommandBuilder } from '../classes/builders/ContextMenuCommandBuilder';
+import { BitField, PermissionFlagsBits, PermissionsBitField } from 'discord.js';
 import { SlashCommandBuilder } from '../classes/builders/SlashCommandBuilder';
 import { CommandType } from '../types/commands';
 import { s } from '@sapphire/shapeshift';

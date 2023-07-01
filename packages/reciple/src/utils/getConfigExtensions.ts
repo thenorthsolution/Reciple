@@ -1,7 +1,7 @@
-import { existsSync, readFileSync } from 'fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { RecipleError } from '@reciple/client';
 import merge from 'lodash.mergewith';
-import path from 'path';
+import path from 'node:path';
 import yml from 'yaml';
 
 export function configMergeCustomizer(objValue: any, srcValue: any, key: string): any {

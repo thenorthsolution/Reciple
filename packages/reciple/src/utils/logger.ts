@@ -1,9 +1,9 @@
-import { IConfig } from '../classes/Config';
 import { Logger, LoggerLevel, PartialDeep } from 'fallout-utility';
 import { ApplicationCommand, Collection } from 'discord.js';
+import { IConfig } from '../classes/Config';
 import { RecipleClient } from '../';
+import path from 'node:path';
 import { cli } from './cli';
-import path from 'path';
 import kleur from 'kleur';
 
 export function formatLogMessage(message: string, logger: Logger, config: PartialDeep<IConfig['logger']>, level: LoggerLevel): string {

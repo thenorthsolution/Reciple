@@ -1,9 +1,9 @@
 import { realVersion } from '@reciple/client';
+import { readFileSync } from 'node:fs';
+import { deprecate } from 'node:util';
 import { Command } from 'commander';
-import { readFileSync } from 'fs';
-import path from 'path';
 import { coerce } from 'semver';
-import { deprecate } from 'util';
+import path from 'node:path';
 
 const { version, description } = JSON.parse(readFileSync(path.join(__dirname, '../../package.json'), 'utf-8'));
 
