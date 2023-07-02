@@ -1,7 +1,7 @@
 // @ts-check
 import { Config, cli, command, createLogger } from 'reciple';
-import path from 'path';
 import { ShardingManager } from 'discord.js';
+import path from 'path';
 
 // @ts-expect-error We need to modify readonly command options
 command.options = command.options.filter(o => !['shardmode', 'version', 'yes'].includes(o.name()));
