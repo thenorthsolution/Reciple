@@ -147,9 +147,12 @@ client.once('ready', async () => {
 
     process.stdin.resume();
 
-    process.once('SIGINT', signal => unloadModulesAndStopProcess(signal));
-    process.once('SIGTERM', signal => unloadModulesAndStopProcess(signal));
     process.once('SIGHUP', signal => unloadModulesAndStopProcess(signal));
+    process.once('SIGINT', signal => unloadModulesAndStopProcess(signal));
+    process.once('SIGQUIT', signal => unloadModulesAndStopProcess(signal));
+    process.once('SIGABRT', signal => unloadModulesAndStopProcess(signal));
+    process.once('SIGALRM', signal => unloadModulesAndStopProcess(signal));
+    process.once('SIGTERM', signal => unloadModulesAndStopProcess(signal));
     process.once('SIGUSR2', signal => unloadModulesAndStopProcess(signal));
 
     await client.commands.registerApplicationCommands();
