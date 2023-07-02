@@ -142,7 +142,10 @@ client.once('ready', async () => {
         await setTimeoutAsync(10);
         process.exitCode = 0;
 
-        setTimeout(() => process.exit(0), 1000).unref();
+        setTimeout(() => {
+            client.logger?.debug(`Process did not exit on time! Calling process.exit(0);`);
+            process.exit(0);
+        }, 5000).unref();
     };
 
     process.stdin.resume();
