@@ -142,18 +142,19 @@ client.once('ready', async () => {
         client.logger?.closeWriteStream();
 
         await setTimeoutAsync(10);
-        process.exit(0);
+        process.kill(process.pid, signal);
     };
 
     process.stdin.resume();
 
-    process.once('SIGHUP', signal => unloadModulesAndStopProcess(signal));
-    process.once('SIGINT', signal => unloadModulesAndStopProcess(signal));
-    process.once('SIGQUIT', signal => unloadModulesAndStopProcess(signal));
-    process.once('SIGABRT', signal => unloadModulesAndStopProcess(signal));
-    process.once('SIGALRM', signal => unloadModulesAndStopProcess(signal));
-    process.once('SIGTERM', signal => unloadModulesAndStopProcess(signal));
-    process.once('SIGUSR2', signal => unloadModulesAndStopProcess(signal));
+    process.once('SIGHUP', unloadModulesAndStopProcess);
+    process.once('SIGINT', unloadModulesAndStopProcess);
+    process.once('SIGQUIT', unloadModulesAndStopProcess);
+    process.once('SIGABRT',unloadModulesAndStopProcess);
+    process.once('SIGALRM', unloadModulesAndStopProcess);
+    process.once('SIGTERM', unloadModulesAndStopProcess);
+    process.once('SIGBREAK', unloadModulesAndStopProcess);
+    process.once('SIGUSR2', unloadModulesAndStopProcess);
 
     await client.commands.registerApplicationCommands();
 
