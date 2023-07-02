@@ -2,7 +2,7 @@ import { RecipleConfigOptions, RecipleError, version } from '@reciple/client';
 import { ClientOptions, RestOrArray, normalizeArray } from 'discord.js';
 import { getConfigExtensions } from '../utils/getConfigExtensions';
 import { parseEnvString } from '../utils/parseEnvString';
-import { readFile, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { existsSync, readFileSync } from 'node:fs';
 import { replaceAll } from 'fallout-utility';
 import { cli } from '../utils/cli';
@@ -57,6 +57,7 @@ export class Config {
                 configYaml = replaceAll(configYaml, 'token: TOKEN', `token: ${configData.token}`);
             }
 
+            await mkdir(path.dirname(this.configPath), { recursive: true });
             await writeFile(this.configPath, configYaml, 'utf-8');
             this.config = configData;
         } else {

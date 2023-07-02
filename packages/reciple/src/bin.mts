@@ -7,7 +7,7 @@ import { checkLatestUpdate } from '@reciple/update-checker';
 import { CacheFactory, SweeperOptions } from 'discord.js';
 import { command, cli, cliVersion } from './utils/cli.js';
 import { mkdir, readdir } from 'node:fs/promises';
-import { setTimeout } from 'node:timers/promises';
+import { setTimeout as setTimeoutAsync } from 'node:timers/promises';
 import { Config } from './classes/Config.js';
 import { RecipleClient } from './index.js';
 import { existsSync } from 'node:fs';
@@ -122,6 +122,8 @@ client.once('ready', async () => {
     const unloadModulesAndStopProcess = async (signal: NodeJS.Signals) => {
         if (stopping) return;
 
+        client.logger?.debug(`Received exit signal: ${signal}`);
+
         stopping = true;
 
         await client.modules.unloadModules({
@@ -137,9 +139,13 @@ client.once('ready', async () => {
 
         client.logger?.warn(`Process exited: ${kleur.yellow(signalString)}`);
 
-        await setTimeout(10);
-        process.exit(0);
+        await setTimeoutAsync(10);
+        process.exitCode = 0;
+
+        setTimeout(() => process.exit(0), 1000).unref();
     };
+
+    process.stdin.resume();
 
     process.once('SIGINT', signal => unloadModulesAndStopProcess(signal));
     process.once('SIGTERM', signal => unloadModulesAndStopProcess(signal));
