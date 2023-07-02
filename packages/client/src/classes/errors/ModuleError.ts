@@ -1,6 +1,6 @@
 import { RestOrArray, normalizeArray } from 'discord.js';
 import { BaseError, ErrorType } from './BaseError';
-import kleur from 'kleur';
+import { kleur } from 'fallout-utility';
 
 // TODO: Remove this class
 

@@ -2,8 +2,8 @@ import { replacePlaceholders } from '../../utils/functions';
 import { RestOrArray, normalizeArray } from 'discord.js';
 import { CommandError } from './CommandError';
 import { ModuleError } from './ModuleError';
+import { kleur } from 'fallout-utility';
 import stripAnsi from 'strip-ansi';
-import kleur from 'kleur';
 
 // TODO: Remove this class
 

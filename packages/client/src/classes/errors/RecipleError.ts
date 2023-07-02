@@ -1,5 +1,5 @@
 import { stripVTControlCharacters } from 'node:util';
-import kleur from 'kleur';
+import { kleur } from 'fallout-utility';
 
 export interface RecipleErrorOptions {
     message: string;

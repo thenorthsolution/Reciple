@@ -1,8 +1,8 @@
+import { AnyCommandBuilder, AnyCommandData } from '../types/commands';
 import { RecipleErrorOptions } from '../classes/errors/RecipleError';
 import { getCommandBuilderName } from '../utils/functions';
-import { AnyCommandBuilder, AnyCommandData } from '../types/commands';
 import { realVersion } from './constants';
-import kleur from 'kleur';
+import { kleur } from 'fallout-utility';
 
 export function createUnknownCommandTypeErrorOptions(given: unknown): RecipleErrorOptions {
     return {
