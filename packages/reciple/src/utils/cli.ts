@@ -6,6 +6,7 @@ import { coerce } from 'semver';
 import path from 'node:path';
 
 const { version, description } = JSON.parse(readFileSync(path.join(__dirname, '../../package.json'), 'utf-8'));
+const originalCwd = process.cwd();
 
 export let command = new Command()
     .name('reciple')
@@ -40,7 +41,11 @@ export interface CLIOptions {
 export const cli = {
     get args() { return command.args; },
     get options() { return command.opts<CLIOptions>(); },
-    get cwd() { return this.args[0] ? path.resolve(this.args[0]) : process.cwd(); },
+    get cwd() {
+        return this.args[0]
+            ? path.isAbsolute(this.args[0]) ? this.args[0] : path.join(originalCwd, this.args[0])
+            : process.cwd();
+    },
     binPath: path.join(__dirname, '../bin.mjs')
 };
 

@@ -3,25 +3,27 @@ import { Config, cli, command, createLogger } from 'reciple';
 import path from 'path';
 import { ShardingManager } from 'discord.js';
 
-const console = await (await createLogger({
-        enabled: true,
-        debugmode: true,
-        coloredMessages: true,
-    }))
-    .setDebugMode(true)
-    .setName('ShardManager')
-    .createFileWriteStream({
-        file: path.join(cli.cwd, 'sharder-logs/shards.log'),
-        renameOldFile: true
-    });
-
 // @ts-expect-error We need to modify readonly command options
 command.options = command.options.filter(o => !['shardmode', 'version', 'yes'].includes(o.name()));
 
 command.name('').description('The options below are passed to reciple cli shards').parse();
 
-let configPaths = cli.options?.config?.map(c => path.isAbsolute(c) ? path.resolve(c) : path.join(cli.cwd, c));
-    configPaths = !configPaths?.length ? [path.join(cli.cwd, 'reciple.yml')] : configPaths;
+process.chdir(cli.cwd);
+
+const console = await (await createLogger({
+    enabled: true,
+    debugmode: true,
+    coloredMessages: true,
+}))
+.setDebugMode(true)
+.setName('ShardManager')
+.createFileWriteStream({
+    file: path.join(process.cwd(), 'sharder-logs/shards.log'),
+    renameOldFile: true
+});
+
+let configPaths = cli.options?.config?.map(c => path.isAbsolute(c) ? path.resolve(c) : path.join(process.cwd(), c));
+    configPaths = !configPaths?.length ? [path.join(process.cwd(), 'reciple.yml')] : configPaths;
 
 /**
  * @type {string}

@@ -41,7 +41,7 @@ export async function createLogger(config: PartialDeep<IConfig['logger']>): Prom
 
     if (config.logToFile?.enabled) {
         await logger.createFileWriteStream({
-            file: path.join(cli.cwd, config.logToFile?.logsFolder ?? path.join(cli.cwd, 'logs'), !cli.options.shardmode ? (config.logToFile?.file ?? 'latest.log') : `${process.pid}.log`)
+            file: path.join(process.cwd(), config.logToFile?.logsFolder ?? path.join(process.cwd(), 'logs'), !cli.options.shardmode ? (config.logToFile?.file ?? 'latest.log') : `${process.pid}.log`)
         });
     }
 

@@ -5,18 +5,17 @@ import { IConfig } from '../classes/Config';
 import { existsSync } from 'node:fs';
 import micromatch from 'micromatch';
 import path from 'node:path';
-import { cli } from './cli';
 
 export async function getModules(config: IConfig['modules'], filter?: (filename: string) => Awaitable<boolean>): Promise<string[]> {
     const modules: string[] = [];
     const { globby, isDynamicPattern } = await import('globby');
 
     for (const folder of config.modulesFolders) {
-        const dir = path.isAbsolute(folder) ? folder : path.join(cli.cwd, folder);
+        const dir = path.isAbsolute(folder) ? folder : path.join(process.cwd(), folder);
 
-        if (isDynamicPattern(folder, { cwd: cli.cwd })) {
+        if (isDynamicPattern(folder, { cwd: process.cwd() })) {
             let modulesFolders = await globby(folder, {
-                    cwd: cli.cwd,
+                    cwd: process.cwd(),
                     onlyDirectories: true,
                     absolute: true
                 });
@@ -42,7 +41,7 @@ export async function getModules(config: IConfig['modules'], filter?: (filename:
 }
 
 export async function getJsConfig<T>(file: string): Promise<T|undefined> {
-    file = path.resolve(path.isAbsolute(file) ? file : path.join(cli.cwd, file));
+    file = path.resolve(path.isAbsolute(file) ? file : path.join(process.cwd(), file));
 
     return recursiveDefaults<T>(await import(`file://${file}`));
 }

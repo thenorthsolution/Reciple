@@ -30,19 +30,18 @@ export default new RecipleNPMLoader();
 You can set your custom node_modules folder by extending the class
 ```js
 import { RecipleNPMLoader } from '@reciple/npm-loader';
-import { cli } from 'reciple';
 import path from 'path';
 
 export class NPMLoader extends RecipleNPMLoader {
     async onStart(client) {
         // Change the node_modules path
-        this.nodeModulesFolder = path.join(cli.cwd, 'node_modules');
+        this.nodeModulesFolder = path.join(process.cwd(), 'node_modules');
         // Use config value of disableVersionChecks
         this.disableVersionChecks = !!client.config.modules?.disableModuleVersionCheck;
         // Ignored packages
         this.ignoredPackages = [];
         // Define to only use modules that are in package.json dependencies and dev dependencies
-        this.packageJsonPath = path.join(cli.cwd, 'package.json');
+        this.packageJsonPath = path.join(process.cwd(), 'package.json');
 
         return super.onStart(client);
     }

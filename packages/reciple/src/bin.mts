@@ -18,19 +18,20 @@ import semver from 'semver';
 import kleur from 'kleur';
 
 command.parse();
+process.chdir(cli.cwd);
 
 const allowedFiles = ['node_modules', 'reciple.yml', 'package.json', '.*'];
-let configPaths = cli.options?.config?.map(c => path.isAbsolute(c) ? path.resolve(c) : path.join(cli.cwd, c));
-    configPaths = !configPaths?.length ? [path.join(cli.cwd, 'reciple.yml')] : configPaths;
+let configPaths = cli.options?.config?.map(c => path.isAbsolute(c) ? path.resolve(c) : path.join(process.cwd(), c));
+    configPaths = !configPaths?.length ? [path.join(process.cwd(), 'reciple.yml')] : configPaths;
 
 const mainConfigPath = configPaths.shift()!;
 
-if (!existsSync(cli.cwd)) await mkdir(cli.cwd, { recursive: true });
-if ((await readdir(cli.cwd)).filter(f => !micromatch.isMatch(f, allowedFiles)).length && !existsSync(mainConfigPath) && !cli.options.yes) {
+if (!existsSync(process.cwd())) await mkdir(process.cwd(), { recursive: true });
+if ((await readdir(process.cwd())).filter(f => !micromatch.isMatch(f, allowedFiles)).length && !existsSync(mainConfigPath) && !cli.options.yes) {
     const confirm = await prompts(
         {
             initial: false,
-            message: `Would you like to initialize your Reciple app ${cli.cwd !== process.cwd() ? 'in your chosen directory': 'here'}?`,
+            message: `Would you like to initialize your Reciple app ${process.cwd() !== process.cwd() ? 'in your chosen directory': 'here'}?`,
             name: 'confirm',
             type: 'confirm'
         }
@@ -138,14 +139,10 @@ client.once('ready', async () => {
         const signalString = signal === 'SIGINT' ? 'keyboard interrupt' : signal === 'SIGTERM' ? 'terminate' : String(signal);
 
         client.logger?.warn(`Process exited: ${kleur.yellow(signalString)}`);
+        client.logger?.closeWriteStream();
 
         await setTimeoutAsync(10);
-        process.exitCode = 0;
-
-        setTimeout(() => {
-            client.logger?.debug(`Process did not exit on time! Calling process.exit(0);`);
-            process.exit(0);
-        }, 60000).unref();
+        process.exit(0);
     };
 
     process.stdin.resume();

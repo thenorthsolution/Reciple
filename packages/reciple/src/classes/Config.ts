@@ -93,7 +93,7 @@ export class Config {
         const token = cli.options.token || this.config?.token || null;
         if (!token) return token;
 
-        return parseEnvString(token, cli.options.env ? path.resolve(cli.options.env) : path.join(cli.cwd, '.env')) || null;
+        return parseEnvString(token, cli.options.env ? path.resolve(cli.options.env) : path.join(process.cwd(), '.env')) || null;
     }
 
     public static resolveEnvValues<T extends Record<any, any>|string|Array<any>>(object: T, envFile?: string): T {
