@@ -1,8 +1,5 @@
 import { AnyCommandBuilder, AnyCommandData } from '../types/commands';
-import { RecipleErrorOptions } from '../classes/errors/RecipleError';
-import { getCommandBuilderName } from '../utils/functions';
-import { realVersion } from './constants';
-import { kleur } from 'fallout-utility';
+import { RecipleError, RecipleErrorOptions } from '../classes/errors/RecipleError';
 
 // TODO: Remove this file
 
@@ -10,73 +7,47 @@ import { kleur } from 'fallout-utility';
  * @deprecated Use `RecipleError` static methods instead
  */
 export function createUnknownCommandTypeErrorOptions(given: unknown): RecipleErrorOptions {
-    return {
-        message: `Unknown command type ${kleur.blue().bold(typeof given)}`,
-        name: 'UnknownCommandType'
-    };
+    return RecipleError.createUnknownCommandTypeErrorOptions(given);
 }
 
 /**
  * @deprecated Use `RecipleError` static methods instead
  */
 export function createCommandExecuteErrorOptions(builder: AnyCommandBuilder|AnyCommandData, cause: unknown): RecipleErrorOptions {
-    return {
-        message: `An error occured while executing a ${kleur.cyan(getCommandBuilderName(builder))} named ${kleur.red("'" + builder.name + "'")}`,
-        cause,
-        name: 'CommandExecuteError'
-    };
+    return RecipleError.createCommandExecuteErrorOptions(builder, cause);
 }
 
 /**
  * @deprecated Use `RecipleError` static methods instead
  */
 export function createCommandHaltErrorOptions(builder: AnyCommandBuilder|AnyCommandData, cause: unknown): RecipleErrorOptions {
-    return {
-        message: `An error occured while executing the halt function of a ${kleur.cyan(getCommandBuilderName(builder))} named ${kleur.red("'" + builder.name + "'")}`,
-        cause,
-        name: 'CommandHaltError'
-    };
+    return RecipleError.createCommandHaltErrorOptions(builder, cause);
 }
 
 /**
  * @deprecated Use `RecipleError` static methods instead
  */
 export function createCommandPreconditionErrorOptions(builder: AnyCommandBuilder|AnyCommandData, cause: unknown): RecipleErrorOptions {
-    return {
-        message: `An error occured while executing precondition for ${kleur.cyan(getCommandBuilderName(builder))} named ${kleur.red("'" + builder.name + "'")}`,
-        cause,
-        name: 'PreconditionError'
-    };
+    return RecipleError.createCommandPreconditionErrorOptions(builder, cause);
 }
 
 /**
  * @deprecated Use `RecipleError` static methods instead
  */
 export function createCommandRequiredOptionNotFoundErrorOptions(optionName: string, value: unknown): RecipleErrorOptions {
-    return {
-        message: `No value given from required option ${kleur.cyan("'" + optionName + "'")}`,
-        cause: { value },
-        name: 'RequiredOptionNotFound'
-    };
+    return RecipleError.createCommandRequiredOptionNotFoundErrorOptions(optionName, value);
 }
 
 /**
  * @deprecated Use `RecipleError` static methods instead
  */
 export function createLoadModuleFailErrorOptions(moduleDisplayName: string, cause: unknown): RecipleErrorOptions {
-    return {
-        message: `Failed to load ${kleur.red("'" + moduleDisplayName + "'")}`,
-        cause,
-        name: 'LoadModuleFail'
-    };
+    return RecipleError.createLoadModuleFailErrorOptions(moduleDisplayName, cause);
 }
 
 /**
  * @deprecated Use `RecipleError` static methods instead
  */
 export function createUnsupportedModuleErrorOptions(moduleDisplayName: string): RecipleErrorOptions {
-    return {
-        message: `The module ${kleur.red("'" + moduleDisplayName + "'")} does not support reciple client ${kleur.blue().bold(realVersion)}`,
-        name: 'UnsupportedModule'
-    };
+    return RecipleError.createUnsupportedModuleErrorOptions(moduleDisplayName);
 }
