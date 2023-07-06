@@ -3,7 +3,6 @@ import { AnyCommandBuilder, AnyCommandData, AnyCommandExecuteData, AnyCommandPre
 import { AnySlashCommandBuilder, SlashCommandBuilder, SlashCommandPreconditionFunction, SlashCommandResolvable } from '../builders/SlashCommandBuilder';
 import { ContextMenuCommandBuilder, ContextMenuCommandPreconditionFunction, ContextMenuCommandResolvable } from '../builders/ContextMenuCommandBuilder';
 import { MessageCommandBuilder, MessageCommandPreconditionFunction, MessageCommandResovable } from '../builders/MessageCommandBuilder';
-import { createUnknownCommandTypeErrorOptions } from '../../utils/errorCodes';
 import { validateCommand } from '../../utils/assertions/commands/assertions';
 import { RecipleConfigOptions } from '../../types/options';
 import { RecipleError } from '../errors/RecipleError';
@@ -63,7 +62,7 @@ export class CommandManager {
                     this.slashCommands.set(command.name, SlashCommandBuilder.resolve(command));
                     break;
                 default:
-                    throw new RecipleError(createUnknownCommandTypeErrorOptions(command));
+                    throw new RecipleError(RecipleError.createUnknownCommandTypeErrorOptions(command));
             }
         }
 

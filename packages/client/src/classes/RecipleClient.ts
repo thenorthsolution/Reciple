@@ -1,5 +1,4 @@
 import { ContextMenuCommandExecuteData, ContextMenuCommandHaltData, ContextMenuCommandResolvable } from './builders/ContextMenuCommandBuilder';
-import { createCommandExecuteErrorOptions, createCommandHaltErrorOptions, createCommandPreconditionErrorOptions } from '../utils/errorCodes';
 import { MessageCommandExecuteData, MessageCommandHaltData, MessageCommandResovable } from './builders/MessageCommandBuilder';
 import { AnyCommandBuilder, AnyCommandData, AnyCommandExecuteData, AnyCommandHaltData, CommandType } from '../types/commands';
 import { SlashCommandExecuteData, SlashCommandHaltData, SlashCommandResolvable } from './builders/SlashCommandBuilder';
@@ -89,7 +88,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends discordjs.Cl
                         ? command.halt(haltData as SlashCommandHaltData)
                         : false
             : false)
-            .catch(err => this._throwError(new RecipleError(createCommandHaltErrorOptions(command, err))));
+            .catch(err => this._throwError(new RecipleError(RecipleError.createCommandHaltErrorOptions(command, err))));
 
         return haltResolve ?? true;
     }
@@ -116,7 +115,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends discordjs.Cl
         .catch(async err => {
             // @ts-expect-error Types is not usable here
             const isHandled = await this._haltCommand(command, { commandType: command.commandType, reason: CommandHaltReason.Error, executeData, error: err });
-            if (!isHandled) this._throwError(new RecipleError(createCommandExecuteErrorOptions(command, err)));
+            if (!isHandled) this._throwError(new RecipleError(RecipleError.createCommandExecuteErrorOptions(command, err)));
         });
     }
 
@@ -141,7 +140,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends discordjs.Cl
         } catch (err) {
             // @ts-expect-error Types is not usable here
             const isHandled = await this._haltCommand(command, { commandType: command.commandType, reason: CommandHaltReason.PreconditionError, executeData, error: err });
-            if (!isHandled) this._throwError(new RecipleError(createCommandPreconditionErrorOptions(command, err)));
+            if (!isHandled) this._throwError(new RecipleError(RecipleError.createCommandPreconditionErrorOptions(command, err)));
             return false;
         }
     }

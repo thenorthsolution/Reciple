@@ -1,4 +1,3 @@
-import { createCommandRequiredOptionNotFoundErrorOptions } from '../../utils/errorCodes';
 import { MessageCommandOptionValue } from '../builders/MessageCommandOptionBuilder';
 import { RecipleError } from '../errors/RecipleError';
 import { Collection } from 'discord.js';
@@ -25,7 +24,7 @@ export class MessageCommandOptionManager extends Collection<string, MessageComma
     public getValue(optionName: string, required?: true): string;
     public getValue(optionName: string, required: boolean = false): string|null {
         const option = this.get(optionName);
-        if (required && !option?.value) throw new RecipleError(createCommandRequiredOptionNotFoundErrorOptions(optionName, option?.value));
+        if (required && !option?.value) throw new RecipleError(RecipleError.createCommandRequiredOptionNotFoundErrorOptions(optionName, option?.value));
 
         return option?.value || null;
     }

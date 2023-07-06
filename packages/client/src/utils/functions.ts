@@ -11,6 +11,7 @@ export interface RecursiveDefault<T = unknown> {
  * Replace placeholders in a string.
  * @param message The string that contains the placeholders.
  * @param placeholders An array of strings that represent the placeholders.
+ * @deprecated Will be removed on future versions of reciple
  */
 export function replacePlaceholders(message: string, ...placeholders: RestOrArray<string>) {
     placeholders = normalizeArray(placeholders);

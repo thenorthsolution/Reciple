@@ -1,4 +1,3 @@
-import { createLoadModuleFailErrorOptions, createUnsupportedModuleErrorOptions } from '../../utils/errorCodes';
 import { ApplicationCommandType, Awaitable, Collection, RestOrArray, normalizeArray } from 'discord.js';
 import { RecipleModuleAssertions } from '../assertions/RecipleModuleAssertions';
 import { RecursiveDefault, recursiveDefaults } from '../../utils/functions';
@@ -79,7 +78,7 @@ export class ModuleManager extends TypedEmitter<ModuleManagerEvents> {
                     return false;
                 });
 
-                if (error) throw new RecipleError(createLoadModuleFailErrorOptions(module_.displayName, error));
+                if (error) throw new RecipleError(RecipleError.createLoadModuleFailErrorOptions(module_.displayName, error));
                 if (!start) {
                     this.emit('startModuleFailed', module_);
                     continue;
@@ -185,7 +184,7 @@ export class ModuleManager extends TypedEmitter<ModuleManagerEvents> {
                 const script = recursiveDefaults<S|RecipleModule<S>|undefined>(resolveFile);
 
                 if (script instanceof RecipleModule) {
-                    if (!disableVersionCheck && !script.isSupported) throw new RecipleError(createUnsupportedModuleErrorOptions(script.displayName));
+                    if (!disableVersionCheck && !script.isSupported) throw new RecipleError(RecipleError.createUnsupportedModuleErrorOptions(script.displayName));
                     modules.push(script);
                     continue;
                 }
@@ -193,7 +192,7 @@ export class ModuleManager extends TypedEmitter<ModuleManagerEvents> {
                 RecipleModuleAssertions.validateModuleScript(script);
 
                 if (!disableVersionCheck && !normalizeArray([script.versions] as RestOrArray<string>)?.some(v => v === "latest" || semver.satisfies(this.client.version, v))) {
-                    throw new RecipleError(createUnsupportedModuleErrorOptions(filePath));
+                    throw new RecipleError(RecipleError.createUnsupportedModuleErrorOptions(filePath));
                 }
 
                 modules.push(
