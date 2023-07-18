@@ -47,6 +47,33 @@ if (existsSync(cwd)) {
 }
 
 const templatesRawJSON = await readFile(join(root, 'templates.json'), 'utf-8');
+const packageManagers: { label?: string; hint?: string; value: PackageManager|'none'; }[] = [
+    {
+        label: 'npm',
+        hint: 'Uses npm as package manager',
+        value: 'npm'
+    },
+    {
+        label: 'yarn',
+        hint: 'Uses yarn as package manager',
+        value: 'yarn'
+    },
+    {
+        label: 'pnpm',
+        hint: 'Uses pnpm as package manager',
+        value: 'pnpm'
+    },
+    {
+        label: 'none',
+        hint: 'Setup package manager later',
+        value: 'none'
+    }
+];
+
+const resolvedPackageManager = resolvePackageManager();
+let firstPackageManagerIndex = packageManagers.findIndex(p => resolvedPackageManager && resolvedPackageManager === p.value);
+    firstPackageManagerIndex = firstPackageManagerIndex === -1 ? packageManagers.length - 1 : firstPackageManagerIndex;
+
 const setup = await group({
     template: () => select({
         message: 'Which language would you like to use?',
@@ -64,31 +91,8 @@ const setup = await group({
     packageManager: () => select<{ label?: string; hint?: string; value: PackageManager|'none'; }[], PackageManager|'none'>({
         message: 'Select your preferred package manager',
         options: [
-            {
-                label: 'auto',
-                hint: `Use detected package manager: ${resolvePackageManager() || 'none'}`,
-                value: resolvePackageManager() || 'none'
-            },
-            {
-                label: 'npm',
-                hint: 'Uses npm as package manager',
-                value: 'npm'
-            },
-            {
-                label: 'yarn',
-                hint: 'Uses yarn as package manager',
-                value: 'yarn'
-            },
-            {
-                label: 'pnpm',
-                hint: 'Uses pnpm as package manager',
-                value: 'pnpm'
-            },
-            {
-                label: 'None',
-                hint: 'Setup package manager later',
-                value: 'none'
-            }
+            packageManagers[firstPackageManagerIndex],
+            ...packageManagers.filter((p, i) => i !== firstPackageManagerIndex)
         ]
     }),
 }, { onCancel: () => { cancel('Operation cancelled'); exit(1); } });
