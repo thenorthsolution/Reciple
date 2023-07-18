@@ -36,8 +36,8 @@
   ],
   "dependencies": {
     "@sapphire/shapeshift": "^3.9.2",
-    "fallout-utility": "^2.6.0",
-    "semver": "^7.5.3",
+    "fallout-utility": "^2.7.0",
+    "semver": "^7.5.4",
     "ts-mixer": "^6.0.2"
   },
   "devDependencies": {
