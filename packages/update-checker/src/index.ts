@@ -18,6 +18,7 @@ export interface UpdateData {
     updateType: UpdateType;
     currentVersion: string;
     updatedVersion: string;
+    latestVersion: string;
 }
 
 export async function fetchPackageData<T extends AbbreviatedMetadata = AbbreviatedMetadata>(pkg: string, options?: Options): Promise<T>;
@@ -40,6 +41,7 @@ export async function checkLatestUpdate(pkg: string, version: string, allowMajor
         data: updateData,
         currentVersion: currentSemver.format(),
         updatedVersion: latest.format(),
+        latestVersion: updateData['dist-tags'].latest,
         updateType: UpdateType.None
     };
 
