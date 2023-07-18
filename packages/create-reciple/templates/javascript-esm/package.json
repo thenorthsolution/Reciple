@@ -11,6 +11,7 @@
     "reciple": "RECIPLE"
   },
   "devDependencies": {
+    "@types/node": "TYPES_NODE",
     "nodemon": "NODEMON"
   }
 }

@@ -9,9 +9,10 @@ export const root = join(__dirname, '../../');
 export const packageJSON = JSON.parse(readFileSync(join(root, 'package.json'), 'utf-8'));
 
 export const packages = {
-    'TYPESCRIPT': '^5.0.2',
-    'RIMRAF': '^4.4.1',
-    'RECIPLE': packageJSON.devDependencies.reciple,
+    'TYPES_NODE': packageJSON.devDependencies['@types/node'],
+    'TYPESCRIPT': packageJSON.devDependencies['typescript'],
+    'RIMRAF': packageJSON.devDependencies['rimraf'],
+    'RECIPLE': packageJSON.devDependencies['reciple'],
     'DISCORDJS': packageJSON.devDependencies['discord.js'],
     'NODEMON': packageJSON.devDependencies['nodemon']
 };

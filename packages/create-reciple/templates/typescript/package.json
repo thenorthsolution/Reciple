@@ -12,7 +12,7 @@
     "reciple": "RECIPLE"
   },
   "devDependencies": {
-    "@types/node": "^18.15.3",
+    "@types/node": "TYPES_NODE",
     "nodemon": "NODEMON",
     "typescript": "TYPESCRIPT",
     "rimraf": "RIMRAF"
