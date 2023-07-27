@@ -7,12 +7,12 @@
     "example"
   ],
   "scripts": {
-    "clean": "npx rimraf ./packages/bin ./packages/dist ./node_modules/.bin",
-    "build": "npx lerna run build",
-    "watch": "npx tsc --watch --noEmit",
-    "test": "npx lerna run test",
-    "publish:dev": "npx lerna publish prerelease",
-    "docs": "npx lerna run docs"
+    "clean": "rimraf ./packages/bin ./packages/dist ./node_modules/.bin",
+    "build": "lerna run build",
+    "watch": "tsc --watch --noEmit",
+    "test": "lerna run test",
+    "publish:dev": "lerna publish prerelease",
+    "docs": "lerna run docs"
   },
   "devDependencies": {
     "@discordjs/docgen": "^0.12.1",
