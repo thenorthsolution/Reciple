@@ -13,17 +13,8 @@
     <a href="https://www.codefactor.io/repository/github/falloutstudios/reciple/overview/main">
         <img src="https://www.codefactor.io/repository/github/falloutstudios/reciple/badge/main">
     </a>
-    <br>
 </h3>
 
 ## About
 
-Reciple is a Discord.js command handler framework that provides extended features for developers.
-
-## Packages
-- [@reciple/actions](./packages/actions/)
-- [@reciple/client](./packages/client/)
-- [create-reciple](./packages/create-reciple/)
-- [reciple](./packages/reciple/)
-- [npm-loader](./packages/npm-loader)
-- [update-checker](./packages/update-checker)
+`@reciple/utils` utilities used by reciple modules

@@ -1,29 +1,27 @@
 {
-  "name": "@reciple/client",
-  "description": "Reciple client and builder classes",
-  "homepage": "https://reciple.js.org/docs/client",
+  "name": "@reciple/utils",
+  "description": "Utilities used by reciple modules",
   "license": "GPL-3.0",
-  "version": "7.8.1",
+  "version": "7.0.0",
   "main": "./dist/index.js",
   "module": "./dist/esm.mjs",
   "types": "./dist/index.d.ts",
   "keywords": [
     "reciple",
-    "discord.js",
-    "handler",
-    "client"
+    "utility"
   ],
   "repository": {
     "type": "git",
     "url": "https://github.com/FalloutStudios",
-    "directory": "packages/client"
+    "directory": "packages/utils"
   },
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/esm.mjs",
       "require": "./dist/index.js"
-    }
+    },
+    "./tsconfig.json": "./assets/tsconfig.json"
   },
   "scripts": {
     "clean": "npx rimraf ./dist",
@@ -34,21 +32,10 @@
     "dist",
     "README.md"
   ],
-  "dependencies": {
-    "@reciple/utils": "^7.0.0",
-    "@sapphire/shapeshift": "^3.9.2",
-    "fallout-utility": "^2.7.0",
-    "semver": "^7.5.4",
-    "ts-mixer": "^6.0.2"
-  },
-  "devDependencies": {
-    "@types/semver": "^7.5.0",
-    "discord.js": "^14.11.0"
-  },
-  "peerDependencies": {
-    "discord.js": "^14.9.0"
-  },
   "publishConfig": {
     "access": "public"
+  },
+  "dependencies": {
+    "fallout-utility": "^2.7.0"
   }
 }

@@ -1,3 +1,1 @@
-import { packageManagerPlaceholders } from './constants.js';
-
-export type PackageManager = keyof typeof packageManagerPlaceholders;
+export { PackageManager } from '@reciple/utils';
