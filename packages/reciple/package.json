@@ -41,7 +41,7 @@
     "@reciple/update-checker": "^7.2.1",
     "commander": "^11.0.0",
     "dotenv": "^16.3.1",
-    "fallout-utility": "^2.7.0",
+    "fallout-utility": "^2.7.1",
     "globby": "^13.2.1",
     "lodash.mergewith": "^4.6.2",
     "micromatch": "^4.0.5",

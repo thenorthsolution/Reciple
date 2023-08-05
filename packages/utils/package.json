@@ -37,6 +37,6 @@
   },
   "dependencies": {
     "@discordjs/collection": "^1.5.2",
-    "fallout-utility": "^2.7.0"
+    "fallout-utility": "^2.7.1"
   }
 }
