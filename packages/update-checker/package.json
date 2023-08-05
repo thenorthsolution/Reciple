@@ -2,7 +2,7 @@
   "name": "@reciple/update-checker",
   "description": "Check updates from npm registry",
   "license": "GPL-3.0",
-  "version": "7.2.1",
+  "version": "7.2.2",
   "main": "./dist/index.js",
   "module": "./dist/esm.mjs",
   "types": "./dist/index.d.ts",
