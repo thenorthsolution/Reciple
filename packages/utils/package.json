@@ -36,7 +36,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@discordjs/collection": "^1.5.1",
+    "@discordjs/collection": "^1.5.2",
     "fallout-utility": "^2.7.0"
   }
 }

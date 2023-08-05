@@ -29,8 +29,8 @@
     "prompts": "^2.4.2"
   },
   "devDependencies": {
-    "@types/node": "^20.4.2",
-    "discord.js": "^14.11.0",
+    "@types/node": "^20.4.8",
+    "discord.js": "^14.12.1",
     "nodemon": "^3.0.1",
     "reciple": "^7.9.1",
     "rimraf": "^5.0.1",

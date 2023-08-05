@@ -16,7 +16,7 @@
   },
   "devDependencies": {
     "@discordjs/docgen": "^0.12.1",
-    "@types/node": "^20.4.2",
+    "@types/node": "^20.4.8",
     "lerna": "^7.1.4",
     "rimraf": "^5.0.1",
     "ts-mixer": "^6.0.3",
