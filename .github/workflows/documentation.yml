@@ -110,4 +110,5 @@ jobs:
           git pull
           git add .
           git commit -m "Docs build for ${GITHUB_REF_TYPE} ${GITHUB_REF_NAME}: ${GITHUB_SHA}" || true
+          git pull
           git push
