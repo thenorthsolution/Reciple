@@ -184,7 +184,7 @@ export class CommandManager {
 
                 const commands = await this.client.application!.commands.set([...APIcommands.values()], guildId)
                     .then(cmds => {
-                        this.client.emit('recipleRegisterApplicationCommands', cmds);
+                        this.client.emit('recipleRegisterApplicationCommands', cmds, guildId);
                         return cmds;
                     })
                     .catch(err => this.client._throwError(err));
