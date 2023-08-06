@@ -163,7 +163,7 @@ export class CommandManager {
 
             for (const guildId of config.registerToGuilds ?? []) {
                 const commands = guildCommands.get(guildId) ?? guildCommands.set(guildId, new Set()).get(guildId)!;
-                [...contextMenuCommands, ...slashCommands, ...additionalApplicationCommands].forEach(c => commands.add(c));;
+                [...contextMenuCommands, ...slashCommands, ...additionalApplicationCommands].forEach(c => commands.add(c));
             }
         }
 
