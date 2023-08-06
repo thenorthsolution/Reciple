@@ -1,10 +1,11 @@
-import { ApplicationCommand, ApplicationCommandDataResolvable, ChatInputCommandInteraction, Collection, ContextMenuCommandInteraction, Message, RESTPostAPIApplicationCommandsJSONBody, RestOrArray, normalizeArray } from 'discord.js';
+import { ApplicationCommand, ApplicationCommandDataResolvable, ChatInputCommandInteraction, Collection, ContextMenuCommandInteraction, mergeDefault, Message, RESTPostAPIApplicationCommandsJSONBody, RestOrArray, normalizeArray } from 'discord.js';
 import { AnyCommandBuilder, AnyCommandData, AnyCommandExecuteData, AnyCommandPreconditionFunction, ApplicationCommandBuilder, CommandType } from '../../types/commands';
 import { AnySlashCommandBuilder, SlashCommandBuilder, SlashCommandPreconditionFunction, SlashCommandResolvable } from '../builders/SlashCommandBuilder';
 import { ContextMenuCommandBuilder, ContextMenuCommandPreconditionFunction, ContextMenuCommandResolvable } from '../builders/ContextMenuCommandBuilder';
 import { MessageCommandBuilder, MessageCommandPreconditionFunction, MessageCommandResovable } from '../builders/MessageCommandBuilder';
-import { validateCommand } from '../../utils/assertions/commands/assertions';
-import { RecipleConfigOptions } from '../../types/options';
+import { RecipleCommandsRegisterOptions } from '../../types/options';
+import { CommandAssertions } from '../assertions/CommandAssertions';
+import { BaseCommandBuilderData } from '../builders/BaseCommandBuilder';
 import { RecipleError } from '../errors/RecipleError';
 import { RecipleClient } from '../RecipleClient';
 
@@ -42,7 +43,7 @@ export class CommandManager {
     public add(...commands: RestOrArray<AnyCommandBuilder|AnyCommandData>): this {
         commands = normalizeArray(commands);
 
-        commands.forEach(command => validateCommand(command));
+        commands.forEach(command => CommandAssertions.validateCommand(command));
 
         for (const command of commands) {
             switch (command.commandType) {
@@ -127,84 +128,72 @@ export class CommandManager {
         }
     }
 
-    public async registerApplicationCommands(options?: { commands: Omit<RecipleConfigOptions['commands'], 'messageCommand'> } & Pick<RecipleConfigOptions, 'applicationCommandRegister'>): Promise<void> {
-        const commandConfig = {
-            contextMenuCommand: {
-                ...this.client.config.commands?.contextMenuCommand,
-                ...options?.commands
-            },
-            slashCommand: {
-                ...this.client.config.commands?.slashCommand,
-                ...options?.commands
-            },
-            additionalApplicationCommands: {
-                ...this.client.config.commands?.contextMenuCommand,
-                ...options?.commands
-            },
-            applicationRegister: {
-                ...this.client.config.applicationCommandRegister,
-                ...options?.applicationCommandRegister
+    public async registerApplicationCommands(options?: RecipleCommandsRegisterOptions): Promise<{ global: Collection<string, ApplicationCommand>; guilds: Collection<string, Collection<string, ApplicationCommand>> }> {
+        const store = { global: new Collection<string, ApplicationCommand>(), guilds: new Collection<string, Collection<string, ApplicationCommand>>() };
+        const config = mergeDefault({ ...this.client.config.commands, ...this.client.config.applicationCommandRegister }, options) as RecipleCommandsRegisterOptions;
+
+        const contextMenuCommands = this._parseApplicationCommands(options?.contextMenus?.commands ?? [...this.contextMenuCommands.values()]);
+        const slashCommands = this._parseApplicationCommands(options?.slashCommands?.commands ?? [...this.slashCommands.values()]);
+        const additionalApplicationCommands = this._parseApplicationCommands(options?.additionalApplicationCommands?.commands ?? [...this.additionalApplicationCommands]);
+
+        const globalCommands: ApplicationCommandDataResolvable[] = [];
+        const guildCommands: Collection<string, Set<ApplicationCommandDataResolvable>> = new Collection();
+
+        if (config.allowRegisterGlobally !== false) {
+            if (config.contextMenus?.registerCommands?.registerGlobally) globalCommands.push(...contextMenuCommands);
+            if (config.slashCommands?.registerCommands?.registerGlobally) globalCommands.push(...slashCommands);
+            if (config.additionalApplicationCommands?.registerCommands?.registerGlobally) globalCommands.push(...additionalApplicationCommands);
+        }
+
+        if (config.allowRegisterToGuilds ?? config.allowRegisterOnGuilds) {
+            for (const guildId of config.contextMenus?.registerCommands?.registerToGuilds ?? []) {
+                const commands = guildCommands.get(guildId) ?? guildCommands.set(guildId, new Set()).get(guildId)!;
+                contextMenuCommands.forEach(c => commands.add(c));
             }
-        };
 
-        if (commandConfig.applicationRegister?.enabled === false) return;
+            for (const guildId of config.slashCommands?.registerCommands?.registerToGuilds ?? []) {
+                const commands = guildCommands.get(guildId) ?? guildCommands.set(guildId, new Set()).get(guildId)!;
+                slashCommands.forEach(c => commands.add(c));
+            }
 
-        const globalCommands: RESTPostAPIApplicationCommandsJSONBody[] = [];
-        const guildCommands: Collection<string, RESTPostAPIApplicationCommandsJSONBody[]> = new Collection();
+            for (const guildId of config.additionalApplicationCommands?.registerCommands?.registerToGuilds ?? []) {
+                const commands = guildCommands.get(guildId) ?? guildCommands.set(guildId, new Set()).get(guildId)!;
+                additionalApplicationCommands.forEach(c => commands.add(c));
+            }
 
-        if (commandConfig.contextMenuCommand.registerCommands?.registerGlobally !== false) globalCommands.push(...this._parseApplicationCommands([...this.contextMenuCommands.values()]));
-        if (commandConfig.slashCommand.registerCommands?.registerGlobally !== false) globalCommands.push(...this._parseApplicationCommands([...this.slashCommands.values()]));
-        if (commandConfig.additionalApplicationCommands.registerCommands?.registerGlobally !== false) globalCommands.push(...this._parseApplicationCommands(this.additionalApplicationCommands));
+            for (const guildId of config.registerToGuilds ?? []) {
+                const commands = guildCommands.get(guildId) ?? guildCommands.set(guildId, new Set()).get(guildId)!;
+                [...contextMenuCommands, ...slashCommands, ...additionalApplicationCommands].forEach(c => commands.add(c));;
+            }
+        }
 
-        commandConfig.contextMenuCommand.registerCommands?.registerToGuilds.forEach(guildId => {
-            const data = guildCommands.get(guildId) ?? guildCommands.set(guildId, []).get(guildId);
+        if (config.allowRegisterGlobally !== false && (config.registerEmptyCommands || globalCommands.length)) {
+            const commands = await this.client.application!.commands.set(globalCommands)
+                .then(cmds => {
+                    this.client.emit('recipleRegisterApplicationCommands', cmds);
+                    return cmds;
+                })
+                .catch(err => this.client._throwError(err));
 
-            data?.push(...this._parseApplicationCommands([...this.contextMenuCommands.values()]));
-        });
+            if (commands) commands.forEach(c => store.global.set(c.id, c));
+        }
 
-        commandConfig.slashCommand.registerCommands?.registerToGuilds.forEach(guildId => {
-            const data = guildCommands.get(guildId) ?? guildCommands.set(guildId, []).get(guildId);
+        if (config.allowRegisterToGuilds ?? config.allowRegisterOnGuilds) {
+            for (const [guildId, APIcommands] of guildCommands) {
+                if (!config.registerEmptyCommands && !APIcommands.size) continue;
 
-            data?.push(...this._parseApplicationCommands([...this.slashCommands.values()]));
-        });
-
-        commandConfig.additionalApplicationCommands.registerCommands?.registerToGuilds.forEach(guildId => {
-            const data = guildCommands.get(guildId) ?? guildCommands.set(guildId, []).get(guildId);
-
-            data?.push(...this._parseApplicationCommands(this.additionalApplicationCommands));
-        });
-
-        commandConfig.applicationRegister.registerToGuilds?.forEach(guildId => {
-            const data = guildCommands.get(guildId) ?? guildCommands.set(guildId, []).get(guildId);
-
-            let commands = [...this._parseApplicationCommands([
-                    ...this.contextMenuCommands.values(),
-                    ...this.slashCommands.values(),
-                    ...this.additionalApplicationCommands
-                ])];
-
-                commands = commands.filter(c => !data?.some(d => d.name === c.name));
-
-            data?.push(...commands);
-        });
-
-        if (commandConfig.applicationRegister.allowRegisterGlobally !== false) {
-            if (commandConfig.applicationRegister.registerEmptyCommands || globalCommands.length) {
-                await this.client.application?.commands.set(globalCommands)
-                    .then(commands => this.client.emit('recipleRegisterApplicationCommands', commands))
+                const commands = await this.client.application!.commands.set([...APIcommands.values()], guildId)
+                    .then(cmds => {
+                        this.client.emit('recipleRegisterApplicationCommands', cmds);
+                        return cmds;
+                    })
                     .catch(err => this.client._throwError(err));
+
+                store.guilds.set(guildId, commands ?? new Collection());
             }
         }
 
-        if (commandConfig.applicationRegister.allowRegisterToGuilds || commandConfig.applicationRegister.allowRegisterOnGuilds) {
-            for (const [guildId, commands] of guildCommands) {
-                if (commandConfig.applicationRegister.registerEmptyCommands || commands.length) {
-                    await this.client.application?.commands.set(commands, guildId)
-                        .then(commands => this.client.emit('recipleRegisterApplicationCommands', commands, guildId))
-                        .catch(err => this.client._throwError(err));
-                }
-            }
-        }
+        return store;
     }
 
     public async execute(trigger: ContextMenuCommandInteraction|Message|ChatInputCommandInteraction): Promise<AnyCommandExecuteData|undefined> {
@@ -232,7 +221,14 @@ export class CommandManager {
     private _parseApplicationCommands(commands: (ApplicationCommandDataResolvable | ApplicationCommandBuilder)[]): RESTPostAPIApplicationCommandsJSONBody[] {
         return commands.map(cmd => {
             if ((cmd as ApplicationCommandBuilder)?.toJSON === undefined) return (<unknown>cmd) as RESTPostAPIApplicationCommandsJSONBody;
-            return (cmd as ApplicationCommandBuilder).toJSON();
+            const data = (cmd as ApplicationCommandBuilder).toJSON() as RESTPostAPIApplicationCommandsJSONBody & BaseCommandBuilderData;
+
+            data.requiredBotPermissions = undefined;
+            data.requiredMemberPermissions = undefined;
+            data.execute = undefined;
+            data.halt = undefined;
+
+            return data;
         });
     }
 }
