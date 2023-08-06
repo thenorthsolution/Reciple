@@ -156,14 +156,6 @@ client.once('ready', async () => {
     process.once('SIGBREAK', unloadModulesAndStopProcess);
     process.once('SIGUSR2', unloadModulesAndStopProcess);
 
-    await client.commands.registerApplicationCommands();
-
-    client.logger?.warn(`Logged in as ${kleur.bold().cyan(client.user.tag)} ${kleur.magenta('(' + client.user.id + ')')}`);
-
-    client.logger?.log(`Loaded ${client.commands.contextMenuCommands.size} context menu command(s)`);
-    client.logger?.log(`Loaded ${client.commands.messageCommands.size} message command(s)`);
-    client.logger?.log(`Loaded ${client.commands.slashCommands.size} slash command(s)`);
-
     client.on('interactionCreate', interaction => {
         if (interaction.isContextMenuCommand()) {
             ContextMenuCommandBuilder.execute(client, interaction);
@@ -175,6 +167,15 @@ client.once('ready', async () => {
     client.on('messageCreate', message => {
         MessageCommandBuilder.execute(client, message);
     });
+
+    await client.commands.registerApplicationCommands()
+        .catch(err => client.emit('recipleError', err));
+
+    client.logger?.warn(`Logged in as ${kleur.bold().cyan(client.user.tag)} ${kleur.magenta('(' + client.user.id + ')')}`);
+
+    client.logger?.log(`Loaded ${client.commands.contextMenuCommands.size} context menu command(s)`);
+    client.logger?.log(`Loaded ${client.commands.messageCommands.size} message command(s)`);
+    client.logger?.log(`Loaded ${client.commands.slashCommands.size} slash command(s)`);
 });
 
 client.logger?.debug(`Logging in...`);
