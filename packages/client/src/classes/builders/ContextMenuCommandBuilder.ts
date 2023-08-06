@@ -1,4 +1,4 @@
-import discordjs, { ApplicationCommandType, Awaitable, ContextMenuCommandInteraction, ContextMenuCommandType } from 'discord.js';
+import discordjs, { ApplicationCommandType, Awaitable, ContextMenuCommandInteraction, ContextMenuCommandType, RESTPostAPIContextMenuApplicationCommandsJSONBody } from 'discord.js';
 import { BaseInteractionBasedCommandData, CommandType } from '../../types/commands';
 import { BaseCommandBuilder, BaseCommandBuilderData } from './BaseCommandBuilder';
 import { CommandCooldownData } from '../managers/CommandCooldownManager';
@@ -63,6 +63,10 @@ export class ContextMenuCommandBuilder extends Mixin(discordjs.ContextMenuComman
         super.setRequiredMemberPermissions(permissions);
         this.setDefaultMemberPermissions(this.requiredMemberPermissions);
         return this;
+    }
+
+    public toJSON() {
+        return super.toJSON() as RESTPostAPIContextMenuApplicationCommandsJSONBody & BaseCommandBuilderData;
     }
 
     public override setType(type: ContextMenuCommandType|'User'|'Message'): this {

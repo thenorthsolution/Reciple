@@ -1,4 +1,4 @@
-import discordjs, { ApplicationCommandOptionType, Awaitable, ChatInputCommandInteraction, SharedSlashCommandOptions, SlashCommandAttachmentOption, SlashCommandBooleanOption, SlashCommandChannelOption, SlashCommandIntegerOption, SlashCommandMentionableOption, SlashCommandNumberOption, SlashCommandRoleOption, SlashCommandStringOption, SlashCommandSubcommandBuilder, SlashCommandSubcommandGroupBuilder, SlashCommandUserOption } from 'discord.js';
+import discordjs, { ApplicationCommandOptionType, Awaitable, ChatInputCommandInteraction, RESTPostAPIChatInputApplicationCommandsJSONBody, SharedSlashCommandOptions, SlashCommandAttachmentOption, SlashCommandBooleanOption, SlashCommandChannelOption, SlashCommandIntegerOption, SlashCommandMentionableOption, SlashCommandNumberOption, SlashCommandRoleOption, SlashCommandStringOption, SlashCommandSubcommandBuilder, SlashCommandSubcommandGroupBuilder, SlashCommandUserOption } from 'discord.js';
 import { AnySlashCommandOptionBuilder, AnySlashCommandOptionData, SlashCommandOptionResolvable, SlashCommandSubcommandOptionsOnlyBuilder, SlashCommandSubcommandOptionsOnlyData, SlashCommandSubcommandsOnlyResolvable } from '../../types/slashCommandOptions';
 import { BaseInteractionBasedCommandData, CommandType } from '../../types/commands';
 import { BaseCommandBuilder, BaseCommandBuilderData } from './BaseCommandBuilder';
@@ -110,6 +110,10 @@ export class SlashCommandBuilder extends Mixin(discordjs.SlashCommandBuilder, Ba
         super.setRequiredMemberPermissions(permissions);
         this.setDefaultMemberPermissions(this.requiredMemberPermissions);
         return this;
+    }
+
+    public toJSON() {
+        return super.toJSON() as RESTPostAPIChatInputApplicationCommandsJSONBody & BaseCommandBuilderData;
     }
 
     public static addOption<Builder extends SharedSlashCommandOptions>(builder: Builder, option: AnySlashCommandOptionBuilder|SlashCommandSubcommandOptionsOnlyBuilder): Builder {
