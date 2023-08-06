@@ -168,8 +168,7 @@ client.once('ready', async () => {
         MessageCommandBuilder.execute(client, message);
     });
 
-    await client.commands.registerApplicationCommands()
-        .catch(err => client.emit('recipleError', err));
+    await client.commands.registerApplicationCommands();
 
     client.logger?.warn(`Logged in as ${kleur.bold().cyan(client.user.tag)} ${kleur.magenta('(' + client.user.id + ')')}`);
 
