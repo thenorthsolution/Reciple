@@ -89,9 +89,11 @@ logger?.debug(`Failed to start (${failedToStartModules}) modules.`);
 
 client.once('ready', async () => {
     if (!client.isReady()) {
-        client.logger?.error(`Client did not start properly!`);
+        logger?.error(`Client did not start properly!`);
         return process.exit(1);
     }
+
+    logger?.debug(`Client is ready!`);
 
     process.removeListener('uncaughtException', processErrorHandler);
     process.removeListener('unhandledRejection', processErrorHandler);
@@ -116,14 +118,14 @@ client.once('ready', async () => {
 
     const unloaded = client.modules.cache.sweep(m => !loadedModules.some(s => s.id == m.id));
 
-    client.logger?.debug(`Failed to load (${unloaded}) modules.`);
+    logger?.debug(`Failed to load (${unloaded}) modules.`);
 
     let stopping = false;
 
     const unloadModulesAndStopProcess = async (signal: NodeJS.Signals) => {
         if (stopping) return;
 
-        client.logger?.debug(`Received exit signal: ${signal}`);
+        logger?.debug(`Received exit signal: ${signal}`);
 
         stopping = true;
 
@@ -138,8 +140,8 @@ client.once('ready', async () => {
 
         const signalString = signal === 'SIGINT' ? 'keyboard interrupt' : signal === 'SIGTERM' ? 'terminate' : String(signal);
 
-        client.logger?.warn(`Process exited: ${kleur.yellow(signalString)}`);
-        client.logger?.closeWriteStream();
+        logger?.warn(`Process exited: ${kleur.yellow(signalString)}`);
+        logger?.closeWriteStream();
 
         await setTimeoutAsync(10);
         process.kill(process.pid, signal);
@@ -170,15 +172,15 @@ client.once('ready', async () => {
 
     await client.commands.registerApplicationCommands();
 
-    client.logger?.warn(`Logged in as ${kleur.bold().cyan(client.user.tag)} ${kleur.magenta('(' + client.user.id + ')')}`);
+    logger?.warn(`Logged in as ${kleur.bold().cyan(client.user.tag)} ${kleur.magenta('(' + client.user.id + ')')}`);
 
-    client.logger?.log(`Loaded ${client.commands.contextMenuCommands.size} context menu command(s)`);
-    client.logger?.log(`Loaded ${client.commands.messageCommands.size} message command(s)`);
-    client.logger?.log(`Loaded ${client.commands.slashCommands.size} slash command(s)`);
+    logger?.log(`Loaded ${client.commands.contextMenuCommands.size} context menu command(s)`);
+    logger?.log(`Loaded ${client.commands.messageCommands.size} message command(s)`);
+    logger?.log(`Loaded ${client.commands.slashCommands.size} slash command(s)`);
 });
 
-client.logger?.debug(`Logging in...`);
+logger?.debug(`Logging in...`);
 
 await client.login(config.token)
-    .then(() => client.logger?.debug(`Login successful`))
-    .catch(err => client.logger?.error(err));
+    .then(() => logger?.debug(`Login successful`))
+    .catch(err => logger?.error(err));
