@@ -182,5 +182,4 @@ client.once('ready', async () => {
 logger?.debug(`Logging in...`);
 
 await client.login(config.token)
-    .then(() => logger?.debug(`Login successful`))
-    .catch(err => logger?.error(err));
+    .then(() => logger?.debug(`Login successful`));

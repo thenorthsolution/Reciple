@@ -1,5 +1,4 @@
 import { Logger, LoggerLevel, PartialDeep, kleur } from 'fallout-utility';
-import { ApplicationCommand, Collection } from 'discord.js';
 import { IConfig } from '../classes/Config';
 import { RecipleClient } from '../';
 import path from 'node:path';
@@ -69,5 +68,5 @@ export function eventLogger(client: RecipleClient): void {
     client.modules.on('postUnloadModule', (module_) => client.logger?.log(`Unloaded module ${kleur.cyan(quoteString(module_.displayName))}`));
     client.modules.on('unloadModuleError', (module_, err) => client.logger?.error(`An error occured while unloading module ${kleur.yellow(quoteString(module_.displayName))}:`, err));
 
-    client.on('recipleRegisterApplicationCommands', (commands: Collection<string, ApplicationCommand>, guild) => client.logger?.log(`Registered (${commands?.size || 0}) application commands ${guild ? 'to ' + guild : 'globally'}`));
+    client.on('recipleRegisterApplicationCommands', (commands, guild) => client.logger?.log(`Registered (${commands?.size || 0}) application commands ${guild ? 'to ' + guild : 'globally'}`));
 }
