@@ -2,7 +2,7 @@
   "name": "@reciple/npm-loader",
   "description": "Load Reciple modules from node_modules",
   "license": "GPL-3.0",
-  "version": "7.4.4",
+  "version": "7.4.5",
   "main": "./dist/module.js",
   "module": "./dist/module.mjs",
   "types": "./dist/module.d.ts",
@@ -34,7 +34,7 @@
     "README.md"
   ],
   "devDependencies": {
-    "@reciple/client": "^7.8.4"
+    "@reciple/client": "^7.8.5"
   },
   "peerDependencies": {
     "@reciple/client": "^7.5.4"
