@@ -130,6 +130,8 @@ export class CommandManager {
 
     public async registerApplicationCommands(options?: RecipleCommandsRegisterOptions): Promise<{ global: Collection<string, ApplicationCommand>; guilds: Collection<string, Collection<string, ApplicationCommand>> }> {
         const store = { global: new Collection<string, ApplicationCommand>(), guilds: new Collection<string, Collection<string, ApplicationCommand>>() };
+        if (options?.enabled === false) return store;
+
         const config = mergeDefault({ ...this.client.config.commands, ...this.client.config.applicationCommandRegister }, options) as RecipleCommandsRegisterOptions;
 
         const contextMenuCommands = this._parseApplicationCommands(options?.contextMenus?.commands ?? [...this.contextMenuCommands.values()]);
