@@ -1,0 +1,48 @@
+{
+  "name": "@reciple/docgen",
+  "description": "Parses typescript files and generate json output",
+  "license": "GPL-3.0",
+  "version": "7.0.0",
+  "main": "./dist/index.js",
+  "module": "./dist/esm.mjs",
+  "types": "./dist/index.d.ts",
+  "bin": {
+    "reciple-docgen": "./dist/bin.mjs"
+  },
+  "keywords": [
+    "reciple",
+    "discord.js",
+    "handler",
+    "client"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/FalloutStudios",
+    "directory": "packages/npm-loader"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/esm.mjs",
+      "require": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "clean": "npx rimraf ./dist",
+    "build": "npm run clean && npx tsc",
+    "docs": "npx reciple-docgen -i ./src/index.ts -c ./docs/custom.json -o ./docs/docs.json"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@discordjs/collection": "^1.5.2",
+    "commander": "^11.0.0",
+    "typedoc": "^0.24.8",
+    "typedoc-json-parser": "^8.2.0"
+  }
+}
