@@ -30,7 +30,7 @@
   "scripts": {
     "clean": "npx rimraf ./dist",
     "build": "npm run clean && npx tsc",
-    "docs": "npx reciple-docgen -i ./src/index.ts -o ./docs/docs.json"
+    "docs": "node ./dist/bin.mjs -i ./src/index.ts -o ./docs/docs.json"
   },
   "files": [
     "dist",
