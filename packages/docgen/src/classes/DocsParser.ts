@@ -10,6 +10,7 @@ export interface DocsParserOptions extends Omit<ProjectParser.Options, 'data'> {
     files: string[];
     optionsReader?: OptionsReader;
     custom?: string;
+    readme?: string;
 }
 
 export class DocsParser {
@@ -47,7 +48,11 @@ export class DocsParser {
 
         this._project = this.typedoc.convert() ?? null;
         this._data = this._project && this.typedoc.serializer.projectToObject(this._project, process.cwd());
-        this._parser = this._data && new ProjectParser({ ...this.options, data: this._data });
+        this._parser = this._data && new ProjectParser({
+            ...this.options,
+            data: this._data,
+            readme: this.options.readme ? await readFile(this.options.readme, 'utf-8') : undefined
+        });
 
         const customFile = this.options.custom ? resolve(this.options.custom) : null;
         const customDir = customFile && dirname(customFile);
