@@ -31,6 +31,9 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Build Docgen
+        run: npm run build -w @reciple/docgen
+
       - name: Build docs.json
         run: npm run docs
 
