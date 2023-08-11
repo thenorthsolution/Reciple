@@ -80,7 +80,7 @@ jobs:
       - name: Checkout docs repository
         uses: actions/checkout@v3
         with:
-          ref: 'docs'
+          ref: 'tags'
           path: 'out'
 
       - name: Move docs to correct directory (Tag)
