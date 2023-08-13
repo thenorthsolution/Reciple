@@ -50,7 +50,7 @@ jobs:
       max-parallel: 1
       fail-fast: false
       matrix:
-        package: ['reciple', 'client', 'utils', 'npm-loader', 'update-checker']
+        package: ['reciple', 'client', 'utils', 'npm-loader', 'update-checker', 'docgen']
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
