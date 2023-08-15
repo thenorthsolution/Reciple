@@ -142,9 +142,9 @@ export class CommandManager {
         const guildCommands: Collection<string, Set<ApplicationCommandDataResolvable>> = new Collection();
 
         if (config.allowRegisterGlobally !== false) {
-            if (config.contextMenus?.registerCommands?.registerGlobally) globalCommands.push(...contextMenuCommands);
-            if (config.slashCommands?.registerCommands?.registerGlobally) globalCommands.push(...slashCommands);
-            if (config.additionalApplicationCommands?.registerCommands?.registerGlobally) globalCommands.push(...additionalApplicationCommands);
+            if (config.contextMenus?.registerCommands?.registerGlobally !== false) globalCommands.push(...contextMenuCommands);
+            if (config.slashCommands?.registerCommands?.registerGlobally !== false) globalCommands.push(...slashCommands);
+            if (config.additionalApplicationCommands?.registerCommands?.registerGlobally !== false) globalCommands.push(...additionalApplicationCommands);
         }
 
         if (config.allowRegisterToGuilds ?? config.allowRegisterOnGuilds) {
