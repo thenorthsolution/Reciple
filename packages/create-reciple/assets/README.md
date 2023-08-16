@@ -1,6 +1,6 @@
-# Reciple
+## Reciple App
 
-Reciple is a discord.js command handler framework that just works.
+This application is generated from [`create-reciple`](https://npm.im/create-reciple) templates. Reciple is a [Discord.js](https://discord.js.org) command handler framework that just works.
 
 ## Reciple Modules
 

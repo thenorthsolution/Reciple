@@ -4,11 +4,14 @@
 </h1>
 
 <h3 align="center">
+    <a href="https://discord.gg/VzP8qW7Z8d">
+        <img src="https://img.shields.io/discord/993105237000855592?color=5865F2&logo=discord&logoColor=white">
+    </a>
     <a href="https://npmjs.org/package/reciple">
-        <img src="https://img.shields.io/npm/v/reciple?label=latest%20npm%20release%20">
+        <img src="https://img.shields.io/npm/v/reciple?label=npm">
     </a>
     <a href="https://github.com/FalloutStudios/Reciple/blob/main/LICENSE">
-        <img src="https://img.shields.io/github/license/FalloutStudios/Reciple">
+        <img src="https://img.shields.io/npm/dt/reciple.svg?maxAge=3600">
     </a>
     <a href="https://www.codefactor.io/repository/github/falloutstudios/reciple/overview/main">
         <img src="https://www.codefactor.io/repository/github/falloutstudios/reciple/badge/main">
@@ -17,4 +20,28 @@
 
 ## About
 
-`@reciple/utils` utilities used by reciple modules
+`@reciple/utils` global utilities used by reciple modules
+
+## Usage
+
+```js
+import { parseMessageURL, resolveFromCachedCollection } from '@reciple/utils';
+import { RecipleClient } from '@reciple/client';
+
+const client = new RecipleClient({
+    recipleOptions: {
+        token: process.env.TOKEN
+    },
+    intents: []
+});
+
+const message = parseMessageURL('https://discord.com/channels/0000000000000000000/0000000000000000000/0000000000000000000');
+
+if (message.guildId) {
+    const guild = await resolveFromCachedCollection(message.guildId, client.guilds);
+    const channel = await resolveFromCachedCollection(message.channelId, guild.channels);
+    const message = await resolveFromCachedCollection(message.messageId, channel.messages);
+
+    await message.reply('yeah');
+}
+```

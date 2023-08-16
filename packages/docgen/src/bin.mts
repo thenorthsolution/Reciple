@@ -19,6 +19,7 @@ const packageJson = JSON.parse(await readFile(join(dirname(fileURLToPath(import.
 
 const cli = new Command()
     .version(packageJson.version)
+    .name('reciple-docgen')
     .option('-i, --input <string...>', 'Source files to parse docs in')
 	.option('-c, --custom [string]', 'Custom docs pages file to use')
     .option('-r, --root [string]', 'Project root directory', '.')
