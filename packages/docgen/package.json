@@ -1,32 +1,36 @@
 {
-  "name": "@reciple/utils",
-  "description": "Utilities used by reciple modules",
+  "name": "@reciple/docgen",
+  "description": "Parses typescript files and generate json output",
   "license": "GPL-3.0",
-  "version": "7.1.2",
+  "version": "7.0.0",
   "main": "./dist/index.js",
   "module": "./dist/esm.mjs",
   "types": "./dist/index.d.ts",
+  "bin": {
+    "reciple-docgen": "./dist/bin.mjs"
+  },
   "keywords": [
     "reciple",
-    "utility"
+    "discord.js",
+    "handler",
+    "client"
   ],
   "repository": {
     "type": "git",
     "url": "https://github.com/FalloutStudios",
-    "directory": "packages/utils"
+    "directory": "packages/npm-loader"
   },
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/esm.mjs",
       "require": "./dist/index.js"
-    },
-    "./tsconfig.json": "./assets/tsconfig.json"
+    }
   },
   "scripts": {
     "clean": "npx rimraf ./dist",
     "build": "npm run clean && npx tsc",
-    "docs": "node ../docgen/dist/bin.mjs -i ./src/index.ts -o ./docs/docs.json"
+    "docs": "node ./dist/bin.mjs -i ./src/index.ts -c ./docs/custom.json -o ./docs/docs.json"
   },
   "files": [
     "dist",
@@ -37,6 +41,8 @@
   },
   "dependencies": {
     "@discordjs/collection": "^1.5.2",
-    "fallout-utility": "^2.7.1"
+    "commander": "^11.0.0",
+    "typedoc": "^0.24.8",
+    "typedoc-json-parser": "^8.2.0"
   }
 }

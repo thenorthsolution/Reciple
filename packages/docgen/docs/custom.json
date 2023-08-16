@@ -1,0 +1,32 @@
+[
+  {
+    "category": "General",
+    "files": [
+      {
+        "id": "readme",
+        "name": "README.md",
+        "file": "../README.md"
+      },
+      {
+        "id": "client-readme",
+        "name": "Client README.md",
+        "file": "../../client/README.md"
+      }
+    ]
+  },
+  {
+    "category": "Test",
+    "files": [
+      {
+        "id": "reciple-readme",
+        "name": "Reciple README.md",
+        "file": "../../reciple/README.md"
+      },
+      {
+        "id": "utils-readme",
+        "name": "Utils README.md",
+        "file": "../../utils/README.md"
+      }
+    ]
+  }
+]

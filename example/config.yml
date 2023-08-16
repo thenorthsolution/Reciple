@@ -94,6 +94,8 @@ modules:
   # If false, the client will still load unsupported modules
   disableModuleVersionCheck: false
 
+checkForUpdates: false
+
 # Discord.js client options
 client:
   intents:

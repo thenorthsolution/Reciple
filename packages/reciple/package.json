@@ -29,7 +29,7 @@
   "scripts": {
     "clean": "npx rimraf ./bin",
     "build": "npm run clean && npx tsc",
-    "docs": "npx docgen -i ./src/exports.ts -c ./docs/custom.json -o ./docs/docs.json --typescript"
+    "docs": "node ../docgen/dist/bin.mjs -i ./src/exports.ts -o ./docs/docs.json"
   },
   "files": [
     "bin",
