@@ -18,3 +18,9 @@
 ## About
 
 `@reciple/docgen` parses typescript files generates json file for documentation to parse
+
+## Usage
+
+```sh
+npx reciple-docgen -i ./src/index.ts -c ./docs/custom.json -o ./docs/docs.json
+```
