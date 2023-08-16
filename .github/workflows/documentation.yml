@@ -54,6 +54,7 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+        if: ${{github.ref_type != 'tag' || contains(matrix.package, github.ref_name) }}
         with:
           ref: ${{ github.ref_name || '' }}
 
