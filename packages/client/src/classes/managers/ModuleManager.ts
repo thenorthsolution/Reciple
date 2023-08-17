@@ -219,6 +219,10 @@ export class ModuleManager extends TypedEmitter<ModuleManagerEvents> {
         }
     }
 
+    public toJSON() {
+        return this.cache.map(m => m.toJSON());
+    }
+
     // TODO: Remove deprecated
 
     /**

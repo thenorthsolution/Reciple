@@ -8,6 +8,7 @@ import { RestOrArray, normalizeArray } from 'discord.js';
 import { ValidationError } from '@sapphire/shapeshift';
 import { randomUUID } from 'node:crypto';
 import semver from 'semver';
+import { isJSONEncodable } from 'fallout-utility';
 
 export interface RecipleModuleScript {
     /**
@@ -154,5 +155,14 @@ export class RecipleModule<S extends RecipleModuleScript = RecipleModuleScript> 
 
     public toString(): string {
         return this.displayName;
+    }
+
+    public toJSON() {
+        return {
+            id: this.id,
+            filePath: this.filePath,
+            versions: this.versions,
+            commands: this.commands.map(c => isJSONEncodable(c) ? c.toJSON() : c)
+        };
     }
 }

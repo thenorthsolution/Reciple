@@ -8,6 +8,7 @@ import { CommandAssertions } from '../assertions/CommandAssertions';
 import { BaseCommandBuilderData } from '../builders/BaseCommandBuilder';
 import { RecipleError } from '../errors/RecipleError';
 import { RecipleClient } from '../RecipleClient';
+import { isJSONEncodable } from 'fallout-utility';
 
 export interface CommandManagerOptions {
     client: RecipleClient;
@@ -232,5 +233,14 @@ export class CommandManager {
 
             return data;
         });
+    }
+
+    public toJSON() {
+        return {
+            contextMenuCommands: this.contextMenuCommands.map(c => c.toJSON()),
+            messageCommands: this.messageCommands.map(c => c.toJSON()),
+            slashCommands: this.slashCommands.map(c => c.toJSON()),
+            additionalApplicationCommands: this.additionalApplicationCommands.map(c => isJSONEncodable(c) ? c.toJSON() : c)
+        };
     }
 }
