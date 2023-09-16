@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "start": "reciple",
-    "dev": "nodemon --ext js,mjs,cjs,json,yml,yaml --exec \"SCRIPT_RUN start\" --signal SIGHUP"
+    "dev": "nodemon --ext js,mjs,cjs,json,yml,yaml --exec \"reciple\" --signal SIGHUP"
   },
   "dependencies": {
     "discord.js": "DISCORDJS",
