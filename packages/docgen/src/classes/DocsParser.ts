@@ -18,7 +18,7 @@ export class DocsParser {
     private _data: JSONOutput.ProjectReflection|null = null;
     private _parser: ProjectParser|null = null;
 
-    public typedoc!: Application;
+    public typedoc?: Application;
 
     readonly customPages: Collection<string, Collection<string, Docs['customPages'][0]['files'][0]>> = new Collection();
 
@@ -34,9 +34,7 @@ export class DocsParser {
     get typeAliases() { return this.parser?.typeAliases ?? []; }
     get variables() { return this.parser?.variables ?? []; }
 
-    constructor(private options: DocsParserOptions) {
-        this.typedoc.options.addReader(options.optionsReader ?? new TSConfigReader());
-    }
+    constructor(private options: DocsParserOptions) {}
 
     public async parse(): Promise<Docs|undefined> {
         this.typedoc = await Application.bootstrap({
@@ -46,6 +44,8 @@ export class DocsParser {
                 rootDir: process.cwd()
             }
         });
+
+        this.typedoc?.options.addReader(this.options.optionsReader ?? new TSConfigReader());
 
         this._project = await this.typedoc.convert() ?? null;
         this._data = this._project && this.typedoc.serializer.projectToObject(this._project, process.cwd());
