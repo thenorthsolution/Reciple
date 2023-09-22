@@ -18,7 +18,8 @@ export class DocsParser {
     private _data: JSONOutput.ProjectReflection|null = null;
     private _parser: ProjectParser|null = null;
 
-    readonly typedoc = new Application();
+    public typedoc!: Application;
+
     readonly customPages: Collection<string, Collection<string, Docs['customPages'][0]['files'][0]>> = new Collection();
 
     get project() { return this._project; }
@@ -38,7 +39,7 @@ export class DocsParser {
     }
 
     public async parse(): Promise<Docs|undefined> {
-        this.typedoc.bootstrap({
+        this.typedoc = await Application.bootstrap({
             entryPoints: this.options.files,
             skipErrorChecking: true,
             compilerOptions: {
@@ -46,7 +47,7 @@ export class DocsParser {
             }
         });
 
-        this._project = this.typedoc.convert() ?? null;
+        this._project = await this.typedoc.convert() ?? null;
         this._data = this._project && this.typedoc.serializer.projectToObject(this._project, process.cwd());
         this._parser = this._data && new ProjectParser({
             ...this.options,
