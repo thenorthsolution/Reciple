@@ -29,7 +29,7 @@ export interface CommandCooldownData {
 }
 
 export class CommandCooldownManager extends Array<CommandCooldownData> {
-    private _sweeperTimer?: NodeJS.Timer;
+    private _sweeperTimer?: NodeJS.Timeout;
 
     constructor(...data: RestOrArray<CommandCooldownData>) {
         super(...normalizeArray(data));
@@ -84,7 +84,7 @@ export class CommandCooldownManager extends Array<CommandCooldownData> {
     }
 
     public setSweeperTimer(timer?: number|null): void {
-        if (this._sweeperTimer) {
+        if (this._sweeperTimer !== undefined) {
             clearInterval(this._sweeperTimer);
             this._sweeperTimer = undefined;
         }
