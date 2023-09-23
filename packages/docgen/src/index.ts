@@ -1,2 +1,2 @@
-export * from './classes/DocsParser';
-export * from './types/docs';
+export * from './classes/DocsParser.js';
+export * from './types/docs.js';

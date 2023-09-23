@@ -1,4 +1,4 @@
-import { ProjectParser } from 'typedoc-json-parser';
+import type { ProjectParser } from 'typedoc-json-parser';
 
 export interface Docs extends ProjectParser.Json {
     parsedAt: number;

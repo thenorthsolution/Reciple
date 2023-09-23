@@ -3,11 +3,11 @@
   "description": "Parses typescript files and generate json output",
   "license": "GPL-3.0",
   "version": "7.0.0",
-  "main": "./dist/index.js",
-  "module": "./dist/esm.mjs",
+  "type": "module",
+  "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "bin": {
-    "reciple-docgen": "./dist/bin.mjs"
+    "reciple-docgen": "./dist/bin.js"
   },
   "keywords": [
     "reciple",
@@ -23,14 +23,13 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/esm.mjs",
-      "require": "./dist/index.js"
+      "import": "./dist/index.js"
     }
   },
   "scripts": {
     "clean": "npx rimraf ./dist",
     "build": "npm run clean && npx tsc",
-    "docs": "node ./dist/bin.mjs -i ./src/index.ts -o ./docs/docs.json"
+    "docs": "node ./dist/bin.js -i ./src/index.ts -o ./docs/docs.json"
   },
   "files": [
     "dist",
