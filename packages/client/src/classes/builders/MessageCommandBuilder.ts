@@ -18,7 +18,7 @@ export interface MessageCommandExecuteData<Options extends boolean = true> {
     /**
      * The current bot client. This is the client that the command is being executed on.
      */
-    client: RecipleClient;
+    client: RecipleClient<true>;
     /**
      * The command message. This is the message that triggered the command.
      */

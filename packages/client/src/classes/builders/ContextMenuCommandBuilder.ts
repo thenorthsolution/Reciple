@@ -15,7 +15,7 @@ export interface ContextMenuCommandExecuteData {
     /**
      * The current bot client. This is the client that the command is being executed on.
      */
-    client: RecipleClient;
+    client: RecipleClient<true>;
     /**
      * The command interaction. This is the interaction that triggered the command.
      */
