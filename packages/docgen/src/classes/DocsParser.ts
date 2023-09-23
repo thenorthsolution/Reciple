@@ -1,5 +1,5 @@
 import { Application, JSONOutput, OptionsReader, ProjectReflection, TSConfigReader } from 'typedoc';
-import { ProjectParser } from 'typedoc-json-parser';
+import type { ProjectParser } from 'typedoc-json-parser';
 import { Docs, DocsParserCustomPagesData } from '../types/docs';
 import { dirname, join, resolve } from 'node:path';
 import { existsSync } from 'node:fs';
@@ -18,7 +18,8 @@ export class DocsParser {
     private _data: JSONOutput.ProjectReflection|null = null;
     private _parser: ProjectParser|null = null;
 
-    readonly typedoc: Application = new Application();
+    public typedoc?: Application;
+
     readonly customPages: Collection<string, Collection<string, Docs['customPages'][0]['files'][0]>> = new Collection();
 
     get project() { return this._project; }
@@ -36,7 +37,9 @@ export class DocsParser {
     constructor(private options: DocsParserOptions) {}
 
     public async parse(): Promise<Docs|undefined> {
-        this.typedoc.bootstrap({
+        const ProjectParser = (await import('typedoc-json-parser')).ProjectParser;
+
+        this.typedoc = await Application.bootstrap({
             entryPoints: this.options.files,
             skipErrorChecking: true,
             compilerOptions: {
@@ -46,7 +49,7 @@ export class DocsParser {
 
         this.typedoc?.options.addReader(this.options.optionsReader ?? new TSConfigReader());
 
-        this._project = this.typedoc.convert() ?? null;
+        this._project = await this.typedoc.convert() ?? null;
         this._data = this._project && this.typedoc.serializer.projectToObject(this._project, process.cwd());
         this._parser = this._data && new ProjectParser({
             ...this.options,
