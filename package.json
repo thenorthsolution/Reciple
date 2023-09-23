@@ -17,6 +17,7 @@
   "devDependencies": {
     "@types/node": "^20.4.8",
     "lerna": "^7.3.0",
+    "nx-cloud": "^16.4.0",
     "rimraf": "^5.0.1",
     "ts-mixer": "^6.0.3",
     "typescript": "^5.2.2"
