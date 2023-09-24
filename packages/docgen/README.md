@@ -20,7 +20,7 @@
 
 ## About
 
-`@reciple/docgen` parses typescript files generates json file for documentation to parse
+`@reciple/docgen` parses Typescript file to generate json file for documentation
 
 ## Usage
 
