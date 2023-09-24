@@ -3,7 +3,7 @@ import { ContextMenuCommandBuilder, ContextMenuCommandExecuteData } from './buil
 import { MessageCommandBuilder, MessageCommandExecuteData } from './builders/MessageCommandBuilder';
 import { SlashCommandBuilder, SlashCommandExecuteData } from './builders/SlashCommandBuilder';
 import { CommandAssertions } from './assertions/CommandAssertions';
-import { RecipleClient } from '../classes/RecipleClient';
+import { RecipleClient } from './RecipleClient';
 import { RestOrArray, normalizeArray } from 'discord.js';
 import { ValidationError } from '@sapphire/shapeshift';
 import { randomUUID } from 'node:crypto';

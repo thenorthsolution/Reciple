@@ -1,6 +1,6 @@
 {
-  "name": "@reciple/client",
-  "description": "Reciple client and builder classes",
+  "name": "@reciple/core",
+  "description": "Reciple core implementations",
   "homepage": "https://reciple.js.org/docs/client",
   "license": "GPL-3.0",
   "version": "7.8.7",
@@ -16,7 +16,7 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/FalloutStudios",
-    "directory": "packages/client"
+    "directory": "packages/core"
   },
   "exports": {
     ".": {

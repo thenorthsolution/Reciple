@@ -1,6 +1,6 @@
 import { AnyCommandBuilder, AnyCommandData, AnyCommandExecuteFunction, CommandType } from '../../types/commands';
 import { commandCooldownPredicate, permissionResolvablePredicate } from '../../utils/predicates';
-import { BaseCommandBuilderData } from '../../classes/builders/BaseCommandBuilder';
+import { BaseCommandBuilderData } from '../builders/BaseCommandBuilder';
 import { PermissionResolvable, isValidationEnabled } from 'discord.js';
 import { s } from '@sapphire/shapeshift';
 
