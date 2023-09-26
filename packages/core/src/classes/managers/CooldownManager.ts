@@ -36,12 +36,16 @@ export class CooldownManager extends DataManager<Cooldown> {
         });
     }
 
-    public setCooldownSweeper(options?: CooldownSweeperOptions): NodeJS.Timeout {
+    public setCooldownSweeper(options: CooldownSweeperOptions): NodeJS.Timeout {
         if (this._sweeper) clearInterval(this._sweeper);
 
         return this._sweeper = setInterval(
             () => this._cache.sweep(c => c.isEnded() || (!options?.maxAgeMs || (Date.now() - c.createdAt.getTime()) >= options.maxAgeMs) || (!options.filter || options.filter(c))),
-            options?.timer
+            options.timer
         ).unref();
+    }
+
+    public toJSON(): CooldownData[] {
+        return this.cache.map(c => c.toJSON());
     }
 }
