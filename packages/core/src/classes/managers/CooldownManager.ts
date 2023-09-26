@@ -28,6 +28,7 @@ export class CooldownManager extends DataManager<Cooldown> {
         return this.cache.find(d => {
             if (data.userId && d.userId !== data.userId) return false;
             if (data.channelId && d.channelId !== data.channelId) return false;
+            if (data.guildId && d.guildId !== data.guildId) return false;
             if (data.commandName && d.commandName !== data.commandName) return false;
             if (data.commandType && d.commandType !== data.commandType) return false;
 
