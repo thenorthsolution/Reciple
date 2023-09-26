@@ -2,6 +2,8 @@ import { AnyCommandExecuteFunction, AnyCommandHaltFunction } from '../../types/s
 import { PermissionResolvable, PermissionsBitField, RestOrArray, normalizeArray } from 'discord.js';
 import { CommandType } from '../../types/constants';
 import { BaseCommandValidators } from '../validators/BaseCommandValidators';
+import { ContextMenuCommandBuilder } from './ContextMenuCommandBuilder';
+import { MessageCommandBuilder } from './MessageCommandBuilder';
 
 export interface BaseCommandBuilderData {
     command_type: CommandType;
@@ -75,15 +77,27 @@ export abstract class BaseCommandBuilder implements BaseCommandBuilderData {
         return this;
     }
 
-    public isContextMenuCommand(): this is BaseCommandBuilder & { type: CommandType.ContextMenuCommand } {
+    public isContextMenuCommand(): this is ContextMenuCommandBuilder {
         return this.command_type === CommandType.ContextMenuCommand;
     }
 
-    public isMessageCommand(): this is BaseCommandBuilder & { type: CommandType.MessageCommand } {
+    public isMessageCommand(): this is MessageCommandBuilder {
         return this.command_type === CommandType.MessageCommand;
     }
 
     public isSlashCommand(): this is BaseCommandBuilder & { type: CommandType.SlashCommand } {
         return this.command_type === CommandType.SlashCommand;
+    }
+
+    protected _toJSON<C extends CommandType = CommandType, H extends AnyCommandHaltFunction = AnyCommandHaltFunction, E extends AnyCommandExecuteFunction = AnyCommandExecuteFunction>(): Omit<BaseCommandBuilderData, 'command_type'|'halt'|'execute'> & { command_type: C; halt?: H; execute: E; } {
+        return {
+            command_type: this.command_type as C,
+            cooldown: this.cooldown,
+            required_bot_permissions: this.required_bot_permissions,
+            required_member_permissions: this.required_member_permissions,
+            preconditions: this.preconditions,
+            halt: this.halt as H,
+            execute: this.execute as E,
+        };
     }
 }

@@ -1,4 +1,4 @@
-import { ApplicationCommandType, Awaitable, ContextMenuCommandInteraction, ContextMenuCommandType, ContextMenuCommandBuilder as DiscordJsContextMenuCommandBuilder, PermissionResolvable, PermissionsBitField, RESTPostAPIContextMenuApplicationCommandsJSONBody, SlashCommandAssertions } from 'discord.js';
+import { ApplicationCommandType, Awaitable, ContextMenuCommandInteraction, ContextMenuCommandType, ContextMenuCommandBuilder as DiscordJsContextMenuCommandBuilder, JSONEncodable, PermissionResolvable, PermissionsBitField, RESTPostAPIContextMenuApplicationCommandsJSONBody, SlashCommandAssertions, isJSONEncodable } from 'discord.js';
 import { Mixin } from 'ts-mixer';
 import { BaseCommandBuilder, BaseCommandBuilderData } from './BaseCommandBuilder';
 import { CommandType } from '../../types/constants';
@@ -6,7 +6,7 @@ import { RecipleClient } from '../structures/RecipleClient';
 import { CommandHaltData } from '../../types/structures';
 
 export interface ContextMenuCommandExecuteData {
-    type: CommandType;
+    type: CommandType.ContextMenuCommand;
     client: RecipleClient<true>;
     interaction: ContextMenuCommandInteraction;
     builder: ContextMenuCommandBuilder;
@@ -17,10 +17,10 @@ export type ContextMenuCommandHaltData = CommandHaltData<CommandType.ContextMenu
 export type ContextMenuCommandExecuteFunction = (executeData: ContextMenuCommandExecuteData) => Awaitable<void>;
 export type ContextMenuCommandHaltFunction = (haltData: ContextMenuCommandHaltData) => Awaitable<boolean>;
 
-export interface ContextMenuCommandData extends BaseCommandBuilderData, Omit<RESTPostAPIContextMenuApplicationCommandsJSONBody, 'options'|'description'|'description_localizations'|'type'> {
+export interface ContextMenuCommandBuilderData extends BaseCommandBuilderData, Omit<RESTPostAPIContextMenuApplicationCommandsJSONBody, 'options'|'description'|'description_localizations'|'type'> {
     command_type: CommandType.ContextMenuCommand;
     type: ContextMenuCommandType|'Message'|'User';
-    halt: ContextMenuCommandHaltFunction;
+    halt?: ContextMenuCommandHaltFunction;
     execute: ContextMenuCommandExecuteFunction;
 }
 
@@ -30,9 +30,9 @@ export interface ContextMenuCommandBuilder extends DiscordJsContextMenuCommandBu
 }
 
 export class ContextMenuCommandBuilder extends Mixin(DiscordJsContextMenuCommandBuilder, BaseCommandBuilder) {
-    public readonly command_type: CommandType = CommandType.ContextMenuCommand;
+    public readonly command_type: CommandType.ContextMenuCommand = CommandType.ContextMenuCommand;
 
-    constructor(data?: Omit<Partial<ContextMenuCommandData>, 'command_type'>) {
+    constructor(data?: Omit<Partial<ContextMenuCommandBuilderData>, 'command_type'>) {
         super(data);
 
         if (data?.default_member_permissions) this.setDefaultMemberPermissions(data.default_member_permissions);
@@ -75,4 +75,21 @@ export class ContextMenuCommandBuilder extends Mixin(DiscordJsContextMenuCommand
         const bigint = permissions ? PermissionsBitField.resolve(permissions) : null;
         return super.setDefaultMemberPermissions(bigint).setRequiredMemberPermissions(bigint);
     }
+
+    public toJSON(): RESTPostAPIContextMenuApplicationCommandsJSONBody & ContextMenuCommandBuilderData {
+        return {
+            ...super.toJSON(),
+            ...super._toJSON()
+        }
+    }
+
+    public static from(data: ContextMenuCommandResolvable): ContextMenuCommandBuilder {
+        return new ContextMenuCommandBuilder(isJSONEncodable(data) ? data.toJSON() : data);
+    }
+
+    public static resolve(data: ContextMenuCommandBuilder): ContextMenuCommandBuilder {
+        return data instanceof ContextMenuCommandBuilder ? data : this.from(data);
+    }
 }
+
+export type ContextMenuCommandResolvable = ContextMenuCommandBuilderData|JSONEncodable<ContextMenuCommandBuilderData>;

@@ -24,4 +24,8 @@ export class Validators {
         s.bigint,
         s.bigint.array
     );
+
+    public static jsonEncodable = s.object({
+        toJSON: s.instance(Function)
+    });
 }

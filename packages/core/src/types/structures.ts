@@ -1,14 +1,17 @@
-import { ContextMenuCommandExecuteData, ContextMenuCommandExecuteFunction, ContextMenuCommandHaltFunction } from '../classes/builders/ContextMenuCommandBuilder';
+import { ContextMenuCommandExecuteData, ContextMenuCommandExecuteFunction, ContextMenuCommandHaltData, ContextMenuCommandHaltFunction } from '../classes/builders/ContextMenuCommandBuilder';
 import { CommandHaltReason, CommandType } from './constants';
 import { Cooldown } from '../classes/structures/Cooldown';
+import { MessageCommandExecuteData, MessageCommandExecuteFunction, MessageCommandHaltData, MessageCommandHaltFunction } from '../classes/builders/MessageCommandBuilder';
 
 export interface RecipleClientConfig {
     token: string;
     version: string;
 }
 
-export type AnyCommandHaltFunction = ContextMenuCommandHaltFunction|Function;
-export type AnyCommandExecuteFunction = ContextMenuCommandExecuteFunction|Function;
+export type AnyCommandHaltData = ContextMenuCommandHaltData|MessageCommandHaltData;
+export type AnyCommandHaltFunction = ContextMenuCommandHaltFunction|MessageCommandHaltFunction;
+export type AnyCommandExecuteData = ContextMenuCommandExecuteData|MessageCommandExecuteData;
+export type AnyCommandExecuteFunction = ContextMenuCommandExecuteFunction|MessageCommandExecuteFunction;
 
 export type CommandHaltData<T extends CommandType> =
     | CommandErrorHaltData<T>
@@ -24,7 +27,7 @@ export interface BaseCommandHaltData<T extends CommandType> {
     executeData: T extends CommandType.ContextMenuCommand
         ? ContextMenuCommandExecuteData
         : T extends CommandType.MessageCommand
-            ? MessageCommandExecuteData<boolean>
+            ? MessageCommandExecuteData
             : T extends CommandType.SlashCommand
                 ? SlashCommandExecuteData
                 : never;

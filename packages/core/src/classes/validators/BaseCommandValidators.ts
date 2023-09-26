@@ -12,7 +12,7 @@ export class BaseCommandValidators extends Validators {
     public static halt = s.instance(Function).optional;
     public static execute = s.instance(Function);
 
-    public static baseCommandBuilderData = s.object({
+    public static BaseCommandBuilderData = s.object({
         command_type: this.command_type,
         cooldown: this.cooldown,
         required_bot_permissions: this.required_bot_permissions,
