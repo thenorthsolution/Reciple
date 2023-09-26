@@ -6,11 +6,13 @@ import { MessageCommandOptionBuilder, MessageCommandOptionResolvable } from './M
 import { MessageCommandOptionValidators } from '../validators/MessageCommandOptionValidators';
 import { CommandHaltData } from '../../types/structures';
 import { RecipleClient } from '../structures/RecipleClient';
+import { MessageCommandOptionManager } from '../managers/MessageCommandOptionManager';
 
 export interface MessageCommandExecuteData {
     type: CommandType.MessageCommand;
     client: RecipleClient<true>;
     message: Message<boolean>;
+    options: MessageCommandOptionManager;
     builder: MessageCommandBuilder;
 }
 

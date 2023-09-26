@@ -15,7 +15,7 @@ export class CooldownManager extends DataManager<Cooldown> {
         if (isExists) return isExists;
 
         const cooldown = new Cooldown(data, this);
-        this.cache.set(cooldown.id, cooldown);
+        this._cache.set(cooldown.id, cooldown);
 
         return cooldown;
     }
@@ -40,7 +40,7 @@ export class CooldownManager extends DataManager<Cooldown> {
         if (this._sweeper) clearInterval(this._sweeper);
 
         return this._sweeper = setInterval(
-            () => this.cache.sweep(c => c.isEnded() || (!options?.maxAgeMs || (Date.now() - c.createdAt.getTime()) >= options.maxAgeMs) || (!options.filter || options.filter(c))),
+            () => this._cache.sweep(c => c.isEnded() || (!options?.maxAgeMs || (Date.now() - c.createdAt.getTime()) >= options.maxAgeMs) || (!options.filter || options.filter(c))),
             options?.timer
         ).unref();
     }
