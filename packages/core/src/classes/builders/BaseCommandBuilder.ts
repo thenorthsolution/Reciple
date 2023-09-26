@@ -4,6 +4,7 @@ import { CommandType } from '../../types/constants';
 import { BaseCommandValidators } from '../validators/BaseCommandValidators';
 import { ContextMenuCommandBuilder } from './ContextMenuCommandBuilder';
 import { MessageCommandBuilder } from './MessageCommandBuilder';
+import { SlashCommandBuilder } from './SlashCommandBuilder';
 
 export interface BaseCommandBuilderData {
     command_type: CommandType;
@@ -85,7 +86,7 @@ export abstract class BaseCommandBuilder implements BaseCommandBuilderData {
         return this.command_type === CommandType.MessageCommand;
     }
 
-    public isSlashCommand(): this is BaseCommandBuilder & { type: CommandType.SlashCommand } {
+    public isSlashCommand(): this is SlashCommandBuilder {
         return this.command_type === CommandType.SlashCommand;
     }
 

@@ -1,4 +1,4 @@
-import { ApplicationCommandType, Awaitable, ContextMenuCommandInteraction, ContextMenuCommandType, ContextMenuCommandBuilder as DiscordJsContextMenuCommandBuilder, JSONEncodable, PermissionResolvable, PermissionsBitField, RESTPostAPIContextMenuApplicationCommandsJSONBody, SlashCommandAssertions, isJSONEncodable } from 'discord.js';
+import { ApplicationCommandType, Awaitable, ContextMenuCommandInteraction, ContextMenuCommandType, ContextMenuCommandBuilder as DiscordJsContextMenuCommandBuilder, JSONEncodable, PermissionsBitField, PermissionResolvable, RESTPostAPIContextMenuApplicationCommandsJSONBody, SlashCommandAssertions, isJSONEncodable } from 'discord.js';
 import { Mixin } from 'ts-mixer';
 import { BaseCommandBuilder, BaseCommandBuilderData } from './BaseCommandBuilder';
 import { CommandType } from '../../types/constants';
@@ -27,6 +27,9 @@ export interface ContextMenuCommandBuilderData extends BaseCommandBuilderData, O
 export interface ContextMenuCommandBuilder extends DiscordJsContextMenuCommandBuilder, BaseCommandBuilder {
     halt?: ContextMenuCommandHaltFunction;
     execute: ContextMenuCommandExecuteFunction;
+
+    setHalt(halt: ContextMenuCommandHaltFunction|null): this;
+    setExecute(execute: ContextMenuCommandExecuteFunction): this;
 }
 
 export class ContextMenuCommandBuilder extends Mixin(DiscordJsContextMenuCommandBuilder, BaseCommandBuilder) {
@@ -37,20 +40,13 @@ export class ContextMenuCommandBuilder extends Mixin(DiscordJsContextMenuCommand
 
         if (data?.default_member_permissions) this.setDefaultMemberPermissions(data.default_member_permissions);
         if (data?.dm_permission) this.setDMPermission(data.dm_permission);
+        if (data?.default_permission !== undefined) this.setDefaultPermission(data.default_permission);
         if (data?.execute) this.setExecute(data.execute);
         if (data?.halt) this.setHalt(data.halt);
         if (data?.name) this.setName(data.name);
         if (data?.name_localizations) this.setNameLocalizations(data.name_localizations);
         if (data?.nsfw) this.setNSFW(data.nsfw);
         if (data?.type) this.setType(data.type);
-    }
-
-    public setHalt(halt: ContextMenuCommandHaltFunction|null): this {
-        return super.setHalt(halt);
-    }
-
-    public setExecute(execute: ContextMenuCommandExecuteFunction): this {
-        return super.setExecute(execute);
     }
 
     public setNSFW(nsfw: boolean) {

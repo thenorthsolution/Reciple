@@ -2,17 +2,29 @@ import { ContextMenuCommandExecuteData, ContextMenuCommandExecuteFunction, Conte
 import { CommandHaltReason, CommandType } from './constants';
 import { Cooldown } from '../classes/structures/Cooldown';
 import { MessageCommandExecuteData, MessageCommandExecuteFunction, MessageCommandHaltData, MessageCommandHaltFunction } from '../classes/builders/MessageCommandBuilder';
+import { Collection, SlashCommandAttachmentOption, SlashCommandBooleanOption, SlashCommandChannelOption, SlashCommandIntegerOption, SlashCommandMentionableOption, SlashCommandNumberOption, SlashCommandRoleOption, SlashCommandStringOption, SlashCommandSubcommandBuilder, SlashCommandSubcommandGroupBuilder, SlashCommandUserOption } from 'discord.js';
+import { MessageCommandOptionValue } from '../classes/structures/MessageCommandOptionValue';
+import { SlashCommandExecuteData, SlashCommandExecuteFunction, SlashCommandHaltData, SlashCommandHaltFunction } from '../classes/builders/SlashCommandBuilder';
 
+// Config
 export interface RecipleClientConfig {
     token: string;
     version: string;
 }
 
-export type AnyCommandHaltData = ContextMenuCommandHaltData|MessageCommandHaltData;
-export type AnyCommandHaltFunction = ContextMenuCommandHaltFunction|MessageCommandHaltFunction;
-export type AnyCommandExecuteData = ContextMenuCommandExecuteData|MessageCommandExecuteData;
-export type AnyCommandExecuteFunction = ContextMenuCommandExecuteFunction|MessageCommandExecuteFunction;
+// Any types
+export type AnyCommandHaltData = ContextMenuCommandHaltData|MessageCommandHaltData|SlashCommandHaltData;
+export type AnyCommandHaltFunction = ContextMenuCommandHaltFunction|MessageCommandHaltFunction|SlashCommandHaltFunction;
+export type AnyCommandExecuteData = ContextMenuCommandExecuteData|MessageCommandExecuteData|SlashCommandExecuteData;
+export type AnyCommandExecuteFunction = ContextMenuCommandExecuteFunction|MessageCommandExecuteFunction|SlashCommandExecuteFunction;
+export type AnyNonSubcommandSlashCommandOptionBuilder = SlashCommandAttachmentOption|SlashCommandBooleanOption|SlashCommandChannelOption|SlashCommandIntegerOption|SlashCommandMentionableOption|SlashCommandNumberOption|SlashCommandRoleOption|SlashCommandStringOption|SlashCommandUserOption;
+export type AnySubcommandSlashCommandOptionBuilder = SlashCommandSubcommandBuilder|SlashCommandSubcommandGroupBuilder;
+export type AnyNonSubcommandSlashCommandOptionData = ReturnType<AnyNonSubcommandSlashCommandOptionBuilder['toJSON']>;
+export type AnySubcommandSlashCommandOptionData = ReturnType<AnySubcommandSlashCommandOptionBuilder['toJSON']>;
+export type AnySlashCommandOptionBuilder = AnyNonSubcommandSlashCommandOptionBuilder|AnySubcommandSlashCommandOptionBuilder;
+export type AnySlashCommandOptionData = AnyNonSubcommandSlashCommandOptionData|AnySubcommandSlashCommandOptionData;
 
+// Command Halt
 export type CommandHaltData<T extends CommandType> =
     | CommandErrorHaltData<T>
     | CommandCooldownHaltData<T>
@@ -45,12 +57,12 @@ export interface CommandCooldownHaltData<T extends CommandType> extends BaseComm
 
 export interface CommandInvalidArgumentsHaltData<T extends CommandType> extends BaseCommandHaltData<T> {
     reason: CommandHaltReason.InvalidArguments;
-    missingArguments:;
+    invalidOptions: Collection<string, MessageCommandOptionValue>;
 }
 
 export interface CommandMissingArgumentsHaltData<T extends CommandType> extends BaseCommandHaltData<T> {
     reason: CommandHaltReason.MissingArguments;
-    missingArguments:;
+    missingOptions: Collection<string, MessageCommandOptionValue>;
 }
 
 export interface CommandValidateOptionErrorHaltData<T extends CommandType> extends BaseCommandHaltData<T> {
