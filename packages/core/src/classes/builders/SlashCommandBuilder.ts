@@ -1,9 +1,10 @@
 import { ApplicationCommandType, Awaitable, ChatInputCommandInteraction, isJSONEncodable, JSONEncodable, SlashCommandBuilder as DiscordJsSlashCommandBuilder, SharedSlashCommandOptions, RESTPostAPIChatInputApplicationCommandsJSONBody, SlashCommandSubcommandGroupBuilder, SlashCommandSubcommandBuilder, SlashCommandAttachmentOption, SlashCommandBooleanOption, SlashCommandChannelOption, SlashCommandIntegerOption, SlashCommandMentionableOption, SlashCommandNumberOption, SlashCommandRoleOption, SlashCommandStringOption, SlashCommandUserOption, ApplicationCommandOptionType, ApplicationCommandOptionAllowedChannelTypes, PermissionResolvable, PermissionsBitField } from 'discord.js';
 import { Mixin } from 'ts-mixer';
 import { BaseCommandBuilder, BaseCommandBuilderData } from './BaseCommandBuilder';
-import { CommandType } from '../../types/constants';
+import { CommandHaltReason, CommandType } from '../../types/constants';
 import { RecipleClient } from '../structures/RecipleClient';
 import { AnyNonSubcommandSlashCommandOptionBuilder, AnySlashCommandOptionBuilder, AnySlashCommandOptionData, CommandHaltData } from '../../types/structures';
+import { CooldownData } from '../structures/Cooldown';
 
 export interface SlashCommandExecuteData {
     type: CommandType.SlashCommand;
@@ -207,6 +208,59 @@ export class SlashCommandBuilder extends Mixin(DiscordJsSlashCommandBuilder, Bas
     public static resolve(data: SlashCommandResolvable): AnySlashCommandBuilder {
         return data instanceof SlashCommandBuilder ? data : this.from(data);
     }
+
+    public static async execute({ client, interaction, command }: SlashCommandExecuteOptions): Promise<SlashCommandExecuteData|null> {
+        if (client.config.commands?.contextMenuCommands?.acceptRepliedInteractions === false && (interaction.replied || interaction.deferred)) return null;
+
+        const builder = command ? this.resolve(command) : client.commands.get(interaction.commandName, CommandType.SlashCommand);
+        if (!builder) return null;
+
+        const executeData: SlashCommandExecuteData = {
+            type: builder.command_type,
+            builder,
+            interaction,
+            client
+        };
+
+        const commandPreconditionTrigger = await client.commands.executePreconditions(executeData);
+        if (commandPreconditionTrigger) {
+            await client.executeCommandBuilderHalt({
+                reason: CommandHaltReason.PreconditionTrigger,
+                commandType: builder.command_type,
+                ...commandPreconditionTrigger
+            });
+            return null;
+        }
+
+        if (client.config.commands.contextMenuCommands.enableCooldown !== false && builder.cooldown) {
+            const cooldownData: Omit<CooldownData, 'endsAt'> = {
+                commandType: builder.command_type,
+                commandName: builder.name,
+                userId: interaction.user.id,
+                guildId: interaction.guild?.id
+            };
+
+            const cooldown = client.cooldowns.findCooldown(cooldownData);
+
+            if (cooldown) {
+                await client.executeCommandBuilderHalt({
+                    reason: CommandHaltReason.Cooldown,
+                    commandType: builder.command_type,
+                    cooldown,
+                    executeData
+                });
+                return null;
+            }
+        }
+
+        return (await client.executeCommandBuilderExecute(executeData)) ? executeData : null;
+    }
+}
+
+export interface SlashCommandExecuteOptions {
+    client: RecipleClient<true>;
+    interaction: ChatInputCommandInteraction;
+    command?: SlashCommandResolvable;
 }
 
 export type SlashCommandResolvable = SlashCommandBuilderData|JSONEncodable<SlashCommandBuilderData>;

@@ -8,14 +8,16 @@ import { SlashCommandExecuteData } from '../builders/SlashCommandBuilder';
 export interface CommandPreconditionData {
     id: string;
     disabled?: boolean;
-    contextMenuCommandExecute: (execute: ContextMenuCommandExecuteData) => Awaitable<boolean|string|Omit<CommandPreconditionExecuteData, 'executeData'>>;
-    messageCommandExecute: (execute: MessageCommandExecuteData) => Awaitable<boolean|string|Omit<CommandPreconditionExecuteData, 'executeData'>>;
-    slashCommandExecute: (execute: SlashCommandExecuteData) => Awaitable<boolean|string|Omit<CommandPreconditionExecuteData, 'executeData'>>;
+    contextMenuCommandExecute: (execute: ContextMenuCommandExecuteData) => Awaitable<boolean|string|Omit<CommandPreconditionTriggerData, 'executeData'>>;
+    messageCommandExecute: (execute: MessageCommandExecuteData) => Awaitable<boolean|string|Omit<CommandPreconditionTriggerData, 'executeData'>>;
+    slashCommandExecute: (execute: SlashCommandExecuteData) => Awaitable<boolean|string|Omit<CommandPreconditionTriggerData, 'executeData'>>;
 }
 
-export interface CommandPreconditionExecuteData<T extends AnyCommandExecuteData = AnyCommandExecuteData> {
+export interface CommandPreconditionTriggerData<T extends AnyCommandExecuteData = AnyCommandExecuteData, D extends any = any> {
+    precondition: CommandPrecondition;
     successful: boolean;
     message?: string;
+    data?: D;
     executeData: T;
 }
 
@@ -40,8 +42,8 @@ export class CommandPrecondition implements CommandPreconditionData {
         return this;
     }
 
-    public async execute<T extends AnyCommandExecuteData = AnyCommandExecuteData>(execute: T): Promise<CommandPreconditionExecuteData<T>> {
-        let data: string|boolean|Omit<CommandPreconditionExecuteData, 'executeData'>;
+    public async execute<T extends AnyCommandExecuteData = AnyCommandExecuteData, D extends any = any>(execute: T): Promise<CommandPreconditionTriggerData<T, D>> {
+        let data: string|boolean|Omit<CommandPreconditionTriggerData, 'executeData'|'precondition'>;
 
         switch (execute.type) {
             case CommandType.ContextMenuCommand:
@@ -61,7 +63,7 @@ export class CommandPrecondition implements CommandPreconditionData {
                 ? { successful: data }
                 : data;
 
-        const preconditionData: CommandPreconditionExecuteData<T> = { ...data, executeData: execute };
+        const preconditionData: CommandPreconditionTriggerData<T, D> = { ...data, precondition: this, executeData: execute };
         execute.client.emit('recipleCommandPrecondition', preconditionData);
         return preconditionData;
     }
@@ -86,3 +88,8 @@ export class CommandPrecondition implements CommandPreconditionData {
 }
 
 export type CommandPreconditionResolvable = CommandPreconditionData|JSONEncodable<CommandPreconditionData>;
+
+
+// TODO: Cooldown precondition
+// TODO: Bot Execute permissions precondition
+// TODO: User Execute permissions precondition

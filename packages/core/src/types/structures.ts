@@ -6,6 +6,7 @@ import { Collection, SlashCommandAttachmentOption, SlashCommandBooleanOption, Sl
 import { MessageCommandOptionValue } from '../classes/structures/MessageCommandOptionValue';
 import { AnySlashCommandBuilder, SlashCommandBuilderData, SlashCommandExecuteData, SlashCommandExecuteFunction, SlashCommandHaltData, SlashCommandHaltFunction } from '../classes/builders/SlashCommandBuilder';
 import { CooldownSweeperOptions } from '../classes/managers/CooldownManager';
+import { CommandPreconditionTriggerData } from '../classes/structures/CommandPrecondition';
 
 // Config
 export interface RecipleClientConfig {
@@ -60,10 +61,8 @@ export type AnySlashCommandOptionData = AnyNonSubcommandSlashCommandOptionData|A
 export type CommandHaltData<T extends CommandType> =
     | CommandErrorHaltData<T>
     | CommandCooldownHaltData<T>
-    | (T extends CommandType.MessageCommand ? CommandInvalidArgumentsHaltData<T> | CommandMissingArgumentsHaltData<T> | CommandValidateOptionErrorHaltData<T> : never)
-    | CommandMissingMemberPermissionsHaltData<T>
-    | CommandMissingBotPermissionsHaltData<T>
-    | CommandPreconditionErrorHaltData<T>;
+    | (T extends CommandType.MessageCommand ? CommandInvalidArgumentsHaltData<T> | CommandMissingArgumentsHaltData<T> : never)
+    | CommandPreconditionTriggerHaltData<T>;
 
 export interface BaseCommandHaltData<T extends CommandType> {
     reason: CommandHaltReason;
@@ -97,24 +96,6 @@ export interface CommandMissingArgumentsHaltData<T extends CommandType> extends 
     missingOptions: Collection<string, MessageCommandOptionValue>;
 }
 
-export interface CommandValidateOptionErrorHaltData<T extends CommandType> extends BaseCommandHaltData<T> {
-    reason: CommandHaltReason.ValidateOptionError;
-    error: unknown;
-}
-
-export interface CommandMissingMemberPermissionsHaltData<T extends CommandType> extends BaseCommandHaltData<T> {
-    reason: CommandHaltReason.MissingMemberPermissions;
-}
-
-export interface CommandMissingBotPermissionsHaltData<T extends CommandType> extends BaseCommandHaltData<T> {
-    reason: CommandHaltReason.MissingBotPermissions;
-}
-
-export interface CommandNoExecuteHandlerHaltData<T extends CommandType> extends BaseCommandHaltData<T> {
-    reason: CommandHaltReason.NoExecuteHandler;
-}
-
-export interface CommandPreconditionErrorHaltData<T extends CommandType> extends BaseCommandHaltData<T> {
-    reason: CommandHaltReason.PreconditionError;
-    error: unknown;
+export interface CommandPreconditionTriggerHaltData<T extends CommandType> extends BaseCommandHaltData<T>, Omit<CommandPreconditionTriggerData, 'executeData'> {
+    reason: CommandHaltReason.PreconditionTrigger;
 }

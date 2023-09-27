@@ -7,7 +7,7 @@ export class MessageCommandValidators extends BaseCommandValidators {
     public static name = s.string.lengthGreaterThanOrEqual(1).lengthLessThanOrEqual(32).regex(/^[\p{Ll}\p{Lm}\p{Lo}\p{N}\p{sc=Devanagari}\p{sc=Thai}_-]+$/u);
     public static description = s.string.lengthGreaterThanOrEqual(1).lengthLessThanOrEqual(100);
     public static aliases = this.name.array.optional;
-    public static parse_options = s.boolean.optional;
+    public static validate_options = s.boolean.optional;
     public static dm_permission = s.boolean.optional;
     public static allow_bot = s.boolean.optional;
     public static options = MessageCommandOptionValidators.MessageCommandOptionResolvable.array.optional;
@@ -24,8 +24,8 @@ export class MessageCommandValidators extends BaseCommandValidators {
         this.aliases.setValidationEnabled(this.isValidationEnabled).parse(aliases);
     }
 
-    public static isValidParseOptions(parseOptions: unknown): asserts parseOptions is MessageCommandBuilderData['parse_options'] {
-        this.parse_options.setValidationEnabled(this.isValidationEnabled).parse(parseOptions);
+    public static isValidValidateOptions(parseOptions: unknown): asserts parseOptions is MessageCommandBuilderData['parse_options'] {
+        this.validate_options.setValidationEnabled(this.isValidationEnabled).parse(parseOptions);
     }
 
     public static isValidDMPermission(DMPermission: unknown): asserts DMPermission is MessageCommandBuilderData['dm_permission'] {

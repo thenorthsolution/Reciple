@@ -32,8 +32,14 @@ export class CooldownManager extends DataManager<Cooldown> {
             if (data.commandName && d.commandName !== data.commandName) return false;
             if (data.commandType && d.commandType !== data.commandType) return false;
 
+            if (d.isEnded()) this._cache.delete(d.id);
+
             return true;
         });
+    }
+
+    public clean(): void {
+        this._cache.sweep(c => c.isEnded());
     }
 
     public setCooldownSweeper(options: CooldownSweeperOptions): NodeJS.Timeout {

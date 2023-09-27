@@ -3,9 +3,9 @@ import { MessageCommandBuilder } from '../builders/MessageCommandBuilder';
 import { AnySlashCommandBuilder } from '../builders/SlashCommandBuilder';
 import { RecipleClient } from '../structures/RecipleClient';
 import { ContextMenuCommandBuilder } from '../builders/ContextMenuCommandBuilder';
-import { CommandPrecondition, CommandPreconditionResolvable } from '../structures/CommandPrecondition';
+import { CommandPrecondition, CommandPreconditionResolvable, CommandPreconditionTriggerData } from '../structures/CommandPrecondition';
 import { CommandType } from '../../types/constants';
-import { AnyCommandBuilder, RecipleClientConfig, RecipleClientInteractionBasedCommandConfigOptions } from '../../types/structures';
+import { AnyCommandBuilder, AnyCommandExecuteData, RecipleClientConfig, RecipleClientInteractionBasedCommandConfigOptions } from '../../types/structures';
 
 export interface CommandManagerRegisterCommandsOptions extends Omit<RecipleClientConfig['applicationCommandRegister'], 'enabled'> {
     contextMenuCommands?: Partial<RecipleClientInteractionBasedCommandConfigOptions> & {
@@ -88,9 +88,20 @@ export class CommandManager {
         return preconditions;
     }
 
-    public get(command: string, type: CommandType.ContextMenuCommand): ContextMenuCommandBuilder | undefined;
-    public get(command: string, type: CommandType.MessageCommand): MessageCommandBuilder | undefined;
-    public get(command: string, type: CommandType.SlashCommand): AnySlashCommandBuilder | undefined;
+    public async executePreconditions<T extends AnyCommandExecuteData = AnyCommandExecuteData>(executeData: T): Promise<CommandPreconditionTriggerData<T>|null> {
+        for (const [id, precondition] of this.preconditions) {
+            if (precondition.disabled) continue;
+
+            const data = await precondition.execute(executeData);
+            if (!data.successful) return data;
+        }
+
+        return null;
+    }
+
+    public get(command: string, type: CommandType.ContextMenuCommand): ContextMenuCommandBuilder|undefined;
+    public get(command: string, type: CommandType.MessageCommand): MessageCommandBuilder|undefined;
+    public get(command: string, type: CommandType.SlashCommand): AnySlashCommandBuilder|undefined;
     public get(command: string, type: CommandType): AnyCommandBuilder|undefined {
         switch (type) {
             case CommandType.ContextMenuCommand:
@@ -173,6 +184,13 @@ export class CommandManager {
         const commands = await this.client.application?.commands.fetch({ guildId });
         return commands?.find(c => c.name === command);
     }
+
+    // public async execute(interaction: ContextMenuCommandInteraction): Promise<ContextMenuCommandExecuteData>;
+    // public async execute(interaction: Message): Promise<MessageCommandExecuteData>;
+    // public async execute(interaction: ChatInputCommandInteraction): Promise<SlashCommandExecuteData>;
+    // public async execute(interaction: ContextMenuCommandInteraction|Message|ChatInputCommandInteraction): Promise<AnyCommandExecuteData> {
+    // TODO:
+    // }
 
     public toJSON() {
         return {

@@ -1,5 +1,5 @@
 import { Awaitable, JSONEncodable, RestOrArray, Message, normalizeArray, isJSONEncodable } from 'discord.js';
-import { CommandType } from '../../types/constants';
+import { CommandHaltReason, CommandType } from '../../types/constants';
 import { MessageCommandValidators } from '../validators/MessageCommandValidators';
 import { BaseCommandBuilder, BaseCommandBuilderData } from './BaseCommandBuilder';
 import { MessageCommandOptionBuilder, MessageCommandOptionResolvable } from './MessageCommandOptionBuilder';
@@ -7,11 +7,14 @@ import { MessageCommandOptionValidators } from '../validators/MessageCommandOpti
 import { CommandHaltData } from '../../types/structures';
 import { RecipleClient } from '../structures/RecipleClient';
 import { MessageCommandOptionManager } from '../managers/MessageCommandOptionManager';
+import { CommandData, getCommand } from 'fallout-utility/commands';
+import { CooldownData } from '../structures/Cooldown';
 
 export interface MessageCommandExecuteData {
     type: CommandType.MessageCommand;
     client: RecipleClient<true>;
     message: Message<boolean>;
+    parserData: CommandData;
     options: MessageCommandOptionManager;
     builder: MessageCommandBuilder;
 }
@@ -31,7 +34,7 @@ export interface MessageCommandBuilderData extends BaseCommandBuilderData {
     /**
      * @default true
      */
-    parse_options?: boolean;
+    validate_options?: boolean;
     /**
      * @default false
      */
@@ -56,7 +59,7 @@ export class MessageCommandBuilder extends BaseCommandBuilder {
     public name: string = '';
     public description: string = '';
     public aliases?: string[] = [];
-    public parse_options?: boolean = true;
+    public validate_options?: boolean = true;
     public dm_permission?: boolean = false;
     public allow_bot?: boolean = false;
     public options?: MessageCommandOptionBuilder[] = [];
@@ -67,7 +70,7 @@ export class MessageCommandBuilder extends BaseCommandBuilder {
         if (data?.name) this.setName(data.name);
         if (data?.description) this.setDescription(data.description);
         if (data?.aliases) this.setAliases(data.aliases);
-        if (data?.parse_options) this.setParseOptions(data.parse_options);
+        if (data?.validate_options) this.setValidateOptions(data.validate_options);
         if (data?.dm_permission) this.setDMPermission(data.dm_permission);
         if (data?.allow_bot) this.setAllowBot(data.allow_bot);
         if (data?.options) this.setOptions(data.options);
@@ -99,9 +102,9 @@ export class MessageCommandBuilder extends BaseCommandBuilder {
         return this;
     }
 
-    public setParseOptions(enabled: boolean): this {
-        MessageCommandValidators.isValidParseOptions(enabled);
-        this.parse_options = enabled;
+    public setValidateOptions(enabled: boolean): this {
+        MessageCommandValidators.isValidValidateOptions(enabled);
+        this.validate_options = enabled;
         return this;
     }
 
@@ -136,7 +139,7 @@ export class MessageCommandBuilder extends BaseCommandBuilder {
             name: this.name,
             description: this.description,
             aliases: this.aliases,
-            parse_options: this.parse_options,
+            validate_options: this.validate_options,
             dm_permission: this.dm_permission,
             allow_bot: this.allow_bot,
             options: this.options,
@@ -151,6 +154,91 @@ export class MessageCommandBuilder extends BaseCommandBuilder {
     public static resolve(data: MessageCommandResolvable): MessageCommandBuilder {
         return data instanceof MessageCommandBuilder ? data : this.from(data);
     }
+
+    public static async execute({ client, message, command }: MessageCommandExecuteOptions): Promise<MessageCommandExecuteData|null> {
+        if (!message.content) return null;
+
+        const parserData = getCommand(message.content, client.config.commands.messageCommand.prefix, client.config.commands.messageCommand.commandArgumentSeparator);
+        if (!parserData || !parserData.name) return null;
+
+        const builder = command ? this.resolve(command) : client.commands.get(parserData.name, CommandType.MessageCommand);
+        if (!builder) return null;
+
+        const executeData: MessageCommandExecuteData = {
+            type: builder.command_type,
+            client,
+            message,
+            builder,
+            parserData,
+            options: await MessageCommandOptionManager.parseOptions({
+                client,
+                command: builder,
+                args: parserData.args,
+                message
+            })
+        };
+
+        const commandPreconditionTrigger = await client.commands.executePreconditions(executeData);
+        if (commandPreconditionTrigger) {
+            await client.executeCommandBuilderHalt({
+                reason: CommandHaltReason.PreconditionTrigger,
+                commandType: builder.command_type,
+                ...commandPreconditionTrigger
+            });
+            return null;
+        }
+
+        if (client.config.commands.contextMenuCommands.enableCooldown !== false && builder.cooldown) {
+            const cooldownData: Omit<CooldownData, 'endsAt'> = {
+                commandType: builder.command_type,
+                commandName: builder.name,
+                userId: message.author.id,
+                guildId: message.guild?.id
+            };
+
+            const cooldown = client.cooldowns.findCooldown(cooldownData);
+
+            if (cooldown) {
+                await client.executeCommandBuilderHalt({
+                    reason: CommandHaltReason.Cooldown,
+                    commandType: builder.command_type,
+                    cooldown,
+                    executeData
+                });
+                return null;
+            }
+        }
+
+        if (builder.validate_options) {
+            if (executeData.options.hasInvalidOptions) {
+                await client.executeCommandBuilderHalt({
+                    commandType: builder.command_type,
+                    reason: CommandHaltReason.InvalidArguments,
+                    executeData,
+                    invalidOptions: executeData.options.getInvalidOptions()
+                });
+                return null;
+            }
+
+            if (executeData.options.hasMissingOptions) {
+                await client.executeCommandBuilderHalt({
+                    commandType: builder.command_type,
+                    reason: CommandHaltReason.MissingArguments,
+                    executeData,
+                    missingOptions: executeData.options.getMissingOptions()
+                });
+                return null;
+            }
+        }
+
+        return (await client.executeCommandBuilderExecute(executeData)) ? executeData : null;
+    }
+}
+
+export interface MessageCommandExecuteOptions {
+    client: RecipleClient<true>;
+    message: Message;
+    command?: MessageCommandResolvable;
 }
 
 export type MessageCommandResolvable = MessageCommandBuilderData|JSONEncodable<MessageCommandBuilderData>;
