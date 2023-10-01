@@ -8,7 +8,7 @@ export abstract class DataManager<T> {
 
     get cache() { return this._cache as ReadonlyCollection<string, T>; }
 
-    constructor(readonly client: RecipleClient<true>) {}
+    constructor(readonly client: RecipleClient) {}
 
     public static generateId(): string {
         return randomBytes(8).toString('hex');

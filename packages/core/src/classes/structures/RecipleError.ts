@@ -3,6 +3,7 @@ import { stripVTControlCharacters } from 'util';
 import { Utils } from './Utils';
 import { AnyCommandBuilder, AnyCommandBuilderData } from '../../types/structures';
 import { buildVersion } from '../../types/constants';
+import { BaseCommandBuilderData } from '../builders/BaseCommandBuilder';
 
 export interface RecipleErrorOptions {
     message: string;
@@ -40,7 +41,7 @@ export class RecipleError extends Error {
         };
     }
 
-    public static createCommandHaltErrorOptions(builder: AnyCommandBuilder|AnyCommandBuilderData, cause: unknown): RecipleErrorOptions {
+    public static createCommandHaltErrorOptions(builder: BaseCommandBuilderData & { name: string; }, cause: unknown): RecipleErrorOptions {
         return {
             message: `An error occured while executing the halt function of a ${kleur.cyan(Utils.getCommandTypeName(builder.command_type))} named ${kleur.red("'" + builder.name + "'")}`,
             cause,
@@ -48,7 +49,7 @@ export class RecipleError extends Error {
         };
     }
 
-    public static createCommandPreconditionErrorOptions(builder: AnyCommandBuilder|AnyCommandBuilderData, cause: unknown): RecipleErrorOptions {
+    public static createCommandPreconditionErrorOptions(builder: BaseCommandBuilderData & { name: string; }, cause: unknown): RecipleErrorOptions {
         return {
             message: `An error occured while executing precondition for ${kleur.cyan(Utils.getCommandTypeName(builder.command_type))} named ${kleur.red("'" + builder.name + "'")}`,
             cause,
@@ -64,11 +65,27 @@ export class RecipleError extends Error {
         };
     }
 
-    public static createLoadModuleFailErrorOptions(moduleDisplayName: string, cause: unknown): RecipleErrorOptions {
+    public static createStartModuleErrorOptions(moduleName: string, cause: unknown): RecipleErrorOptions {
         return {
-            message: `Failed to load ${kleur.red("'" + moduleDisplayName + "'")}`,
+            message: `Failed to start module ${kleur.red("'" + moduleName + "'")}`,
             cause,
-            name: 'LoadModuleFail'
+            name: `StartModuleError`
+        };
+    }
+
+    public static createLoadModuleErrorOptions(moduleName: string, cause: unknown): RecipleErrorOptions {
+        return {
+            message: `Failed to load ${kleur.red("'" + moduleName + "'")}`,
+            cause,
+            name: 'LoadModuleError'
+        };
+    }
+
+    public static createUnloadModuleErrorOptions(moduleName: string, cause: unknown): RecipleErrorOptions {
+        return {
+            message: `Failed to unload ${kleur.red("'" + moduleName + "'")}`,
+            cause,
+            name: 'UnloadModuleError'
         };
     }
 
@@ -76,6 +93,14 @@ export class RecipleError extends Error {
         return {
             message: `The module ${kleur.red("'" + moduleDisplayName + "'")} does not support reciple client ${kleur.blue().bold(buildVersion)}`,
             name: 'UnsupportedModule'
+        };
+    }
+
+    public static createResolveModuleFilesErrorOptions(file: string, cause: unknown): RecipleErrorOptions {
+        return {
+            message: `An error occured while resolving module file ${kleur.green("'" + file + "'")}`,
+            cause,
+            name: 'ResolveModuleFilesError'
         };
     }
 }

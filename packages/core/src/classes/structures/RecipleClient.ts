@@ -4,8 +4,9 @@ import { CooldownManager } from '../managers/CooldownManager';
 import { If } from 'fallout-utility';
 import { CommandManager } from '../managers/CommandManager';
 import { CommandPreconditionTriggerData } from './CommandPrecondition';
-import { CommandHaltReason, CommandType } from '../../types/constants';
+import { CommandHaltReason, CommandType, version } from '../../types/constants';
 import { RecipleError } from './RecipleError';
+import { ModuleManager } from '../managers/ModuleManager';
 
 export interface RecipleClientOptions extends RecipleClientConfig {
     client: ClientOptions;
@@ -42,11 +43,15 @@ export interface RecipleClient<Ready extends boolean = boolean> extends Client<R
 }
 
 export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready> {
+    readonly version = version;
+
     protected _commands: CommandManager|null = null;
     protected _cooldowns: CooldownManager|null = null;
 
     get commands() { return this._cooldowns as If<Ready, CommandManager>; }
     get cooldowns() { return this._cooldowns as If<Ready, CooldownManager>; }
+
+    public modules: ModuleManager = new ModuleManager(this);
 
     constructor(readonly config: RecipleClientOptions) {
         super(config.client);
@@ -61,6 +66,15 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
         this.cooldowns?.setCooldownSweeper(this.config.cooldownSweeperOptions);
 
         return token;
+    }
+
+    public async destroy(clearModules?: boolean): Promise<void> {
+        await super.destroy();
+
+        this._commands = null;
+        this._cooldowns = null;
+
+        if (clearModules) this.modules.cache.clear();
     }
 
     public async executeCommandBuilderHalt(data: AnyCommandHaltData): Promise<boolean> {

@@ -5,7 +5,8 @@ import { RecipleClient } from '../structures/RecipleClient';
 import { ContextMenuCommandBuilder } from '../builders/ContextMenuCommandBuilder';
 import { CommandPrecondition, CommandPreconditionResolvable, CommandPreconditionTriggerData } from '../structures/CommandPrecondition';
 import { CommandType } from '../../types/constants';
-import { AnyCommandBuilder, AnyCommandExecuteData, RecipleClientConfig, RecipleClientInteractionBasedCommandConfigOptions } from '../../types/structures';
+import { AnyCommandBuilder, AnyCommandExecuteData, AnyCommandResolvable, RecipleClientConfig, RecipleClientInteractionBasedCommandConfigOptions } from '../../types/structures';
+import { Utils } from '../structures/Utils';
 
 export interface CommandManagerRegisterCommandsOptions extends Omit<RecipleClientConfig['applicationCommandRegister'], 'enabled'> {
     contextMenuCommands?: Partial<RecipleClientInteractionBasedCommandConfigOptions> & {
@@ -111,6 +112,26 @@ export class CommandManager {
             case CommandType.SlashCommand:
                 return this.slashCommands.get(command);
         }
+    }
+
+    public add(...commands: RestOrArray<AnyCommandResolvable>): AnyCommandBuilder[] {
+        const resolved = normalizeArray(commands).map(c => Utils.resolveCommandBuilder(c));
+
+        for (const command of resolved) {
+            switch (command.command_type) {
+                case CommandType.ContextMenuCommand:
+                    this.contextMenuCommands.set(command.name, command);
+                    break;
+                case CommandType.MessageCommand:
+                    this.messageCommands.set(command.name, command);
+                    break;
+                case CommandType.SlashCommand:
+                    this.slashCommands.set(command.name, command);
+                    break;
+            }
+        }
+
+        return resolved;
     }
 
     public async registerApplicationCommands(options?: CommandManagerRegisterCommandsOptions): Promise<{ global: Collection<string, ApplicationCommand>; guilds: Collection<string, Collection<string, ApplicationCommand>> }> {

@@ -22,3 +22,9 @@ export enum CommandHaltReason {
     NoExecuteHandler,
     PreconditionTrigger
 }
+
+export enum RecipleModuleStatus {
+    Unloaded = 1,
+    Started,
+    Loaded
+}
