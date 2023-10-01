@@ -319,7 +319,7 @@ export class MessageCommandBuilder extends BaseCommandBuilder implements Message
             }
         }
 
-        if (!message.inGuild() && message.member?.permissions && builder.requiredMemberPermissions && hasExecutePermissions({ builder, memberPermissions: message.member?.permissions })) {
+        if (message.inGuild() && message.member?.permissions && builder.requiredMemberPermissions && hasExecutePermissions({ builder, memberPermissions: message.member?.permissions })) {
             await client._haltCommand(builder, {
                 commandType: builder.commandType,
                 reason: CommandHaltReason.MissingMemberPermissions,
