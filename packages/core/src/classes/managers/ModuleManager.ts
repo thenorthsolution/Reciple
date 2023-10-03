@@ -59,10 +59,10 @@ export class ModuleManager extends Mixin(DataManager<RecipleModule>, TypedEmitte
         return (this.cache as Collection<string, RecipleModule<D>>).find(m => m.commands.some(c => c.command_type === data.command_type && c.name === data.name));
     }
 
-    public async startModules<D extends RecipleModuleData = RecipleModuleData>(options: ModuleManagerModulesActionOptions<D> & { cacheModules?: boolean; }): Promise<RecipleModule<D>[]> {
+    public async startModules<D extends RecipleModuleData = RecipleModuleData>(options?: Partial<ModuleManagerModulesActionOptions<D>> & { cacheModules?: boolean; }): Promise<RecipleModule<D>[]> {
         const startedModules: RecipleModule<D>[] = [];
 
-        for (const m of options.modules) {
+        for (const m of options?.modules ?? this.cache.values() as IterableIterator<RecipleModule<D>>) {
             this.emit('preStartModule', m);
 
             try {
@@ -79,7 +79,7 @@ export class ModuleManager extends Mixin(DataManager<RecipleModule>, TypedEmitte
             }
         }
 
-        if (options.cacheModules !== false) startedModules.forEach(m => this._cache.set(m.id, m));
+        if (options?.cacheModules !== false) startedModules.forEach(m => this._cache.set(m.id, m));
 
         this.emit('startedModules', startedModules);
         return startedModules;
@@ -134,7 +134,7 @@ export class ModuleManager extends Mixin(DataManager<RecipleModule>, TypedEmitte
                     }
                 }
 
-                if (options.removeFromCache !== false) this._cache.delete(m.id);
+                if (options?.removeFromCache !== false) this._cache.delete(m.id);
 
                 this.emit('postUnloadModule', m);
                 unloadedModules.push(m);

@@ -1,7 +1,7 @@
 import { AnyCommandExecuteData, AnyCommandHaltData, RecipleClientConfig } from '../../types/structures';
 import { ApplicationCommand, Awaitable, Client, ClientEvents, ClientOptions, Collection } from 'discord.js';
 import { CooldownManager } from '../managers/CooldownManager';
-import { If } from 'fallout-utility';
+import { If, Logger } from 'fallout-utility';
 import { CommandManager } from '../managers/CommandManager';
 import { CommandPreconditionTriggerData } from './CommandPrecondition';
 import { CommandHaltReason, CommandType, version } from '../../types/constants';
@@ -52,9 +52,15 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
     get cooldowns() { return this._cooldowns as If<Ready, CooldownManager>; }
 
     public modules: ModuleManager = new ModuleManager(this);
+    public logger: Logger|null = null;
 
     constructor(readonly config: RecipleClientOptions) {
         super(config.client);
+    }
+
+    public setLogger(logger: Logger|null): this {
+        this.logger = logger ?? null;
+        return this;
     }
 
     public async login(token?: string): Promise<string> {

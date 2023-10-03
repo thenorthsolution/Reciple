@@ -1,12 +1,7 @@
-import { RecipleClient, RecipleModule, RecipleModuleScript } from '@reciple/client';
+import { RecipleClient, RecipleModule, Logger, RecipleModuleStartData, RecipleModuleData } from '@reciple/core';
 import { readdir, readlink, stat } from 'node:fs/promises';
 import { existsSync, readFileSync } from 'node:fs';
-import { Logger } from '@reciple/client';
 import path from 'node:path';
-
-export interface RecipleNPMModuleScript extends RecipleModuleScript {
-    moduleName?: string;
-}
 
 export interface PartialPackageJson {
     name: string;
@@ -38,7 +33,7 @@ export interface RecipleNPMLoaderOptions {
     ignoredPackages?: string[];
 }
 
-export class RecipleNPMLoader implements RecipleNPMModuleScript, RecipleNPMLoaderOptions {
+export class RecipleNPMLoader implements RecipleModuleData, RecipleNPMLoaderOptions {
     readonly versions: string = JSON.parse(readFileSync(path.join(__dirname, '../package.json'), 'utf-8')).peerDependencies['@reciple/client'];
     readonly moduleName: string = '@reciple/npm-loader';
 
@@ -51,8 +46,6 @@ export class RecipleNPMLoader implements RecipleNPMModuleScript, RecipleNPMLoade
     public disableVersionChecks: boolean;
     public ignoredPackages: string[];
 
-    get cwd() { return process.cwd(); }
-
     constructor(options?: RecipleNPMLoaderOptions) {
         this.nodeModulesFolder = options?.nodeModulesFolder ?? path.join(process.cwd(), 'node_modules');
         this.packageJsonPath = options?.packageJsonPath;
@@ -60,20 +53,17 @@ export class RecipleNPMLoader implements RecipleNPMModuleScript, RecipleNPMLoade
         this.ignoredPackages = options?.ignoredPackages ?? [];
     }
 
-    public async onStart(client: RecipleClient<false>): Promise<boolean> {
+    public async onStart({ client }: RecipleModuleStartData): Promise<boolean> {
         this.client = client;
         this.logger = client.logger?.clone({ name: 'NPMLoader' });
 
         this.modules = await this.getModules(this.nodeModulesFolder);
-        this.modules = this.modules.filter(m => this.moduleScriptHasName(m.script) && !this.isModuleNameLoaded(m.script.moduleName));
+        this.modules = this.modules.filter(m => !this.isModuleIdLoaded(m.id));
 
 
         this.logger?.log(`Found (${this.modules.length}) NPM Reciple modules`);
 
-        await this.client.modules.startModules({
-            modules: this.modules,
-            addToModulesCollection: true
-        });
+        await this.client.modules.startModules({ modules: this.modules });
 
         return true;
     }
@@ -105,8 +95,8 @@ export class RecipleNPMLoader implements RecipleNPMModuleScript, RecipleNPMLoade
 
             contents = await Promise.all(contents.filter(async f => (await stat(f)).isDirectory() || (await stat(f)).isSymbolicLink()));
 
-        const folders = await Promise.all(contents.filter(f => !path.basename(f).startsWith('@')).map(async f => (await stat(f)).isSymbolicLink() ? path.join(this.cwd, await readlink(f)) : f));
-        const withSubfolders = await Promise.all(contents.filter(f => path.basename(f).startsWith('@')).map(async f => (await stat(f)).isSymbolicLink() ? path.join(this.cwd, await readlink(f)) : f));
+        const folders = await Promise.all(contents.filter(f => !path.basename(f).startsWith('@')).map(async f => (await stat(f)).isSymbolicLink() ? path.join(process.cwd(), await readlink(f)) : f));
+        const withSubfolders = await Promise.all(contents.filter(f => path.basename(f).startsWith('@')).map(async f => (await stat(f)).isSymbolicLink() ? path.join(process.cwd(), await readlink(f)) : f));
 
         this.logger?.debug(`Found (${folders.length}) node_modules package folders.`);
         this.logger?.debug(`Found (${withSubfolders.length}) node_modules folders with package subfolders.`);
@@ -143,7 +133,11 @@ export class RecipleNPMLoader implements RecipleNPMModuleScript, RecipleNPMLoade
 
         if (moduleFiles.length) this.logger?.debug(`Loading modules:\n  `, moduleFiles.join('\n  '));
 
-        return this.client.modules.resolveModuleFiles(moduleFiles, this.disableVersionChecks);
+        return this.client.modules.resolveModuleFiles({
+            files: moduleFiles,
+            disableVersionCheck: this.disableVersionChecks,
+            cacheModules: false
+        });
     }
 
     /**
@@ -176,18 +170,10 @@ export class RecipleNPMLoader implements RecipleNPMModuleScript, RecipleNPMLoade
     }
 
     /**
-     * Check if module script contains moduleName property
-     * @param mdule Module script
+     * Check if the give module id is already used in loaded client modules
+     * @param id The module id
      */
-    public moduleScriptHasName(mdule: RecipleModuleScript): mdule is RecipleModuleScript & { moduleName: string; } {
-        return this.client.modules.isRecipleModuleScript(mdule) && !!(mdule as RecipleNPMModuleScript).moduleName;
-    }
-
-    /**
-     * Check if the give module name is already used in loaded client modules
-     * @param moduleName The module name
-     */
-    public isModuleNameLoaded(moduleName: string): boolean {
-        return this.client.modules.cache.some(m => this.moduleScriptHasName(m.script) && m.script.moduleName === moduleName);
+    public isModuleIdLoaded(id: string): boolean {
+        return !!this.client.modules.cache.get(id);
     }
 }

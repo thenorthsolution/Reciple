@@ -20,7 +20,7 @@ if (!existsSync(process.cwd())) await mkdir(process.cwd(), { recursive: true });
 
 const configPath = path.resolve(cli.options.config);
 const config = await ConfigReader.readConfigJS(configPath).then(c => c.config);
-const logger = config.logger?.enabled ? await createLogger(config.logger) : undefined;
+const logger = config.logger?.enabled ? await createLogger(config.logger) : null;
 
 if (cli.options.setup) process.exit(0);
 if (cli.options.shardmode) config.applicationCommandRegister = { ...config.applicationCommandRegister, enabled: false };
@@ -45,7 +45,7 @@ logger?.info(`Starting Reciple client v${buildVersion} - ${new Date()}`);
 
 const client = new RecipleClient(config);
 
-Reflect.set(client, 'logger', logger);
+client.setLogger(logger)
 
 addEventListenersToClient(client);
 
@@ -56,7 +56,7 @@ const modules = await client.modules.resolveModuleFiles({
     disableVersionCheck: config.modules.disableModuleVersionCheck
 });
 
-const startedModules = await client.modules.startModules({ modules });
+const startedModules = await client.modules.startModules();
 const failedToStartModules = modules.length - startedModules.length;
 
 if (failedToStartModules > 0) logger?.error(`Failed to start (${failedToStartModules}) modules.`);
