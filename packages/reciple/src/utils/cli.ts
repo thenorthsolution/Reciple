@@ -1,6 +1,5 @@
-import { realVersion } from '@reciple/client';
+import { buildVersion } from '@reciple/core';
 import { readFileSync } from 'node:fs';
-import { deprecate } from 'node:util';
 import { Command } from 'commander';
 import { coerce } from 'semver';
 import path from 'node:path';
@@ -11,10 +10,10 @@ const originalCwd = process.cwd();
 export let command = new Command()
     .name('reciple')
     .description(description)
-    .version(`Reciple CLI: ${version}\nReciple Client: ${realVersion}`, '-v, --version')
+    .version(`Reciple CLI: ${version}\nReciple Client: ${buildVersion}`, '-v, --version')
     .argument('[cwd]', 'Change the current working directory')
     .option('-t, --token <token>', 'Replace used bot token')
-    .option('-c, --config <dir>', 'Set path to a config file', (v, p: string[]) => p.concat([v]), [])
+    .option('-c, --config <dir>', 'Set path to a config file', 'reciple.mjs')
     .option('-D, --debugmode', 'Enable debug mode')
     .option('-y, --yes', 'Agree to all Reciple confirmation prompts')
     .option('--env <file>', '.env file location')
@@ -27,7 +26,7 @@ export let command = new Command()
 export interface CLIOptions {
     version?: string;
     token?: string;
-    config?: string[];
+    config: string;
     debugmode?: boolean;
     yes?: boolean;
     env?: string;
@@ -50,20 +49,3 @@ export const cli = {
 };
 
 export const cliVersion = `${coerce(version)}`;
-
-// TODO: Remove deprecated
-
-/**
- * @deprecated Use `cli` object instead
- */
-export const flags = cli.options;
-
-/**
- * @deprecated Use `cli` object instead
- */
-export const argvOptions = deprecate(() => cli.options, 'argvOptions() is deprecated. Use the cli.args instead.');
-
-/**
- * @deprecated Use `cli` object instead
- */
-export const cwd = cli.args[0] ? path.resolve(cli.args[0]) : process.cwd();

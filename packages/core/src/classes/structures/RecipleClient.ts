@@ -57,8 +57,10 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
         super(config.client);
     }
 
-    public async login(): Promise<string> {
-        const token = await super.login();
+    public async login(token?: string): Promise<string> {
+        if (token) Reflect.set(this.config, 'token', token);
+
+        token = await super.login(this.config.token);
 
         this._commands = new CommandManager(this as RecipleClient<true>);
         this._cooldowns = new CooldownManager(this as RecipleClient<true>);
@@ -69,6 +71,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
     }
 
     public async destroy(clearModules?: boolean): Promise<void> {
+        await this.modules.unloadModules({ removeFromCache: false }).catch(() => null);
         await super.destroy();
 
         this._commands = null;

@@ -4,10 +4,10 @@
   "homepage": "https://reciple.js.org/docs/reciple",
   "license": "GPL-3.0",
   "version": "7.9.9",
-  "main": "./bin/index.js",
-  "module": "./bin/esm.mjs",
-  "types": "./bin/index.d.ts",
-  "bin": "./bin/bin.mjs",
+  "main": "./dist/index.js",
+  "module": "./dist/esm.mjs",
+  "types": "./dist/index.d.ts",
+  "bin": "./dist/bin.mjs",
   "keywords": [
     "reciple",
     "discord.js",
@@ -21,18 +21,22 @@
   },
   "exports": {
     ".": {
-      "types": "./bin/index.d.ts",
-      "import": "./bin/esm.mjs",
-      "require": "./bin/index.js"
+      "types": "./dist/index.d.ts",
+      "import": "./dist/esm.mjs",
+      "require": "./dist/index.js"
+    },
+    "./config.mjs": {
+      "types": "./static/config.d.mts",
+      "import": "./static/config.mjs"
     }
   },
   "scripts": {
-    "clean": "npx rimraf ./bin",
+    "clean": "npx rimraf ./dist",
     "build": "npm run clean && npx tsc",
     "docs": "node ../docgen/dist/bin.js -i ./src/exports.ts -o ./docs/docs.json"
   },
   "files": [
-    "bin",
+    "dist",
     "static",
     "README.md"
   ],
@@ -47,8 +51,7 @@
     "micromatch": "^4.0.5",
     "prompts": "^2.4.2",
     "semver": "^7.5.4",
-    "typescript": "^5.2.2",
-    "yaml": "^2.3.2"
+    "typescript": "^5.2.2"
   },
   "devDependencies": {
     "@types/lodash.mergewith": "^4.6.7",

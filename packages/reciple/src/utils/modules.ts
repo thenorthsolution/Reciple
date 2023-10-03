@@ -1,12 +1,11 @@
 import { lstat, mkdir, readdir } from 'node:fs/promises';
-import { recursiveDefaults } from '@reciple/client';
 import { Awaitable } from 'fallout-utility';
-import { IConfig } from '../classes/Config';
+import { RecipleConfig } from '../classes/Config';
 import { existsSync } from 'node:fs';
 import micromatch from 'micromatch';
 import path from 'node:path';
 
-export async function getModules(config: IConfig['modules'], filter?: (filename: string) => Awaitable<boolean>): Promise<string[]> {
+export async function findModules(config: RecipleConfig['modules'], filter?: (filename: string) => Awaitable<boolean>): Promise<string[]> {
     const modules: string[] = [];
     const { globby, isDynamicPattern } = await import('globby');
 
@@ -22,7 +21,7 @@ export async function getModules(config: IConfig['modules'], filter?: (filename:
 
                 modulesFolders = modulesFolders.filter(f => !micromatch.isMatch(path.basename(f), config.exclude));
 
-            modules.push(...await getModules({
+            modules.push(...await findModules({
                 ...config,
                 modulesFolders
             }));
@@ -38,10 +37,4 @@ export async function getModules(config: IConfig['modules'], filter?: (filename:
     }
 
     return modules;
-}
-
-export async function getJsConfig<T>(file: string): Promise<T|undefined> {
-    file = path.resolve(path.isAbsolute(file) ? file : path.join(process.cwd(), file));
-
-    return recursiveDefaults<T>(await import(`file://${file}`));
 }

@@ -24,7 +24,7 @@ export class MessageCommandValidators extends BaseCommandValidators {
         this.aliases.setValidationEnabled(this.isValidationEnabled).parse(aliases);
     }
 
-    public static isValidValidateOptions(parseOptions: unknown): asserts parseOptions is MessageCommandBuilderData['parse_options'] {
+    public static isValidValidateOptions(parseOptions: unknown): asserts parseOptions is MessageCommandBuilderData['validate_options'] {
         this.validate_options.setValidationEnabled(this.isValidationEnabled).parse(parseOptions);
     }
 

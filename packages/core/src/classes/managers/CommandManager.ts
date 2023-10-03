@@ -138,8 +138,8 @@ export class CommandManager {
         const store = { global: new Collection<string, ApplicationCommand>(), guilds: new Collection<string, Collection<string, ApplicationCommand>>() };
         const config = mergeDefault({ ...this.client.config.commands, ...this.client.config.applicationCommandRegister }, options) as CommandManagerRegisterCommandsOptions;
 
-        const contextMenuCommands = (options?.contextMenuCommands?.commands ?? [...this.contextMenuCommands.values()]).map(c => isJSONEncodable(c) ? c.toJSON() : c);
-        const slashCommands = (options?.slashCommands?.commands ?? [...this.slashCommands.values()]).map(c => isJSONEncodable(c) ? c.toJSON() : c);
+        const contextMenuCommands = (options?.contextMenuCommands?.commands ?? Array.from(this.contextMenuCommands.values())).map(c => isJSONEncodable(c) ? c.toJSON() : c);
+        const slashCommands = (options?.slashCommands?.commands ?? Array.from(this.slashCommands.values())).map(c => isJSONEncodable(c) ? c.toJSON() : c);
 
         const globalCommands: ApplicationCommandDataResolvable[] = [];
         const guildCommands: Collection<string, Set<ApplicationCommandDataResolvable>> = new Collection();

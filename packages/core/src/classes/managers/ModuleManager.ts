@@ -14,7 +14,6 @@ import { RecipleModuleDataValidators } from '../validators/RecipleModuleDataVali
 export interface ModuleManagerEvents {
     resolveModuleFileError: [file: string, error: Error];
 
-    startModuleFailed: [module: RecipleModule];
     preStartModule: [module: RecipleModule];
     postStartModule: [module: RecipleModule];
     startModuleError: [module: RecipleModule, error: Error];
@@ -86,10 +85,10 @@ export class ModuleManager extends Mixin(DataManager<RecipleModule>, TypedEmitte
         return startedModules;
     }
 
-    public async loadModules<D extends RecipleModuleData = RecipleModuleData>(options: Partial<ModuleManagerModulesActionOptions<D>> & { cacheCommands?: boolean; }): Promise<RecipleModule<D>[]> {
+    public async loadModules<D extends RecipleModuleData = RecipleModuleData>(options?: Partial<ModuleManagerModulesActionOptions<D>> & { cacheCommands?: boolean; removeOnError?: boolean; }): Promise<RecipleModule<D>[]> {
         const loadedModules: RecipleModule<D>[] = [];
 
-        for (const m of options.modules ?? this.cache.values() as IterableIterator<RecipleModule<D>>) {
+        for (const m of options?.modules ?? this.cache.values() as IterableIterator<RecipleModule<D>>) {
             this.emit('preLoadModule', m);
 
             try {
@@ -101,6 +100,7 @@ export class ModuleManager extends Mixin(DataManager<RecipleModule>, TypedEmitte
                 this.emit('postLoadModule', m);
                 loadedModules.push(m);
             } catch(error) {
+                if (options?.removeOnError !== false) this._cache.delete(m.id);
                 this._throwError(error as Error, { name: 'loadModuleError', values: [m, error as Error] });
             }
         }
@@ -109,14 +109,14 @@ export class ModuleManager extends Mixin(DataManager<RecipleModule>, TypedEmitte
         return loadedModules;
     }
 
-    public async unloadModules<D extends RecipleModuleData = RecipleModuleData>(options: Partial<ModuleManagerModulesActionOptions<D>> & { reason?: string; removeFromCache?: boolean; removeModuleCommands?: boolean; }): Promise<RecipleModule<D>[]> {
+    public async unloadModules<D extends RecipleModuleData = RecipleModuleData>(options?: Partial<ModuleManagerModulesActionOptions<D>> & { reason?: string; removeFromCache?: boolean; removeModuleCommands?: boolean; }): Promise<RecipleModule<D>[]> {
         const unloadedModules: RecipleModule<D>[] = [];
 
-        for (const m of options.modules ?? this.cache.values() as IterableIterator<RecipleModule<D>>) {
+        for (const m of options?.modules ?? this.cache.values() as IterableIterator<RecipleModule<D>>) {
             this.emit('preUnloadModule', m);
 
             try {
-                if (options.removeModuleCommands !== false) {
+                if (options?.removeModuleCommands !== false) {
                     const commands = m.commands;
 
                     removeCommands: for (const command of commands) {

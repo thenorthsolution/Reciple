@@ -11,7 +11,6 @@ import { CommandPreconditionTriggerData } from '../classes/structures/CommandPre
 // Config
 export interface RecipleClientConfig {
     token: string;
-    version: string;
     commands: {
         contextMenuCommands: RecipleClientInteractionBasedCommandConfigOptions;
         messageCommand: RecipleClientCommandConfigOptions & {
