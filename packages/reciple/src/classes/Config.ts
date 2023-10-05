@@ -37,11 +37,17 @@ export class ConfigReader {
         return recursiveDefaults<RecipleConfigJS>(await import(this.defaultConfigFile))!;
     }
 
-    public static async getDefaultConfigData(): Promise<string> {
+    public static async getDefaultConfigData(useCommonJS?: boolean): Promise<string> {
         let defaultConfig = await readFile(this.defaultConfigFile, 'utf-8');
 
         defaultConfig = defaultConfig.replace(`import { version } from '@reciple/core';\n`, '');
         defaultConfig = defaultConfig.replace('version: `^${version}`', 'version: `^'+ version +'`');
+
+        if (useCommonJS) {
+            defaultConfig = defaultConfig.replace(`import { IntentsBitField } from 'discord.js';`, `const { IntentsBitField } = require('discord.js');`);
+            defaultConfig = defaultConfig.replace(`export const config`, `const config`);
+            defaultConfig += `module.exports = { config };\n`;
+        }
 
         return defaultConfig;
     }
@@ -51,10 +57,7 @@ export class ConfigReader {
         const isAbsolute = config !== file;
 
         if (isAbsolute && !existsSync(file)) {
-            const defaultConfig = await this.getDefaultConfigData();
-
-            // TODO: Also do CJS
-            if (file.endsWith('.cjs')) throw new RecipleError('Unable to create a CommonJS reciple config! Create one manually');
+            const defaultConfig = await this.getDefaultConfigData(file.endsWith('.cjs'));
 
             mkdir(path.dirname(file), { recursive: true });
             writeFile(file, defaultConfig);
