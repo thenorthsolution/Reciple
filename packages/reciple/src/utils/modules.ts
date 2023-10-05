@@ -9,21 +9,21 @@ export async function findModules(config: RecipleConfig['modules'], filter?: (fi
     const modules: string[] = [];
     const { globby, isDynamicPattern } = await import('globby');
 
-    for (const folder of config.modulesFolders) {
+    for (const folder of config.dirs) {
         const dir = path.isAbsolute(folder) ? folder : path.join(process.cwd(), folder);
 
         if (isDynamicPattern(folder, { cwd: process.cwd() })) {
-            let modulesFolders = await globby(folder, {
+            let dirs = await globby(folder, {
                     cwd: process.cwd(),
                     onlyDirectories: true,
                     absolute: true
                 });
 
-                modulesFolders = modulesFolders.filter(f => !micromatch.isMatch(path.basename(f), config.exclude));
+                dirs = dirs.filter(f => !micromatch.isMatch(path.basename(f), config.exclude));
 
             modules.push(...await findModules({
                 ...config,
-                modulesFolders
+                dirs
             }));
 
             continue;

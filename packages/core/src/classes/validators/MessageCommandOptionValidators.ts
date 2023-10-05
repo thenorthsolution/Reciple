@@ -1,12 +1,11 @@
 import { s } from '@sapphire/shapeshift';
 import { BaseCommandValidators } from './BaseCommandValidators';
-import { MessageCommandValidators } from './MessageCommandValidators';
 import { MessageCommandOptionBuilderData, MessageCommandOptionResolvable } from '../builders/MessageCommandOptionBuilder';
 import { isJSONEncodable } from 'discord.js';
 
 export class MessageCommandOptionValidators extends BaseCommandValidators {
-    public static name = MessageCommandValidators.name;
-    public static description = MessageCommandValidators.description;
+    public static name = s.string.lengthGreaterThanOrEqual(1).lengthLessThanOrEqual(32).regex(/^[\p{Ll}\p{Lm}\p{Lo}\p{N}\p{sc=Devanagari}\p{sc=Thai}_-]+$/u);
+    public static description = s.string.lengthGreaterThanOrEqual(1).lengthLessThanOrEqual(100);
     public static required = s.boolean.optional;
     public static validate = s.instance(Function).optional;
     public static resolve_value = s.instance(Function).optional;

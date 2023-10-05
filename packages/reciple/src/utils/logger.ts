@@ -32,7 +32,7 @@ export function formatLogMessage(message: string, logger: Logger, config: Partia
 
 export async function createLogger(config: PartialDeep<RecipleConfig['logger']>): Promise<Logger> {
     const logger = new Logger({
-        enableDebugmode: cli.options.debugmode || config.debugmode === true,
+        enableDebugmode: (cli.options.debugmode || config.debugmode) ?? null,
         forceEmitLogEvents: true,
         formatMessage: (message, level, logger) => formatLogMessage(message, logger, config, level)
     });

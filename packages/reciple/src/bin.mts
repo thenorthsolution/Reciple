@@ -12,11 +12,14 @@ import { kleur } from 'fallout-utility';
 import { existsSync } from 'node:fs';
 import path from 'node:path';
 import semver from 'semver';
+import { config as loadEnv } from 'dotenv';
 
 command.parse();
+
+if (!existsSync(cli.cwd)) await mkdir(cli.cwd, { recursive: true });
 process.chdir(cli.cwd);
 
-if (!existsSync(process.cwd())) await mkdir(process.cwd(), { recursive: true });
+loadEnv({ path: cli.options.env });
 
 const configPath = path.resolve(cli.options.config);
 const config = await ConfigReader.readConfigJS(configPath).then(c => c.config);
@@ -32,10 +35,6 @@ process.once('unhandledRejection', processErrorHandler);
 
 process.on('warning', warn => logger?.warn(warn));
 
-/**
- * !! BREAKING !!
- * TODO: use reciple cli version instead of client version when checking
- */
 if (!semver.satisfies(version, config.version)) {
     logger?.error(`Your config version doesn't support Reciple client v${version}`);
     process.exit(1);
@@ -63,6 +62,8 @@ if (failedToStartModules > 0) logger?.error(`Failed to start (${failedToStartMod
 
 client.once('ready', async () => {
     if (!client.isReady()) return;
+
+    console.log(client);
 
     logger?.debug(`Client is ready!`);
 

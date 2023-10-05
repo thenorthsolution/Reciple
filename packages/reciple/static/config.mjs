@@ -49,8 +49,25 @@ export const config = {
             IntentsBitField.Flags.MessageContent,
         ]
     },
+    logger: {
+        enabled: true,
+        debugmode: null,
+        coloredMessages: true,
+        disableLogPrefix: false,
+        logToFile: {
+            enabled: true,
+            logsFolder: './logs',
+            file: 'latest.log'
+        }
+    },
+    modules: {
+        dirs: ['./modules'],
+        exclude: [],
+        disableModuleVersionCheck: false
+    },
     cooldownSweeperOptions: {
         timer: 1000 * 60 * 60
     },
+    checkForUpdates: true,
     version: `^${version}`
 };

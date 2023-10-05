@@ -1,5 +1,5 @@
 import { RecipleClientOptions, RecipleError, version } from '@reciple/core';
-import { recursiveDefaults } from '@reciple/utils';
+import { recursiveDefaults, getDirModuleType } from '@reciple/utils';
 import { kleur } from 'fallout-utility';
 import { existsSync } from 'fs';
 import { mkdir, readFile, writeFile } from 'fs/promises';
@@ -8,7 +8,7 @@ import path from 'path';
 export interface RecipleConfig extends RecipleClientOptions {
     logger: {
         enabled: boolean;
-        debugmode: boolean;
+        debugmode?: boolean|null;
         coloredMessages: boolean;
         disableLogPrefix: boolean;
         logToFile: {
@@ -18,7 +18,7 @@ export interface RecipleConfig extends RecipleClientOptions {
         };
     };
     modules: {
-        modulesFolders: string[];
+        dirs: string[];
         exclude: string[];
         disableModuleVersionCheck: boolean;
     };
@@ -46,7 +46,7 @@ export class ConfigReader {
         if (useCommonJS) {
             defaultConfig = defaultConfig.replace(`import { IntentsBitField } from 'discord.js';`, `const { IntentsBitField } = require('discord.js');`);
             defaultConfig = defaultConfig.replace(`export const config`, `const config`);
-            defaultConfig += `module.exports = { config };\n`;
+            defaultConfig += `\nmodule.exports = { config };\n`;
         }
 
         return defaultConfig;
@@ -54,13 +54,14 @@ export class ConfigReader {
 
     public static async readConfigJS(config: string): Promise<RecipleConfigJS> {
         const file = (config.startsWith('.') || config.startsWith('/') ? path.resolve(config) : config);
-        const isAbsolute = config !== file;
+        const isAbsolute = config !== file || path.isAbsolute(config);
 
         if (isAbsolute && !existsSync(file)) {
-            const defaultConfig = await this.getDefaultConfigData(file.endsWith('.cjs'));
+            const isCommonJS = file.endsWith('.cjs') || ((await getDirModuleType(path.dirname(file))) === 'commonjs');
+            const defaultConfig = await this.getDefaultConfigData(!file.endsWith('.mjs') && isCommonJS);
 
-            mkdir(path.dirname(file), { recursive: true });
-            writeFile(file, defaultConfig);
+            await mkdir(path.dirname(file), { recursive: true });
+            await writeFile(file, defaultConfig);
         }
 
         const data = recursiveDefaults<RecipleConfigJS>(await import(isAbsolute ? ('file://' + file) : file));

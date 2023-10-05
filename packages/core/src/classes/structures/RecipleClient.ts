@@ -48,7 +48,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
     protected _commands: CommandManager|null = null;
     protected _cooldowns: CooldownManager|null = null;
 
-    get commands() { return this._cooldowns as If<Ready, CommandManager>; }
+    get commands() { return this._commands as If<Ready, CommandManager>; }
     get cooldowns() { return this._cooldowns as If<Ready, CooldownManager>; }
 
     public modules: ModuleManager = new ModuleManager(this);
@@ -66,12 +66,12 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
     public async login(token?: string): Promise<string> {
         if (token) Reflect.set(this.config, 'token', token);
 
-        token = await super.login(this.config.token);
-
         this._commands = new CommandManager(this as RecipleClient<true>);
         this._cooldowns = new CooldownManager(this as RecipleClient<true>);
 
         this.cooldowns?.setCooldownSweeper(this.config.cooldownSweeperOptions);
+
+        token = await super.login(this.config.token);
 
         return token;
     }
