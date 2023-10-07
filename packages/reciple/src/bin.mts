@@ -142,6 +142,7 @@ client.once('ready', async () => {
     logger?.log(`Loaded ${client.commands.contextMenuCommands.size} context menu command(s)`);
     logger?.log(`Loaded ${client.commands.messageCommands.size} message command(s)`);
     logger?.log(`Loaded ${client.commands.slashCommands.size} slash command(s)`);
+    logger?.log(`Loaded ${client.commands.preconditions.size} precondition(s)`);
 });
 
 logger?.debug(`Logging in...`);
