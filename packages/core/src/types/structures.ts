@@ -12,9 +12,9 @@ import { CommandPreconditionResolvable, CommandPreconditionTriggerData } from '.
 export interface RecipleClientConfig {
     token: string;
     commands: {
-        contextMenuCommands: RecipleClientInteractionBasedCommandConfigOptions;
-        messageCommand: RecipleClientCommandConfigOptions & {
-            commandArgumentSeparator?: string;
+        contextMenuCommand?: Partial<RecipleClientInteractionBasedCommandConfigOptions>;
+        messageCommand: Partial<RecipleClientCommandConfigOptions> & {
+            commandArgumentSeparator?: string|((message: MessageCommandExecuteOptions) => Awaitable<string>);
             prefix?: string|((message: MessageCommandExecuteOptions) => Awaitable<string>);
         };
         slashCommand?: Partial<RecipleClientInteractionBasedCommandConfigOptions>;

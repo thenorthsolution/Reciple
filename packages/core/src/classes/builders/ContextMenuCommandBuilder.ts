@@ -89,7 +89,7 @@ export class ContextMenuCommandBuilder extends Mixin(DiscordJsContextMenuCommand
     }
 
     public static async execute({ client, interaction, command }: ContextMenuCommandExecuteOptions): Promise<ContextMenuCommandExecuteData|null> {
-        if (client.config.commands?.contextMenuCommands?.acceptRepliedInteractions === false && (interaction.replied || interaction.deferred)) return null;
+        if (client.config.commands?.contextMenuCommand?.acceptRepliedInteractions === false && (interaction.replied || interaction.deferred)) return null;
 
         const builder = command ? this.resolve(command) : client.commands.get(interaction.commandName, CommandType.ContextMenuCommand);
         if (!builder) return null;
@@ -101,7 +101,7 @@ export class ContextMenuCommandBuilder extends Mixin(DiscordJsContextMenuCommand
             client
         };
 
-        if (client.config.commands.contextMenuCommands.enableCooldown !== false && builder.cooldown) {
+        if (client.config.commands.contextMenuCommand.enableCooldown !== false && builder.cooldown) {
             const cooldownData: Omit<CooldownData, 'endsAt'> = {
                 commandType: builder.command_type,
                 commandName: builder.name,

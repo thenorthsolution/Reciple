@@ -159,7 +159,8 @@ export class MessageCommandBuilder extends BaseCommandBuilder {
         if (!message.content) return null;
 
         const prefix = typeof client.config.commands.messageCommand.prefix === 'function' ? await Promise.resolve(client.config.commands.messageCommand.prefix({ client, message, command })) : client.config.commands.messageCommand.prefix;
-        const parserData = getCommand(message.content, prefix, client.config.commands.messageCommand.commandArgumentSeparator);
+        const separator = typeof client.config.commands.messageCommand.commandArgumentSeparator === 'function' ? await Promise.resolve(client.config.commands.messageCommand.commandArgumentSeparator({ client, message, command })) : client.config.commands.messageCommand.commandArgumentSeparator;
+        const parserData = getCommand(message.content, prefix, separator);
         if (!parserData || !parserData.name) return null;
 
         const builder = command ? this.resolve(command) : client.commands.get(parserData.name, CommandType.MessageCommand);
@@ -179,7 +180,7 @@ export class MessageCommandBuilder extends BaseCommandBuilder {
             })
         };
 
-        if (client.config.commands.contextMenuCommands.enableCooldown !== false && builder.cooldown) {
+        if (client.config.commands.messageCommand.enableCooldown !== false && builder.cooldown) {
             const cooldownData: Omit<CooldownData, 'endsAt'> = {
                 commandType: builder.command_type,
                 commandName: builder.name,
