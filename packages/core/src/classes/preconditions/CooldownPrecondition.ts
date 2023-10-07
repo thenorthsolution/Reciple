@@ -15,6 +15,18 @@ export class CooldownPrecondition extends CommandPrecondition {
         const duration = data.builder.cooldown;
         if (!duration) return true;
 
+        switch (data.builder.command_type) {
+            case CommandType.ContextMenuCommand:
+                if (data.client.config.commands.contextMenuCommand?.enableCooldown === false) return true;
+                break;
+            case CommandType.MessageCommand:
+                if (data.client.config.commands.messageCommand?.enableCooldown === false) return true;
+                break;
+            case CommandType.SlashCommand:
+                if (data.client.config.commands.slashCommand?.enableCooldown === false) return true;
+                break;
+        }
+
         const userId = data.type === CommandType.MessageCommand ? data.message.author.id : data.interaction.user.id;
         const guildId = (data.type === CommandType.MessageCommand ? data.message.guildId : data.interaction.guildId) ?? undefined;
 
