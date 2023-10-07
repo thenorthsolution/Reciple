@@ -69,7 +69,11 @@ export class RecipleModule<Data extends RecipleModuleData = RecipleModuleData> {
             module: this
         })).catch(err => err);
 
-        if (data === true) return;
+        if (data === true) {
+            this.status = RecipleModuleStatus.Started;
+            return;
+        }
+
         if (data === false) throw new RecipleError(RecipleError.createStartModuleErrorOptions(this.displayName, `Returned ${kleur.yellow('false')} on start`));
 
         throw (typeof data === 'string' ? new RecipleError(RecipleError.createStartModuleErrorOptions(this.displayName, data)) : data);
@@ -83,7 +87,9 @@ export class RecipleModule<Data extends RecipleModuleData = RecipleModuleData> {
             module: this
         })).catch(err => err);
 
-        if (data) throw (typeof data === 'string' ? RecipleError.createLoadModuleErrorOptions(this.displayName, data) : data);
+        if (data) throw (data instanceof Error ? data : RecipleError.createLoadModuleErrorOptions(this.displayName, data));
+
+        this.status = RecipleModuleStatus.Loaded;
     }
 
     public async unload(): Promise<void> {
@@ -94,7 +100,9 @@ export class RecipleModule<Data extends RecipleModuleData = RecipleModuleData> {
             module: this
         })).catch(err => err);
 
-        if (data) throw (typeof data === 'string' ? RecipleError.createUnloadModuleErrorOptions(this.displayName, data) : data);
+        if (data) throw (data instanceof Error ? data : RecipleError.createUnloadModuleErrorOptions(this.displayName, data));
+
+        this.status = RecipleModuleStatus.Unloaded;
     }
 
     public toString() {

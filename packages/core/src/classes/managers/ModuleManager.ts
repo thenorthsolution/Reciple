@@ -133,11 +133,11 @@ export class ModuleManager extends Mixin(DataManager<RecipleModule>, TypedEmitte
                     }
                 }
 
-                if (options?.removeFromCache !== false) this._cache.delete(m.id);
-
                 this.emit('postUnloadModule', m);
                 unloadedModules.push(m);
+                if (options?.removeFromCache !== false) this._cache.delete(m.id);
             } catch(error) {
+                if (options?.removeFromCache !== false) this._cache.delete(m.id);
                 this._throwError(error as Error, { name: 'unloadModuleError', values: [m, error as Error] });
             }
         }
