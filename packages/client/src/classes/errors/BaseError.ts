@@ -3,7 +3,7 @@ import { RestOrArray, normalizeArray } from 'discord.js';
 import { CommandError } from './CommandError';
 import { ModuleError } from './ModuleError';
 import { kleur } from 'fallout-utility';
-import stripAnsi from 'strip-ansi';
+import { stripVTControlCharacters } from 'util';
 
 // TODO: Remove this class
 
@@ -43,6 +43,6 @@ export abstract class BaseError<ErrorCodes extends BaseErrorCodes = BaseErrorCod
     }
 
     public toString(): string {
-        return stripAnsi(super.toString());
+        return stripVTControlCharacters(super.toString());
     }
 }
