@@ -158,7 +158,8 @@ export class MessageCommandBuilder extends BaseCommandBuilder {
     public static async execute({ client, message, command }: MessageCommandExecuteOptions): Promise<MessageCommandExecuteData|null> {
         if (!message.content) return null;
 
-        const parserData = getCommand(message.content, client.config.commands.messageCommand.prefix, client.config.commands.messageCommand.commandArgumentSeparator);
+        const prefix = typeof client.config.commands.messageCommand.prefix === 'function' ? await Promise.resolve(client.config.commands.messageCommand.prefix({ client, message, command })) : client.config.commands.messageCommand.prefix;
+        const parserData = getCommand(message.content, prefix, client.config.commands.messageCommand.commandArgumentSeparator);
         if (!parserData || !parserData.name) return null;
 
         const builder = command ? this.resolve(command) : client.commands.get(parserData.name, CommandType.MessageCommand);

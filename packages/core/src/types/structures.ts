@@ -1,8 +1,8 @@
 import { ContextMenuCommandBuilder, ContextMenuCommandBuilderData, ContextMenuCommandExecuteData, ContextMenuCommandExecuteFunction, ContextMenuCommandHaltData, ContextMenuCommandHaltFunction, ContextMenuCommandResolvable } from '../classes/builders/ContextMenuCommandBuilder';
 import { CommandHaltReason, CommandType } from './constants';
 import { Cooldown } from '../classes/structures/Cooldown';
-import { MessageCommandBuilder, MessageCommandBuilderData, MessageCommandExecuteData, MessageCommandExecuteFunction, MessageCommandHaltData, MessageCommandHaltFunction, MessageCommandResolvable } from '../classes/builders/MessageCommandBuilder';
-import { Collection, SlashCommandAttachmentOption, SlashCommandBooleanOption, SlashCommandChannelOption, SlashCommandIntegerOption, SlashCommandMentionableOption, SlashCommandNumberOption, SlashCommandRoleOption, SlashCommandStringOption, SlashCommandSubcommandBuilder, SlashCommandSubcommandGroupBuilder, SlashCommandUserOption } from 'discord.js';
+import { MessageCommandBuilder, MessageCommandBuilderData, MessageCommandExecuteData, MessageCommandExecuteFunction, MessageCommandExecuteOptions, MessageCommandHaltData, MessageCommandHaltFunction, MessageCommandResolvable } from '../classes/builders/MessageCommandBuilder';
+import { Awaitable, Collection, SlashCommandAttachmentOption, SlashCommandBooleanOption, SlashCommandChannelOption, SlashCommandIntegerOption, SlashCommandMentionableOption, SlashCommandNumberOption, SlashCommandRoleOption, SlashCommandStringOption, SlashCommandSubcommandBuilder, SlashCommandSubcommandGroupBuilder, SlashCommandUserOption } from 'discord.js';
 import { MessageCommandOptionValue } from '../classes/structures/MessageCommandOptionValue';
 import { AnySlashCommandBuilder, SlashCommandBuilderData, SlashCommandExecuteData, SlashCommandExecuteFunction, SlashCommandHaltData, SlashCommandHaltFunction, SlashCommandResolvable } from '../classes/builders/SlashCommandBuilder';
 import { CooldownSweeperOptions } from '../classes/managers/CooldownManager';
@@ -15,7 +15,7 @@ export interface RecipleClientConfig {
         contextMenuCommands: RecipleClientInteractionBasedCommandConfigOptions;
         messageCommand: RecipleClientCommandConfigOptions & {
             commandArgumentSeparator?: string;
-            prefix?: string;
+            prefix?: string|((message: MessageCommandExecuteOptions) => Awaitable<string>);
         };
         slashCommand?: Partial<RecipleClientInteractionBasedCommandConfigOptions>;
     };
