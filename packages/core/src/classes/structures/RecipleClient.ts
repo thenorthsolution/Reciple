@@ -69,7 +69,9 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
         this._commands = new CommandManager(this as RecipleClient<true>);
         this._cooldowns = new CooldownManager(this as RecipleClient<true>);
 
-        this.cooldowns?.setCooldownSweeper(this.config.cooldownSweeperOptions);
+        this.cooldowns?.setCooldownSweeper(this.config.cooldownSweeperOptions ?? { timer: 1000 * 60 * 60 });
+
+        if (this.config.preconditions) this.commands?.addPreconditions(this.config.preconditions);
 
         token = await super.login(this.config.token);
 

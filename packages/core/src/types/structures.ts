@@ -6,7 +6,7 @@ import { Collection, SlashCommandAttachmentOption, SlashCommandBooleanOption, Sl
 import { MessageCommandOptionValue } from '../classes/structures/MessageCommandOptionValue';
 import { AnySlashCommandBuilder, SlashCommandBuilderData, SlashCommandExecuteData, SlashCommandExecuteFunction, SlashCommandHaltData, SlashCommandHaltFunction, SlashCommandResolvable } from '../classes/builders/SlashCommandBuilder';
 import { CooldownSweeperOptions } from '../classes/managers/CooldownManager';
-import { CommandPreconditionTriggerData } from '../classes/structures/CommandPrecondition';
+import { CommandPreconditionResolvable, CommandPreconditionTriggerData } from '../classes/structures/CommandPrecondition';
 
 // Config
 export interface RecipleClientConfig {
@@ -26,7 +26,8 @@ export interface RecipleClientConfig {
         allowRegisterToGuilds: boolean;
         registerEmptyCommands: boolean;
     };
-    cooldownSweeperOptions: CooldownSweeperOptions;
+    cooldownSweeperOptions?: CooldownSweeperOptions;
+    preconditions?: CommandPreconditionResolvable[];
 }
 
 export interface RecipleClientCommandConfigOptions {

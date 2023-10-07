@@ -11,6 +11,8 @@ export * from './classes/managers/DataManager';
 export * from './classes/managers/MessageCommandOptionManager';
 export * from './classes/managers/ModuleManager';
 
+export * from './classes/preconditions/CooldownPrecondition';
+
 export * from './classes/structures/CommandPrecondition';
 export * from './classes/structures/Cooldown';
 export * from './classes/structures/MessageCommandOptionValue';

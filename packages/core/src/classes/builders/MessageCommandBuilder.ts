@@ -178,16 +178,6 @@ export class MessageCommandBuilder extends BaseCommandBuilder {
             })
         };
 
-        const commandPreconditionTrigger = await client.commands.executePreconditions(executeData);
-        if (commandPreconditionTrigger) {
-            await client.executeCommandBuilderHalt({
-                reason: CommandHaltReason.PreconditionTrigger,
-                commandType: builder.command_type,
-                ...commandPreconditionTrigger
-            });
-            return null;
-        }
-
         if (client.config.commands.contextMenuCommands.enableCooldown !== false && builder.cooldown) {
             const cooldownData: Omit<CooldownData, 'endsAt'> = {
                 commandType: builder.command_type,
@@ -207,6 +197,16 @@ export class MessageCommandBuilder extends BaseCommandBuilder {
                 });
                 return null;
             }
+        }
+
+        const commandPreconditionTrigger = await client.commands.executePreconditions(executeData);
+        if (commandPreconditionTrigger) {
+            await client.executeCommandBuilderHalt({
+                reason: CommandHaltReason.PreconditionTrigger,
+                commandType: builder.command_type,
+                ...commandPreconditionTrigger
+            });
+            return null;
         }
 
         if (builder.validate_options) {

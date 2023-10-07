@@ -1,5 +1,6 @@
 import { IntentsBitField } from 'discord.js';
 import { version } from '@reciple/core';
+import { CooldownPrecondition } from 'reciple';
 
 // @ts-check
 
@@ -65,6 +66,9 @@ export const config = {
         exclude: [],
         disableModuleVersionCheck: false
     },
+    preconditions: [
+        CooldownPrecondition.create()
+    ],
     cooldownSweeperOptions: {
         timer: 1000 * 60 * 60
     },

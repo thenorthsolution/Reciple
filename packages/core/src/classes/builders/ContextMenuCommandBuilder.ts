@@ -101,16 +101,6 @@ export class ContextMenuCommandBuilder extends Mixin(DiscordJsContextMenuCommand
             client
         };
 
-        const commandPreconditionTrigger = await client.commands.executePreconditions(executeData);
-        if (commandPreconditionTrigger) {
-            await client.executeCommandBuilderHalt({
-                reason: CommandHaltReason.PreconditionTrigger,
-                commandType: builder.command_type,
-                ...commandPreconditionTrigger
-            });
-            return null;
-        }
-
         if (client.config.commands.contextMenuCommands.enableCooldown !== false && builder.cooldown) {
             const cooldownData: Omit<CooldownData, 'endsAt'> = {
                 commandType: builder.command_type,
@@ -130,6 +120,16 @@ export class ContextMenuCommandBuilder extends Mixin(DiscordJsContextMenuCommand
                 });
                 return null;
             }
+        }
+
+        const commandPreconditionTrigger = await client.commands.executePreconditions(executeData);
+        if (commandPreconditionTrigger) {
+            await client.executeCommandBuilderHalt({
+                reason: CommandHaltReason.PreconditionTrigger,
+                commandType: builder.command_type,
+                ...commandPreconditionTrigger
+            });
+            return null;
         }
 
         return (await client.executeCommandBuilderExecute(executeData)) ? executeData : null;

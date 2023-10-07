@@ -8,9 +8,9 @@ import { SlashCommandExecuteData } from '../builders/SlashCommandBuilder';
 export interface CommandPreconditionData {
     id: string;
     disabled?: boolean;
-    contextMenuCommandExecute: (execute: ContextMenuCommandExecuteData) => Awaitable<boolean|string|Omit<CommandPreconditionTriggerData, 'executeData'>>;
-    messageCommandExecute: (execute: MessageCommandExecuteData) => Awaitable<boolean|string|Omit<CommandPreconditionTriggerData, 'executeData'>>;
-    slashCommandExecute: (execute: SlashCommandExecuteData) => Awaitable<boolean|string|Omit<CommandPreconditionTriggerData, 'executeData'>>;
+    contextMenuCommandExecute: (execute: ContextMenuCommandExecuteData, precondition: CommandPrecondition) => Awaitable<boolean|string|Omit<CommandPreconditionTriggerData, 'executeData'>>;
+    messageCommandExecute: (execute: MessageCommandExecuteData, precondition: CommandPrecondition) => Awaitable<boolean|string|Omit<CommandPreconditionTriggerData, 'executeData'>>;
+    slashCommandExecute: (execute: SlashCommandExecuteData, precondition: CommandPrecondition) => Awaitable<boolean|string|Omit<CommandPreconditionTriggerData, 'executeData'>>;
 }
 
 export interface CommandPreconditionTriggerData<T extends AnyCommandExecuteData = AnyCommandExecuteData, D extends any = any> {
@@ -47,13 +47,13 @@ export class CommandPrecondition implements CommandPreconditionData {
 
         switch (execute.type) {
             case CommandType.ContextMenuCommand:
-                data = await Promise.resolve(this.contextMenuCommandExecute(execute));
+                data = await Promise.resolve(this.contextMenuCommandExecute(execute, this));
                 break;
             case CommandType.MessageCommand:
-                data = await Promise.resolve(this.messageCommandExecute(execute));
+                data = await Promise.resolve(this.messageCommandExecute(execute, this));
                 break;
             case CommandType.SlashCommand:
-                data = await Promise.resolve(this.slashCommandExecute(execute));
+                data = await Promise.resolve(this.slashCommandExecute(execute, this));
                 break;
         }
 
