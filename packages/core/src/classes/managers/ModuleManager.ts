@@ -59,22 +59,19 @@ export class ModuleManager extends Mixin(DataManager<RecipleModule>, TypedEmitte
         return (this.cache as Collection<string, RecipleModule<D>>).find(m => m.commands.some(c => c.command_type === data.command_type && c.name === data.name));
     }
 
-    public async startModules<D extends RecipleModuleData = RecipleModuleData>(options?: Partial<ModuleManagerModulesActionOptions<D>> & { cacheModules?: boolean; }): Promise<RecipleModule<D>[]> {
+    public async startModules<D extends RecipleModuleData = RecipleModuleData>(options?: Partial<ModuleManagerModulesActionOptions<D>> & { cacheModules?: boolean; removeOnError?: boolean; }): Promise<RecipleModule<D>[]> {
         const startedModules: RecipleModule<D>[] = [];
 
         for (const m of options?.modules ?? this.cache.values() as IterableIterator<RecipleModule<D>>) {
             this.emit('preStartModule', m);
 
             try {
-                let error: Error|null = null;
+                await m.start();
 
-                await m.start().catch(err => error = err);
-
-                if (error) throw new RecipleError(RecipleError.createStartModuleErrorOptions(m.displayName, error));
-
-                startedModules.push(m);
                 this.emit('postStartModule', m);
+                startedModules.push(m);
             } catch(error) {
+                if (options?.removeOnError !== false) this._cache.delete(m.id);
                 this._throwError(error as Error, { name: 'startModuleError', values: [m, error as Error] });
             }
         }
@@ -116,6 +113,8 @@ export class ModuleManager extends Mixin(DataManager<RecipleModule>, TypedEmitte
             this.emit('preUnloadModule', m);
 
             try {
+                await m.unload();
+
                 if (options?.removeModuleCommands !== false) {
                     const commands = m.commands;
 

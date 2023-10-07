@@ -16,6 +16,7 @@ export class RecipleError extends Error {
 
     constructor(options: RecipleErrorOptions|string) {
         options = typeof options === 'string' ? { message: options } : options;
+        if ('cause' in options) options.cause = ['string', 'boolean', 'number', 'symbol', 'bigint'].includes(typeof options.cause) ? new RecipleError(String(options.cause)) : options.cause;
 
         super(options.message, { ...options });
 

@@ -63,8 +63,6 @@ if (failedToStartModules > 0) logger?.error(`Failed to start (${failedToStartMod
 client.once('ready', async () => {
     if (!client.isReady()) return;
 
-    console.log(client);
-
     logger?.debug(`Client is ready!`);
 
     process.removeListener('uncaughtException', processErrorHandler);

@@ -5,6 +5,7 @@ import { Utils } from './Utils';
 import { ModuleManager } from '../managers/ModuleManager';
 import { RecipleError } from './RecipleError';
 import { RecipleModuleStatus } from '../../types/constants';
+import { kleur } from 'fallout-utility/strings';
 import semver from 'semver';
 
 export interface RecipleModuleData {
@@ -66,9 +67,10 @@ export class RecipleModule<Data extends RecipleModuleData = RecipleModuleData> {
         const data = await Promise.resolve(this.data.onStart({
             client: this.client,
             module: this
-        }));
+        })).catch(err => err);
 
         if (data === true) return;
+        if (data === false) throw new RecipleError(RecipleError.createStartModuleErrorOptions(this.displayName, `Returned ${kleur.yellow('false')} on start`));
 
         throw (typeof data === 'string' ? new RecipleError(RecipleError.createStartModuleErrorOptions(this.displayName, data)) : data);
     }
@@ -79,9 +81,9 @@ export class RecipleModule<Data extends RecipleModuleData = RecipleModuleData> {
         const data = await Promise.resolve(this.data.onLoad({
             client: this.client,
             module: this
-        }));
+        })).catch(err => err);
 
-        if (data !== undefined) throw (typeof data === 'string' ? RecipleError.createLoadModuleErrorOptions(this.displayName, data) : data);
+        if (data) throw (typeof data === 'string' ? RecipleError.createLoadModuleErrorOptions(this.displayName, data) : data);
     }
 
     public async unload(): Promise<void> {
@@ -90,9 +92,9 @@ export class RecipleModule<Data extends RecipleModuleData = RecipleModuleData> {
         const data = await Promise.resolve(this.data.onUnload({
             client: this.client,
             module: this
-        }));
+        })).catch(err => err);
 
-        if (data !== undefined) throw (typeof data === 'string' ? RecipleError.createUnloadModuleErrorOptions(this.displayName, data) : data);
+        if (data) throw (typeof data === 'string' ? RecipleError.createUnloadModuleErrorOptions(this.displayName, data) : data);
     }
 
     public toString() {
