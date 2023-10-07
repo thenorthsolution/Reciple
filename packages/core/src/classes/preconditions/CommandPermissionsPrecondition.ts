@@ -57,7 +57,7 @@ export class CommandPermissionsPrecondition extends CommandPrecondition {
                     triggerData.message = `User doesn't have enough permissions to execute this command in this channel`;
                     triggerData.data = {
                         type: CommandPermissionsPreconditionTriggerDataType.MemberNotEnoughPermissions,
-                        requiredPermissions: await CommandPermissionsPrecondition.getMissingPermissionsIn(data.message.channel, requiredMemberPermissions)
+                        requiredPermissions: new PermissionsBitField(member.permissionsIn(data.message.channel).missing(requiredMemberPermissions))
                     };
 
                     return triggerData;
