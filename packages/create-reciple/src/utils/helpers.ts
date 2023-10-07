@@ -1,5 +1,5 @@
 import { TemplateJson, TemplateMetadata } from './types.js';
-import { mkdir, readFile, readdir, stat } from 'node:fs/promises';
+import { mkdir, readFile, readdir, stat, writeFile } from 'node:fs/promises';
 import { PackageJson } from 'fallout-utility/types';
 import { kleur } from 'fallout-utility/strings';
 import path from 'node:path';
@@ -50,6 +50,19 @@ export function cancelPrompts(options?: { reason?: string; code?: number; }): ne
     exit(options?.code ?? 1);
 }
 
+export async function createDotEnv(dir: string): Promise<string> {
+    const file = path.resolve(path.join(dir, '.env'));
+
+    let content: string = '';
+    if (existsSync(file)) content = await readFile(file, 'utf-8');
+
+    content += `\n# Replace this value to your Discord bot token from https://discord.com/developers/applications\nTOKEN=""`;
+    content = content.trim();
+
+    await writeFile(file, content);
+    return content;
+}
+
 export async function create(template: TemplateMetadata, dir: string, packageManager?: PackageManager): Promise<void> {
     if (!existsSync(dir)) mkdir(dir, { recursive: true });
 
@@ -71,6 +84,8 @@ export async function create(template: TemplateMetadata, dir: string, packageMan
 
     runScript(`reciple --setup -c reciple.${template.type === 'commonjs' ? 'cjs' : 'mjs'}`);
 
+    await createDotEnv(dir);
+
     console.log(`${kleur.bold(kleur.green('✔') + ' Your project is ready!')}`);
     console.log(`\nStart developing:`);
 
@@ -85,9 +100,7 @@ export async function create(template: TemplateMetadata, dir: string, packageMan
 }
 
 export async function copyFile(from: string, to: string, rename?: (f: string) => string): Promise<void> {
-    const isDirectory = (await stat(from)).isDirectory();
-
-    if (isDirectory) {
+    if ((await stat(from)).isDirectory()) {
         const contents = await readdir(from);
 
         for (const content of contents) {
