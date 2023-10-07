@@ -1,7 +1,7 @@
 import { PackageJson } from 'fallout-utility';
-import { existsSync } from 'fs';
-import { readFile } from 'fs/promises';
-import path from 'path';
+import { readFile } from 'node:fs/promises';
+import { existsSync } from 'node:fs';
+import path from 'node:path';
 
 export type ModuleType = 'module'|'commonjs';
 
