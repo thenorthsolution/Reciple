@@ -43,6 +43,7 @@
   "dependencies": {
     "@reciple/client": "^7.8.7",
     "@reciple/update-checker": "^7.2.2",
+    "@reciple/utils": "^7.1.2",
     "commander": "^11.0.0",
     "dotenv": "^16.3.1",
     "fallout-utility": "^2.7.1",

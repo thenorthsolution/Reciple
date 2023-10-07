@@ -11,43 +11,43 @@ export class MessageCommandOptionValidators extends BaseCommandValidators {
     public static resolve_value = s.instance(Function).optional;
 
     public static MessageCommandOptionBuilderData = s.object({
-        name: this.name,
-        description: this.description,
-        required: this.required,
-        validate: this.validate,
-        resolve_value: this.resolve_value
+        name: MessageCommandOptionValidators.name,
+        description: MessageCommandOptionValidators.description,
+        required: MessageCommandOptionValidators.required,
+        validate: MessageCommandOptionValidators.validate,
+        resolve_value: MessageCommandOptionValidators.resolve_value
     });
 
-    public static MessageCommandOptionResolvable = s.union(MessageCommandOptionValidators.MessageCommandOptionBuilderData, this.jsonEncodable);
+    public static MessageCommandOptionResolvable = s.union(MessageCommandOptionValidators.MessageCommandOptionBuilderData, MessageCommandOptionValidators.jsonEncodable);
 
     public static isValidName(name: unknown): asserts name is MessageCommandOptionBuilderData['name'] {
-        this.name.setValidationEnabled(this.isValidationEnabled).parse(name);
+        MessageCommandOptionValidators.name.setValidationEnabled(MessageCommandOptionValidators.isValidationEnabled).parse(name);
     }
 
     public static isValidDescription(description: unknown): asserts description is MessageCommandOptionBuilderData['description'] {
-        this.description.setValidationEnabled(this.isValidationEnabled).parse(description);
+        MessageCommandOptionValidators.description.setValidationEnabled(MessageCommandOptionValidators.isValidationEnabled).parse(description);
     }
 
     public static isValidRequired(required: unknown): asserts required is MessageCommandOptionBuilderData['required'] {
-        this.required.setValidationEnabled(this.isValidationEnabled).parse(required);
+        MessageCommandOptionValidators.required.setValidationEnabled(MessageCommandOptionValidators.isValidationEnabled).parse(required);
     }
 
     public static isValidValidate(validate: unknown): asserts validate is MessageCommandOptionBuilderData['validate'] {
-        this.validate.setValidationEnabled(this.isValidationEnabled).parse(validate);
+        MessageCommandOptionValidators.validate.setValidationEnabled(MessageCommandOptionValidators.isValidationEnabled).parse(validate);
     }
 
     public static isValidResolveValue(resolveValue: unknown): asserts resolveValue is MessageCommandOptionBuilderData['resolve_value'] {
-        this.resolve_value.setValidationEnabled(this.isValidationEnabled).parse(resolveValue);
+        MessageCommandOptionValidators.resolve_value.setValidationEnabled(MessageCommandOptionValidators.isValidationEnabled).parse(resolveValue);
     }
 
     public static isValidMessageCommandOptionBuilderData(data: unknown): asserts data is MessageCommandOptionBuilderData {
         const opt = data as MessageCommandOptionBuilderData;
 
-        this.isValidName(opt.name);
-        this.isValidDescription(opt.description);
-        this.isValidRequired(opt.required);
-        this.isValidValidate(opt.validate);
-        this.isValidResolveValue(opt.resolve_value);
+        MessageCommandOptionValidators.isValidName(opt.name);
+        MessageCommandOptionValidators.isValidDescription(opt.description);
+        MessageCommandOptionValidators.isValidRequired(opt.required);
+        MessageCommandOptionValidators.isValidValidate(opt.validate);
+        MessageCommandOptionValidators.isValidResolveValue(opt.resolve_value);
     }
 
     public static isValidMessageCommandOptionResolvable(data: unknown): asserts data is MessageCommandOptionResolvable {
@@ -55,9 +55,9 @@ export class MessageCommandOptionValidators extends BaseCommandValidators {
 
         if (isJSONEncodable(opt)) {
             const i = opt.toJSON();
-            this.isValidMessageCommandOptionBuilderData(i);
+            MessageCommandOptionValidators.isValidMessageCommandOptionBuilderData(i);
         } else {
-            this.isValidMessageCommandOptionBuilderData(opt);
+            MessageCommandOptionValidators.isValidMessageCommandOptionBuilderData(opt);
         }
     }
 }
