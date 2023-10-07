@@ -2,7 +2,7 @@ import { ContextMenuCommandBuilder, ContextMenuCommandBuilderData, ContextMenuCo
 import { CommandHaltReason, CommandType } from './constants';
 import { Cooldown } from '../classes/structures/Cooldown';
 import { MessageCommandBuilder, MessageCommandBuilderData, MessageCommandExecuteData, MessageCommandExecuteFunction, MessageCommandExecuteOptions, MessageCommandHaltData, MessageCommandHaltFunction, MessageCommandResolvable } from '../classes/builders/MessageCommandBuilder';
-import { Awaitable, Collection, SlashCommandAttachmentOption, SlashCommandBooleanOption, SlashCommandChannelOption, SlashCommandIntegerOption, SlashCommandMentionableOption, SlashCommandNumberOption, SlashCommandRoleOption, SlashCommandStringOption, SlashCommandSubcommandBuilder, SlashCommandSubcommandGroupBuilder, SlashCommandUserOption } from 'discord.js';
+import { Awaitable, ClientOptions, Collection, SlashCommandAttachmentOption, SlashCommandBooleanOption, SlashCommandChannelOption, SlashCommandIntegerOption, SlashCommandMentionableOption, SlashCommandNumberOption, SlashCommandRoleOption, SlashCommandStringOption, SlashCommandSubcommandBuilder, SlashCommandSubcommandGroupBuilder, SlashCommandUserOption } from 'discord.js';
 import { MessageCommandOptionValue } from '../classes/structures/MessageCommandOptionValue';
 import { AnySlashCommandBuilder, SlashCommandBuilderData, SlashCommandExecuteData, SlashCommandExecuteFunction, SlashCommandHaltData, SlashCommandHaltFunction, SlashCommandResolvable } from '../classes/builders/SlashCommandBuilder';
 import { CooldownSweeperOptions } from '../classes/managers/CooldownManager';
@@ -11,7 +11,7 @@ import { CommandPreconditionResolvable, CommandPreconditionTriggerData } from '.
 // Config
 export interface RecipleClientConfig {
     token: string;
-    commands: {
+    commands?: {
         contextMenuCommand?: Partial<RecipleClientInteractionBasedCommandConfigOptions>;
         messageCommand?: Partial<RecipleClientCommandConfigOptions> & {
             commandArgumentSeparator?: string|((message: MessageCommandExecuteOptions) => Awaitable<string>);
@@ -19,15 +19,16 @@ export interface RecipleClientConfig {
         };
         slashCommand?: Partial<RecipleClientInteractionBasedCommandConfigOptions>;
     };
-    applicationCommandRegister: {
+    applicationCommandRegister?: {
         enabled: boolean;
-        registerToGuilds: string[];
-        allowRegisterGlobally: boolean;
-        allowRegisterToGuilds: boolean;
-        registerEmptyCommands: boolean;
+        registerToGuilds?: string[];
+        allowRegisterGlobally?: boolean;
+        allowRegisterToGuilds?: boolean;
+        registerEmptyCommands?: boolean;
     };
     cooldownSweeperOptions?: CooldownSweeperOptions;
     preconditions?: CommandPreconditionResolvable[];
+    client: ClientOptions;
 }
 
 export interface RecipleClientCommandConfigOptions {

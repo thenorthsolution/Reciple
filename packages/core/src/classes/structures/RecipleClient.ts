@@ -1,5 +1,5 @@
 import { AnyCommandExecuteData, AnyCommandHaltData, RecipleClientConfig } from '../../types/structures';
-import { ApplicationCommand, Awaitable, Client, ClientEvents, ClientOptions, Collection } from 'discord.js';
+import { ApplicationCommand, Awaitable, Client, ClientEvents, Collection } from 'discord.js';
 import { CooldownManager } from '../managers/CooldownManager';
 import { If, Logger } from 'fallout-utility';
 import { CommandManager } from '../managers/CommandManager';
@@ -7,10 +7,6 @@ import { CommandPreconditionTriggerData } from './CommandPrecondition';
 import { CommandHaltReason, CommandType, version } from '../../types/constants';
 import { RecipleError } from './RecipleError';
 import { ModuleManager } from '../managers/ModuleManager';
-
-export interface RecipleClientOptions extends RecipleClientConfig {
-    client: ClientOptions;
-}
 
 export interface RecipleClientEvents extends ClientEvents {
     recipleCommandExecute: [executeData: AnyCommandExecuteData];
@@ -54,7 +50,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
     public modules: ModuleManager = new ModuleManager(this);
     public logger: Logger|null = null;
 
-    constructor(readonly config: RecipleClientOptions) {
+    constructor(readonly config: RecipleClientConfig) {
         super(config.client);
     }
 

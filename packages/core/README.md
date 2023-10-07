@@ -25,17 +25,17 @@
 ## Usage
 
 ```js
-import { RecipleClient, SlashCommandBuilder } from '@reciple/client';
+import { RecipleClient, SlashCommandBuilder } from '@reciple/core';
 
 const client = new RecipleClient({
-    recipleOptions: {
-        token: 'MTExIHlvdSEgpHJpZWQgMTEx.O5rKAA.dQw4w9WgXxQ_wpV-gGg4PSk_bm8'
-    },
-    intents: [
-        'Guilds',
-        'GuildMessages',
-        'MessageContent'
-    ]
+    token: 'MTExIHlvdSEgpHJpZWQgMTEx.O5rKAA.dQw4w9WgXxQ_wpV-gGg4PSk_bm8',
+    client: {
+        intents: [
+            'Guilds',
+            'GuildMessages',
+            'MessageContent'
+        ]
+    }
 });
 
 client.commands.add(

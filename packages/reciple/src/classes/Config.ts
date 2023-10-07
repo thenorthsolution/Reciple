@@ -1,11 +1,11 @@
-import { RecipleClientOptions, RecipleError, version } from '@reciple/core';
+import { RecipleClientConfig, RecipleError, version } from '@reciple/core';
 import { recursiveDefaults, getDirModuleType } from '@reciple/utils';
 import { kleur } from 'fallout-utility';
 import { existsSync } from 'fs';
 import { mkdir, readFile, writeFile } from 'fs/promises';
 import path from 'path';
 
-export interface RecipleConfig extends RecipleClientOptions {
+export interface RecipleConfig extends RecipleClientConfig {
     logger: {
         enabled: boolean;
         debugmode?: boolean|null;

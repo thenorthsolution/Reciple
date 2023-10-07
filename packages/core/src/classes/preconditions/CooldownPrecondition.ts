@@ -17,13 +17,13 @@ export class CooldownPrecondition extends CommandPrecondition {
 
         switch (data.builder.command_type) {
             case CommandType.ContextMenuCommand:
-                if (data.client.config.commands.contextMenuCommand?.enableCooldown === false) return true;
+                if (data.client.config.commands?.contextMenuCommand?.enableCooldown === false) return true;
                 break;
             case CommandType.MessageCommand:
-                if (data.client.config.commands.messageCommand?.enableCooldown === false) return true;
+                if (data.client.config.commands?.messageCommand?.enableCooldown === false) return true;
                 break;
             case CommandType.SlashCommand:
-                if (data.client.config.commands.slashCommand?.enableCooldown === false) return true;
+                if (data.client.config.commands?.slashCommand?.enableCooldown === false) return true;
                 break;
         }
 

@@ -8,7 +8,7 @@ import { CommandType } from '../../types/constants';
 import { AnyCommandBuilder, AnyCommandExecuteData, AnyCommandResolvable, RecipleClientConfig, RecipleClientInteractionBasedCommandConfigOptions } from '../../types/structures';
 import { Utils } from '../structures/Utils';
 
-export interface CommandManagerRegisterCommandsOptions extends Omit<RecipleClientConfig['applicationCommandRegister'], 'enabled'> {
+export interface CommandManagerRegisterCommandsOptions extends Omit<Exclude<RecipleClientConfig['applicationCommandRegister'], undefined>, 'enabled'> {
     contextMenuCommands?: Partial<RecipleClientInteractionBasedCommandConfigOptions> & {
         commands?: (RESTPostAPIContextMenuApplicationCommandsJSONBody|JSONEncodable<RESTPostAPIContextMenuApplicationCommandsJSONBody>)[];
     };

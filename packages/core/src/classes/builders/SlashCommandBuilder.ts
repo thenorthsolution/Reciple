@@ -222,7 +222,7 @@ export class SlashCommandBuilder extends Mixin(DiscordJsSlashCommandBuilder, Bas
             client
         };
 
-        if (client.config.commands.slashCommand?.enableCooldown !== false && builder.cooldown) {
+        if (client.config.commands?.slashCommand?.enableCooldown !== false && builder.cooldown) {
             const cooldownData: Omit<CooldownData, 'endsAt'> = {
                 commandType: builder.command_type,
                 commandName: builder.name,
