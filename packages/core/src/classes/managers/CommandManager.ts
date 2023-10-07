@@ -1,11 +1,11 @@
 import { ApplicationCommand, ApplicationCommandDataResolvable, Collection, JSONEncodable, RESTPostAPIChatInputApplicationCommandsJSONBody, RESTPostAPIContextMenuApplicationCommandsJSONBody, RestOrArray, isJSONEncodable, mergeDefault, normalizeArray } from 'discord.js';
+import { AnyCommandBuilder, AnyCommandExecuteData, AnyCommandResolvable, RecipleClientConfig, RecipleClientInteractionBasedCommandConfigOptions } from '../../types/structures';
+import { CommandPrecondition, CommandPreconditionResolvable, CommandPreconditionTriggerData } from '../structures/CommandPrecondition';
+import { ContextMenuCommandBuilder } from '../builders/ContextMenuCommandBuilder';
 import { MessageCommandBuilder } from '../builders/MessageCommandBuilder';
 import { AnySlashCommandBuilder } from '../builders/SlashCommandBuilder';
 import { RecipleClient } from '../structures/RecipleClient';
-import { ContextMenuCommandBuilder } from '../builders/ContextMenuCommandBuilder';
-import { CommandPrecondition, CommandPreconditionResolvable, CommandPreconditionTriggerData } from '../structures/CommandPrecondition';
 import { CommandType } from '../../types/constants';
-import { AnyCommandBuilder, AnyCommandExecuteData, AnyCommandResolvable, RecipleClientConfig, RecipleClientInteractionBasedCommandConfigOptions } from '../../types/structures';
 import { Utils } from '../structures/Utils';
 
 export interface CommandManagerRegisterCommandsOptions extends Omit<Exclude<RecipleClientConfig['applicationCommandRegister'], undefined>, 'enabled'> {

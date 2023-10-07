@@ -1,7 +1,7 @@
-import { s } from '@sapphire/shapeshift';
-import { Validators } from './Validators';
-import { CommandType } from '../../types/constants';
 import { BaseCommandBuilderData } from '../builders/BaseCommandBuilder';
+import { CommandType } from '../../types/constants';
+import { Validators } from './Validators';
+import { s } from '@sapphire/shapeshift';
 
 export class BaseCommandValidators extends Validators {
     public static command_type = s.nativeEnum(CommandType);

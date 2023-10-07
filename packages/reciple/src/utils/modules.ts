@@ -1,5 +1,5 @@
 import { lstat, mkdir, readdir } from 'node:fs/promises';
-import { Awaitable } from 'fallout-utility';
+import { Awaitable } from 'fallout-utility/types';
 import { RecipleConfig } from '../classes/Config';
 import { existsSync } from 'node:fs';
 import micromatch from 'micromatch';

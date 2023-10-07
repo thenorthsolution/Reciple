@@ -1,5 +1,5 @@
-import { s } from '@sapphire/shapeshift';
 import { BitField, PermissionFlagsBits, PermissionsBitField, isValidationEnabled } from 'discord.js';
+import { s } from '@sapphire/shapeshift';
 
 export class Validators {
     protected static _isValidationEnabled: boolean|null = null;

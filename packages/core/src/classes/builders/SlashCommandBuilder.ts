@@ -1,10 +1,10 @@
 import { ApplicationCommandType, Awaitable, ChatInputCommandInteraction, isJSONEncodable, JSONEncodable, SlashCommandBuilder as DiscordJsSlashCommandBuilder, SharedSlashCommandOptions, RESTPostAPIChatInputApplicationCommandsJSONBody, SlashCommandSubcommandGroupBuilder, SlashCommandSubcommandBuilder, SlashCommandAttachmentOption, SlashCommandBooleanOption, SlashCommandChannelOption, SlashCommandIntegerOption, SlashCommandMentionableOption, SlashCommandNumberOption, SlashCommandRoleOption, SlashCommandStringOption, SlashCommandUserOption, ApplicationCommandOptionType, ApplicationCommandOptionAllowedChannelTypes, PermissionResolvable, PermissionsBitField } from 'discord.js';
-import { Mixin } from 'ts-mixer';
+import { AnyNonSubcommandSlashCommandOptionBuilder, AnySlashCommandOptionBuilder, AnySlashCommandOptionData, CommandHaltData } from '../../types/structures';
 import { BaseCommandBuilder, BaseCommandBuilderData } from './BaseCommandBuilder';
 import { CommandHaltReason, CommandType } from '../../types/constants';
 import { RecipleClient } from '../structures/RecipleClient';
-import { AnyNonSubcommandSlashCommandOptionBuilder, AnySlashCommandOptionBuilder, AnySlashCommandOptionData, CommandHaltData } from '../../types/structures';
 import { CooldownData } from '../structures/Cooldown';
+import { Mixin } from 'ts-mixer';
 
 export interface SlashCommandExecuteData {
     type: CommandType.SlashCommand;

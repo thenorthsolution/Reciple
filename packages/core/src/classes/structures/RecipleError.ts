@@ -1,9 +1,9 @@
-import { kleur } from 'fallout-utility/strings';
-import { stripVTControlCharacters } from 'util';
-import { Utils } from './Utils';
 import { AnyCommandBuilder, AnyCommandBuilderData } from '../../types/structures';
-import { buildVersion } from '../../types/constants';
 import { BaseCommandBuilderData } from '../builders/BaseCommandBuilder';
+import { stripVTControlCharacters } from 'node:util';
+import { buildVersion } from '../../types/constants';
+import { kleur } from 'fallout-utility/strings';
+import { Utils } from './Utils';
 
 export interface RecipleErrorOptions {
     message: string;

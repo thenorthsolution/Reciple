@@ -1,6 +1,6 @@
-import { Message } from 'discord.js';
 import { MessageCommandOptionBuilder } from '../builders/MessageCommandOptionBuilder';
 import { RecipleClient } from './RecipleClient';
+import { Message } from 'discord.js';
 
 export interface MessageCommandOptionValueData<T extends any = any> {
     name: string;

@@ -1,9 +1,9 @@
 import { RecipleClientConfig, RecipleError, version } from '@reciple/core';
 import { recursiveDefaults, getDirModuleType } from '@reciple/utils';
-import { kleur } from 'fallout-utility';
-import { existsSync } from 'fs';
-import { mkdir, readFile, writeFile } from 'fs/promises';
-import path from 'path';
+import { mkdir, readFile, writeFile } from 'node:fs/promises';
+import { kleur } from 'fallout-utility/strings';
+import { existsSync } from 'node:fs';
+import path from 'node:path';
 
 export interface RecipleConfig extends RecipleClientConfig {
     logger: {

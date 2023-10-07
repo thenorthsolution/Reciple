@@ -1,9 +1,8 @@
+import { BaseCommandValidators } from './BaseCommandValidators';
+import { RecipleModuleData } from '../structures/RecipleModule';
 import { semverRegex } from '@reciple/utils';
 import { Validators } from './Validators';
 import { s } from '@sapphire/shapeshift';
-import { } from 'semver';
-import { BaseCommandValidators } from './BaseCommandValidators';
-import { RecipleModuleData } from '../structures/RecipleModule';
 
 export class RecipleModuleDataValidators extends Validators {
     public static id = s.string.regex(/^[a-zA-Z0-9_.-]+$/).optional;

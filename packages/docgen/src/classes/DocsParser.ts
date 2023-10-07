@@ -1,10 +1,10 @@
 import { Application, JSONOutput, OptionsReader, ProjectReflection, TSConfigReader } from 'typedoc';
-import type { ProjectParser } from 'typedoc-json-parser';
 import { Docs, DocsParserCustomPagesData } from '../types/docs.js';
-import { dirname, join, resolve } from 'node:path';
-import { existsSync } from 'node:fs';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
+import type { ProjectParser } from 'typedoc-json-parser';
+import { dirname, join, resolve } from 'node:path';
 import { Collection } from '@discordjs/collection';
+import { existsSync } from 'node:fs';
 
 export interface DocsParserOptions extends Omit<ProjectParser.Options, 'data'> {
     files: string[];

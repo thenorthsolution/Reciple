@@ -1,7 +1,7 @@
-import { s } from '@sapphire/shapeshift';
-import { BaseCommandValidators } from './BaseCommandValidators';
-import { MessageCommandBuilderData } from '../builders/MessageCommandBuilder';
 import { MessageCommandOptionValidators } from './MessageCommandOptionValidators';
+import { MessageCommandBuilderData } from '../builders/MessageCommandBuilder';
+import { BaseCommandValidators } from './BaseCommandValidators';
+import { s } from '@sapphire/shapeshift';
 
 export class MessageCommandValidators extends BaseCommandValidators {
     public static name = s.string.lengthGreaterThanOrEqual(1).lengthLessThanOrEqual(32).regex(/^[\p{Ll}\p{Lm}\p{Lo}\p{N}\p{sc=Devanagari}\p{sc=Thai}_-]+$/u);

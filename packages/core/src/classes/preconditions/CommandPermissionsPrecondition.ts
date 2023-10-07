@@ -1,7 +1,7 @@
-import { MessageCommandExecuteData } from '../builders/MessageCommandBuilder';
 import { CommandPrecondition, CommandPreconditionData, CommandPreconditionTriggerData } from '../structures/CommandPrecondition';
 import { Guild, GuildBasedChannel, PermissionResolvable, PermissionsBitField } from 'discord.js';
-import { CommandPermissionsPreconditionTriggerDataType } from '../..';
+import { CommandPermissionsPreconditionTriggerDataType } from '../../types/constants';
+import { MessageCommandExecuteData } from '../builders/MessageCommandBuilder';
 
 export class CommandPermissionsPrecondition extends CommandPrecondition {
     public static id: string = 'org.reciple.js.cmdpermissions';

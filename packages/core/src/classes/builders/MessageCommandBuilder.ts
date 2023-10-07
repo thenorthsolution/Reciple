@@ -1,13 +1,13 @@
 import { Awaitable, JSONEncodable, RestOrArray, Message, normalizeArray, isJSONEncodable } from 'discord.js';
-import { CommandHaltReason, CommandType } from '../../types/constants';
-import { MessageCommandValidators } from '../validators/MessageCommandValidators';
-import { BaseCommandBuilder, BaseCommandBuilderData } from './BaseCommandBuilder';
 import { MessageCommandOptionBuilder, MessageCommandOptionResolvable } from './MessageCommandOptionBuilder';
 import { MessageCommandOptionValidators } from '../validators/MessageCommandOptionValidators';
-import { CommandHaltData } from '../../types/structures';
-import { RecipleClient } from '../structures/RecipleClient';
 import { MessageCommandOptionManager } from '../managers/MessageCommandOptionManager';
+import { MessageCommandValidators } from '../validators/MessageCommandValidators';
+import { BaseCommandBuilder, BaseCommandBuilderData } from './BaseCommandBuilder';
+import { CommandHaltReason, CommandType } from '../../types/constants';
 import { CommandData, getCommand } from 'fallout-utility/commands';
+import { RecipleClient } from '../structures/RecipleClient';
+import { CommandHaltData } from '../../types/structures';
 import { CooldownData } from '../structures/Cooldown';
 
 export interface MessageCommandExecuteData {

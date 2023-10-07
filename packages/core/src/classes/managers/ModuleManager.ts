@@ -1,15 +1,15 @@
-import { Mixin } from 'ts-mixer';
-import { RecipleModule, RecipleModuleData } from '../structures/RecipleModule';
-import { DataManager } from './DataManager';
-import { TypedEmitter } from 'fallout-utility/TypedEmitter';
+import { RecipleModuleDataValidators } from '../validators/RecipleModuleDataValidators';
 import { Awaitable, Collection, Constructable, isJSONEncodable } from 'discord.js';
+import { RecipleModule, RecipleModuleData } from '../structures/RecipleModule';
+import { RecursiveDefault, recursiveDefaults } from '@reciple/utils';
+import { TypedEmitter } from 'fallout-utility/TypedEmitter';
 import { RecipleClient } from '../structures/RecipleClient';
 import { AnyCommandResolvable } from '../../types/structures';
 import { RecipleError } from '../structures/RecipleError';
 import { CommandType } from '../../types/constants';
-import { RecursiveDefault, recursiveDefaults } from '@reciple/utils';
-import path from 'path';
-import { RecipleModuleDataValidators } from '../validators/RecipleModuleDataValidators';
+import { DataManager } from './DataManager';
+import { Mixin } from 'ts-mixer';
+import path from 'node:path';
 
 export interface ModuleManagerEvents {
     resolveModuleFileError: [file: string, error: Error];

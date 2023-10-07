@@ -1,11 +1,11 @@
-import { RestOrArray, normalizeArray } from 'discord.js';
 import { AnyCommandBuilder, AnyCommandResolvable } from '../../types/structures';
-import { RecipleClient } from './RecipleClient';
-import { Utils } from './Utils';
-import { ModuleManager } from '../managers/ModuleManager';
-import { RecipleError } from './RecipleError';
 import { RecipleModuleStatus } from '../../types/constants';
+import { ModuleManager } from '../managers/ModuleManager';
+import { RestOrArray, normalizeArray } from 'discord.js';
+import { RecipleClient } from './RecipleClient';
+import { RecipleError } from './RecipleError';
 import { kleur } from 'fallout-utility/strings';
+import { Utils } from './Utils';
 import semver from 'semver';
 
 export interface RecipleModuleData {

@@ -1,18 +1,18 @@
 #!/usr/bin/env node
 
 import { ContextMenuCommandBuilder, MessageCommandBuilder, SlashCommandBuilder, buildVersion, version } from '@reciple/core';
-import { setTimeout as setTimeoutAsync } from 'node:timers/promises';
 import { createLogger, addEventListenersToClient } from './utils/logger.js';
+import { setTimeout as setTimeoutAsync } from 'node:timers/promises';
 import { checkLatestUpdate } from '@reciple/update-checker';
 import { command, cli, cliVersion } from './utils/cli.js';
-import { mkdir } from 'node:fs/promises';
-import { ConfigReader } from './classes/Config.js';
 import { RecipleClient, findModules } from './index.js';
+import { ConfigReader } from './classes/Config.js';
+import { config as loadEnv } from 'dotenv';
+import { mkdir } from 'node:fs/promises';
 import { kleur } from 'fallout-utility';
 import { existsSync } from 'node:fs';
 import path from 'node:path';
 import semver from 'semver';
-import { config as loadEnv } from 'dotenv';
 
 command.parse();
 

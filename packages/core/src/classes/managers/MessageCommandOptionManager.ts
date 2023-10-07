@@ -1,9 +1,9 @@
+import { MessageCommandOptionParseOptionValueOptions, MessageCommandOptionValue } from '../structures/MessageCommandOptionValue';
 import { MessageCommandBuilder } from '../builders/MessageCommandBuilder';
-import { Collection, Message } from 'discord.js';
-import { DataManager } from './DataManager';
 import { RecipleClient } from '../structures/RecipleClient';
 import { RecipleError } from '../structures/RecipleError';
-import { MessageCommandOptionParseOptionValueOptions, MessageCommandOptionValue } from '../structures/MessageCommandOptionValue';
+import { Collection, Message } from 'discord.js';
+import { DataManager } from './DataManager';
 
 export interface MessageCommandOptionManagerOptions {
     command: MessageCommandBuilder;

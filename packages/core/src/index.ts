@@ -31,4 +31,4 @@ export * from './classes/validators/Validators';
 export * from './types/constants';
 export * from './types/structures';
 
-export { Logger } from 'fallout-utility';
+export { Logger } from 'fallout-utility/Logger';

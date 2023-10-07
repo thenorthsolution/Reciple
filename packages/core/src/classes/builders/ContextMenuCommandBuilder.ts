@@ -1,10 +1,10 @@
 import { ApplicationCommandType, Awaitable, ContextMenuCommandInteraction, ContextMenuCommandType, ContextMenuCommandBuilder as DiscordJsContextMenuCommandBuilder, JSONEncodable, PermissionsBitField, PermissionResolvable, RESTPostAPIContextMenuApplicationCommandsJSONBody, SlashCommandAssertions, isJSONEncodable } from 'discord.js';
-import { Mixin } from 'ts-mixer';
 import { BaseCommandBuilder, BaseCommandBuilderData } from './BaseCommandBuilder';
 import { CommandHaltReason, CommandType } from '../../types/constants';
 import { RecipleClient } from '../structures/RecipleClient';
 import { CommandHaltData } from '../../types/structures';
 import { CooldownData } from '../structures/Cooldown';
+import { Mixin } from 'ts-mixer';
 
 export interface ContextMenuCommandExecuteData {
     type: CommandType.ContextMenuCommand;

@@ -1,10 +1,10 @@
-import { AnyCommandExecuteFunction, AnyCommandHaltFunction } from '../../types/structures';
 import { PermissionResolvable, PermissionsBitField, RestOrArray, normalizeArray } from 'discord.js';
-import { CommandType } from '../../types/constants';
+import { AnyCommandExecuteFunction, AnyCommandHaltFunction } from '../../types/structures';
 import { BaseCommandValidators } from '../validators/BaseCommandValidators';
 import { ContextMenuCommandBuilder } from './ContextMenuCommandBuilder';
 import { MessageCommandBuilder } from './MessageCommandBuilder';
 import { SlashCommandBuilder } from './SlashCommandBuilder';
+import { CommandType } from '../../types/constants';
 
 export interface BaseCommandBuilderData {
     command_type: CommandType;

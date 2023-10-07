@@ -1,6 +1,6 @@
-import { Collection } from 'discord.js';
 import { ReadonlyCollection } from '@discordjs/collection';
 import { RecipleClient } from '../structures/RecipleClient';
+import { Collection } from 'discord.js';
 import { randomBytes } from 'crypto';
 
 export abstract class DataManager<T> {
