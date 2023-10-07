@@ -50,7 +50,7 @@ npm i reciple discord.js
 You can initialize the bot to the current directory with the following command in your terminal:
 
 ```bash
-npx reciple
+reciple
 ```
 
 It will ask you to continue if the directory is not empty. Type `y` to continue. After the bot has been initialized, it will ask you for your bot token.
@@ -198,13 +198,13 @@ token: "env:TOKEN_VARIABLE"
 You can override the given token using your terminal
 
 ```bash
-npx reciple --token "YOUR_TOKEN_HERE"
+reciple --token "YOUR_TOKEN_HERE"
 ```
 
 Use env variable
 
 ```bash
-npx reciple --token "env:TOKEN_VARIABLE"
+reciple --token "env:TOKEN_VARIABLE"
 ```
 
 ---

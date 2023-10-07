@@ -25,7 +25,7 @@
 ## Usage
 
 ```sh
-npx reciple-docgen -i ./src/index.ts -c ./docs/custom.json -o ./docs/docs.json
+reciple-docgen -i ./src/index.ts -c ./docs/custom.json -o ./docs/docs.json
 ```
 
 ```sh

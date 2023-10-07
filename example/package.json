@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "start": "npx reciple -c config.yml",
+    "start": "reciple -c config.yml",
     "test": "node ../packages/reciple/bin/bin.mjs -c config.yml --debugmode",
     "shards": "node shards.js -c config.yml"
   },

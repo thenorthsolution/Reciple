@@ -26,8 +26,8 @@
     }
   },
   "scripts": {
-    "clean": "npx rimraf ./dist",
-    "build": "npm run clean && npx tsc",
+    "clean": "rimraf ./dist",
+    "build": "npm run clean && tsc",
     "docs": "node ../docgen/dist/bin.js -i ./src/index.ts -o ./docs/docs.json"
   },
   "files": [

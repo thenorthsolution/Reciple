@@ -1,10 +1,10 @@
 {
   "name": "reciple-app",
+  "type": "commonjs",
   "private": true,
-  "type": "module",
   "scripts": {
-    "start": "reciple",
-    "dev": "nodemon --ext js,mjs,cjs,json,yml,yaml --exec \"reciple\" --signal SIGHUP"
+    "start": "reciple -c reciple.cjs",
+    "dev": "nodemon --ext js,mjs,cjs,json --exec \"reciple -c reciple.cjs\" --signal SIGHUP"
   },
   "dependencies": {
     "discord.js": "DISCORDJS",
