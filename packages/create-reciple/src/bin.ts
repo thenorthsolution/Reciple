@@ -28,8 +28,10 @@ let dir: string|null = command.args[0] ?? null;
 let typescript: boolean|null = options.typescript !== 'null' ? options.typescript : null;
 let commonjs: boolean|null = options.esm === true ? false : options.commonjs !== 'null' ? options.commonjs : null;
 let packageManager: PackageManager|null = options.packageManager !== 'null' ? options.packageManager : null;
+let setup: boolean = false;
 
 if (dir === null || typescript === null || commonjs === null || packageManager === null) {
+    setup = true;
     intro(kleur.cyan().bold(`${packageJson.name} v${packageJson.version}`));
 }
 
@@ -107,6 +109,6 @@ if (packageManager === null) {
 const template = templates.find(p => p.type === (commonjs ? 'commonjs' : 'module') && p.language === (typescript ? 'Typescript' : 'Javascript'));
 if (!template) cancelPrompts({ reason: `Template not found` });
 if (packageManager && !packageManagers.some(p => p.value === packageManager)) cancelPrompts({ reason: `Invalid package manager` });
+if (setup) outro(`Setup Done! Creating from ${kleur.cyan().bold(template.name)} template`);
 
-outro(`Setup Done! Creating from ${kleur.cyan().bold(template.name)} template`);
 await create(template, dir, packageManager ?? undefined);
