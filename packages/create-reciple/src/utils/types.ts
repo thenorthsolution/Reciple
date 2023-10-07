@@ -1,7 +1,7 @@
 import { ModuleType, PackageManager } from '@reciple/utils';
 
 export interface CliOptions {
-    override: boolean;
+    force: boolean;
     typescript: boolean|'null';
     esm: boolean|'null';
     commonjs: boolean|'null';

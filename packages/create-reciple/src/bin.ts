@@ -52,7 +52,7 @@ if (dir === null) {
 
 dir = path.resolve(dir);
 
-if (!options.override && await isDirEmpty(dir)) {
+if (!options.force && !(await isDirEmpty(dir))) {
     const override = await confirm({
         message: `Directory is not empty! Would you like to override its existing files?`,
         initialValue: false,

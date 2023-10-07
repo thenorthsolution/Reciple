@@ -88,7 +88,7 @@ export async function create(template: TemplateMetadata, dir: string, packageMan
 
     if (packageManager) runScript(placeholders['INSTALL_ALL'], dir);
 
-    runScript(`reciple --setup -c reciple.${template.type === 'commonjs' ? 'cjs' : 'mjs'}`);
+    runScript(`${packageManagerPlaceholders['npm']['BIN_EXEC']} reciple ${dir} --setup -c reciple.${template.type === 'commonjs' ? 'cjs' : 'mjs'}`);
 
     await createDotEnv(dir);
 
@@ -129,5 +129,5 @@ export async function isDirEmpty(dir: string): Promise<boolean> {
     if (!existsSync(dir)) return true;
 
     const contents = (await readdir(dir)).filter(f => !f.startsWith('.'));
-    return !contents.length;
+    return contents.length === 0;
 }
