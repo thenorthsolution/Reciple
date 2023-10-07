@@ -1,13 +1,12 @@
 import { BaseCommandValidators } from './BaseCommandValidators';
 import { RecipleModuleData } from '../structures/RecipleModule';
-import { semverRegex } from '@reciple/utils';
 import { Validators } from './Validators';
 import { s } from '@sapphire/shapeshift';
 
 export class RecipleModuleDataValidators extends Validators {
     public static id = s.string.regex(/^[a-zA-Z0-9_.-]+$/).optional;
     public static name = s.string.optional;
-    public static versions = s.union(s.string.regex(semverRegex), s.string.regex(/latest/), s.union(s.string.regex(semverRegex), s.string.regex(/latest/)).array);
+    public static versions = s.union(s.string, s.string.array);
     public static commands = s.union(BaseCommandValidators.BaseCommandBuilderData, RecipleModuleDataValidators.jsonEncodable).array.optional;
     public static onStart = s.instance(Function);
     public static onLoad = s.instance(Function).optional;
