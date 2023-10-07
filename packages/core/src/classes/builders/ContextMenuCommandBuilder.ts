@@ -101,7 +101,7 @@ export class ContextMenuCommandBuilder extends Mixin(DiscordJsContextMenuCommand
             client
         };
 
-        if (client.config.commands.contextMenuCommand.enableCooldown !== false && builder.cooldown) {
+        if (client.config.commands.contextMenuCommand?.enableCooldown !== false && builder.cooldown) {
             const cooldownData: Omit<CooldownData, 'endsAt'> = {
                 commandType: builder.command_type,
                 commandName: builder.name,

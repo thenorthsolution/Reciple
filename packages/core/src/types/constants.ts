@@ -28,3 +28,10 @@ export enum RecipleModuleStatus {
     Started,
     Loaded
 }
+
+export enum CommandPermissionsPreconditionTriggerDataType {
+    BotNotAllowed = 1,
+    NoDmPermission,
+    ClientNotEnoughPermissions,
+    MemberNotEnoughPermissions
+}

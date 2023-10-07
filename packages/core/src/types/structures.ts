@@ -13,7 +13,7 @@ export interface RecipleClientConfig {
     token: string;
     commands: {
         contextMenuCommand?: Partial<RecipleClientInteractionBasedCommandConfigOptions>;
-        messageCommand: Partial<RecipleClientCommandConfigOptions> & {
+        messageCommand?: Partial<RecipleClientCommandConfigOptions> & {
             commandArgumentSeparator?: string|((message: MessageCommandExecuteOptions) => Awaitable<string>);
             prefix?: string|((message: MessageCommandExecuteOptions) => Awaitable<string>);
         };
