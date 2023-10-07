@@ -44,8 +44,8 @@ export class ConfigReader {
         defaultConfig = defaultConfig.replace('version: `^${version}`', 'version: `^'+ version +'`');
 
         if (useCommonJS) {
+            defaultConfig = defaultConfig.replace(`import { CooldownPrecondition, CommandPermissionsPrecondition } from 'reciple';`, `const { CooldownPrecondition, CommandPermissionsPrecondition } = require('reciple');`);
             defaultConfig = defaultConfig.replace(`import { IntentsBitField } from 'discord.js';`, `const { IntentsBitField } = require('discord.js');`);
-            defaultConfig = defaultConfig.replace(`import { CooldownPrecondition } from 'reciple';`, `const { CooldownPrecondition } = require('reciple');`);
             defaultConfig = defaultConfig.replace(`export const config`, `const config`);
             defaultConfig += `\nmodule.exports = { config };\n`;
         }
