@@ -18,17 +18,13 @@
         "^build"
       ],
       "outputs": [
-        "{projectRoot}/dist",
-        "{projectRoot}/bin"
+        "{projectRoot}/dist"
       ],
       "inputs": [
         "{projectRoot}/src/**/*"
       ]
     },
     "docs": {
-      "dependsOn": [
-        "^docs"
-      ],
       "outputs": [
         "{projectRoot}/docs/docs.json"
       ],
