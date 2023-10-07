@@ -1,12 +1,12 @@
 import { TemplateJson, TemplateMetadata } from './types.js';
-import { mkdir, readFile, readdir, stat, writeFile } from 'node:fs/promises';
+import { copyFile, mkdir, readFile, readdir, stat, writeFile } from 'node:fs/promises';
 import { PackageJson } from 'fallout-utility/types';
 import { kleur } from 'fallout-utility/strings';
 import path from 'node:path';
 import { cancel } from '@clack/prompts';
 import { exit } from 'node:process';
 import { existsSync } from 'node:fs';
-import { packageManagerPlaceholders, packages } from './constants.js';
+import { packageManagerPlaceholders, packages, root } from './constants.js';
 import { PackageManager } from '@reciple/utils';
 import { execSync } from 'node:child_process';
 
@@ -66,7 +66,11 @@ export async function createDotEnv(dir: string): Promise<string> {
 export async function create(template: TemplateMetadata, dir: string, packageManager?: PackageManager): Promise<void> {
     if (!existsSync(dir)) mkdir(dir, { recursive: true });
 
-    await copyFile(template.path, dir, f => f.replace('dot.', '.'));
+    await recursiveCopyFiles(template.path, dir, f => f.replace('dot.', '.'));
+
+    if (existsSync(path.join(root, 'assets'))) {
+        await recursiveCopyFiles(path.join(root, 'assets'), dir, f => f.replace('dot.', '.'));
+    }
 
     let packageJsonData = await readFile(path.join(dir, 'package.json'), 'utf-8');
 
@@ -79,6 +83,8 @@ export async function create(template: TemplateMetadata, dir: string, packageMan
     for (const placeholder of (Object.keys(placeholders) as (keyof typeof placeholders)[])) {
         packageJsonData = packageJsonData.replaceAll(placeholder, placeholders[placeholder]);
     }
+
+    await writeFile(path.join(dir, 'package.json'), packageJsonData);
 
     if (packageManager) runScript(placeholders['INSTALL_ALL'], dir);
 
@@ -99,12 +105,12 @@ export async function create(template: TemplateMetadata, dir: string, packageMan
     }
 }
 
-export async function copyFile(from: string, to: string, rename?: (f: string) => string): Promise<void> {
+export async function recursiveCopyFiles(from: string, to: string, rename?: (f: string) => string): Promise<void> {
     if ((await stat(from)).isDirectory()) {
         const contents = await readdir(from);
 
         for (const content of contents) {
-            await copyFile(path.join(from, content), path.join(to, rename ? rename(content) : content));
+            await recursiveCopyFiles(path.join(from, content), path.join(to, rename ? rename(content) : content));
         }
 
         return;
@@ -117,4 +123,11 @@ export async function copyFile(from: string, to: string, rename?: (f: string) =>
 export async function runScript(command: string, cwd?: string) {
     console.log(kleur.gray(kleur.bold('$') + ' ' + command));
     execSync(`${command}`, { cwd, env: { ...process.env, FORCE_COLOR: '1' }, stdio: ['inherit', 'inherit', 'inherit'] });
+}
+
+export async function isDirEmpty(dir: string): Promise<boolean> {
+    if (!existsSync(dir)) return true;
+
+    const contents = (await readdir(dir)).filter(f => !f.startsWith('.'));
+    return !contents.length;
 }

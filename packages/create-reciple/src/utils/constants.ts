@@ -4,8 +4,9 @@ import { readFile } from 'node:fs/promises';
 import { PackageJson } from 'fallout-utility/types';
 import { PackageManager } from '@reciple/utils';
 
-export const templatesFolder = path.join(path.dirname(fileURLToPath(import.meta.url)), '../../templates');
-export const packageJson: PackageJson = JSON.parse(await readFile(path.join(templatesFolder, '../package.json'), 'utf-8'));
+export const root = path.join(path.dirname(fileURLToPath(import.meta.url)), '../../');
+export const templatesFolder = path.join(root, 'templates');
+export const packageJson: PackageJson = JSON.parse(await readFile(path.join(root, 'package.json'), 'utf-8'));
 
 export const packageManagers: { label?: string; hint?: string; value: PackageManager|'none'; }[] = [
     {
