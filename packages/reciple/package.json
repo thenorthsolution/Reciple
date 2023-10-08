@@ -56,9 +56,8 @@
   },
   "devDependencies": {
     "@types/lodash.mergewith": "^4.6.7",
-    "@types/micromatch": "^4.0.2",
-    "@types/prompts": "^2.4.4",
-    "@types/semver": "^7.5.2",
+    "@types/micromatch": "^4.0.3",
+    "@types/semver": "^7.5.3",
     "discord.js": "^14.13.0"
   },
   "peerDependencies": {

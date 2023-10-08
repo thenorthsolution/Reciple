@@ -36,11 +36,11 @@
     "fallout-utility": "^2.7.1"
   },
   "devDependencies": {
-    "@types/node": "^20.6.3",
+    "@types/node": "^20.8.3",
     "discord.js": "^14.13.0",
     "nodemon": "^3.0.1",
     "reciple": "^8.0.0-dev.0",
-    "rimraf": "^5.0.1",
+    "rimraf": "^5.0.5",
     "typescript": "^5.2.2"
   }
 }
