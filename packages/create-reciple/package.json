@@ -21,7 +21,7 @@
   "scripts": {
     "clean": "rimraf ./dist",
     "build": "npm run clean && tsc",
-    "docs": ""
+    "docs": "node ../docgen/dist/bin.js -i ./src/index.ts -o ./docs/docs.json"
   },
   "files": [
     "dist",
