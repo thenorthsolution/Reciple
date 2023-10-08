@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import { packageJson, packageManagers, templatesFolder } from './utils/constants.js';
 import { cancelPrompts, create, getTemplates, isDirEmpty } from './utils/helpers.js';
 import { PackageManager, resolvePackageManager } from '@reciple/utils';
