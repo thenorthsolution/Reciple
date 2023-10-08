@@ -1,7 +1,6 @@
 name: Generate Docs
 on:
   push:
-    branches: ['main']
     paths:
       - 'packages/*/src/**'
       - 'packages/*/package.json'
@@ -50,11 +49,10 @@ jobs:
       max-parallel: 1
       fail-fast: false
       matrix:
-        package: ['reciple', 'client', 'utils', 'npm-loader', 'update-checker', 'docgen']
+        package: ['core', 'reciple', 'docgen', 'update-checker', 'npm-loader', 'create-reciple']
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-        if: ${{github.ref_type != 'tag' || contains(matrix.package, github.ref_name) }}
         with:
           ref: ${{ github.ref_name || '' }}
 
