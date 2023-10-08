@@ -56,10 +56,10 @@ jobs:
         with:
           ref: ${{ github.ref_name || '' }}
 
-      - name: Install node.js v16
+      - name: Install node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: 20
           cache: 'npm'
           cache-dependency-path: package-lock.json
 
