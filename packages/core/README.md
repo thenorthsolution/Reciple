@@ -20,7 +20,7 @@
 
 ## About
 
-`@reciple/client` is a [discord.js](https://npmjs.com/package/discord.js) Client extension that exports various utilities to simplify working with Discord API
+`@reciple/core` is a [discord.js](https://npmjs.com/package/discord.js) Client extension that exports various utilities to simplify working with Discord API
 
 ## Usage
 

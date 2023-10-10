@@ -116,13 +116,19 @@ export async function recursiveCopyFiles(from: string, to: string, rename?: (f: 
         return;
     }
 
+    if (to.endsWith('template.json')) return;
+
     await mkdir(path.dirname(to), { recursive: true });
     await copyFile(from, to);
 }
 
 export async function runScript(command: string, cwd?: string) {
     console.log(kleur.gray(kleur.bold('$') + ' ' + command));
-    execSync(`${command}`, { cwd, env: { ...process.env, FORCE_COLOR: '1' }, stdio: ['inherit', 'inherit', 'inherit'] });
+    try {
+        execSync(`${command}`, { cwd, env: { ...process.env, FORCE_COLOR: '1' }, stdio: ['inherit', 'inherit', 'inherit'] });
+    } catch(error) {
+        process.exit(1);
+    }
 }
 
 export async function isDirEmpty(dir: string): Promise<boolean> {

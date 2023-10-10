@@ -34,7 +34,7 @@ export interface RecipleNPMLoaderOptions {
 }
 
 export class RecipleNPMLoader implements RecipleModuleData, RecipleNPMLoaderOptions {
-    readonly versions: string = JSON.parse(readFileSync(path.join(__dirname, '../package.json'), 'utf-8')).peerDependencies['@reciple/client'];
+    readonly versions: string = JSON.parse(readFileSync(path.join(__dirname, '../package.json'), 'utf-8')).peerDependencies['@reciple/core'];
     readonly moduleName: string = '@reciple/npm-loader';
 
     public modules: RecipleModule[] = [];

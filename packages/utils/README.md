@@ -26,13 +26,13 @@
 
 ```js
 import { parseMessageURL, resolveFromCachedCollection } from '@reciple/utils';
-import { RecipleClient } from '@reciple/client';
+import { RecipleClient } from '@reciple/core';
 
 const client = new RecipleClient({
-    recipleOptions: {
-        token: process.env.TOKEN
-    },
-    intents: []
+    token: process.env.TOKEN,
+    client: {
+        intents: []
+    }
 });
 
 const message = parseMessageURL('https://discord.com/channels/0000000000000000000/0000000000000000000/0000000000000000000');
@@ -44,4 +44,6 @@ if (message.guildId) {
 
     await message.reply('yeah');
 }
+
+await client.login();
 ```
