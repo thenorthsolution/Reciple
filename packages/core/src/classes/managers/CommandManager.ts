@@ -1,9 +1,9 @@
-import { ApplicationCommand, ApplicationCommandDataResolvable, Collection, JSONEncodable, RESTPostAPIChatInputApplicationCommandsJSONBody, RESTPostAPIContextMenuApplicationCommandsJSONBody, RestOrArray, isJSONEncodable, mergeDefault, normalizeArray } from 'discord.js';
+import { ApplicationCommand, ApplicationCommandDataResolvable, ChatInputCommandInteraction, Collection, ContextMenuCommandInteraction, JSONEncodable, Message, RESTPostAPIChatInputApplicationCommandsJSONBody, RESTPostAPIContextMenuApplicationCommandsJSONBody, RestOrArray, isJSONEncodable, mergeDefault, normalizeArray } from 'discord.js';
 import { AnyCommandBuilder, AnyCommandExecuteData, AnyCommandResolvable, RecipleClientConfig, RecipleClientInteractionBasedCommandConfigOptions } from '../../types/structures';
 import { CommandPrecondition, CommandPreconditionResolvable, CommandPreconditionTriggerData } from '../structures/CommandPrecondition';
-import { ContextMenuCommandBuilder } from '../builders/ContextMenuCommandBuilder';
-import { MessageCommandBuilder } from '../builders/MessageCommandBuilder';
-import { AnySlashCommandBuilder } from '../builders/SlashCommandBuilder';
+import { AnySlashCommandBuilder, SlashCommandBuilder, SlashCommandExecuteData } from '../builders/SlashCommandBuilder';
+import { ContextMenuCommandBuilder, ContextMenuCommandExecuteData } from '../builders/ContextMenuCommandBuilder';
+import { MessageCommandBuilder, MessageCommandExecuteData } from '../builders/MessageCommandBuilder';
 import { RecipleClient } from '../structures/RecipleClient';
 import { CommandType } from '../../types/constants';
 import { Utils } from '../structures/Utils';
@@ -206,12 +206,20 @@ export class CommandManager {
         return commands?.find(c => c.name === command);
     }
 
-    // public async execute(interaction: ContextMenuCommandInteraction): Promise<ContextMenuCommandExecuteData>;
-    // public async execute(interaction: Message): Promise<MessageCommandExecuteData>;
-    // public async execute(interaction: ChatInputCommandInteraction): Promise<SlashCommandExecuteData>;
-    // public async execute(interaction: ContextMenuCommandInteraction|Message|ChatInputCommandInteraction): Promise<AnyCommandExecuteData> {
-    // TODO:
-    // }
+    public async execute(interaction: ContextMenuCommandInteraction): Promise<ContextMenuCommandExecuteData|null>;
+    public async execute(message: Message): Promise<MessageCommandExecuteData|null>;
+    public async execute(interaction: ChatInputCommandInteraction): Promise<SlashCommandExecuteData|null>;
+    public async execute(command: ContextMenuCommandInteraction|Message|ChatInputCommandInteraction): Promise<AnyCommandExecuteData|null> {
+        if (command instanceof Message) {
+            return MessageCommandBuilder.execute({ client: this.client, message: command });
+        } else if (command.isContextMenuCommand()) {
+            return ContextMenuCommandBuilder.execute({ client: this.client, interaction: command });
+        } else if (command.isChatInputCommand()) {
+            return SlashCommandBuilder.execute({ client: this.client, interaction: command });
+        }
+
+        return null;
+    }
 
     public toJSON() {
         return {
