@@ -88,8 +88,3 @@ export class CommandPrecondition implements CommandPreconditionData {
 }
 
 export type CommandPreconditionResolvable = CommandPreconditionData|JSONEncodable<CommandPreconditionData>;
-
-
-// TODO: Cooldown precondition
-// TODO: Bot Execute permissions precondition
-// TODO: User Execute permissions precondition
