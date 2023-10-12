@@ -7,6 +7,7 @@ import { checkLatestUpdate } from '@reciple/update-checker';
 import { command, cli, cliVersion } from './utils/cli.js';
 import { RecipleClient, findModules } from './index.js';
 import { ConfigReader } from './classes/Config.js';
+import { resolveEnvProtocol } from '@reciple/utils';
 import { config as loadEnv } from 'dotenv';
 import { mkdir } from 'node:fs/promises';
 import { kleur } from 'fallout-utility';
@@ -27,6 +28,7 @@ const logger = config.logger?.enabled ? await createLogger(config.logger) : null
 
 if (cli.options.setup) process.exit(0);
 if (cli.options.shardmode) config.applicationCommandRegister = { ...config.applicationCommandRegister, enabled: false };
+if (cli.options.token) config.token = resolveEnvProtocol(cli.options.token) ?? config.token;
 
 const processErrorHandler = (err: any) => logger?.error(err);
 
