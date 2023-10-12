@@ -7,11 +7,11 @@
     <a href="https://discord.gg/VzP8qW7Z8d">
         <img src="https://img.shields.io/discord/993105237000855592?color=5865F2&logo=discord&logoColor=white">
     </a>
-    <a href="https://npmjs.org/package/reciple">
-        <img src="https://img.shields.io/npm/v/reciple?label=npm">
+    <a href="https://npmjs.org/package/@reciple/npm-loader">
+        <img src="https://img.shields.io/npm/v/%40reciple/npm-loader?label=npm">
     </a>
-    <a href="https://github.com/FalloutStudios/Reciple/blob/main/LICENSE">
-        <img src="https://img.shields.io/npm/dt/reciple.svg?maxAge=3600">
+    <a href="https://github.com/FalloutStudios/Reciple/tree/main/packages/npm-loader">
+        <img src="https://img.shields.io/npm/dt/%40reciple/npm-loader?maxAge=3600">
     </a>
     <a href="https://www.codefactor.io/repository/github/falloutstudios/reciple/overview/main">
         <img src="https://www.codefactor.io/repository/github/falloutstudios/reciple/badge/main">
@@ -20,7 +20,7 @@
 
 ## About
 
-`@reciple/npm-loader` will load Reciple modules from node_modules
+`@reciple/npm-loader` loads Reciple modules from node_modules
 
 ## Usage
 

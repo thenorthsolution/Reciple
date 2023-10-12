@@ -10,15 +10,15 @@
     <a href="https://npmjs.org/package/reciple">
         <img src="https://img.shields.io/npm/v/reciple?label=npm">
     </a>
-    <a href="https://github.com/FalloutStudios/Reciple/blob/main/LICENSE">
-        <img src="https://img.shields.io/npm/dt/reciple.svg?maxAge=3600">
+    <a href="https://github.com/FalloutStudios/Reciple/tree/main/packages/reciple">
+        <img src="https://img.shields.io/npm/dt/reciple?maxAge=3600">
     </a>
     <a href="https://www.codefactor.io/repository/github/falloutstudios/reciple/overview/main">
         <img src="https://www.codefactor.io/repository/github/falloutstudios/reciple/badge/main">
     </a>
 </h3>
 
-## Features
+## Highlights
 
 -   [CLI based handler](#cli-usage)
 -   [Supports Context Menus](#context-menus)
@@ -44,18 +44,8 @@ After that configure the template you want to use.
 To install the handler, run the following command in your terminal:
 
 ```bash
-npm i reciple discord.js
+npm i reciple @reciple/core discord.js
 ```
-
-You can initialize the bot to the current directory with the following command in your terminal:
-
-```bash
-reciple
-```
-
-It will ask you to continue if the directory is not empty. Type `y` to continue. After the bot has been initialized, it will ask you for your bot token.
-
-> You can change the token anytime you want
 
 ## CLI usage
 
@@ -65,82 +55,89 @@ Usage: reciple [options] [cwd]
 Reciple is a Discord.js bot framework
 
 Arguments:
-  cwd                  Change the current working directory
+  cwd                      Change the current working directory
 
 Options:
-  -v, --version        output the version number
-  -t, --token <token>  Replace used bot token
-  -c, --config <dir>   Change path to config file
-  -D, --debugmode      Enable debug mode
-  -y, --yes            Agree to all Reciple confirmation prompts
-  --env <file>         .env file location
-  --shardmode          Modifies some functionalities to support sharding
-  --setup              Create required config without starting the bot
-  -h, --help           display help for command
+  -v, --version            output the version number
+  -t, --token <token>      Replace used bot token
+  -c, --config <dir>       Set path to a config file (default: "reciple.mjs")
+  -D, --debugmode          Enable debug mode
+  -y, --yes                Agree to all Reciple confirmation prompts
+  --env <file>             .env file location
+  --shardmode              Modifies some functionalities to support sharding
+  --setup                  Create required config without starting the bot
+  --cache-config <file>    Add custom caching config
+  --sweeper-config <file>  Add custom sweeper config
+  -h, --help               display help for command
 ```
 
 ## Message Commands
 
-Reciple provides built-in `MessageCommandBuilder` class that can be used for message command handler.
+Reciple provides a built-in `MessageCommandBuilder` class that can be used for message command handler.
 
+[**Read Docs**](https://reciple.js.org/docs/core/main/classes:MessageCommandBuilder)
 ```js
-const { MessageCommandBuilder } = require("reciple");
+import { MessageCommandBuilder } from 'reciple';
 
 new MessageCommandBuilder()
     .setName("command")
     .setDescription("Your lil tiny description")
     .addAliases("cmd", "cmd1")
-    .setExecute((command) => command.message.reply("Hello!"));
+    .setExecute(command => command.message.reply("Hello!"));
 ```
 
 ### Validate Message Command Options
 
+[**Read Docs**](https://reciple.js.org/docs/core/main/classes:MessageCommandOptionBuilder)
 ```js
-const { MessageCommandBuilder } = require("reciple");
+import { MessageCommandBuilder } from 'reciple';
 
 new MessageCommandBuilder()
     .setName("command")
     .setDescription("Your lil tiny description")
     .addAliases("cmd", "cmd1")
     .setValidateOptions(true) // Validate options
-    .addOption(
-        (option) =>
-            option
-                .setName("quantity")
-                .setDescription("Must be a number")
-                .setRequired(true) // A required option
-                .setValidator((val) => !isNaN(Number(val))) // Validate value
+    .addOption(option => option
+        .setName("quantity")
+        .setDescription("Must be a number")
+        .setRequired(true) // A required option
+        .setValidate(val => !isNaN(Number(val))) // Validate value
+        .setResolveValue(val => Number(val)) // Resolves the option value
     )
-    .setExecute(async (command) => {
-        const quantity = Number(command.options.getValue("quantity", true));
-
+    .setExecute(async command => {
+        /**
+         * @type {number}
+         */
+        const quantity = await data.options.getOptionValue('number', { required: true, resolveValue: true });;
         await command.message.reply("Quantity: " + quantity);
     });
 ```
 
 ## Context Menus
 
-Reciple provides custom `ContextMenuBuilder` class that can be used for context menu command handler.
+Reciple provides extended `ContextMenuCommandBuilder` class that can be used for context menu command handler.
 
+[**Read Docs**](https://reciple.js.org/docs/core/main/classes:ContextMenuCommandBuilder)
 ```js
-const { ContextMenuBuilder } = require("reciple");
-const { ApplicationCommandType } = require("discord.js");
+import { ApplicationCommandType } from 'discord.js';
+import { ContextMenuCommandBuilder } from 'reciple';
 
-new ContextMenuBuilder()
+new ContextMenuCommandBuilder()
     .setName("Ban")
     .setType(ApplicationCommandType.User)
     .setExecute(async ({ interaction }) => {
         if (!interaction.inCachedGuild()) return;
-        await interaction.member.ban();
+        await interaction.targetMember.ban();
     });
 ```
 
 ## Slash Commands
 
-Reciple provides custom `SlashCommandBuilder` class that can be used for slash command handler.
+Reciple provides extended `SlashCommandBuilder` class that can be used for slash command handler.
+[**Read Docs**](https://reciple.js.org/docs/core/main/classes:SlashCommandBuilder)
 
 ```js
-const { SlashCommandBuilder } = require("reciple");
+import { SlashCommandMenuBuilder } from 'reciple';
 
 new SlashCommandBuilder()
     .setName("ping")
@@ -150,13 +147,11 @@ new SlashCommandBuilder()
 
 ## Command Cooldowns
 
+[**Read Docs**](https://reciple.js.org/docs/core/main/classes:BaseCommandBuilder#setcooldown)
+
 ```js
-const {
-    MessageCommandBuilder,
-    MessageCommandBuilder,
-    SlashCommandBuilder,
-} = require("reciple");
-const { ApplicationCommandType } = require("discord.js");
+import { ContextMenuCommandBuilder, MessageCommandBuilder, SlashCommandBuilder } from 'reciple';
+import { ApplicationCommandType } from 'discord.js';
 
 new ContextMenuCommandBuilder()
     .setName("Context Menu")
@@ -179,31 +174,21 @@ new SlashCommandBuilder()
 
 ## Config
 
-You can configure the bot in `reciple.yml` located in the bot's root directory.
+You can configure the bot in `reciple.mjs` or `reciple.cjs` usually located in the bot's root directory.
 
 ### Token
 
-You can directly change the token in `reciple.yml`.
+You can change the token in config.
 
-```yml
-token: "YOUR_TOKEN_HERE"
+```js
+token: "Your Token" // Directly set token string
+token: process.env.TOKEN // Use env variable
 ```
 
-Using environment variables is also supported.
-
-```yml
-token: "env:TOKEN_VARIABLE"
-```
-
-You can override the given token using your terminal
+You can override the given token as cli flag
 
 ```bash
 reciple --token "YOUR_TOKEN_HERE"
-```
-
-Use env variable
-
-```bash
 reciple --token "env:TOKEN_VARIABLE"
 ```
 

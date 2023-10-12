@@ -10,8 +10,8 @@
     <a href="https://npmjs.org/package/reciple">
         <img src="https://img.shields.io/npm/v/reciple?label=npm">
     </a>
-    <a href="https://github.com/FalloutStudios/Reciple/blob/main/LICENSE">
-        <img src="https://img.shields.io/npm/dt/reciple.svg?maxAge=3600">
+    <a href="https://github.com/FalloutStudios/Reciple/tree/main/packages/reciple">
+        <img src="https://img.shields.io/npm/dt/reciple?maxAge=3600">
     </a>
     <a href="https://www.codefactor.io/repository/github/falloutstudios/reciple/overview/main">
         <img src="https://www.codefactor.io/repository/github/falloutstudios/reciple/badge/main">
