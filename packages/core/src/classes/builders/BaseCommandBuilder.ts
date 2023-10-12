@@ -1,5 +1,6 @@
-import { PermissionResolvable, PermissionsBitField, RestOrArray, normalizeArray } from 'discord.js';
+import { PermissionResolvable, PermissionsBitField, RestOrArray, isJSONEncodable, normalizeArray } from 'discord.js';
 import { AnyCommandExecuteFunction, AnyCommandHaltFunction } from '../../types/structures';
+import { CommandPreconditionResolvable } from '../structures/CommandPrecondition';
 import { BaseCommandValidators } from '../validators/BaseCommandValidators';
 import { ContextMenuCommandBuilder } from './ContextMenuCommandBuilder';
 import { MessageCommandBuilder } from './MessageCommandBuilder';
@@ -11,7 +12,7 @@ export interface BaseCommandBuilderData {
     cooldown?: number;
     required_bot_permissions?: PermissionResolvable;
     required_member_permissions?: PermissionResolvable;
-    preconditions?: string[];
+    preconditions?: CommandPreconditionResolvable[];
     halt?: AnyCommandHaltFunction;
     execute: AnyCommandExecuteFunction;
 }
@@ -21,7 +22,7 @@ export abstract class BaseCommandBuilder implements BaseCommandBuilderData {
     public cooldown?: number;
     public required_bot_permissions?: bigint;
     public required_member_permissions?: bigint;
-    public preconditions: string[] = [];
+    public preconditions: CommandPreconditionResolvable[] = [];
     public halt?: AnyCommandHaltFunction;
     public execute: AnyCommandExecuteFunction = () => {};
 
@@ -52,14 +53,14 @@ export abstract class BaseCommandBuilder implements BaseCommandBuilderData {
         return this;
     }
 
-    public addPreconditions(...preconditionIds: RestOrArray<string>): this {
+    public addPreconditions(...preconditionIds: RestOrArray<CommandPreconditionResolvable>): this {
         const ids = normalizeArray(preconditionIds);
         BaseCommandValidators.isValidPreconditions(ids);
         this.preconditions.push(...ids);
         return this;
     }
 
-    public setPreconditions(...preconditionIds: RestOrArray<string>): this {
+    public setPreconditions(...preconditionIds: RestOrArray<CommandPreconditionResolvable>): this {
         const ids = normalizeArray(preconditionIds);
         BaseCommandValidators.isValidPreconditions(ids);
         this.preconditions = ids;
@@ -96,7 +97,7 @@ export abstract class BaseCommandBuilder implements BaseCommandBuilderData {
             cooldown: this.cooldown,
             required_bot_permissions: this.required_bot_permissions,
             required_member_permissions: this.required_member_permissions,
-            preconditions: this.preconditions,
+            preconditions: this.preconditions.map(p => isJSONEncodable(p) ? p.toJSON() : p),
             halt: this.halt as H,
             execute: this.execute as E,
         };

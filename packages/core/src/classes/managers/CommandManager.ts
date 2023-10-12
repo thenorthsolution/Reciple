@@ -90,7 +90,16 @@ export class CommandManager {
     }
 
     public async executePreconditions<T extends AnyCommandExecuteData = AnyCommandExecuteData>(executeData: T): Promise<CommandPreconditionTriggerData<T>|null> {
-        for (const [id, precondition] of this.preconditions) {
+        const preconditions = Array.from(this.preconditions.values());
+
+        for (const precondition of executeData.builder.preconditions) {
+            const data = CommandPrecondition.resolve(precondition);
+            if (preconditions.some(p => p.id === data.id)) continue;
+
+            preconditions.push(data);
+        }
+
+        for (const precondition of preconditions) {
             if (precondition.disabled) continue;
 
             const data = await precondition.execute(executeData);
