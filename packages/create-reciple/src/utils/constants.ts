@@ -33,6 +33,7 @@ export const packageManagers: { label?: string; hint?: string; value: PackageMan
 
 export const packages = {
     'TYPES_NODE': packageJson.devDependencies!['@types/node'],
+    'RECIPLE_CORE': packageJson.devDependencies!['@reciple/core'],
     'TYPESCRIPT': packageJson.devDependencies!['typescript'],
     'RIMRAF': packageJson.devDependencies!['rimraf'],
     'RECIPLE': packageJson.devDependencies!['reciple'],

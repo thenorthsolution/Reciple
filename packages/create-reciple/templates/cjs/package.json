@@ -7,6 +7,7 @@
     "dev": "nodemon --ext js,mjs,cjs,json --exec \"reciple -c reciple.cjs\" --signal SIGHUP"
   },
   "dependencies": {
+    "@reciple/core": "RECIPLE_CORE",
     "discord.js": "DISCORDJS",
     "reciple": "RECIPLE"
   },

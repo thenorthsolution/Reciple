@@ -31,6 +31,7 @@
   ],
   "dependencies": {
     "@clack/prompts": "^0.7.0",
+    "@reciple/core": "^8.0.0-dev.1",
     "@reciple/utils": "^8.0.0-dev.0",
     "commander": "^11.0.0",
     "fallout-utility": "^2.7.1"
