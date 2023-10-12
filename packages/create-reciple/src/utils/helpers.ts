@@ -77,7 +77,7 @@ export async function create(template: TemplateMetadata, dir: string, packageMan
     const placeholders = packageManagerPlaceholders[packageManager ?? 'npm'];
 
     for (const pkg of (Object.keys(packages) as (keyof typeof packages)[])) {
-        packageJsonData = packageJsonData.replaceAll(pkg, packages[pkg] ?? "*");
+        packageJsonData = packageJsonData.replaceAll(`"${pkg}"`, `"${packages[pkg] ?? "*"}"`);
     }
 
     for (const placeholder of (Object.keys(placeholders) as (keyof typeof placeholders)[])) {
