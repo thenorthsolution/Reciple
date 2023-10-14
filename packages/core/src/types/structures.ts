@@ -8,8 +8,6 @@ import { CooldownSweeperOptions } from '../classes/managers/CooldownManager';
 import { CommandHaltReason, CommandType } from './constants';
 import { Cooldown } from '../classes/structures/Cooldown';
 
-export { CommandData } from 'fallout-utility/commands';
-
 // Config
 export interface RecipleClientConfig {
     token: string;
@@ -102,4 +100,13 @@ export interface CommandMissingArgumentsHaltData<T extends CommandType> extends 
 
 export interface CommandPreconditionTriggerHaltData<T extends CommandType> extends BaseCommandHaltData<T>, Omit<CommandPreconditionTriggerData, 'executeData'> {
     reason: CommandHaltReason.PreconditionTrigger;
+}
+
+// SOmething
+export interface CommandData {
+    name?: string;
+    prefix?: string;
+    args: string[];
+    raw: string;
+    separator: string;
 }
