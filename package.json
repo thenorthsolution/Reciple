@@ -10,7 +10,7 @@
     "clean": "rimraf ./packages/bin ./packages/dist ./node_modules/.bin",
     "build": "lerna run build",
     "watch": "tsc --watch --noEmit",
-    "test": "lerna run test",
+    "test": "npm run start -w example",
     "publish:dev": "lerna publish prerelease",
     "docs": "lerna run docs"
   },
