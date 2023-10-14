@@ -38,6 +38,8 @@ const client = new RecipleClient({
     }
 });
 
+await client.login();
+
 client.commands.add(
     new SlashCommandBuilder()
         .setName('ping')
@@ -45,7 +47,6 @@ client.commands.add(
         .setExecute(async ({ interaction }) => interaction.reply(`Pong!`))
 );
 
-await client.login();
 await client.commands.registerApplicationCommands();
 
 client.on('interactionCreate', async interaction => {
