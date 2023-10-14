@@ -8,6 +8,8 @@ import { CooldownSweeperOptions } from '../classes/managers/CooldownManager';
 import { CommandHaltReason, CommandType } from './constants';
 import { Cooldown } from '../classes/structures/Cooldown';
 
+export { CommandData } from 'fallout-utility/commands';
+
 // Config
 export interface RecipleClientConfig {
     token: string;

@@ -5,9 +5,9 @@ import { MessageCommandOptionManager } from '../managers/MessageCommandOptionMan
 import { MessageCommandValidators } from '../validators/MessageCommandValidators';
 import { BaseCommandBuilder, BaseCommandBuilderData } from './BaseCommandBuilder';
 import { CommandHaltReason, CommandType } from '../../types/constants';
-import { CommandData, getCommand } from 'fallout-utility/commands';
+import { CommandData, CommandHaltData } from '../../types/structures';
 import { RecipleClient } from '../structures/RecipleClient';
-import { CommandHaltData } from '../../types/structures';
+import { getCommand } from 'fallout-utility/commands';
 import { CooldownData } from '../structures/Cooldown';
 
 export interface MessageCommandExecuteData {
