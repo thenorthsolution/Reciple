@@ -97,13 +97,7 @@ client.once('ready', async () => {
 
         stopping = true;
 
-        await client.modules.unloadModules({
-            reason: 'ProcessExit',
-            removeFromCache: true,
-            removeModuleCommands: true
-        });
-
-        await client.destroy();
+        await client.destroy(true);
 
         const signalString = signal === 'SIGINT' ? 'keyboard interrupt' : signal === 'SIGTERM' ? 'terminate' : String(signal);
 
@@ -111,7 +105,7 @@ client.once('ready', async () => {
         logger?.closeWriteStream();
 
         await setTimeoutAsync(10);
-        process.kill(process.pid, signal);
+        process.exit(0);
     };
 
     process.stdin.resume();
