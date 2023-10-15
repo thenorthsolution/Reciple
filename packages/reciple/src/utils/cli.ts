@@ -19,8 +19,6 @@ export let command = new Command()
     .option('--env <file>', '.env file location')
     .option('--shardmode', 'Modifies some functionalities to support sharding')
     .option('--setup', 'Create required config without starting the bot')
-    .option('--cache-config <file>', 'Add custom caching config')
-    .option('--sweeper-config <file>', 'Add custom sweeper config')
     .allowUnknownOption(true);
 
 export interface CLIOptions {
@@ -32,8 +30,6 @@ export interface CLIOptions {
     env?: string;
     shardmode?: boolean;
     setup?: boolean;
-    cacheConfig?: string;
-    sweeperConfig?: string;
     [k: string]: any;
 }
 
