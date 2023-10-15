@@ -5,13 +5,14 @@ import { createLogger, addEventListenersToClient } from './utils/logger.js';
 import { setTimeout as setTimeoutAsync } from 'node:timers/promises';
 import { checkLatestUpdate } from '@reciple/update-checker';
 import { command, cli, cliVersion } from './utils/cli.js';
-import { RecipleClient, findModules } from './index.js';
+import { ProcessInformation, RecipleClient, findModules } from './index.js';
 import { resolveEnvProtocol } from '@reciple/utils';
 import { ConfigReader } from './classes/Config.js';
 import { config as loadEnv } from 'dotenv';
 import { mkdir } from 'node:fs/promises';
 import { kleur } from 'fallout-utility';
 import { existsSync } from 'node:fs';
+import { parentPort } from 'node:worker_threads';
 import path from 'node:path';
 import semver from 'semver';
 
@@ -36,6 +37,13 @@ process.once('uncaughtException', processErrorHandler);
 process.once('unhandledRejection', processErrorHandler);
 
 process.on('warning', warn => logger?.warn(warn));
+
+if (cli.options.shardmode) {
+    const message: ProcessInformation = { type: 'ProcessInfo', pid: process.pid };
+
+    if (parentPort) parentPort.postMessage(message);
+    if (process.send) process.send(message);
+}
 
 if (!semver.satisfies(version, config.version)) {
     logger?.error(`Your config version doesn't support Reciple client v${version}`);
