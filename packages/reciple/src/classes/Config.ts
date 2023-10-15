@@ -54,10 +54,10 @@ export class ConfigReader {
     }
 
     public static async readConfigJS(config: string): Promise<RecipleConfigJS> {
-        const file = (config.startsWith('.') || config.startsWith('/') ? path.resolve(config) : config);
-        const isAbsolute = config !== file || path.isAbsolute(config);
+        const file = path.resolve(config);
+        const isFile = path.isAbsolute(config) || existsSync(file) || ['reciple.js', 'reciple.mjs', 'reciple.cjs'].includes(config);
 
-        if (isAbsolute && !existsSync(file)) {
+        if (isFile) {
             const isCommonJS = file.endsWith('.cjs') || ((await getDirModuleType(path.dirname(file))) === 'commonjs');
             const defaultConfig = await this.getDefaultConfigData(!file.endsWith('.mjs') && isCommonJS);
 
@@ -65,7 +65,7 @@ export class ConfigReader {
             await writeFile(file, defaultConfig);
         }
 
-        const data = recursiveDefaults<RecipleConfigJS>(await import(isAbsolute ? ('file://' + file) : file));
+        const data = recursiveDefaults<RecipleConfigJS>(await import(isFile ? ('file://' + file) : config));
         if (!data || !('config' in data)) throw new RecipleError(`Invalid config data in ${kleur.yellow("'" + file) + "'"}`);
 
         return data;
