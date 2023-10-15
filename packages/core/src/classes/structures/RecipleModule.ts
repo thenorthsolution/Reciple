@@ -51,7 +51,7 @@ export class RecipleModule<Data extends RecipleModuleData = RecipleModuleData> {
     get displayName(): string { return this.name ?? this.file ?? this.id; }
     get versions(): string[] { return normalizeArray([this.data.versions] as RestOrArray<string>); }
     get commands(): AnyCommandBuilder[] { return this.data.commands?.map(c => Utils.resolveCommandBuilder(c)) ?? []; }
-    get supported(): boolean { return this.versions.some(v => v === "latest" || semver.satisfies(this.client.version, v)); };
+    get supported(): boolean { return this.versions.some(v => v === "latest" || semver.satisfies(this.client.version, v)); }
 
     constructor(options: RecipleModuleOptions<Data>) {
         this.data = options.data;
