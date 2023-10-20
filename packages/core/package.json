@@ -36,13 +36,13 @@
   ],
   "dependencies": {
     "@reciple/utils": "^8.0.0-dev.1",
-    "@sapphire/shapeshift": "^3.9.2",
+    "@sapphire/shapeshift": "^3.9.3",
     "fallout-utility": "^2.7.1",
     "semver": "^7.5.4",
     "ts-mixer": "^6.0.2"
   },
   "devDependencies": {
-    "@types/semver": "^7.5.3",
+    "@types/semver": "^7.5.4",
     "discord.js": "^14.13.0"
   },
   "peerDependencies": {

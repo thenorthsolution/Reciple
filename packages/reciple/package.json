@@ -43,7 +43,7 @@
   "dependencies": {
     "@reciple/update-checker": "^8.0.0-dev.2",
     "@reciple/utils": "^8.0.0-dev.1",
-    "commander": "^11.0.0",
+    "commander": "^11.1.0",
     "dotenv": "^16.3.1",
     "fallout-utility": "^2.7.1",
     "globby": "^13.2.1",
@@ -55,9 +55,8 @@
   },
   "devDependencies": {
     "@reciple/core": "^8.0.0-dev.4",
-    "@types/lodash.mergewith": "^4.6.7",
     "@types/micromatch": "^4.0.3",
-    "@types/semver": "^7.5.3",
+    "@types/semver": "^7.5.4",
     "discord.js": "^14.13.0"
   },
   "peerDependencies": {
