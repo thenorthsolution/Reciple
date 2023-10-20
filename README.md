@@ -22,6 +22,12 @@
 
 Reciple is a Discord.js command handler framework that provides extended features for developers.
 
+## Installation
+
+```bash
+npm create reciple@latest
+```
+
 ## Packages
 
 - [@reciple/actions](./packages/actions/) - Used by our github workflow to generate docs.json
