@@ -60,7 +60,7 @@
     "discord.js": "^14.13.0"
   },
   "peerDependencies": {
-    "@reciple/core": "^8.0.0",
+    "@reciple/core": "^8.0.0-dev.5",
     "discord.js": "^14.7.1"
   },
   "gitHead": "c5620aa5f046aa426b832c052a4f933817270573"
