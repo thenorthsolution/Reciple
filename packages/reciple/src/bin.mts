@@ -148,7 +148,7 @@ client.once('ready', async () => {
     logger?.log(`Loaded ${client.commands.slashCommands.size} slash command(s)`);
     logger?.log(`Loaded ${client.commands.preconditions.size} precondition(s)`);
 
-    await checkForUpdates(logger ?? undefined);
+    if (config.checkForUpdates) await checkForUpdates(logger ?? undefined);
 });
 
 logger?.debug(`Logging in...`);
