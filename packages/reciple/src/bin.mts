@@ -4,7 +4,7 @@ import { ContextMenuCommandBuilder, MessageCommandBuilder, SlashCommandBuilder, 
 import { createLogger, addEventListenersToClient } from './utils/logger.js';
 import { setTimeout as setTimeoutAsync } from 'node:timers/promises';
 import { checkLatestUpdate } from '@reciple/update-checker';
-import { command, cli, cliVersion } from './utils/cli.js';
+import { command, cli, cliVersion, checkForUpdates } from './utils/cli.js';
 import { ProcessInformation, RecipleClient, findModules } from './index.js';
 import { resolveEnvProtocol } from '@reciple/utils';
 import { ConfigReader } from './classes/Config.js';
@@ -147,6 +147,8 @@ client.once('ready', async () => {
     logger?.log(`Loaded ${client.commands.messageCommands.size} message command(s)`);
     logger?.log(`Loaded ${client.commands.slashCommands.size} slash command(s)`);
     logger?.log(`Loaded ${client.commands.preconditions.size} precondition(s)`);
+
+    await checkForUpdates(logger ?? undefined);
 });
 
 logger?.debug(`Logging in...`);
