@@ -1,14 +1,14 @@
-import type { Client, GuildMember, GuildResolvable, User, UserMention, UserResolvable } from 'discord.js';
-import { FormattingPatterns } from 'discord-api-types/globals';
+import type { Client, GuildMember, GuildResolvable, User, UserResolvable } from 'discord.js';
+import { FormattingPatterns, APIUser, APIMessage } from 'discord-api-types/v10';
 
 export interface FetchMentionOrIdOptions {
     client: Client;
-    user: UserResolvable|UserMention;
+    user: UserResolvable|APIUser|APIMessage|`<@${string}>`;
     guild?: GuildResolvable;
     force?: boolean;
 }
 
-export function getMentionId(user: UserResolvable|UserMention): string|null {
+export function getMentionId(user: UserResolvable|APIUser|APIMessage|`<@${string}>`): string|null {
     const id = typeof user === 'string'
         ? user.match(FormattingPatterns.User)?.[1] ?? null
         : 'author' in user
