@@ -2,8 +2,8 @@
 import { ConfigReader, cli, command, createLogger } from 'reciple';
 import { ShardingManager } from 'discord.js';
 import { config as loadEnv } from 'dotenv';
-import path from 'node:path';
 import { createReadStream } from 'node:fs';
+import path from 'node:path';
 
 Reflect.set(command, 'options', command.options.filter(o => !['shardmode', 'version', 'yes'].includes(o.name())));
 command.name('').description('The options below are passed to reciple cli shards').parse();
