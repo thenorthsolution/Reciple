@@ -34,8 +34,9 @@ export interface RecipleNPMLoaderOptions {
 }
 
 export class RecipleNPMLoader implements RecipleModuleData, RecipleNPMLoaderOptions {
+    readonly id: string = 'com.reciple.npm-loader';
+    readonly name: string = '@reciple/npm-loader';
     readonly versions: string = JSON.parse(readFileSync(path.join(__dirname, '../package.json'), 'utf-8')).peerDependencies['@reciple/core'];
-    readonly moduleName: string = '@reciple/npm-loader';
 
     public modules: RecipleModule[] = [];
     public client!: RecipleClient;
@@ -57,10 +58,7 @@ export class RecipleNPMLoader implements RecipleModuleData, RecipleNPMLoaderOpti
         this.client = client;
         this.logger = client.logger?.clone({ name: 'NPMLoader' });
 
-        this.modules = await this.getModules(this.nodeModulesFolder);
-        this.modules = this.modules.filter(m => !this.isModuleIdLoaded(m.id));
-
-
+        this.modules = (await this.getModules(this.nodeModulesFolder)).filter(m => !this.isModuleIdLoaded(m.id));
         this.logger?.log(`Found (${this.modules.length}) NPM Reciple modules`);
 
         await this.client.modules.startModules({ modules: this.modules });
