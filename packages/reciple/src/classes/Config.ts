@@ -61,8 +61,10 @@ export class ConfigReader {
             const isCommonJS = file.endsWith('.cjs') || ((await getDirModuleType(path.dirname(file))) === 'commonjs');
             const defaultConfig = await this.getDefaultConfigData(!file.endsWith('.mjs') && isCommonJS);
 
-            await mkdir(path.dirname(file), { recursive: true });
-            await writeFile(file, defaultConfig);
+            if (!existsSync(file)) {
+                await mkdir(path.dirname(file), { recursive: true });
+                await writeFile(file, defaultConfig);
+            }
         }
 
         const data = recursiveDefaults<RecipleConfigJS>(await import(isFile ? ('file://' + file) : config));
