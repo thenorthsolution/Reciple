@@ -61,8 +61,8 @@ export class CommandManager {
         return preconditions;
     }
 
-    public disablePreconditions(...data: RestOrArray<string>): CommandPrecondition[] {
-        const ids = normalizeArray(data);
+    public disablePreconditions(...data: RestOrArray<string|CommandPreconditionResolvable>): CommandPrecondition[] {
+        const ids = normalizeArray(data).map(id => typeof id === 'string' ? id : CommandPrecondition.resolve(id).id);
         const preconditions: CommandPrecondition[] = [];
 
         for (const id of ids) {
@@ -75,8 +75,8 @@ export class CommandManager {
         return preconditions;
     }
 
-    public enablePreconditions(...data: RestOrArray<string>): CommandPrecondition[] {
-        const ids = normalizeArray(data);
+    public enablePreconditions(...data: RestOrArray<string|CommandPreconditionResolvable>): CommandPrecondition[] {
+        const ids = normalizeArray(data).map(id => typeof id === 'string' ? id : CommandPrecondition.resolve(id).id);
         const preconditions: CommandPrecondition[] = [];
 
         for (const id of ids) {
