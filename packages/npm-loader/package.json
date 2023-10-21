@@ -35,5 +35,8 @@
   ],
   "publishConfig": {
     "access": "public"
+  },
+  "peerDependencies": {
+    "@reciple/core": "^8.0.0-dev.6"
   }
 }
