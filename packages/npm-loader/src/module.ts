@@ -101,11 +101,11 @@ export class RecipleNPMLoader implements RecipleModuleData, RecipleNPMLoaderOpti
 
         const moduleFiles: string[] = [];
 
-        for (const folder of folders) {
+        const isFolderValid = async (folder: string) => {
             const isValid = await this.isValidModuleFolder(folder, dependencies || undefined);
 
             this.logger?.debug(isValid, folder);
-            if (!isValid) continue;
+            if (!isValid) return;
 
             const packageJson = this.getPackageJson(path.join(folder, 'package.json'), true);
             const moduleFile: string = path.join(folder, packageJson.recipleModule);
@@ -113,21 +113,16 @@ export class RecipleNPMLoader implements RecipleModuleData, RecipleNPMLoaderOpti
             moduleFiles.push(moduleFile);
         }
 
-        for (const folder of withSubfolders) {
+        const isSubfolderValid = async (folder: string) => {
             const subFolders = await Promise.all((await readdir(folder)).map(f => path.join(folder, f)).filter(async f => (await stat(f)).isDirectory()));
 
-            for (const subFolder of subFolders) {
-                const isValid = await this.isValidModuleFolder(subFolder, dependencies || undefined);
-
-                this.logger?.debug(isValid, subFolder);
-                if (!isValid) continue;
-
-                const packageJson: { name: string; keywords: string[]; recipleModule: string; } = JSON.parse(readFileSync(path.join(subFolder, 'package.json'), 'utf-8'));
-                const moduleFile: string = path.join(subFolder, packageJson.recipleModule);
-
-                moduleFiles.push(moduleFile);
-            }
+            return Promise.all(subFolders.map(f => isFolderValid(f)));
         }
+
+        await Promise.all([
+            Promise.all(folders.map(f => isFolderValid(f))),
+            Promise.all(withSubfolders.map(f => isSubfolderValid(f)))
+        ]);
 
         if (moduleFiles.length) this.logger?.debug(`Loading modules:\n  `, moduleFiles.join('\n  '));
 
