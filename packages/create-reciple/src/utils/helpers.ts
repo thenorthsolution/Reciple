@@ -56,8 +56,10 @@ export async function createDotEnv(dir: string): Promise<string> {
     let content: string = '';
     if (existsSync(file)) content = await readFile(file, 'utf-8');
 
-    content += `\n# Replace this value to your Discord bot token from https://discord.com/developers/applications\nTOKEN=""`;
-    content = content.trim();
+    if (!content.includes('TOKEN=')) {
+        content += `\n# Replace this value to your Discord bot token from https://discord.com/developers/applications\nTOKEN=""`;
+        content = content.trim();
+    }
 
     await writeFile(file, content);
     return content;
