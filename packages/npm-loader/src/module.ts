@@ -47,7 +47,8 @@ export interface RecipleNPMLoaderOptions {
     ignoredPackages?: string[];
     /**
      * Number of folders scanned by each workers. Falsy to disable workers
-     * @default 100
+     * @experimental
+     * @default null
      */
     foldersPerWorker?: number|null;
 }
@@ -65,7 +66,7 @@ export class RecipleNPMLoader implements RecipleModuleData, RecipleNPMLoaderOpti
     public packageJsonPath?: string;
     public disableVersionChecks: boolean;
     public ignoredPackages: string[];
-    public foldersPerWorker: number|null = 100;
+    public foldersPerWorker: number|null = null;
 
     static readonly workersFolder: string = path.join(__dirname, './workers');
 
@@ -74,7 +75,7 @@ export class RecipleNPMLoader implements RecipleModuleData, RecipleNPMLoaderOpti
         this.packageJsonPath = options?.packageJsonPath;
         this.disableVersionChecks = options?.disableVersionChecks ?? false;
         this.ignoredPackages = options?.ignoredPackages ?? [];
-        this.foldersPerWorker = options?.foldersPerWorker ?? 100;
+        this.foldersPerWorker = options?.foldersPerWorker ?? null;
     }
 
     public async onStart({ client }: RecipleModuleStartData): Promise<boolean> {
