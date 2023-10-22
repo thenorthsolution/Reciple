@@ -16,7 +16,15 @@
     <a href="https://www.codefactor.io/repository/github/falloutstudios/reciple/overview/main">
         <img src="https://www.codefactor.io/repository/github/falloutstudios/reciple/badge/main">
     </a>
+    <br>
+    <div style="padding-top: 1rem">
+        <a href="https://discord.gg/VzP8qW7Z8d">
+            <img src="https://discord.com/api/guilds/993105237000855592/embed.png?style=banner2">
+        </a>
+    </div>
 </h3>
+
+---
 
 ## Highlights
 
