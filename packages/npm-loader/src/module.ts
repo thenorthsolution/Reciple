@@ -13,8 +13,8 @@ export interface WorkerScannedFolderData {
 
 export interface WorkerData {
     folders: string[];
-    ignoredPackages: string[];
-    dependencies: Record<string, string>;
+    ignoredPackages?: string[];
+    dependencies?: Record<string, string>;
 }
 
 export interface PartialPackageJson {
@@ -167,7 +167,7 @@ export class RecipleNPMLoader implements RecipleModuleData, RecipleNPMLoaderOpti
 
         const workersData: WorkerData[] = sliceIntoChunks(folders, options.foldersPerWorker).map(f => ({
             folders: f,
-            dependencies: options.dependencies ?? {},
+            dependencies: options.dependencies,
             ignoredPackages: this.ignoredPackages
         }));
 
