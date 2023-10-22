@@ -9,8 +9,13 @@
   },
   "dependencies": {
     "@reciple/core": "^8.0.0-dev.2",
+    "@reciple/npm-loader": "^8.0.0-dev.3",
     "discord.js": "^14.13.0",
-    "reciple": "^8.0.0-dev.2"
+    "reciple": "^8.0.0-dev.2",
+    "reciple-anticrash": "^1.1.3",
+    "reciple-dev-commands": "^1.3.10",
+    "reciple-interaction-events": "^1.1.3",
+    "reciple-registry-cache": "^1.0.11"
   },
   "devDependencies": {
     "@types/node": "^20.8.7",
