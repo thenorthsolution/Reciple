@@ -7,5 +7,6 @@ export * from './helpers/recursiveDefaults';
 export * from './helpers/replacePlaceholders';
 export * from './helpers/resolveEnvProtocol';
 export * from './helpers/resolvePackageManager';
+export * from './helpers/sliceIntoChunks';
 
 export * from './constants';

@@ -1,7 +1,21 @@
-import { RecipleClient, RecipleModule, Logger, RecipleModuleStartData, RecipleModuleData } from '@reciple/core';
-import { readdir, readlink, stat } from 'node:fs/promises';
+import { RecipleClient, RecipleModule, Logger, RecipleModuleStartData, RecipleModuleData, RecipleError } from '@reciple/core';
+import { readFile, readdir, readlink, stat } from 'node:fs/promises';
 import { existsSync, readFileSync } from 'node:fs';
 import path from 'node:path';
+import { sliceIntoChunks } from '@reciple/utils';
+import { Worker } from 'node:worker_threads';
+
+export interface WorkerScannedFolderData {
+    folder: string;
+    moduleFile: string|null;
+    valid: boolean;
+}
+
+export interface WorkerData {
+    folders: string[];
+    ignoredPackages: string[];
+    dependencies: Record<string, string>;
+}
 
 export interface PartialPackageJson {
     name: string;
@@ -31,6 +45,11 @@ export interface RecipleNPMLoaderOptions {
      * Ignored package names
      */
     ignoredPackages?: string[];
+    /**
+     * Number of folders scanned by each workers. Falsy to disable workers
+     * @default 5
+     */
+    foldersPerWorker?: number|null;
 }
 
 export class RecipleNPMLoader implements RecipleModuleData, RecipleNPMLoaderOptions {
@@ -46,12 +65,16 @@ export class RecipleNPMLoader implements RecipleModuleData, RecipleNPMLoaderOpti
     public packageJsonPath?: string;
     public disableVersionChecks: boolean;
     public ignoredPackages: string[];
+    public foldersPerWorker: number|null = 5;
+
+    static readonly workersFolder: string = path.join(__dirname, './workers');
 
     constructor(options?: RecipleNPMLoaderOptions) {
         this.nodeModulesFolder = options?.nodeModulesFolder ?? path.join(process.cwd(), 'node_modules');
         this.packageJsonPath = options?.packageJsonPath;
         this.disableVersionChecks = options?.disableVersionChecks ?? false;
         this.ignoredPackages = options?.ignoredPackages ?? [];
+        this.foldersPerWorker = options?.foldersPerWorker ?? 5;
     }
 
     public async onStart({ client }: RecipleModuleStartData): Promise<boolean> {
@@ -75,7 +98,7 @@ export class RecipleNPMLoader implements RecipleModuleData, RecipleNPMLoaderOpti
 
         this.logger?.debug(`Loading modules from '${node_modules}'`);
 
-        const packageJson = this.packageJsonPath ? this.getPackageJson(this.packageJsonPath) : null;
+        const packageJson = this.packageJsonPath ? await RecipleNPMLoader.getPackageJson(this.packageJsonPath) : null;
         const dependencies = packageJson ? { ...packageJson?.dependencies, ...packageJson?.devDependencies } : null;
 
         let contents: string[] = [];
@@ -99,30 +122,15 @@ export class RecipleNPMLoader implements RecipleModuleData, RecipleNPMLoaderOpti
         this.logger?.debug(`Found (${folders.length}) node_modules package folders.`);
         this.logger?.debug(`Found (${withSubfolders.length}) node_modules folders with package subfolders.`);
 
-        const moduleFiles: string[] = [];
-
-        const isFolderValid = async (folder: string) => {
-            const isValid = await this.isValidModuleFolder(folder, dependencies || undefined);
-
-            this.logger?.debug(isValid, folder);
-            if (!isValid) return;
-
-            const packageJson = this.getPackageJson(path.join(folder, 'package.json'), true);
-            const moduleFile: string = path.join(folder, packageJson.recipleModule);
-
-            moduleFiles.push(moduleFile);
-        }
-
-        const isSubfolderValid = async (folder: string) => {
+        for (const folder of withSubfolders) {
             const subFolders = await Promise.all((await readdir(folder)).map(f => path.join(folder, f)).filter(async f => (await stat(f)).isDirectory()));
-
-            return Promise.all(subFolders.map(f => isFolderValid(f)));
+            folders.push(...subFolders);
         }
 
-        await Promise.all([
-            Promise.all(folders.map(f => isFolderValid(f))),
-            Promise.all(withSubfolders.map(f => isSubfolderValid(f)))
-        ]);
+        const moduleFiles: string[] = await this.getModuleFilesFromFolders(folders, {
+            foldersPerWorker: this.foldersPerWorker,
+            dependencies: dependencies ?? undefined
+        });
 
         if (moduleFiles.length) this.logger?.debug(`Loading modules:\n  `, moduleFiles.join('\n  '));
 
@@ -133,18 +141,58 @@ export class RecipleNPMLoader implements RecipleModuleData, RecipleNPMLoaderOpti
         });
     }
 
+    public async getModuleFilesFromFolders(folders: string[], options?: { foldersPerWorker?: number|null; dependencies?: Record<string, string>; }): Promise<string[]> {
+        if (!options?.foldersPerWorker) {
+            const moduleFiles: string[] = [];
+
+            const scanFolder = async (folder: string) => {
+                const isValid = await RecipleNPMLoader.isValidModuleFolder(folder, {
+                    dependencies: options?.dependencies ?? undefined,
+                    ignoredPackages: this.ignoredPackages
+                });
+
+                this.logger?.debug(isValid, folder);
+                if (!isValid) return;
+
+                const packageJson = await RecipleNPMLoader.getPackageJson(path.join(folder, 'package.json'), true);
+                const moduleFile: string = path.join(folder, packageJson.recipleModule);
+
+                moduleFiles.push(moduleFile);
+            }
+
+            await Promise.all(folders.map(f => scanFolder(f)));
+            return moduleFiles;
+        }
+
+        const workersData: WorkerData[] = sliceIntoChunks(folders, options.foldersPerWorker).map(f => ({
+            folders: f,
+            dependencies: options.dependencies ?? {},
+            ignoredPackages: this.ignoredPackages
+        }));
+
+        return (await Promise.all(workersData.map(d => RecipleNPMLoader.getModuleFilesWithWorker(d)))).reduce((v, c) => { v.push(...c); return v; }, []);
+    }
+
+    /**
+     * Check if the give module id is already used in loaded client modules
+     * @param id The module id
+     */
+    public isModuleIdLoaded(id: string): boolean {
+        return !!this.client.modules.cache.get(id);
+    }
+
     /**
      * Check if folder is a contains valid reciple module
      * @param folder The module folder
      * @param packageJsonDependencies Define to check if the module is in dependencies
      */
-    public async isValidModuleFolder(folder: string, packageJsonDependencies?: Record<string, string>): Promise<boolean> {
+    public static async isValidModuleFolder(folder: string, options?: { ignoredPackages?: string[]; dependencies?: Record<string, string>; }): Promise<boolean> {
         const packageJsonPath = path.join(folder, 'package.json');
         if (!existsSync(packageJsonPath)) return false;
 
-        const packageJson = this.getPackageJson(packageJsonPath);
-        if (this.ignoredPackages.includes(packageJson.name)) return false;
-        if (packageJsonDependencies && !packageJsonDependencies[packageJson.name]) return false;
+        const packageJson = await RecipleNPMLoader.getPackageJson(packageJsonPath);
+        if (options?.ignoredPackages?.includes(packageJson.name)) return false;
+        if (options?.dependencies && !options.dependencies[packageJson.name]) return false;
         if (!packageJson.recipleModule || !existsSync(path.join(folder, packageJson.recipleModule))) return false;
         if (!packageJson.keywords?.includes('reciple-module')) return false;
 
@@ -156,17 +204,34 @@ export class RecipleNPMLoader implements RecipleModuleData, RecipleNPMLoaderOpti
      * @param file The package.json path
      * @param isRecipleModule Reciple module type guard
      */
-    public getPackageJson(file: string, isRecipleModule?: false): PartialPackageJson;
-    public getPackageJson(file: string, isRecipleModule: true): PartialPackageJson & { recipleModule: string; keywords: string[]; };
-    public getPackageJson(file: string, _isRecipleModule?: boolean): PartialPackageJson {
-        return JSON.parse(readFileSync(file, 'utf-8'));
+    public static async getPackageJson(file: string, isRecipleModule?: false): Promise<PartialPackageJson>;
+    public static async getPackageJson(file: string, isRecipleModule: true): Promise<PartialPackageJson & { recipleModule: string; keywords: string[]; }>;
+    public static async getPackageJson(file: string, _isRecipleModule?: boolean): Promise<PartialPackageJson> {
+        return JSON.parse(await readFile(file, 'utf-8'));
     }
 
-    /**
-     * Check if the give module id is already used in loaded client modules
-     * @param id The module id
-     */
-    public isModuleIdLoaded(id: string): boolean {
-        return !!this.client.modules.cache.get(id);
+    public static async getModuleFilesWithWorker(data: WorkerData): Promise<string[]> {
+        const scannedFolders: WorkerScannedFolderData[] = await new Promise((res, rej) => {
+            const worker = new Worker(path.join(RecipleNPMLoader.workersFolder, 'getModuleFiles.mjs'), { workerData: data });
+            const terminate = () => worker.terminate().catch(() => {});
+
+            worker.on('error', async err => {
+                await terminate();
+                rej(err);
+            });
+
+            worker.on('message', async data => {
+                if (!Array.isArray(data)) return;
+
+                await terminate();
+                res(data);
+            });
+
+            worker.on('exit', () => {
+                if (!scannedFolders.length) rej(new RecipleError('Worker exited unexpectedly'));
+            });
+        });
+
+        return scannedFolders.filter(s => s.valid && s.moduleFile).map(s => s.moduleFile!);
     }
 }

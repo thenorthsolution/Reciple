@@ -38,5 +38,8 @@
   },
   "peerDependencies": {
     "@reciple/core": "^8.0.0-dev.6"
+  },
+  "dependencies": {
+    "@reciple/utils": "^8.0.0-dev.3"
   }
 }
