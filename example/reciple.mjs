@@ -61,7 +61,10 @@ export const config = {
         }
     },
     modules: {
-        dirs: ['./modules'],
+        dirs: [
+            './modules/loader',
+            './modules'
+        ],
         exclude: [],
         disableModuleVersionCheck: false
     },
