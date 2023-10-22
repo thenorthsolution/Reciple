@@ -3,5 +3,5 @@ import path from 'path';
 
 export default new RecipleNPMLoader({
     nodeModulesFolder: path.join(process.cwd(), '../node_modules'),
-    foldersPerWorker: 0
+    foldersPerWorker: 229
 });

@@ -46,9 +46,10 @@ export interface RecipleNPMLoaderOptions {
      */
     ignoredPackages?: string[];
     /**
-     * Number of folders scanned by each workers. Falsy to disable workers
+     * Number of folders scanned by each workers.
+     * ## **Values below 100 might cause performance issues**
      * @experimental
-     * @default null
+     * @default null // Disables workers
      */
     foldersPerWorker?: number|null;
 }
@@ -99,8 +100,11 @@ export class RecipleNPMLoader implements RecipleModuleData, RecipleNPMLoaderOpti
 
         this.logger?.debug(`Loading modules from '${node_modules}'`);
 
+        const startTimestamp = Date.now();
         const packageJson = this.packageJsonPath ? await RecipleNPMLoader.getPackageJson(this.packageJsonPath) : null;
         const dependencies = packageJson ? { ...packageJson?.dependencies, ...packageJson?.devDependencies } : null;
+
+        if (this.foldersPerWorker && this.foldersPerWorker < 100) this.logger?.warn(`foldersPerWorker: values below 100 might cause performance issues`);
 
         let contents: string[] = [];
 
@@ -133,7 +137,9 @@ export class RecipleNPMLoader implements RecipleModuleData, RecipleNPMLoaderOpti
             dependencies: dependencies ?? undefined
         });
 
-        if (moduleFiles.length) this.logger?.debug(`Loading modules:\n  `, moduleFiles.join('\n  '));
+        if (moduleFiles.length) this.logger?.debug(`Loading modules:\n `, moduleFiles.join('\n  '));
+
+        this.logger?.log(`Took ${Math.floor(Date.now() - startTimestamp)}ms to resolve (${moduleFiles.length}) module(s)`);
 
         return this.client.modules.resolveModuleFiles({
             files: moduleFiles,
@@ -151,8 +157,6 @@ export class RecipleNPMLoader implements RecipleModuleData, RecipleNPMLoaderOpti
                     dependencies: options?.dependencies ?? undefined,
                     ignoredPackages: this.ignoredPackages
                 });
-
-                this.logger?.debug(isValid, folder);
                 if (!isValid) return;
 
                 const packageJson = await RecipleNPMLoader.getPackageJson(path.join(folder, 'package.json'), true);
@@ -162,6 +166,15 @@ export class RecipleNPMLoader implements RecipleModuleData, RecipleNPMLoaderOpti
             }
 
             await Promise.all(folders.map(f => scanFolder(f)));
+
+            if (moduleFiles.length) {
+                this.logger?.debug(`Scanned modules:`);
+
+                for (const moduleFile of moduleFiles) {
+                    this.logger?.debug(`  ${moduleFile}`);
+                }
+            }
+
             return moduleFiles;
         }
 
@@ -171,19 +184,17 @@ export class RecipleNPMLoader implements RecipleModuleData, RecipleNPMLoaderOpti
             ignoredPackages: this.ignoredPackages
         }));
 
-        return (await Promise.all(
-            workersData.map(d => RecipleNPMLoader.getModuleFilesWithWorker(d).then(data => {
-                if (!this.logger) return data.moduleFiles;
+        const moduleFiles = (await Promise.all(workersData.map(d => RecipleNPMLoader.getModuleFilesWithWorker(d).then(data => data.moduleFiles)))).reduce((v, c) => { v.push(...c); return v; }, []);
 
-                this.logger.debug(`Scanned Folders (worker: ${data.threadId}):`);
+        if (moduleFiles.length) {
+            this.logger?.debug(`Scanned modules:`);
 
-                for (const scannedFolder of data.scannedFolders) {
-                    this.logger.debug(scannedFolder.valid, scannedFolder.folder);
-                }
+            for (const moduleFile of moduleFiles) {
+                this.logger?.debug(`  ${moduleFile}`);
+            }
+        }
 
-                return data.moduleFiles;
-            }))
-        )).reduce((v, c) => { v.push(...c); return v; }, []);
+        return moduleFiles;
     }
 
     /**
