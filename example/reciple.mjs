@@ -51,7 +51,7 @@ export const config = {
     },
     logger: {
         enabled: true,
-        debugmode: null,
+        debugmode: true,
         coloredMessages: true,
         disableLogPrefix: false,
         logToFile: {
