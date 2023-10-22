@@ -47,7 +47,7 @@ export interface RecipleNPMLoaderOptions {
     ignoredPackages?: string[];
     /**
      * Number of folders scanned by each workers. Falsy to disable workers
-     * @default 5
+     * @default 100
      */
     foldersPerWorker?: number|null;
 }
@@ -65,7 +65,7 @@ export class RecipleNPMLoader implements RecipleModuleData, RecipleNPMLoaderOpti
     public packageJsonPath?: string;
     public disableVersionChecks: boolean;
     public ignoredPackages: string[];
-    public foldersPerWorker: number|null = 5;
+    public foldersPerWorker: number|null = 100;
 
     static readonly workersFolder: string = path.join(__dirname, './workers');
 
@@ -74,7 +74,7 @@ export class RecipleNPMLoader implements RecipleModuleData, RecipleNPMLoaderOpti
         this.packageJsonPath = options?.packageJsonPath;
         this.disableVersionChecks = options?.disableVersionChecks ?? false;
         this.ignoredPackages = options?.ignoredPackages ?? [];
-        this.foldersPerWorker = options?.foldersPerWorker ?? 5;
+        this.foldersPerWorker = options?.foldersPerWorker ?? 100;
     }
 
     public async onStart({ client }: RecipleModuleStartData): Promise<boolean> {
@@ -171,19 +171,17 @@ export class RecipleNPMLoader implements RecipleModuleData, RecipleNPMLoaderOpti
         }));
 
         return (await Promise.all(
-            workersData.map(
-                d => RecipleNPMLoader.getModuleFilesWithWorker(d).then(data => {
-                    if (!this.logger) return data.moduleFiles;
+            workersData.map(d => RecipleNPMLoader.getModuleFilesWithWorker(d).then(data => {
+                if (!this.logger) return data.moduleFiles;
 
-                    this.logger.debug(`Scanned Folders (worker: ${data.threadId}):`);
+                this.logger.debug(`Scanned Folders (worker: ${data.threadId}):`);
 
-                    for (const scannedFolder of data.scannedFolders) {
-                        this.logger.debug(scannedFolder);
-                    }
+                for (const scannedFolder of data.scannedFolders) {
+                    this.logger.debug(scannedFolder.valid, scannedFolder.folder);
+                }
 
-                    return data.moduleFiles;
-                })
-            )
+                return data.moduleFiles;
+            }))
         )).reduce((v, c) => { v.push(...c); return v; }, []);
     }
 
@@ -227,7 +225,9 @@ export class RecipleNPMLoader implements RecipleModuleData, RecipleNPMLoaderOpti
     public static async getModuleFilesWithWorker(data: WorkerData): Promise<{ threadId: number; scannedFolders: WorkerScannedFolderData[]; moduleFiles: string[] }> {
         let threadId: number = 0;
 
-        const scannedFolders: WorkerScannedFolderData[] = await new Promise((res, rej) => {
+        let scannedFolders: WorkerScannedFolderData[] = [];
+
+        await new Promise((res, rej) => {
             const worker = new Worker(path.join(RecipleNPMLoader.workersFolder, 'getModuleFiles.mjs'), { workerData: data });
             const terminate = () => worker.terminate().catch(() => {});
 
@@ -241,8 +241,9 @@ export class RecipleNPMLoader implements RecipleModuleData, RecipleNPMLoaderOpti
             worker.on('message', async data => {
                 if (!Array.isArray(data)) return;
 
+                scannedFolders = data;
                 await terminate();
-                res(data);
+                res(void 0);
             });
 
             worker.on('exit', () => {
