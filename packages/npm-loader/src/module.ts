@@ -170,7 +170,21 @@ export class RecipleNPMLoader implements RecipleModuleData, RecipleNPMLoaderOpti
             ignoredPackages: this.ignoredPackages
         }));
 
-        return (await Promise.all(workersData.map(d => RecipleNPMLoader.getModuleFilesWithWorker(d)))).reduce((v, c) => { v.push(...c); return v; }, []);
+        return (await Promise.all(
+            workersData.map(
+                d => RecipleNPMLoader.getModuleFilesWithWorker(d).then(data => {
+                    if (!this.logger) return data.moduleFiles;
+
+                    this.logger.debug(`Scanned Folders (worker: ${data.threadId}):`);
+
+                    for (const scannedFolder of data.scannedFolders) {
+                        this.logger.debug(scannedFolder);
+                    }
+
+                    return data.moduleFiles;
+                })
+            )
+        )).reduce((v, c) => { v.push(...c); return v; }, []);
     }
 
     /**
@@ -210,10 +224,14 @@ export class RecipleNPMLoader implements RecipleModuleData, RecipleNPMLoaderOpti
         return JSON.parse(await readFile(file, 'utf-8'));
     }
 
-    public static async getModuleFilesWithWorker(data: WorkerData): Promise<string[]> {
+    public static async getModuleFilesWithWorker(data: WorkerData): Promise<{ threadId: number; scannedFolders: WorkerScannedFolderData[]; moduleFiles: string[] }> {
+        let threadId: number = 0;
+
         const scannedFolders: WorkerScannedFolderData[] = await new Promise((res, rej) => {
             const worker = new Worker(path.join(RecipleNPMLoader.workersFolder, 'getModuleFiles.mjs'), { workerData: data });
             const terminate = () => worker.terminate().catch(() => {});
+
+            threadId = worker.threadId;
 
             worker.on('error', async err => {
                 await terminate();
@@ -232,6 +250,10 @@ export class RecipleNPMLoader implements RecipleModuleData, RecipleNPMLoaderOpti
             });
         });
 
-        return scannedFolders.filter(s => s.valid && s.moduleFile).map(s => s.moduleFile!);
+        return {
+            threadId,
+            scannedFolders,
+            moduleFiles: scannedFolders.filter(s => s.valid && s.moduleFile).map(s => s.moduleFile!)
+        };
     }
 }
