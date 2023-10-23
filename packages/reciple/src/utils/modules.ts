@@ -38,9 +38,9 @@ export async function findModules(config: RecipleConfig['modules'], filter?: (fi
             )
             .filter(file => (filter ? filter(file) : file.endsWith('.js')));
 
-        const addFile = async (file: string) => config.filter && await Promise.resolve(config.filter(file)) ? modules.push(file) : 0;
+        const addFile = async (file: string) => !config.filter || await Promise.resolve(config.filter(file)) ? modules.push(file) : 0;
 
-        await Promise.all(files.map(f => addFile));
+        await Promise.all(files.map(f => addFile(f)));
     }
 
     return modules;
