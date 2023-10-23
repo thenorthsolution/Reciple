@@ -1,14 +1,19 @@
 // @ts-check
-import { Config, cli, command, createLogger } from 'reciple';
+import { ConfigReader, cli, command, createLogger } from 'reciple';
 import { ShardingManager } from 'discord.js';
-import path from 'path';
+import { config as loadEnv } from 'dotenv';
+import { createReadStream } from 'node:fs';
+import path from 'node:path';
 
-// @ts-expect-error We need to modify readonly command options
-command.options = command.options.filter(o => !['shardmode', 'version', 'yes'].includes(o.name()));
-
+Reflect.set(command, 'options', command.options.filter(o => !['shardmode', 'version', 'yes'].includes(o.name())));
 command.name('').description('The options below are passed to reciple cli shards').parse();
 
 process.chdir(cli.cwd);
+
+loadEnv({ path: cli.options.env });
+
+const config = (await ConfigReader.readConfigJS(cli.options.config)).config;
+const logsFolder = path.join(process.cwd(), (config.logger.logToFile.logsFolder || 'logs'));
 
 const console = await (await createLogger({
     enabled: true,
@@ -18,21 +23,9 @@ const console = await (await createLogger({
 .setDebugMode(true)
 .setName('ShardManager')
 .createFileWriteStream({
-    file: path.join(process.cwd(), 'sharder-logs/shards.log'),
+    file: path.join(logsFolder, '/sharder/latest.log'),
     renameOldFile: true
 });
-
-let configPaths = cli.options?.config?.map(c => path.isAbsolute(c) ? path.resolve(c) : path.join(process.cwd(), c));
-    configPaths = !configPaths?.length ? [path.join(process.cwd(), 'reciple.yml')] : configPaths;
-
-/**
- * @type {string}
- */
-// @ts-ignore
-const mainConfigPath = configPaths.shift();
-
-const configParser = await (new Config(mainConfigPath, configPaths)).parseConfig();
-const config = configParser.getConfig();
 
 const shards = new ShardingManager(cli.binPath, {
     shardArgs: ['--shardmode', ...process.argv.slice(2)],
@@ -42,23 +35,64 @@ const shards = new ShardingManager(cli.binPath, {
 });
 
 shards.on('shardCreate', shard => {
+    /**
+     * @type {number}
+     */
+    let pid;
+    /**
+     * @type {string}
+     */
+    let logs;
+
     console.log(`Creating shard ${shard.id}...`);
 
-    shard.on('ready', () => console.log(`Shard ${shard.id} is ready!`));
+    shard.on('ready', () => {
+        console.log(`Shard ${shard.id} is ready!`);
+        if (!pid) return;
+
+        console.log(`PID: ${pid}; Logs for shard ${shard.id} is located at '${logs}'`);
+
+        const readStream = createReadStream(logs, 'utf-8');
+        if (console.writeStream) readStream.pipe(console.writeStream);
+    });
+
     shard.on('reconnecting', () => console.log(`Shard ${shard.id} is reconnecting!`));
     shard.on('disconnect', () => console.log(`Shard ${shard.id} disconnected!`));
     shard.on('death', () => console.log(`Shard ${shard.id} died!`));
     shard.on('error', err => console.log(`Shard ${shard.id} encountered an error!\n`, err));
 
-    if (shard.worker) {
-        shard.worker.stdout.on('data', chunk => console.writeStream?.write(chunk.toString('utf-8').trim()));
-        shard.worker.stderr.on('data', chunk => console.writeStream?.write(chunk.toString('utf-8').trim()));
-    }
+    shard.on('message', data => {
+        if (!('type' in data) || data.type !== 'ProcessInfo') return;
 
-    if (shard.process) {
-        shard.process.stdout?.on('data', chunk => console.writeStream?.write(chunk.toString('utf-8').trim()));
-        shard.process.stderr?.on('data', chunk => console.writeStream?.write(chunk.toString('utf-8').trim()));
-    }
+        pid = data.pid;
+        logs = path.join(logsFolder, `${pid}.log`);
+    });
 });
 
-shards.spawn();
+process.stdin.resume();
+
+process.once('SIGHUP', stopProcess);
+process.once('SIGINT', stopProcess);
+process.once('SIGQUIT', stopProcess);
+process.once('SIGABRT', stopProcess);
+process.once('SIGALRM', stopProcess);
+process.once('SIGTERM', stopProcess);
+process.once('SIGBREAK', stopProcess);
+process.once('SIGUSR2', stopProcess);
+
+function stopProcess() {
+    shards.shards.map(c => {
+        console.log(`Killed ${c.id}`);
+
+        if (c.process) {
+            c.process?.kill('SIGINT');
+        } else {
+            c.kill();
+        }
+    });
+
+    console.log(`Exitting process!`);
+    setTimeout(() => process.exit(0), 500);
+}
+
+await shards.spawn();

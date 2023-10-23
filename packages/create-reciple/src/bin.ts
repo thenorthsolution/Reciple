@@ -1,102 +1,116 @@
 #!/usr/bin/env node
-import { cancel, confirm, group, intro, isCancel, outro, select, text } from '@clack/prompts';
-import { resolvePackageManager } from './utils/functions.js';
-import { readFile, readdir, stat } from 'node:fs/promises';
-import { dirname, join, resolve } from 'node:path';
-import { PackageManager } from './utils/types.js';
-import { fileURLToPath } from 'node:url';
-import { create } from './create.js';
-import { existsSync } from 'node:fs';
-import { exit } from 'node:process';
-import kleur from 'kleur';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-const root = join(__dirname, '../');
+import { packageJson, packageManagers, templatesFolder } from './utils/constants.js';
+import { cancelPrompts, create, getTemplates, isDirEmpty } from './utils/helpers.js';
+import { PackageManager, resolvePackageManager } from '@reciple/utils';
+import { CliOptions } from './utils/types.js';
+import { confirm, intro, isCancel, outro, select, text } from '@clack/prompts';
+import { Command } from 'commander';
+import path from 'path';
+import { existsSync, statSync } from 'fs';
+import { kleur } from 'fallout-utility';
 
-const isExplicitDir: boolean = !!process.argv[2];
+const command = new Command()
+    .name(packageJson.name!)
+    .description(packageJson.description!)
+    .version(packageJson.version!, '-v, --version')
+    .argument('[dir]', 'Create template in this folder')
+    .option('--force', 'Force override existing files in directory', false)
+    .option('--typescript', 'Use typescript templates', 'null')
+    .option('--esm', 'Use commonjs templates', 'null')
+    .option('--commonjs', 'Use commonjs templates', 'null')
+    .option('--package-manager <npm,yarn,pnpm>', 'Set package manager', 'null');
 
-let cwd = resolve(process.argv[2] || '.');
+command.parse(process.argv);
 
-intro(`${kleur.bold().cyan(`Welcome to Reciple!`)}`);
+const options = command.opts<CliOptions>();
+const templates = await getTemplates(templatesFolder);
 
-if (cwd === process.cwd() && !isExplicitDir) {
-    const newCwd = await text({
-        message: 'Set your project directory (Leave empty to use current dir)',
-        placeholder: 'Project directory'
+let dir: string|null = command.args[0] ?? null;
+let typescript: boolean|null = options.typescript !== 'null' ? options.typescript : null;
+let commonjs: boolean|null = options.esm === true ? false : options.commonjs !== 'null' ? options.commonjs : null;
+let packageManager: PackageManager|null = options.packageManager !== 'null' ? options.packageManager : null;
+let setup: boolean = false;
+
+if (dir === null || typescript === null || commonjs === null || packageManager === null) {
+    setup = true;
+    intro(kleur.cyan().bold(`${packageJson.name} v${packageJson.version}`));
+}
+
+if (dir === null) {
+    const newDir = await text({
+        message: `Enter project directory`,
+        placeholder: `Leave empty to use current directory`,
+        defaultValue: process.cwd(),
+        validate: value => {
+            const dir = path.resolve(value);
+
+            if (!existsSync(dir)) return;
+            if (!statSync(dir).isDirectory()) return 'Invalid folder directory';
+        }
     });
 
-    if (isCancel(newCwd)) { cancel('Operation cancelled'); exit(1); }
-    if (newCwd) cwd = newCwd;
+    if (isCancel(newDir)) cancelPrompts();
+    dir = newDir;
 }
 
-if (existsSync(cwd)) {
-    if (!(await stat(cwd)).isDirectory()) {
-        console.log(`${kleur.gray(cwd)} ${kleur.green(`is not a directory`)}`);
-        exit(1);
-    }
+dir = path.resolve(dir);
 
-    if ((await readdir(cwd)).length > 0) {
-        const acceptDir = await confirm({
-            message: 'Directory is not empty, would you like to continue?',
-            initialValue: false
-        });
+if (!options.force && !(await isDirEmpty(dir))) {
+    const override = await confirm({
+        message: `Directory is not empty! Would you like to override its existing files?`,
+        initialValue: false,
+        active: `Yes`,
+        inactive: `No`
+    });
 
-        if (!acceptDir || isCancel(acceptDir)) { cancel('Operation cancelled'); exit(1); }
-    }
+    if (isCancel(override) || override === false) cancelPrompts();
 }
 
-const templatesRawJSON = await readFile(join(root, 'templates.json'), 'utf-8');
-const packageManagers: { label?: string; hint?: string; value: PackageManager|'none'; }[] = [
-    {
-        label: 'npm',
-        hint: 'Uses npm as package manager',
-        value: 'npm'
-    },
-    {
-        label: 'yarn',
-        hint: 'Uses yarn as package manager',
-        value: 'yarn'
-    },
-    {
-        label: 'pnpm',
-        hint: 'Uses pnpm as package manager',
-        value: 'pnpm'
-    },
-    {
-        label: 'none',
-        hint: 'Setup package manager later',
-        value: 'none'
-    }
-];
+if (typescript === null) {
+    const isTypescript = await confirm({
+        message: `Would you like to use typescript?`,
+        initialValue: false,
+        active: `Yes`,
+        inactive: `No`
+    });
 
-const resolvedPackageManager = resolvePackageManager();
-let firstPackageManagerIndex = packageManagers.findIndex(p => resolvedPackageManager && resolvedPackageManager === p.value);
-    firstPackageManagerIndex = firstPackageManagerIndex === -1 ? packageManagers.length - 1 : firstPackageManagerIndex;
+    if (isCancel(isTypescript)) cancelPrompts();
+    typescript = isTypescript;
+}
 
-const setup = await group({
-    template: () => select({
-        message: 'Which language would you like to use?',
-        // @ts-expect-error Idk why
-        options: (JSON.parse(templatesRawJSON) as { name: string; description: string; dir: string }[]).map(m => ({
-            label: m.name,
-            value: m.dir,
-            hint: m.description
-        }))
-    }),
-    esm: () => confirm({
-        message: 'Would you like to use ES Modules? (ES modules uses import instead of require)',
-        initialValue: false
-    }),
-    packageManager: () => select<{ label?: string; hint?: string; value: PackageManager|'none'; }[], PackageManager|'none'>({
+if (commonjs === null) {
+    const isESM = await confirm({
+        message: `Would you like to use ES Modules? (uses import() instead of require())`,
+        initialValue: true,
+        active: `Yes`,
+        inactive: `No`
+    });
+
+    if (isCancel(isESM)) cancelPrompts();
+    commonjs = !isESM;
+}
+
+if (packageManager === null) {
+    const resolvedPackageManager = resolvePackageManager();
+    let firstPackageManagerIndex = packageManagers.findIndex(p => resolvedPackageManager && resolvedPackageManager === p.value);
+        firstPackageManagerIndex = firstPackageManagerIndex === -1 ? packageManagers.length - 1 : firstPackageManagerIndex;
+
+    const newPackageManager = await select<{ label?: string; hint?: string; value: PackageManager|'none'; }[], PackageManager|'none'>({
         message: 'Select your preferred package manager',
         options: [
             packageManagers[firstPackageManagerIndex],
             ...packageManagers.filter((p, i) => i !== firstPackageManagerIndex)
         ]
-    }),
-}, { onCancel: () => { cancel('Operation cancelled'); exit(1); } });
+    });
 
-outro('Setup done!');
+    if (isCancel(newPackageManager)) cancelPrompts();
+    packageManager = newPackageManager !== 'none' ? newPackageManager : null;
+}
 
-create(cwd, join(root, setup.template), setup.esm, setup.packageManager !== 'none' ? setup.packageManager : undefined);
+const template = templates.find(p => p.type === (commonjs ? 'commonjs' : 'module') && p.language === (typescript ? 'Typescript' : 'Javascript'));
+if (!template) cancelPrompts({ reason: `Template not found` });
+if (packageManager && !packageManagers.some(p => p.value === packageManager)) cancelPrompts({ reason: `Invalid package manager` });
+if (setup) outro(`Setup Done! Creating from ${kleur.cyan().bold(template.name)} template`);
+
+await create(template, dir, packageManager ?? undefined);

@@ -132,12 +132,8 @@ dist
 # bin
 bin
 
-# testing
-test/*.yml
-
 # docs
 docs/docs.json
 
 # files
-registry.json
-test/extensions
+test

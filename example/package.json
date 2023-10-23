@@ -1,15 +1,20 @@
 {
-  "name": "reciple-app",
-  "private": true,
+  "name": "example",
   "type": "module",
+  "private": true,
   "scripts": {
-    "start": "npx reciple -c config.yml",
-    "test": "node ../packages/reciple/bin/bin.mjs -c config.yml --debugmode",
-    "shards": "node shards.js -c config.yml"
+    "start": "reciple -c ./reciple.mjs",
+    "shard": "node shards.js -c reciple.mjs",
+    "dev": "nodemon --ext js,mjs,cjs,json --exec \"reciple -c reciple.mjs\" --signal SIGHUP"
   },
   "dependencies": {
-    "@reciple/npm-loader": "^7.4.0",
+    "@reciple/core": "^8.0.0-dev.2",
+    "@reciple/npm-loader": "^8.0.0-dev.3",
     "discord.js": "^14.13.0",
-    "reciple": "^7.9.0"
+    "reciple": "^8.0.0-dev.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20.8.7",
+    "nodemon": "^3.0.1"
   }
 }

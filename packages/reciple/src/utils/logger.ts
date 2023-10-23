@@ -1,10 +1,10 @@
 import { Logger, LoggerLevel, PartialDeep, kleur } from 'fallout-utility';
-import { IConfig } from '../classes/Config';
+import { RecipleConfig } from '../classes/Config';
 import { RecipleClient } from '../';
 import path from 'node:path';
 import { cli } from './cli';
 
-export function formatLogMessage(message: string, logger: Logger, config: PartialDeep<IConfig['logger']>, level: LoggerLevel): string {
+export function formatLogMessage(message: string, logger: Logger, config: PartialDeep<RecipleConfig['logger']>, level: LoggerLevel): string {
     const color = (msg: string) => {
         if (!config.coloredMessages || level === LoggerLevel.INFO) return msg;
 
@@ -30,9 +30,9 @@ export function formatLogMessage(message: string, logger: Logger, config: Partia
             ) + ` ${message}`;
 }
 
-export async function createLogger(config: PartialDeep<IConfig['logger']>): Promise<Logger> {
+export async function createLogger(config: PartialDeep<RecipleConfig['logger']>): Promise<Logger> {
     const logger = new Logger({
-        enableDebugmode: cli.options.debugmode || config.debugmode === true,
+        enableDebugmode: (cli.options.debugmode || config.debugmode) ?? null,
         forceEmitLogEvents: true,
         formatMessage: (message, level, logger) => formatLogMessage(message, logger, config, level)
     });
@@ -46,27 +46,26 @@ export async function createLogger(config: PartialDeep<IConfig['logger']>): Prom
     return logger;
 }
 
-export function quoteString(string: string, quote: string = "'"): string {
-    return `${quote}${string}${quote}`;
-}
-
-export function eventLogger(client: RecipleClient): void {
+export function addEventListenersToClient(client: RecipleClient<true>): void {
     client.on('recipleDebug', debug => client.logger?.debug(debug));
 
     client.modules.on('resolveModuleFileError', (file, error) => client.logger?.err(`Failed to resolve module ${kleur.yellow(quoteString(file))}:`, error));
 
-    client.modules.on('preStartModule', (module_) => client.logger?.debug(`Starting module ${kleur.cyan(quoteString(module_.displayName))}`));
-    client.modules.on('postStartModule', (module_) => client.logger?.log(`Started module ${kleur.cyan(quoteString(module_.displayName))}`));
-    client.modules.on('startModuleFailed', (module_) => client.logger?.error(`Failed to start module ${kleur.yellow(quoteString(module_.displayName))}: ${kleur.red('Module returned false')}`));
-    client.modules.on('startModuleError', (module_, err) => client.logger?.error(`An error occured while starting module ${kleur.yellow(quoteString(module_.displayName))}:`, err));
+    client.modules.on('preStartModule', (m) => client.logger?.debug(`Starting module ${kleur.cyan(quoteString(m.displayName))}`));
+    client.modules.on('postStartModule', (m) => client.logger?.log(`Started module ${kleur.cyan(quoteString(m.displayName))}`));
+    client.modules.on('startModuleError', (m, err) => client.logger?.error(`Failed to start module ${kleur.yellow(quoteString(m.displayName))}:`, err));
 
-    client.modules.on('preLoadModule', (module_) => client.logger?.debug(`Loading module ${kleur.cyan(quoteString(module_.displayName))}`));
-    client.modules.on('postLoadModule', (module_) => client.logger?.log(`Loaded module ${kleur.cyan(quoteString(module_.displayName))}`));
-    client.modules.on('loadModuleError', (module_, err) => client.logger?.error(`An error occured while loading module ${kleur.yellow(quoteString(module_.displayName))}:`, err));
+    client.modules.on('preLoadModule', (m) => client.logger?.debug(`Loading module ${kleur.cyan(quoteString(m.displayName))}`));
+    client.modules.on('postLoadModule', (m) => client.logger?.log(`Loaded module ${kleur.cyan(quoteString(m.displayName))}`));
+    client.modules.on('loadModuleError', (m, err) => client.logger?.error(`Failed to load module ${kleur.yellow(quoteString(m.displayName))}:`, err));
 
-    client.modules.on('preUnloadModule', (module_) => client.logger?.debug(`Unloading module ${kleur.cyan(quoteString(module_.displayName))}`));
-    client.modules.on('postUnloadModule', (module_) => client.logger?.log(`Unloaded module ${kleur.cyan(quoteString(module_.displayName))}`));
-    client.modules.on('unloadModuleError', (module_, err) => client.logger?.error(`An error occured while unloading module ${kleur.yellow(quoteString(module_.displayName))}:`, err));
+    client.modules.on('preUnloadModule', (m) => client.logger?.debug(`Unloading module ${kleur.cyan(quoteString(m.displayName))}`));
+    client.modules.on('postUnloadModule', (m) => client.logger?.log(`Unloaded module ${kleur.cyan(quoteString(m.displayName))}`));
+    client.modules.on('unloadModuleError', (m, err) => client.logger?.error(`Failed to unload module ${kleur.yellow(quoteString(m.displayName))}:`, err));
 
     client.on('recipleRegisterApplicationCommands', (commands, guild) => client.logger?.log(`Registered (${commands?.size || 0}) application commands ${guild ? 'to ' + guild : 'globally'}`));
+}
+
+function quoteString(string: string, quote: string = "'"): string {
+    return `${quote}${string}${quote}`;
 }

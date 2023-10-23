@@ -2,7 +2,7 @@
   "name": "@reciple/utils",
   "description": "Utilities used by reciple modules",
   "license": "GPL-3.0",
-  "version": "7.1.3",
+  "version": "8.0.0-dev.4",
   "main": "./dist/index.js",
   "module": "./dist/esm.mjs",
   "types": "./dist/index.d.ts",
@@ -24,8 +24,8 @@
     "./tsconfig.json": "./assets/tsconfig.json"
   },
   "scripts": {
-    "clean": "npx rimraf ./dist",
-    "build": "npm run clean && npx tsc",
+    "clean": "rimraf ./dist",
+    "build": "npm run clean && tsc",
     "docs": "node ../docgen/dist/bin.js -i ./src/index.ts -o ./docs/docs.json"
   },
   "files": [
@@ -37,6 +37,8 @@
   },
   "dependencies": {
     "@discordjs/collection": "^1.5.2",
+    "discord-api-types": "^0.37.60",
+    "dotenv": "^16.3.1",
     "fallout-utility": "^2.7.1"
   },
   "devDependencies": {

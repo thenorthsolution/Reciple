@@ -2,7 +2,7 @@
   "name": "@reciple/npm-loader",
   "description": "Load Reciple modules from node_modules",
   "license": "GPL-3.0",
-  "version": "7.4.9",
+  "version": "8.0.0-dev.5",
   "main": "./dist/module.js",
   "module": "./dist/module.mjs",
   "types": "./dist/module.d.ts",
@@ -25,21 +25,21 @@
     }
   },
   "scripts": {
-    "clean": "npx rimraf ./dist",
-    "build": "npm run clean && npx tsc",
+    "clean": "rimraf ./dist",
+    "build": "npm run clean && tsc",
     "docs": "node ../docgen/dist/bin.js -i ./src/module.ts -o ./docs/docs.json"
   },
   "files": [
     "dist",
     "README.md"
   ],
-  "devDependencies": {
-    "@reciple/client": "^7.8.9"
-  },
-  "peerDependencies": {
-    "@reciple/client": "^7.5.4"
-  },
   "publishConfig": {
     "access": "public"
+  },
+  "peerDependencies": {
+    "@reciple/core": "^8.0.0-dev.6"
+  },
+  "dependencies": {
+    "@reciple/utils": "^8.0.0-dev.4"
   }
 }

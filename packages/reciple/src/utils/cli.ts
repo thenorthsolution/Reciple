@@ -1,9 +1,10 @@
-import { realVersion } from '@reciple/client';
+import { Logger, buildVersion } from '@reciple/core';
 import { readFileSync } from 'node:fs';
-import { deprecate } from 'node:util';
 import { Command } from 'commander';
 import { coerce } from 'semver';
 import path from 'node:path';
+import { UpdateData, checkLatestUpdate } from '@reciple/update-checker';
+import { kleur } from 'fallout-utility';
 
 const { version, description } = JSON.parse(readFileSync(path.join(__dirname, '../../package.json'), 'utf-8'));
 const originalCwd = process.cwd();
@@ -11,30 +12,26 @@ const originalCwd = process.cwd();
 export let command = new Command()
     .name('reciple')
     .description(description)
-    .version(`Reciple CLI: ${version}\nReciple Client: ${realVersion}`, '-v, --version')
+    .version(`Reciple CLI: ${version}\nReciple Client: ${buildVersion}`, '-v, --version')
     .argument('[cwd]', 'Change the current working directory')
     .option('-t, --token <token>', 'Replace used bot token')
-    .option('-c, --config <dir>', 'Set path to a config file', (v, p: string[]) => p.concat([v]), [])
+    .option('-c, --config <dir>', 'Set path to a config file', 'reciple.mjs')
     .option('-D, --debugmode', 'Enable debug mode')
     .option('-y, --yes', 'Agree to all Reciple confirmation prompts')
     .option('--env <file>', '.env file location')
     .option('--shardmode', 'Modifies some functionalities to support sharding')
     .option('--setup', 'Create required config without starting the bot')
-    .option('--cache-config <file>', 'Add custom caching config')
-    .option('--sweeper-config <file>', 'Add custom sweeper config')
     .allowUnknownOption(true);
 
 export interface CLIOptions {
     version?: string;
     token?: string;
-    config?: string[];
+    config: string;
     debugmode?: boolean;
     yes?: boolean;
     env?: string;
     shardmode?: boolean;
     setup?: boolean;
-    cacheConfig?: string;
-    sweeperConfig?: string;
     [k: string]: any;
 }
 
@@ -50,20 +47,23 @@ export const cli = {
 };
 
 export const cliVersion = `${coerce(version)}`;
+export const cliBuildVersion = version;
 
-// TODO: Remove deprecated
+export async function checkForUpdates(logger?: Logger): Promise<Record<'reciple'|'@reciple/core', UpdateData|null>> {
+    const updates = await Promise.all([
+        checkLatestUpdate('reciple', cliBuildVersion).catch(() => null),
+        checkLatestUpdate('@reciple/core', buildVersion).catch(() => null),
+    ]);
 
-/**
- * @deprecated Use `cli` object instead
- */
-export const flags = cli.options;
+    if (logger) for (const update of updates) {
+        logger.debug(`Update checked for ${update?.package}`, update);
+        if (!update?.updateType) continue;
 
-/**
- * @deprecated Use `cli` object instead
- */
-export const argvOptions = deprecate(() => cli.options, 'argvOptions() is deprecated. Use the cli.args instead.');
+        logger.warn(`An update is available for ${kleur.cyan(update.package)}: ${kleur.red(update.currentVersion)} ${kleur.gray('->')} ${kleur.green().bold(update.updatedVersion)}`);
+    }
 
-/**
- * @deprecated Use `cli` object instead
- */
-export const cwd = cli.args[0] ? path.resolve(cli.args[0]) : process.cwd();
+    return {
+        'reciple': updates.find(u => u?.package === 'reciple') ?? null,
+        '@reciple/core': updates.find(u => u?.package === '@reciple/core') ?? null,
+    };
+}

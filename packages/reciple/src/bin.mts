@@ -1,51 +1,35 @@
 #!/usr/bin/env node
 
-import { ContextMenuCommandBuilder, MessageCommandBuilder, SlashCommandBuilder, realVersion, version } from '@reciple/client';
+import { ContextMenuCommandBuilder, MessageCommandBuilder, SlashCommandBuilder, buildVersion, version } from '@reciple/core';
+import { createLogger, addEventListenersToClient } from './utils/logger.js';
 import { setTimeout as setTimeoutAsync } from 'node:timers/promises';
-import { createLogger, eventLogger } from './utils/logger.js';
-import { getJsConfig, getModules } from './utils/modules.js';
 import { checkLatestUpdate } from '@reciple/update-checker';
-import { CacheFactory, SweeperOptions } from 'discord.js';
-import { command, cli, cliVersion } from './utils/cli.js';
-import { mkdir, readdir } from 'node:fs/promises';
-import { Config } from './classes/Config.js';
-import { RecipleClient } from './index.js';
+import { command, cli, cliVersion, checkForUpdates } from './utils/cli.js';
+import { ProcessInformation, RecipleClient, findModules } from './index.js';
+import { resolveEnvProtocol } from '@reciple/utils';
+import { ConfigReader } from './classes/Config.js';
+import { config as loadEnv } from 'dotenv';
+import { mkdir } from 'node:fs/promises';
 import { kleur } from 'fallout-utility';
 import { existsSync } from 'node:fs';
-import micromatch from 'micromatch';
-import prompts from 'prompts';
+import { parentPort } from 'node:worker_threads';
 import path from 'node:path';
 import semver from 'semver';
 
 command.parse();
+
+if (!existsSync(cli.cwd)) await mkdir(cli.cwd, { recursive: true });
 process.chdir(cli.cwd);
 
-const allowedFiles = ['node_modules', 'reciple.yml', 'package.json', '.*'];
-let configPaths = cli.options?.config?.map(c => path.isAbsolute(c) ? path.resolve(c) : path.join(process.cwd(), c));
-    configPaths = !configPaths?.length ? [path.join(process.cwd(), 'reciple.yml')] : configPaths;
+loadEnv({ path: cli.options.env });
 
-const mainConfigPath = configPaths.shift()!;
-
-if (!existsSync(process.cwd())) await mkdir(process.cwd(), { recursive: true });
-if ((await readdir(process.cwd())).filter(f => !micromatch.isMatch(f, allowedFiles)).length && !existsSync(mainConfigPath) && !cli.options.yes) {
-    const confirm = await prompts(
-        {
-            initial: false,
-            message: `Would you like to initialize your Reciple app ${process.cwd() !== process.cwd() ? 'in your chosen directory': 'here'}?`,
-            name: 'confirm',
-            type: 'confirm'
-        }
-    );
-
-    if (!confirm.confirm) process.exit(0);
-}
-
-const configParser = await (new Config(mainConfigPath, configPaths)).parseConfig();
-const config = configParser.getConfig();
-const logger = config.logger?.enabled ? await createLogger(config.logger) : undefined;
+const configPath = path.resolve(cli.options.config);
+const config = await ConfigReader.readConfigJS(configPath).then(c => c.config);
+const logger = config.logger?.enabled ? await createLogger(config.logger) : null;
 
 if (cli.options.setup) process.exit(0);
 if (cli.options.shardmode) config.applicationCommandRegister = { ...config.applicationCommandRegister, enabled: false };
+if (cli.options.token) config.token = resolveEnvProtocol(cli.options.token) ?? config.token;
 
 const processErrorHandler = (err: any) => logger?.error(err);
 
@@ -54,44 +38,40 @@ process.once('unhandledRejection', processErrorHandler);
 
 process.on('warning', warn => logger?.warn(warn));
 
-/**
- * !! BREAKING !!
- * TODO: use reciple cli version instead of client version when checking
- */
+if (cli.options.shardmode) {
+    const message: ProcessInformation = { type: 'ProcessInfo', pid: process.pid };
+
+    if (parentPort) parentPort.postMessage(message);
+    if (process.send) process.send(message);
+}
+
 if (!semver.satisfies(version, config.version)) {
     logger?.error(`Your config version doesn't support Reciple client v${version}`);
     process.exit(1);
 }
 
-logger?.info(`Starting Reciple client v${realVersion} - ${new Date()}`);
+logger?.info(`Starting Reciple client v${buildVersion} - ${new Date()}`);
 
-const client = new RecipleClient({
-    recipleOptions: config,
-    ...config.client,
-    logger,
-    makeCache: cli.options.cacheConfig ? await getJsConfig<CacheFactory>(cli.options.cacheConfig) : undefined,
-    sweepers: cli.options.sweeperConfig ? await getJsConfig<SweeperOptions>(cli.options.sweeperConfig) : undefined,
-});
+const client = new RecipleClient(config);
 
-eventLogger(client);
+client.setLogger(logger)
+
+addEventListenersToClient(client);
 
 const moduleFilesFilter = (file: string) => file.endsWith('.js') || file.endsWith('.cjs') || file.endsWith('.mjs');
 
-const modules = await client.modules.resolveModuleFiles(await getModules(config.modules, (f) => moduleFilesFilter(f)), config.modules.disableModuleVersionCheck);
-const startedModules = await client.modules.startModules({
-    modules,
-    addToModulesCollection: true
+const modules = await client.modules.resolveModuleFiles({
+    files: await findModules(config.modules, (f) => moduleFilesFilter(f)),
+    disableVersionCheck: config.modules.disableModuleVersionCheck
 });
 
+const startedModules = await client.modules.startModules();
 const failedToStartModules = modules.length - startedModules.length;
 
-logger?.debug(`Failed to start (${failedToStartModules}) modules.`);
+if (failedToStartModules > 0) logger?.error(`Failed to start (${failedToStartModules}) modules.`);
 
 client.once('ready', async () => {
-    if (!client.isReady()) {
-        logger?.error(`Client did not start properly!`);
-        return process.exit(1);
-    }
+    if (!client.isReady()) return;
 
     logger?.debug(`Client is ready!`);
 
@@ -111,14 +91,10 @@ client.once('ready', async () => {
             .catch(() => null);
     }
 
-    const loadedModules = await client.modules.loadModules({
-        modules: [...client.modules.cache.values()],
-        resolveCommands: true
-    });
+    const loadedModules = await client.modules.loadModules({ cacheCommands: true });
+    const failedToLoadModules = startedModules.length - loadedModules.length;
 
-    const unloaded = client.modules.cache.sweep(m => !loadedModules.some(s => s.id == m.id));
-
-    logger?.debug(`Failed to load (${unloaded}) modules.`);
+    if (failedToLoadModules > 0) logger?.debug(`Failed to load (${failedToLoadModules}) modules.`);
 
     let stopping = false;
 
@@ -129,14 +105,7 @@ client.once('ready', async () => {
 
         stopping = true;
 
-        await client.modules.unloadModules({
-            reason: 'ProcessExit',
-            modules: [...client.modules.cache.values()],
-            removeCommandsFromClient: false,
-            removeFromModulesCollection: true
-        });
-
-        client.destroy();
+        await client.destroy(true);
 
         const signalString = signal === 'SIGINT' ? 'keyboard interrupt' : signal === 'SIGTERM' ? 'terminate' : String(signal);
 
@@ -144,7 +113,7 @@ client.once('ready', async () => {
         logger?.closeWriteStream();
 
         await setTimeoutAsync(10);
-        process.kill(process.pid, signal);
+        process.exit(0);
     };
 
     process.stdin.resume();
@@ -160,14 +129,14 @@ client.once('ready', async () => {
 
     client.on('interactionCreate', interaction => {
         if (interaction.isContextMenuCommand()) {
-            ContextMenuCommandBuilder.execute(client, interaction);
+            ContextMenuCommandBuilder.execute({ client, interaction });
         } else if (interaction.isChatInputCommand()) {
-            SlashCommandBuilder.execute(client, interaction);
+            SlashCommandBuilder.execute({ client, interaction });
         }
     });
 
     client.on('messageCreate', message => {
-        MessageCommandBuilder.execute(client, message);
+        MessageCommandBuilder.execute({ client, message });
     });
 
     await client.commands.registerApplicationCommands();
@@ -177,9 +146,11 @@ client.once('ready', async () => {
     logger?.log(`Loaded ${client.commands.contextMenuCommands.size} context menu command(s)`);
     logger?.log(`Loaded ${client.commands.messageCommands.size} message command(s)`);
     logger?.log(`Loaded ${client.commands.slashCommands.size} slash command(s)`);
+    logger?.log(`Loaded ${client.commands.preconditions.size} precondition(s)`);
+
+    if (config.checkForUpdates) await checkForUpdates(logger ?? undefined);
 });
 
 logger?.debug(`Logging in...`);
 
-await client.login(config.token)
-    .then(() => logger?.debug(`Login successful`));
+await client.login().then(() => logger?.debug(`Login successful`));

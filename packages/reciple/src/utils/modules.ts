@@ -1,30 +1,29 @@
 import { lstat, mkdir, readdir } from 'node:fs/promises';
-import { recursiveDefaults } from '@reciple/client';
-import { Awaitable } from 'fallout-utility';
-import { IConfig } from '../classes/Config';
+import { Awaitable } from 'fallout-utility/types';
+import { RecipleConfig } from '../classes/Config';
 import { existsSync } from 'node:fs';
 import micromatch from 'micromatch';
 import path from 'node:path';
 
-export async function getModules(config: IConfig['modules'], filter?: (filename: string) => Awaitable<boolean>): Promise<string[]> {
+export async function findModules(config: RecipleConfig['modules'], filter?: (filename: string) => Awaitable<boolean>): Promise<string[]> {
     const modules: string[] = [];
     const { globby, isDynamicPattern } = await import('globby');
 
-    for (const folder of config.modulesFolders) {
+    for (const folder of config.dirs) {
         const dir = path.isAbsolute(folder) ? folder : path.join(process.cwd(), folder);
 
         if (isDynamicPattern(folder, { cwd: process.cwd() })) {
-            let modulesFolders = await globby(folder, {
+            let dirs = await globby(folder, {
                     cwd: process.cwd(),
                     onlyDirectories: true,
                     absolute: true
                 });
 
-                modulesFolders = modulesFolders.filter(f => !micromatch.isMatch(path.basename(f), config.exclude));
+                dirs = dirs.filter(f => !micromatch.isMatch(path.basename(f), config.exclude));
 
-            modules.push(...await getModules({
+            modules.push(...await findModules({
                 ...config,
-                modulesFolders
+                dirs
             }));
 
             continue;
@@ -33,15 +32,16 @@ export async function getModules(config: IConfig['modules'], filter?: (filename:
         if (!existsSync(dir)) await mkdir(dir, { recursive: true });
         if (!(await lstat(dir)).isDirectory()) continue;
 
-        const files = (await readdir(dir)).map(file => path.join(dir, file)).filter(f => !micromatch.isMatch(path.basename(f), config.exclude));
-        modules.push(...files.filter(file => (filter ? filter(file) : file.endsWith('.js'))));
+        const files = (await readdir(dir))
+            .map(file => path.join(dir, file))
+                .filter(f => !micromatch.isMatch(path.basename(f), config.exclude)
+            )
+            .filter(file => (filter ? filter(file) : file.endsWith('.js')));
+
+        const addFile = async (file: string) => !config.filter || await Promise.resolve(config.filter(file)) ? modules.push(file) : 0;
+
+        await Promise.all(files.map(f => addFile(f)));
     }
 
     return modules;
-}
-
-export async function getJsConfig<T>(file: string): Promise<T|undefined> {
-    file = path.resolve(path.isAbsolute(file) ? file : path.join(process.cwd(), file));
-
-    return recursiveDefaults<T>(await import(`file://${file}`));
 }

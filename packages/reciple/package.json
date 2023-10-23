@@ -3,11 +3,11 @@
   "description": "Reciple is a Discord.js bot framework",
   "homepage": "https://reciple.js.org/docs/reciple",
   "license": "GPL-3.0",
-  "version": "7.9.11",
-  "main": "./bin/index.js",
-  "module": "./bin/esm.mjs",
-  "types": "./bin/index.d.ts",
-  "bin": "./bin/bin.mjs",
+  "version": "8.0.0-dev.13",
+  "main": "./dist/index.js",
+  "module": "./dist/esm.mjs",
+  "types": "./dist/index.d.ts",
+  "bin": "./dist/bin.mjs",
   "keywords": [
     "reciple",
     "discord.js",
@@ -21,25 +21,29 @@
   },
   "exports": {
     ".": {
-      "types": "./bin/index.d.ts",
-      "import": "./bin/esm.mjs",
-      "require": "./bin/index.js"
+      "types": "./dist/index.d.ts",
+      "import": "./dist/esm.mjs",
+      "require": "./dist/index.js"
+    },
+    "./config.mjs": {
+      "types": "./static/config.d.mts",
+      "import": "./static/config.mjs"
     }
   },
   "scripts": {
-    "clean": "npx rimraf ./bin",
-    "build": "npm run clean && npx tsc",
+    "clean": "rimraf ./dist",
+    "build": "npm run clean && tsc",
     "docs": "node ../docgen/dist/bin.js -i ./src/exports.ts -o ./docs/docs.json"
   },
   "files": [
-    "bin",
+    "dist",
     "static",
     "README.md"
   ],
   "dependencies": {
-    "@reciple/client": "^7.8.9",
-    "@reciple/update-checker": "^7.2.3",
-    "commander": "^11.0.0",
+    "@reciple/update-checker": "^8.0.0-dev.4",
+    "@reciple/utils": "^8.0.0-dev.4",
+    "commander": "^11.1.0",
     "dotenv": "^16.3.1",
     "fallout-utility": "^2.7.1",
     "globby": "^13.2.1",
@@ -47,17 +51,16 @@
     "micromatch": "^4.0.5",
     "prompts": "^2.4.2",
     "semver": "^7.5.4",
-    "typescript": "^5.2.2",
-    "yaml": "^2.3.2"
+    "typescript": "^5.2.2"
   },
   "devDependencies": {
-    "@types/lodash.mergewith": "^4.6.7",
-    "@types/micromatch": "^4.0.2",
-    "@types/prompts": "^2.4.4",
-    "@types/semver": "^7.5.2",
+    "@reciple/core": "^8.0.0-dev.7",
+    "@types/micromatch": "^4.0.4",
+    "@types/semver": "^7.5.4",
     "discord.js": "^14.13.0"
   },
   "peerDependencies": {
+    "@reciple/core": "^8.0.0-dev.5",
     "discord.js": "^14.7.1"
   },
   "gitHead": "c5620aa5f046aa426b832c052a4f933817270573"

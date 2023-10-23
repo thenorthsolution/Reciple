@@ -1,20 +1,44 @@
-import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { readFileSync } from 'node:fs';
+import path from 'node:path';
+import { readFile } from 'node:fs/promises';
+import { PackageJson } from 'fallout-utility/types';
+import { PackageManager } from '@reciple/utils';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+export const root = path.join(path.dirname(fileURLToPath(import.meta.url)), '../../');
+export const templatesFolder = path.join(root, 'templates');
+export const packageJson: PackageJson = JSON.parse(await readFile(path.join(root, 'package.json'), 'utf-8'));
 
-export const root = join(__dirname, '../../');
-export const packageJSON = JSON.parse(readFileSync(join(root, 'package.json'), 'utf-8'));
+export const packageManagers: { label?: string; hint?: string; value: PackageManager|'none'; }[] = [
+    {
+        label: 'npm',
+        hint: 'Uses npm as package manager',
+        value: 'npm'
+    },
+    {
+        label: 'yarn',
+        hint: 'Uses yarn as package manager',
+        value: 'yarn'
+    },
+    {
+        label: 'pnpm',
+        hint: 'Uses pnpm as package manager',
+        value: 'pnpm'
+    },
+    {
+        label: 'none',
+        hint: 'Setup package manager later',
+        value: 'none'
+    }
+];
 
 export const packages = {
-    'TYPES_NODE': packageJSON.devDependencies['@types/node'],
-    'TYPESCRIPT': packageJSON.devDependencies['typescript'],
-    'RIMRAF': packageJSON.devDependencies['rimraf'],
-    'RECIPLE': packageJSON.devDependencies['reciple'],
-    'DISCORDJS': packageJSON.devDependencies['discord.js'],
-    'NODEMON': packageJSON.devDependencies['nodemon']
+    'TYPES_NODE': packageJson.devDependencies!['@types/node'],
+    'RECIPLE_CORE': packageJson.devDependencies!['@reciple/core'],
+    'TYPESCRIPT': packageJson.devDependencies!['typescript'],
+    'RIMRAF': packageJson.devDependencies!['rimraf'],
+    'RECIPLE': packageJson.devDependencies!['reciple'],
+    'DISCORDJS': packageJson.devDependencies!['discord.js'],
+    'NODEMON': packageJson.devDependencies!['nodemon']
 };
 
 export const packageManagerPlaceholders = {
@@ -40,3 +64,4 @@ export const packageManagerPlaceholders = {
         'UNINSTALL_PKG': 'yarn remove'
     }
 };
+

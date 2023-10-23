@@ -2,7 +2,7 @@
   "name": "@reciple/docgen",
   "description": "Parses typescript files and generate json output",
   "license": "GPL-3.0",
-  "version": "7.0.1",
+  "version": "8.0.0-dev.4",
   "type": "module",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -27,8 +27,8 @@
     }
   },
   "scripts": {
-    "clean": "npx rimraf ./dist",
-    "build": "npm run clean && npx tsc",
+    "clean": "rimraf ./dist",
+    "build": "npm run clean && tsc",
     "docs": "node ./dist/bin.js -i ./src/index.ts -o ./docs/docs.json"
   },
   "files": [
@@ -40,8 +40,8 @@
   },
   "dependencies": {
     "@discordjs/collection": "^1.5.2",
-    "commander": "^11.0.0",
-    "typedoc": "^0.25.1",
-    "typedoc-json-parser": "^9.0.0"
+    "commander": "^11.1.0",
+    "typedoc": "^0.25.2",
+    "typedoc-json-parser": "^9.0.1"
   }
 }

@@ -2,7 +2,7 @@
   "name": "@reciple/update-checker",
   "description": "Check updates from npm registry",
   "license": "GPL-3.0",
-  "version": "7.2.3",
+  "version": "8.0.0-dev.4",
   "main": "./dist/index.js",
   "module": "./dist/esm.mjs",
   "types": "./dist/index.d.ts",
@@ -24,8 +24,8 @@
     }
   },
   "scripts": {
-    "clean": "npx rimraf ./dist",
-    "build": "npm run clean && npx tsc",
+    "clean": "rimraf ./dist",
+    "build": "npm run clean && tsc",
     "docs": "node ../docgen/dist/bin.js -i ./src/index.ts -o ./docs/docs.json"
   },
   "files": [
@@ -36,8 +36,8 @@
     "access": "public"
   },
   "dependencies": {
-    "@types/semver": "^7.5.2",
-    "axios": "^1.5.0",
+    "@types/semver": "^7.5.4",
+    "axios": "^1.5.1",
     "package-json": "^8.1.1",
     "semver": "^7.5.4"
   }

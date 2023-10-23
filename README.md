@@ -10,22 +10,36 @@
     <a href="https://npmjs.org/package/reciple">
         <img src="https://img.shields.io/npm/v/reciple?label=npm">
     </a>
-    <a href="https://github.com/FalloutStudios/Reciple/blob/main/LICENSE">
-        <img src="https://img.shields.io/npm/dt/reciple.svg?maxAge=3600">
+    <a href="https://github.com/FalloutStudios/Reciple/tree/main/packages/reciple">
+        <img src="https://img.shields.io/npm/dt/reciple?maxAge=3600">
     </a>
     <a href="https://www.codefactor.io/repository/github/falloutstudios/reciple/overview/main">
         <img src="https://www.codefactor.io/repository/github/falloutstudios/reciple/badge/main">
     </a>
+    <br>
+    <div style="padding-top: 1rem">
+        <a href="https://discord.gg/VzP8qW7Z8d">
+            <img src="https://discord.com/api/guilds/993105237000855592/embed.png?style=banner2">
+        </a>
+    </div>
 </h3>
+
+---
 
 ## About
 
 Reciple is a Discord.js command handler framework that provides extended features for developers.
 
+## Installation
+
+```bash
+npm create reciple@latest
+```
+
 ## Packages
 
 - [@reciple/actions](./packages/actions/) - Used by our github workflow to generate docs.json
-- [@reciple/client](./packages/client/) - Extends [discord.js](https://npmjs.com/package/discord.js) Client to simplify working with Discord API
+- [@reciple/core](./packages/core/) - Extends [discord.js](https://npmjs.com/package/discord.js) Client to simplify working with Discord API
 - [@reciple/docgen](./packages/docgen/) - Parses Typescript file to generate json file for documentation
 - [@reciple/npm-loader](./packages/npm-loader) - A reciple module that loads Reciple modules from node_modules
 - [@reciple/update-checker](./packages/update-checker) - Checks for an update for a given package name from npm registry

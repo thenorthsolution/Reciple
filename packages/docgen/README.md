@@ -7,25 +7,33 @@
     <a href="https://discord.gg/VzP8qW7Z8d">
         <img src="https://img.shields.io/discord/993105237000855592?color=5865F2&logo=discord&logoColor=white">
     </a>
-    <a href="https://npmjs.org/package/reciple">
-        <img src="https://img.shields.io/npm/v/reciple?label=npm">
+    <a href="https://npmjs.org/package/@reciple/docgen">
+        <img src="https://img.shields.io/npm/v/%40reciple/docgen?label=npm">
     </a>
-    <a href="https://github.com/FalloutStudios/Reciple/blob/main/LICENSE">
-        <img src="https://img.shields.io/npm/dt/reciple.svg?maxAge=3600">
+    <a href="https://github.com/FalloutStudios/Reciple/tree/main/packages/docgen">
+        <img src="https://img.shields.io/npm/dt/%40reciple/docgen?maxAge=3600">
     </a>
     <a href="https://www.codefactor.io/repository/github/falloutstudios/reciple/overview/main">
         <img src="https://www.codefactor.io/repository/github/falloutstudios/reciple/badge/main">
     </a>
+    <br>
+    <div style="padding-top: 1rem">
+        <a href="https://discord.gg/VzP8qW7Z8d">
+            <img src="https://discord.com/api/guilds/993105237000855592/embed.png?style=banner2">
+        </a>
+    </div>
 </h3>
+
+---
 
 ## About
 
-`@reciple/docgen` parses Typescript file to generate json file for documentation
+`@reciple/docgen` parses Typescript files to generate json file for documentation
 
 ## Usage
 
 ```sh
-npx reciple-docgen -i ./src/index.ts -c ./docs/custom.json -o ./docs/docs.json
+reciple-docgen -i ./src/index.ts -c ./docs/custom.json -o ./docs/docs.json
 ```
 
 ```sh
