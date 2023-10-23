@@ -33,7 +33,7 @@
   "scripts": {
     "clean": "rimraf ./dist",
     "build": "npm run clean && tsc",
-    "docs": "node ../docgen/dist/bin.js -i ./src/exports.ts -o ./docs/docs.json"
+    "docs": "node ../docgen/dist/bin.js -c ./docs/custom.json -i ./src/exports.ts -o ./docs/docs.json"
   },
   "files": [
     "dist",

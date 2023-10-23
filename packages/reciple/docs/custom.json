@@ -1,0 +1,12 @@
+[
+  {
+    "category": "Updating from v7",
+    "files": [
+      {
+        "id": "updating-from-v7",
+        "name": "Updating from v7",
+        "file": "./changelog.md"
+      }
+    ]
+  }
+]
