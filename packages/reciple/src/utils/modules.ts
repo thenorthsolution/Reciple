@@ -32,8 +32,17 @@ export async function findModules(config: RecipleConfig['modules'], filter?: (fi
         if (!existsSync(dir)) await mkdir(dir, { recursive: true });
         if (!(await lstat(dir)).isDirectory()) continue;
 
-        const files = (await readdir(dir)).map(file => path.join(dir, file)).filter(f => !micromatch.isMatch(path.basename(f), config.exclude));
-        modules.push(...files.filter(file => (filter ? filter(file) : file.endsWith('.js'))));
+        const files = (await readdir(dir))
+            .map(file => path.join(dir, file))
+                .filter(f => !micromatch.isMatch(path.basename(f), config.exclude)
+            )
+            .filter(file => (filter ? filter(file) : file.endsWith('.js')));
+
+        for (const file of files) {
+            if (config.filter && await Promise.resolve(config.filter(file))) continue;
+
+            modules.push(file);
+        }
     }
 
     return modules;

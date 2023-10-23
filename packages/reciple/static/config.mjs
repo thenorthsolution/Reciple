@@ -64,6 +64,7 @@ export const config = {
     modules: {
         dirs: ['./modules'],
         exclude: [],
+        filter: file => true,
         disableModuleVersionCheck: false
     },
     preconditions: [

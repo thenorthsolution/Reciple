@@ -4,6 +4,7 @@ import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { kleur } from 'fallout-utility/strings';
 import { existsSync } from 'node:fs';
 import path from 'node:path';
+import { Awaitable } from 'discord.js';
 
 export interface RecipleConfig extends RecipleClientConfig {
     logger: {
@@ -20,6 +21,7 @@ export interface RecipleConfig extends RecipleClientConfig {
     modules: {
         dirs: string[];
         exclude: string[];
+        filter?: (file: string) => Awaitable<boolean>;
         disableModuleVersionCheck: boolean;
     };
     checkForUpdates: boolean;
