@@ -7,7 +7,7 @@ if (!parentPort) process.exit();
 const data = workerData as WorkerData;
 const scanned: WorkerScannedFolderData[] = [];
 
-for (const folder of data.folders) {
+await Promise.all(data.folders.map(async folder => {
     const isValid = await RecipleNPMLoader.isValidModuleFolder(folder, {
         dependencies: data.dependencies,
         ignoredPackages: data.ignoredPackages
@@ -20,7 +20,7 @@ for (const folder of data.folders) {
             valid: false
         });
 
-        continue;
+        return;
     }
 
     const packageJson = await RecipleNPMLoader.getPackageJson(path.join(folder, 'package.json'), true);
@@ -31,6 +31,6 @@ for (const folder of data.folders) {
         moduleFile,
         valid: true
     });
-}
+}));
 
 parentPort.postMessage(scanned);
