@@ -1,4 +1,4 @@
-import { Awaitable, ClientOptions, Collection, SlashCommandAttachmentOption, SlashCommandBooleanOption, SlashCommandChannelOption, SlashCommandIntegerOption, SlashCommandMentionableOption, SlashCommandNumberOption, SlashCommandRoleOption, SlashCommandStringOption, SlashCommandSubcommandBuilder, SlashCommandSubcommandGroupBuilder, SlashCommandUserOption } from 'discord.js';
+import { Awaitable, ClientOptions, Collection, Guild, Message, SlashCommandAttachmentOption, SlashCommandBooleanOption, SlashCommandChannelOption, SlashCommandIntegerOption, SlashCommandMentionableOption, SlashCommandNumberOption, SlashCommandRoleOption, SlashCommandStringOption, SlashCommandSubcommandBuilder, SlashCommandSubcommandGroupBuilder, SlashCommandUserOption } from 'discord.js';
 import { ContextMenuCommandBuilder, ContextMenuCommandBuilderData, ContextMenuCommandExecuteData, ContextMenuCommandExecuteFunction, ContextMenuCommandHaltData, ContextMenuCommandHaltFunction, ContextMenuCommandResolvable } from '../classes/builders/ContextMenuCommandBuilder';
 import { MessageCommandBuilder, MessageCommandBuilderData, MessageCommandExecuteData, MessageCommandExecuteFunction, MessageCommandExecuteOptions, MessageCommandHaltData, MessageCommandHaltFunction, MessageCommandResolvable } from '../classes/builders/MessageCommandBuilder';
 import { AnySlashCommandBuilder, SlashCommandBuilderData, SlashCommandExecuteData, SlashCommandExecuteFunction, SlashCommandHaltData, SlashCommandHaltFunction, SlashCommandResolvable } from '../classes/builders/SlashCommandBuilder';
@@ -14,8 +14,8 @@ export interface RecipleClientConfig {
     commands?: {
         contextMenuCommand?: Partial<RecipleClientInteractionBasedCommandConfigOptions>;
         messageCommand?: Partial<RecipleClientCommandConfigOptions> & {
-            commandArgumentSeparator?: string|((message: MessageCommandExecuteOptions) => Awaitable<string>);
-            prefix?: string|((message: MessageCommandExecuteOptions) => Awaitable<string>);
+            commandArgumentSeparator?: string|((message: Omit<MessageCommandExecuteOptions, 'message'> & { message?: Message; guild?: Guild|null; }) => Awaitable<string>);
+            prefix?: string|((message: Omit<MessageCommandExecuteOptions, 'message'> & { message?: Message; guild?: Guild|null; }) => Awaitable<string>);
         };
         slashCommand?: Partial<RecipleClientInteractionBasedCommandConfigOptions>;
     };
