@@ -167,7 +167,7 @@ new ContextMenuCommandBuilder()
     .setCooldown(1000 * 5) // 5 seconds cooldown
     .setExecute(async ({ interaction }) => interaction.reply(`Hello!`));
 
-new ContextMenuCommandBuilder()
+new MessageCommandBuilder()
     .setName("message-command")
     .setDescription(`Your command`)
     .setCooldown(1000 * 5) // 5 seconds cooldown
