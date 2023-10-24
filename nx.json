@@ -25,6 +25,9 @@
       ]
     },
     "docs": {
+      "dependsOn": [
+        "^docs"
+      ],
       "outputs": [
         "{projectRoot}/docs/docs.json"
       ],
