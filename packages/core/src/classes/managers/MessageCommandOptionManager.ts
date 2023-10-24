@@ -55,11 +55,11 @@ export class MessageCommandOptionManager extends DataManager<MessageCommandOptio
         return option ?? null;
     }
 
-    public getOptionValue<V extends any = any>(name: string, options: { required?: false; resolveValue?: false; }): string|null;
-    public getOptionValue<V extends any = any>(name: string, options: { required?: true; resolveValue?: false; }): string;
-    public getOptionValue<V extends any = any>(name: string, options: { required?: true; resolveValue?: true; }): Promise<string|V>;
-    public getOptionValue<V extends any = any>(name: string, options: { required?: false; resolveValue?: true; }): Promise<string|V|null>;
-    public getOptionValue<V extends any = any>(name: string, options: { required?: boolean; resolveValue?: boolean; } = { required: false, resolveValue: false }): string|null|Promise<V|string|null> {
+    public getOptionValue<V extends any = any>(name: string, options?: { required?: false; resolveValue?: false; }): string|null;
+    public getOptionValue<V extends any = any>(name: string, options?: { required?: true; resolveValue?: false; }): string;
+    public getOptionValue<V extends any = any>(name: string, options?: { required?: true; resolveValue?: true; }): Promise<V>;
+    public getOptionValue<V extends any = any>(name: string, options?: { required?: false; resolveValue?: true; }): Promise<V|null>;
+    public getOptionValue<V extends any = any>(name: string, options: { required?: boolean; resolveValue?: boolean; } = { required: false, resolveValue: false }): string|null|Promise<V|null> {
         const value = this.getOption<V>(name, options.required as false);
 
         return options.resolveValue ? Promise.resolve(value.resolveValue() ?? value.value) : value.value;
