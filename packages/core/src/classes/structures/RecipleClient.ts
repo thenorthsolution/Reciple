@@ -51,7 +51,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
     public modules: ModuleManager = new ModuleManager(this);
     public logger: Logger|null = null;
 
-    constructor(readonly config: RecipleClientConfig) {
+    constructor(readonly config: RecipleClientConfig & { [key: string]: any; }) {
         super(config.client);
     }
 
