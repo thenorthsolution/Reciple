@@ -16,10 +16,6 @@ export enum CommandHaltReason {
     Cooldown,
     InvalidArguments,
     MissingArguments,
-    ValidateOptionError,
-    MissingMemberPermissions,
-    MissingBotPermissions,
-    NoExecuteHandler,
     PreconditionTrigger
 }
 
