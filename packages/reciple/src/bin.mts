@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { ContextMenuCommandBuilder, MessageCommandBuilder, SlashCommandBuilder, buildVersion, version } from '@reciple/core';
+import { ContextMenuCommandBuilder, Logger, MessageCommandBuilder, SlashCommandBuilder, buildVersion, version } from '@reciple/core';
 import { createLogger, addEventListenersToClient } from './utils/logger.js';
 import { setTimeout as setTimeoutAsync } from 'node:timers/promises';
 import { checkLatestUpdate } from '@reciple/update-checker';
@@ -25,7 +25,11 @@ loadEnv({ path: cli.options.env });
 
 const configPath = path.resolve(cli.options.config);
 const config = await ConfigReader.readConfigJS(configPath).then(c => c.config);
-const logger = config.logger?.enabled ? await createLogger(config.logger) : null;
+const logger = config.logger instanceof Logger
+    ? config.logger
+    : config.logger?.enabled
+        ? await createLogger(config.logger)
+        : null;
 
 if (cli.options.setup) process.exit(0);
 if (cli.options.shardmode) config.applicationCommandRegister = { ...config.applicationCommandRegister, enabled: false };
@@ -45,7 +49,7 @@ if (cli.options.shardmode) {
     if (process.send) process.send(message);
 }
 
-if (!semver.satisfies(version, config.version)) {
+if (config.version && !semver.satisfies(version, config.version)) {
     logger?.error(`Your config version doesn't support Reciple client v${version}`);
     process.exit(1);
 }
@@ -62,7 +66,7 @@ const moduleFilesFilter = (file: string) => file.endsWith('.js') || file.endsWit
 
 const modules = await client.modules.resolveModuleFiles({
     files: await findModules(config.modules, (f) => moduleFilesFilter(f)),
-    disableVersionCheck: config.modules.disableModuleVersionCheck
+    disableVersionCheck: config.modules?.disableModuleVersionCheck
 });
 
 const startedModules = await client.modules.startModules();

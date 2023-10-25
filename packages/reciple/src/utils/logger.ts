@@ -4,7 +4,7 @@ import { RecipleClient } from '../';
 import path from 'node:path';
 import { cli } from './cli';
 
-export function formatLogMessage(message: string, logger: Logger, config: PartialDeep<RecipleConfig['logger']>, level: LoggerLevel): string {
+export function formatLogMessage(message: string, logger: Logger, config: PartialDeep<Exclude<RecipleConfig['logger'], Logger|undefined>>, level: LoggerLevel): string {
     const color = (msg: string) => {
         if (!config.coloredMessages || level === LoggerLevel.INFO) return msg;
 
@@ -30,7 +30,7 @@ export function formatLogMessage(message: string, logger: Logger, config: Partia
             ) + ` ${message}`;
 }
 
-export async function createLogger(config: PartialDeep<RecipleConfig['logger']>): Promise<Logger> {
+export async function createLogger(config: PartialDeep<Exclude<RecipleConfig['logger'], Logger|undefined>>): Promise<Logger> {
     const logger = new Logger({
         enableDebugmode: (cli.options.debugmode || config.debugmode) ?? null,
         forceEmitLogEvents: true,

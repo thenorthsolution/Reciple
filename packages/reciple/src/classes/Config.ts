@@ -1,13 +1,13 @@
-import { RecipleClientConfig, RecipleError, version } from '@reciple/core';
+import { Logger, RecipleClientConfig, RecipleError, version } from '@reciple/core';
 import { recursiveDefaults, getDirModuleType } from '@reciple/utils';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { kleur } from 'fallout-utility/strings';
+import { Awaitable } from 'discord.js';
 import { existsSync } from 'node:fs';
 import path from 'node:path';
-import { Awaitable } from 'discord.js';
 
 export interface RecipleConfig extends RecipleClientConfig {
-    logger: {
+    logger?: {
         enabled: boolean;
         debugmode?: boolean|null;
         coloredMessages: boolean;
@@ -17,15 +17,15 @@ export interface RecipleConfig extends RecipleClientConfig {
             logsFolder: string;
             file: string;
         };
-    };
-    modules: {
+    }|Logger;
+    modules?: {
         dirs: string[];
-        exclude: string[];
+        exclude?: string[];
         filter?: (file: string) => Awaitable<boolean>;
-        disableModuleVersionCheck: boolean;
+        disableModuleVersionCheck?: boolean;
     };
-    checkForUpdates: boolean;
-    version: string;
+    checkForUpdates?: boolean;
+    version?: string;
 }
 
 export interface RecipleConfigJS {
