@@ -27,10 +27,12 @@ const console = await (await createLogger({
     renameOldFile: true
 });
 
+Object.defineProperty(process.env, 'SHARDMODE', true);
+
 const shards = new ShardingManager(cli.binPath, {
     shardArgs: ['--shardmode', ...process.argv.slice(2)],
     token: config.token,
-    mode: 'process',
+    mode: 'worker',
     respawn: true,
 });
 

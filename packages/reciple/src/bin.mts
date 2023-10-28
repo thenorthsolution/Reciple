@@ -36,7 +36,7 @@ const logger = config.logger instanceof Logger
         : null;
 
 if (cli.options.setup) process.exit(0);
-if (cli.options.shardmode) config.applicationCommandRegister = { ...config.applicationCommandRegister, enabled: false };
+if (cli.shardmode) config.applicationCommandRegister = { ...config.applicationCommandRegister, enabled: false };
 if (cli.options.token) config.token = resolveEnvProtocol(cli.options.token) ?? config.token;
 
 const processErrorHandler = (err: any) => logger?.error(err);
@@ -46,7 +46,7 @@ process.once('unhandledRejection', processErrorHandler);
 
 process.on('warning', warn => logger?.warn(warn));
 
-if (cli.options.shardmode) {
+if (cli.shardmode) {
     const message: ProcessInformation = { type: 'ProcessInfo', pid: process.pid };
 
     if (parentPort) parentPort.postMessage(message);

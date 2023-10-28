@@ -23,7 +23,7 @@ export function formatLogMessage(message: string, logger: Logger, config: Partia
     return (!config.disableLogPrefix
                 ? color(
                         `[${new Date().toLocaleTimeString(undefined, { hour12: false })} ${LoggerLevel[level]}]` +
-                        (cli.options.shardmode && process.pid ? `[${process.pid}]` : '') +
+                        (cli.shardmode && process.pid ? `[${process.pid}]` : '') +
                         (logger.name ? `[${logger.name}]` : '')
                     )
                 : ''
@@ -39,7 +39,7 @@ export async function createLogger(config: PartialDeep<Exclude<RecipleConfig['lo
 
     if (config.logToFile?.enabled) {
         await logger.createFileWriteStream({
-            file: path.join(process.cwd(), config.logToFile?.logsFolder ?? path.join(process.cwd(), 'logs'), !cli.options.shardmode ? (config.logToFile?.file ?? 'latest.log') : `${process.pid}.log`)
+            file: path.join(process.cwd(), config.logToFile?.logsFolder ?? path.join(process.cwd(), 'logs'), !cli.shardmode ? (config.logToFile?.file ?? 'latest.log') : `${process.pid}.log`)
         });
     }
 

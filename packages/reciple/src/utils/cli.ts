@@ -43,6 +43,7 @@ export const cli = {
             ? path.isAbsolute(this.args[0]) ? this.args[0] : path.join(originalCwd, this.args[0])
             : process.cwd();
     },
+    get shardmode() { return !!(this.options.shardmode ?? process.env.SHARDMODE) },
     isCwdUpdated: false,
     nodeCwd: process.cwd(),
     binPath: path.join(__dirname, '../bin.mjs')
