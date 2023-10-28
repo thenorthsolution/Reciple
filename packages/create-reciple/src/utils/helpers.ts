@@ -101,7 +101,7 @@ export async function create(template: TemplateMetadata, dir: string, packageMan
         console.log(`  • ${kleur.cyan().bold('cd ' + path.relative(process.cwd(), dir))}`);
     }
 
-    if (!packageManager) {
+    if (packageManager) {
         console.log(`  • ${kleur.cyan().bold(placeholders.INSTALL_ALL)} (or ${packageManagerPlaceholders.pnpm.INSTALL_ALL}, etc)`);
         console.log(`  • ${kleur.cyan().bold(`${placeholders.BIN_EXEC} reciple`)}`);
     }
