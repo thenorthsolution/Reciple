@@ -70,7 +70,11 @@ export class ContextMenuCommandBuilder extends Mixin(DiscordJsContextMenuCommand
 
     public setRequiredMemberPermissions(permissions: PermissionResolvable|null): this {
         const bigint = permissions ? PermissionsBitField.resolve(permissions) : null;
-        return super.setDefaultMemberPermissions(bigint).setRequiredMemberPermissions(bigint);
+
+        this.required_member_permissions = bigint ?? undefined;
+        Reflect.set(this, 'default_member_permissions', String(bigint));
+
+        return this;
     }
 
     public toJSON(): RESTPostAPIContextMenuApplicationCommandsJSONBody & ContextMenuCommandBuilderData {
