@@ -3,7 +3,6 @@
 import { ContextMenuCommandBuilder, Logger, MessageCommandBuilder, SlashCommandBuilder, buildVersion } from '@reciple/core';
 import { createLogger, addEventListenersToClient } from './utils/logger.js';
 import { setTimeout as setTimeoutAsync } from 'node:timers/promises';
-import { checkLatestUpdate } from '@reciple/update-checker';
 import { command, cli, cliVersion, checkForUpdates } from './utils/cli.js';
 import { ProcessInformation, RecipleClient, findModules } from './index.js';
 import { resolveEnvProtocol } from '@reciple/utils';
@@ -85,19 +84,6 @@ client.once('ready', async () => {
 
     process.removeListener('uncaughtException', processErrorHandler);
     process.removeListener('unhandledRejection', processErrorHandler);
-
-    if (config.checkForUpdates !== false) {
-        checkLatestUpdate('reciple', cliVersion)
-            .then(data => {
-                logger?.debug(`Update checked! `, data);
-                return data;
-            })
-            .then(data => data.currentVersion !== data.updatedVersion ? logger?.warn(
-                `A new updated version of Reciple is available! Update from ${kleur.red(data.currentVersion)} to ${kleur.green(data.updatedVersion)}:\n` +
-                `   ${kleur.bold().cyan('npm i reciple@' + data.updatedVersion)}`
-            ) : null)
-            .catch(() => null);
-    }
 
     const loadedModules = await client.modules.loadModules({ cacheCommands: true });
     const failedToLoadModules = startedModules.length - loadedModules.length;
