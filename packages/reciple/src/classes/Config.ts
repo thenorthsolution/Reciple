@@ -1,7 +1,8 @@
-import { Logger, RecipleClientConfig, RecipleError, version } from '@reciple/core';
+import { Logger, RecipleClientConfig, RecipleError } from '@reciple/core';
 import { recursiveDefaults, getDirModuleType } from '@reciple/utils';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { kleur } from 'fallout-utility/strings';
+import { cliVersion } from '../utils/cli';
 import { Awaitable } from 'discord.js';
 import { existsSync } from 'node:fs';
 import path from 'node:path';
@@ -42,8 +43,8 @@ export class ConfigReader {
     public static async getDefaultConfigData(useCommonJS?: boolean): Promise<string> {
         let defaultConfig = await readFile(this.defaultConfigFile, 'utf-8');
 
-        defaultConfig = defaultConfig.replace(`import { version } from '@reciple/core';\n`, '');
-        defaultConfig = defaultConfig.replace('version: `^${version}`', 'version: `^'+ version +'`');
+        defaultConfig = defaultConfig.replace(`import { cliVersion } from 'reciple';\n`, '');
+        defaultConfig = defaultConfig.replace('version: `^${cliVersion}`', 'version: `^'+ cliVersion +'`');
 
         if (useCommonJS) {
             defaultConfig = defaultConfig.replace(`import { CooldownPrecondition, CommandPermissionsPrecondition } from 'reciple';`, `const { CooldownPrecondition, CommandPermissionsPrecondition } = require('reciple');`);

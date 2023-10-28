@@ -1,6 +1,6 @@
 import { CooldownPrecondition, CommandPermissionsPrecondition } from 'reciple';
 import { IntentsBitField } from 'discord.js';
-import { version } from '@reciple/core';
+import { cliVersion } from 'reciple';
 
 // @ts-check
 
@@ -75,5 +75,5 @@ export const config = {
         timer: 1000 * 60 * 60
     },
     checkForUpdates: true,
-    version: `^${version}`
+    version: `^${cliVersion}`
 };

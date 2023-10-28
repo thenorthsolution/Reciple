@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { ContextMenuCommandBuilder, Logger, MessageCommandBuilder, SlashCommandBuilder, buildVersion, version } from '@reciple/core';
+import { ContextMenuCommandBuilder, Logger, MessageCommandBuilder, SlashCommandBuilder, buildVersion } from '@reciple/core';
 import { createLogger, addEventListenersToClient } from './utils/logger.js';
 import { setTimeout as setTimeoutAsync } from 'node:timers/promises';
 import { checkLatestUpdate } from '@reciple/update-checker';
@@ -53,8 +53,8 @@ if (cli.shardmode) {
     if (process.send) process.send(message);
 }
 
-if (config.version && !semver.satisfies(version, config.version)) {
-    logger?.error(`Your config version doesn't support Reciple client v${version}`);
+if (config.version && !semver.satisfies(cliVersion, config.version)) {
+    logger?.error(`Your config version doesn't support Reciple CLI v${cliVersion}`);
     process.exit(1);
 }
 
