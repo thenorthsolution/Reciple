@@ -27,7 +27,6 @@ const logger = await (await createLogger({
     renameOldFile: true
 });
 
-Reflect.set(process.env, 'SHARDER_MAIN', true);
 Reflect.set(process.env, 'SHARDMODE', true);
 Reflect.set(process.env, 'SHARDS_LOGS_FOLDER', path.join(logsFolder, `/sharder/${process.pid}`));
 
