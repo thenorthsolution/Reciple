@@ -6,4 +6,6 @@ export * from './utils/modules';
 export interface ProcessInformation {
     type: 'ProcessInfo';
     pid: number;
+    threadId: number;
+    log?: string;
 }

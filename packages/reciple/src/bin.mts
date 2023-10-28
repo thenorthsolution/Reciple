@@ -12,7 +12,7 @@ import { config as loadEnv } from 'dotenv';
 import { mkdir } from 'node:fs/promises';
 import { kleur } from 'fallout-utility';
 import { existsSync } from 'node:fs';
-import { parentPort } from 'node:worker_threads';
+import { parentPort, threadId } from 'node:worker_threads';
 import path from 'node:path';
 import semver from 'semver';
 
@@ -47,7 +47,7 @@ process.once('unhandledRejection', processErrorHandler);
 process.on('warning', warn => logger?.warn(warn));
 
 if (cli.shardmode) {
-    const message: ProcessInformation = { type: 'ProcessInfo', pid: process.pid };
+    const message: ProcessInformation = { type: 'ProcessInfo', pid: process.pid, threadId, log: cli.logPath };
 
     if (parentPort) parentPort.postMessage(message);
     if (process.send) process.send(message);

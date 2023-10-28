@@ -13,9 +13,9 @@ process.chdir(cli.cwd);
 loadEnv({ path: cli.options.env });
 
 const config = (await ConfigReader.readConfigJS(cli.options.config)).config;
-const logsFolder = path.join(process.cwd(), (config.logger.logToFile.logsFolder || 'logs'));
+const logsFolder = process.env.LOGS_FOLDER ?? path.join(process.cwd(), (config.logger.logToFile.logsFolder || 'logs'));
 
-const console = await (await createLogger({
+const logger = await (await createLogger({
     enabled: true,
     debugmode: true,
     coloredMessages: true,
@@ -23,51 +23,49 @@ const console = await (await createLogger({
 .setDebugMode(true)
 .setName('ShardManager')
 .createFileWriteStream({
-    file: path.join(logsFolder, '/sharder/latest.log'),
+    file: path.join(logsFolder, `/sharder/${process.pid}/main.log`),
     renameOldFile: true
 });
 
-Object.defineProperty(process.env, 'SHARDMODE', true);
+Reflect.set(process.env, 'SHARDMODE', true);
+Reflect.set(process.env, 'SHARDS_LOGS_FOLDER', path.join(logsFolder, `/sharder/${process.pid}`));
 
 const shards = new ShardingManager(cli.binPath, {
     shardArgs: ['--shardmode', ...process.argv.slice(2)],
     token: config.token,
+    totalShards: 5,
     mode: 'worker',
     respawn: true,
 });
 
 shards.on('shardCreate', shard => {
     /**
-     * @type {number}
-     */
-    let pid;
-    /**
      * @type {string}
      */
     let logs;
 
-    console.log(`Creating shard ${shard.id}...`);
+    logger.log(`Creating shard ${shard.id}...`);
 
     shard.on('ready', () => {
-        console.log(`Shard ${shard.id} is ready!`);
-        if (!pid) return;
+        logger.log(`Shard ${shard.id} is ready!`);
+        if (!logs) return;
 
-        console.log(`PID: ${pid}; Logs for shard ${shard.id} is located at '${logs}'`);
+        logger.log(`Logs for shard ${shard.id} is located at '${logs}'`);
 
         const readStream = createReadStream(logs, 'utf-8');
-        if (console.writeStream) readStream.pipe(console.writeStream);
+
+        readStream.on('data', data => logger.writeStream?.write(data.toString('utf-8')));
     });
 
-    shard.on('reconnecting', () => console.log(`Shard ${shard.id} is reconnecting!`));
-    shard.on('disconnect', () => console.log(`Shard ${shard.id} disconnected!`));
-    shard.on('death', () => console.log(`Shard ${shard.id} died!`));
-    shard.on('error', err => console.log(`Shard ${shard.id} encountered an error!\n`, err));
+    shard.on('reconnecting', () => logger.log(`Shard ${shard.id} is reconnecting!`));
+    shard.on('disconnect', () => logger.log(`Shard ${shard.id} disconnected!`));
+    shard.on('death', () => logger.log(`Shard ${shard.id} died!`));
+    shard.on('error', err => logger.log(`Shard ${shard.id} encountered an error!\n`, err));
 
     shard.on('message', data => {
         if (!('type' in data) || data.type !== 'ProcessInfo') return;
 
-        pid = data.pid;
-        logs = path.join(logsFolder, `${pid}.log`);
+        logs = data.log;
     });
 });
 
@@ -84,7 +82,7 @@ process.once('SIGUSR2', stopProcess);
 
 function stopProcess() {
     shards.shards.map(c => {
-        console.log(`Killed ${c.id}`);
+        logger.log(`Killed ${c.id}`);
 
         if (c.process) {
             c.process?.kill('SIGINT');
@@ -93,7 +91,7 @@ function stopProcess() {
         }
     });
 
-    console.log(`Exitting process!`);
+    logger.log(`Exitting process!`);
     setTimeout(() => process.exit(0), 500);
 }
 

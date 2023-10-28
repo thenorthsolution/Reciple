@@ -75,6 +75,6 @@ export const config = {
     cooldownSweeperOptions: {
         timer: 1000 * 60 * 60
     },
-    checkForUpdates: true,
+    checkForUpdates: false,
     version: `^8.0.0`
 };

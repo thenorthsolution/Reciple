@@ -5,6 +5,7 @@ import { coerce } from 'semver';
 import path from 'node:path';
 import { UpdateData, checkLatestUpdate } from '@reciple/update-checker';
 import { kleur } from 'fallout-utility';
+import { isMainThread, parentPort, threadId } from 'node:worker_threads';
 
 const { version, description } = JSON.parse(readFileSync(path.join(__dirname, '../../package.json'), 'utf-8'));
 const originalCwd = process.cwd();
@@ -44,9 +45,11 @@ export const cli = {
             : process.cwd();
     },
     get shardmode() { return !!(this.options.shardmode ?? process.env.SHARDMODE) },
+    threadId: !isMainThread && parentPort !== undefined ? threadId : undefined,
     isCwdUpdated: false,
     nodeCwd: process.cwd(),
-    binPath: path.join(__dirname, '../bin.mjs')
+    binPath: path.join(__dirname, '../bin.mjs'),
+    logPath: undefined as string|undefined
 };
 
 export const cliVersion = `${coerce(version)}`;

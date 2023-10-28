@@ -23,7 +23,7 @@ export function formatLogMessage(message: string, logger: Logger, config: Partia
     return (!config.disableLogPrefix
                 ? color(
                         `[${new Date().toLocaleTimeString(undefined, { hour12: false })} ${LoggerLevel[level]}]` +
-                        (cli.shardmode && process.pid ? `[${process.pid}]` : '') +
+                        (cli.shardmode ? `[${cli.threadId ?? process.pid}]` : '') +
                         (logger.name ? `[${logger.name}]` : '')
                     )
                 : ''
@@ -37,9 +37,22 @@ export async function createLogger(config: PartialDeep<Exclude<RecipleConfig['lo
         formatMessage: (message, level, logger) => formatLogMessage(message, logger, config, level)
     });
 
+    const logPath = path.join(
+        cli.shardmode && typeof process.env.SHARDS_LOGS_FOLDER === 'string'
+            ? process.env.SHARDS_LOGS_FOLDER
+            : config.logToFile?.logsFolder
+                ? path.join(process.cwd(), config.logToFile?.logsFolder)
+                : path.join(process.cwd(), 'logs'),
+        !cli.shardmode
+            ? (config.logToFile?.file ?? 'latest.log')
+            : `shard-${(cli.threadId !== undefined ? (cli.threadId + '-') : '') + process.pid}.log`
+    );
+
+    cli.logPath = logPath;
+
     if (config.logToFile?.enabled) {
         await logger.createFileWriteStream({
-            file: path.join(process.cwd(), config.logToFile?.logsFolder ?? path.join(process.cwd(), 'logs'), !cli.shardmode ? (config.logToFile?.file ?? 'latest.log') : `${process.pid}.log`)
+            file: logPath
         });
     }
 
