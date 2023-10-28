@@ -16,9 +16,9 @@ const config = (await ConfigReader.readConfigJS(cli.options.config)).config;
 const logsFolder = process.env.LOGS_FOLDER ?? path.join(process.cwd(), (config.logger.logToFile.logsFolder || 'logs'));
 
 const logger = await (await createLogger({
-    enabled: true,
     debugmode: true,
     coloredMessages: true,
+    shards: false
 }))
 .setDebugMode(true)
 .setName('ShardManager')
@@ -34,7 +34,7 @@ const shards = new ShardingManager(cli.binPath, {
     shardArgs: ['--shardmode', ...process.argv.slice(2)],
     token: config.token,
     totalShards: 5,
-    mode: 'process',
+    mode: 'worker',
     respawn: true,
 });
 

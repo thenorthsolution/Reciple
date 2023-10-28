@@ -147,7 +147,7 @@ client.once('ready', async () => {
         MessageCommandBuilder.execute({ client, message });
     });
 
-    await client.commands.registerApplicationCommands();
+    if (config.applicationCommandRegister?.enabled !== false) await client.commands.registerApplicationCommands();
 
     logger?.warn(`Logged in as ${kleur.bold().cyan(client.user.tag)} ${kleur.magenta('(' + client.user.id + ')')}`);
 

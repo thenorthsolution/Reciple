@@ -4,7 +4,7 @@ import { RecipleClient } from '../';
 import path from 'node:path';
 import { cli } from './cli';
 
-export function formatLogMessage(message: string, logger: Logger, config: PartialDeep<Exclude<RecipleConfig['logger'], Logger|undefined>>, level: LoggerLevel): string {
+export function formatLogMessage(message: string, logger: Logger, config: PartialDeep<Exclude<RecipleConfig['logger'], Logger|undefined>> & { shards?: boolean; }, level: LoggerLevel): string {
     const color = (msg: string) => {
         if (!config.coloredMessages || level === LoggerLevel.INFO) return msg;
 
@@ -23,37 +23,33 @@ export function formatLogMessage(message: string, logger: Logger, config: Partia
     return (!config.disableLogPrefix
                 ? color(
                         `[${new Date().toLocaleTimeString(undefined, { hour12: false })} ${LoggerLevel[level]}]` +
-                        (cli.shardmode ? `[${cli.threadId ?? process.pid}]` : '') +
+                        (config?.shards ?? cli.shardmode ? `[${cli.threadId ?? process.pid}]` : '') +
                         (logger.name ? `[${logger.name}]` : '')
                     )
                 : ''
             ) + ` ${message}`;
 }
 
-export async function createLogger(config: PartialDeep<Exclude<RecipleConfig['logger'], Logger|undefined>>): Promise<Logger> {
+export async function createLogger(config?: Omit<PartialDeep<Exclude<RecipleConfig['logger'], Logger|undefined>>, 'enabled'> & { shards?: boolean; }): Promise<Logger> {
     const logger = new Logger({
-        enableDebugmode: (cli.options.debugmode || config.debugmode) ?? null,
+        enableDebugmode: (cli.options.debugmode || config?.debugmode) ?? null,
         forceEmitLogEvents: true,
-        formatMessage: (message, level, logger) => formatLogMessage(message, logger, config, level)
+        formatMessage: (message, level, logger) => formatLogMessage(message, logger, config ?? {}, level)
     });
 
-    const logPath = path.join(
-        cli.shardmode && typeof process.env.SHARDS_LOGS_FOLDER === 'string'
+    const shards = config?.shards ?? cli.shardmode;
+    const file = path.join(
+        shards && typeof process.env.SHARDS_LOGS_FOLDER === 'string'
             ? process.env.SHARDS_LOGS_FOLDER
-            : config.logToFile?.logsFolder
-                ? path.join(process.cwd(), config.logToFile?.logsFolder)
-                : path.join(process.cwd(), 'logs'),
-        !cli.shardmode
-            ? (config.logToFile?.file ?? 'latest.log')
+            : path.join(process.cwd(), config?.logToFile?.logsFolder ? config.logToFile?.logsFolder : 'logs'),
+        !shards
+            ? (config?.logToFile?.file ?? 'latest.log')
             : `shard-${(cli.threadId !== undefined ? (cli.threadId + '-') : '') + process.pid}.log`
     );
 
-    cli.logPath = logPath;
-
-    if (config.logToFile?.enabled) {
-        await logger.createFileWriteStream({
-            file: logPath
-        });
+    if (config?.logToFile?.enabled) {
+        await logger.createFileWriteStream({ file });
+        cli.logPath = file;
     }
 
     return logger;
