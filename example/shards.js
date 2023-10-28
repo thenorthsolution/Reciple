@@ -34,7 +34,7 @@ const shards = new ShardingManager(cli.binPath, {
     shardArgs: ['--shardmode', ...process.argv.slice(2)],
     token: config.token,
     totalShards: 5,
-    mode: 'worker',
+    mode: 'process',
     respawn: true,
 });
 
