@@ -19,7 +19,11 @@ import semver from 'semver';
 command.parse();
 
 if (!existsSync(cli.cwd)) await mkdir(cli.cwd, { recursive: true });
-process.chdir(cli.cwd);
+
+if (cli.cwd !== cli.nodeCwd || parentPort === null) {
+    process.chdir(cli.cwd);
+    cli.isCwdUpdated = true;
+}
 
 loadEnv({ path: cli.options.env });
 
