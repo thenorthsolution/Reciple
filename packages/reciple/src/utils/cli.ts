@@ -44,7 +44,7 @@ export const cli = {
             ? path.isAbsolute(this.args[0]) ? this.args[0] : path.join(originalCwd, this.args[0])
             : process.cwd();
     },
-    get shardmode() { return !!(this.options.shardmode ?? process.env.SHARDMODE) && process.env.SHARDER_MAIN_PROCESS === undefined },
+    get shardmode() { return !!(this.options.shardmode ?? process.env.SHARDMODE) && process.env.SHARDER_MAIN === undefined },
     threadId: !isMainThread && parentPort !== undefined ? threadId : undefined,
     isCwdUpdated: false,
     nodeCwd: process.cwd(),
