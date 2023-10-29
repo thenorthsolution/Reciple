@@ -85,14 +85,18 @@ export class MessageURLData<InGuild extends boolean = boolean, Fetched extends b
     }
 
     public static isValidMessageURL(url: string|URL): boolean {
-        const structure = url instanceof URL ? url : new URL(url);
-        const path = structure.pathname.split('/').filter(Boolean);
+        try {
+            const structure = url instanceof URL ? url : new URL(url);
+            const path = structure.pathname.split('/').filter(Boolean);
 
-        if (path.length < 4) return false;
+            if (path.length < 4) return false;
 
-        const type = path.shift() as 'channels';
-        if (type !== 'channels') return false;
+            const type = path.shift() as 'channels';
+            if (type !== 'channels') return false;
 
-        return true;
+            return true;
+        } catch (err) {
+            return false;
+        }
     }
 }
