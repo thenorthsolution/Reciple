@@ -61,8 +61,7 @@ export class MessageCommandOptionManager extends DataManager<MessageCommandOptio
     public getOptionValue<V extends any = any>(name: string, options?: { required?: false; resolveValue?: true; }): Promise<V|null>;
     public getOptionValue<V extends any = any>(name: string, options: { required?: boolean; resolveValue?: boolean; } = { required: false, resolveValue: false }): string|null|Promise<V|null> {
         const value = this.getOption<V>(name, options.required as false);
-
-        return options.resolveValue ? Promise.resolve(value.resolveValue() ?? value.value) : value.value;
+        return options.resolveValue ? Promise.resolve(value.resolveValue(options.required) ?? value.value) : value.value;
     }
 
     private async _parseOptions(): Promise<void> {
