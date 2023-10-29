@@ -36,7 +36,7 @@ export class MessageCommandOptionValue<T extends any = any> implements MessageCo
         this.client = options.client;
     }
 
-    public async resolveValue(required?: false): Promise<T|null>;
+    public async resolveValue(required?: boolean): Promise<T|null>;
     public async resolveValue(required?: true): Promise<T>;
     public async resolveValue(required: boolean = false): Promise<T|null> {
         if (this.value === null) return null;
