@@ -54,7 +54,7 @@ export class MessageCommandOptionBuilder<T extends any = any> implements Message
 
     public setResolveValue(resolveValue: MessageCommandOptionBuilderData['resolve_value']|null): this {
         MessageCommandOptionValidators.isValidResolveValue(resolveValue);
-        this.resolve_value = this.resolve_value ?? undefined;
+        this.resolve_value = resolveValue ?? undefined;
         return this;
     }
 
