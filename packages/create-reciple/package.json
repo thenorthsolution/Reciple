@@ -2,7 +2,7 @@
   "name": "create-reciple",
   "description": "A Reciple Discord bot project builder",
   "license": "GPL-3.0",
-  "version": "8.1.1",
+  "version": "8.1.2",
   "type": "module",
   "types": "./dist/index.d.ts",
   "module": "./dist/index.js",
@@ -31,16 +31,16 @@
   ],
   "dependencies": {
     "@clack/prompts": "^0.7.0",
-    "@reciple/utils": "^8.0.0",
+    "@reciple/utils": "^8.0.1",
     "commander": "^11.1.0",
     "fallout-utility": "^2.7.1"
   },
   "devDependencies": {
-    "@reciple/core": "^8.1.1",
+    "@reciple/core": "^8.1.2",
     "@types/node": "^20.8.7",
     "discord.js": "^14.13.0",
     "nodemon": "^3.0.1",
-    "reciple": "^8.1.1",
+    "reciple": "^8.1.2",
     "rimraf": "^5.0.5",
     "typescript": "^5.2.2"
   }
