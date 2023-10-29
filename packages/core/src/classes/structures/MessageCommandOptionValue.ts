@@ -55,7 +55,7 @@ export class MessageCommandOptionValue<T extends any = any> implements MessageCo
 
     public static async parseOptionValue<T>(options: MessageCommandOptionParseOptionValueOptions<T>): Promise<MessageCommandOptionValue<T>> {
         const missing = !!options.option.required && typeof options.value !== 'string';
-        const invalid = missing || (options.option.validate && options.value ? await Promise.resolve(options.option.validate(options.value, options.message, options.client)) : false);
+        const invalid = missing || (options.option.validate && options.value ? !(await Promise.resolve(options.option.validate(options.value, options.message, options.client))) : false);
 
         return new MessageCommandOptionValue({
             name: options.option.name,
