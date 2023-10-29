@@ -35,7 +35,7 @@ export class MessageCommandOptionManager extends DataManager<MessageCommandOptio
     }
 
     get hasInvalidOptions() {
-        return this.cache.some(o => o.value);
+        return this.cache.some(o => o.invalid);
     }
 
     public getMissingOptions(): Collection<string, MessageCommandOptionValue> {
