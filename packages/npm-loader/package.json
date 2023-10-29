@@ -37,7 +37,7 @@
     "access": "public"
   },
   "peerDependencies": {
-    "@reciple/core": "^8.0.0-dev.6"
+    "@reciple/core": "^8.0.0"
   },
   "dependencies": {
     "@reciple/utils": "^8.0.1"
