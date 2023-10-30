@@ -10,7 +10,7 @@
     <a href="https://npmjs.org/package/@reciple/core">
         <img src="https://img.shields.io/npm/v/%40reciple/core?label=npm">
     </a>
-    <a href="https://github.com/FalloutStudios/Reciple/tree/main/packages/core">
+    <a href="https://github.com/thenorthsolution/Reciple/tree/main/packages/core">
         <img src="https://img.shields.io/npm/dt/%40reciple/core?maxAge=3600">
     </a>
     <a href="https://www.codefactor.io/repository/github/falloutstudios/reciple/overview/main">

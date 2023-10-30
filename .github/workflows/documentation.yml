@@ -13,7 +13,7 @@ jobs:
   build:
     name: Build documentation
     runs-on: ubuntu-latest
-    if: github.repository_owner == 'FalloutStudios'
+    if: github.repository_owner == 'thenorthsolution'
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3

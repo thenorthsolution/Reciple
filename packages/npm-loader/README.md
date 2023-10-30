@@ -10,7 +10,7 @@
     <a href="https://npmjs.org/package/@reciple/npm-loader">
         <img src="https://img.shields.io/npm/v/%40reciple/npm-loader?label=npm">
     </a>
-    <a href="https://github.com/FalloutStudios/Reciple/tree/main/packages/npm-loader">
+    <a href="https://github.com/thenorthsolution/Reciple/tree/main/packages/npm-loader">
         <img src="https://img.shields.io/npm/dt/%40reciple/npm-loader?maxAge=3600">
     </a>
     <a href="https://www.codefactor.io/repository/github/falloutstudios/reciple/overview/main">
