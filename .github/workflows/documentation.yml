@@ -2,8 +2,7 @@ name: Generate Docs
 on:
   push:
     paths:
-      - 'packages/*/src/**'
-      - 'packages/*/package.json'
+      - 'packages/*/**'
     tags: ['**']
   workflow_dispatch:
 concurrency:
