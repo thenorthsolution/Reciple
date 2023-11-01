@@ -32,7 +32,10 @@ export class CooldownManager extends DataManager<Cooldown> {
             if (data.commandName && d.commandName !== data.commandName) return false;
             if (data.commandType && d.commandType !== data.commandType) return false;
 
-            if (d.isEnded()) this._cache.delete(d.id);
+            if (d.isEnded()) {
+                this._cache.delete(d.id);
+                return false;
+            }
 
             return true;
         });
