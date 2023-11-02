@@ -5,8 +5,7 @@
       "runner": "nx-cloud",
       "options": {
         "cacheableOperations": [
-          "build",
-          "docs"
+          "build"
         ],
         "accessToken": "NDc2NWU1ZjktYWYxYy00YTYwLTgzOWUtZWM0MjhlNTcxZmNlfHJlYWQtd3JpdGU="
       }
