@@ -12,7 +12,7 @@
     "watch": "tsc --watch --noEmit",
     "test": "npm run start -w example",
     "publish:dev": "lerna publish prerelease",
-    "docs": "lerna run docs"
+    "docs": "rimraf -g ./packages/*/docs/docs.json && lerna run docs"
   },
   "devDependencies": {
     "@types/node": "^20.8.3",
