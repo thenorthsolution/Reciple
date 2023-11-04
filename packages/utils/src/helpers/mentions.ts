@@ -1,5 +1,6 @@
 import type { Client, GuildMember, GuildResolvable, User, UserResolvable } from 'discord.js';
 import { FormattingPatterns, APIUser, APIMessage } from 'discord-api-types/v10';
+import { isValidSnowflake } from './validators';
 
 export interface FetchMentionOrIdOptions {
     client: Client;
@@ -8,6 +9,11 @@ export interface FetchMentionOrIdOptions {
     force?: boolean;
 }
 
+/**
+ * Get user id from mention or user object
+ * @param user User resolvable
+ * @returns 
+ */
 export function getMentionId(user: UserResolvable|APIUser|APIMessage|`<@${string}>`): string|null {
     const id = typeof user === 'string'
         ? user.match(FormattingPatterns.User)?.[1] ?? null
@@ -15,9 +21,12 @@ export function getMentionId(user: UserResolvable|APIUser|APIMessage|`<@${string
             ? user.author.id
             : user.id;
 
-    return !id && typeof user === 'string' ? user : id;
+    return !id && typeof user === 'string' && isValidSnowflake(user) ? user : id;
 }
 
+/**
+ * Fetch user object of a user id or object
+ */
 export async function fetchMentionOrId(options: Omit<FetchMentionOrIdOptions, 'guild'>): Promise<User>;
 export async function fetchMentionOrId(options: FetchMentionOrIdOptions): Promise<GuildMember>;
 export async function fetchMentionOrId(options: FetchMentionOrIdOptions): Promise<User|GuildMember> {
