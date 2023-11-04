@@ -6,6 +6,7 @@ import { MessageCommandValidators } from '../validators/MessageCommandValidators
 import { BaseCommandBuilder, BaseCommandBuilderData } from './BaseCommandBuilder';
 import { CommandHaltReason, CommandType } from '../../types/constants';
 import { CommandData, CommandHaltData } from '../../types/structures';
+import { RecipleError } from '../structures/RecipleError';
 import { RecipleClient } from '../structures/RecipleClient';
 import { getCommand } from 'fallout-utility/commands';
 import { CooldownData } from '../structures/Cooldown';
@@ -58,11 +59,11 @@ export class MessageCommandBuilder extends BaseCommandBuilder {
     public readonly command_type: CommandType.MessageCommand = CommandType.MessageCommand;
     public name: string = '';
     public description: string = '';
-    public aliases?: string[] = [];
-    public validate_options?: boolean = true;
-    public dm_permission?: boolean = false;
-    public allow_bot?: boolean = false;
-    public options?: MessageCommandOptionBuilder[] = [];
+    public aliases: string[] = [];
+    public validate_options: boolean = true;
+    public dm_permission: boolean = false;
+    public allow_bot: boolean = false;
+    public options: MessageCommandOptionBuilder[] = [];
 
     constructor(data?: Omit<Partial<MessageCommandBuilderData>, 'command_type'>) {
         super(data);
@@ -121,16 +122,25 @@ export class MessageCommandBuilder extends BaseCommandBuilder {
     }
 
     public addOption(option: MessageCommandOptionResolvable|((builder: MessageCommandOptionBuilder) => MessageCommandOptionBuilder)): this {
-        option = typeof option === 'function' ? option(new MessageCommandOptionBuilder()) : MessageCommandOptionBuilder.from(option);
-        MessageCommandOptionValidators.isValidMessageCommandOptionResolvable(option);
-        this.options?.push(MessageCommandOptionBuilder.resolve(option));
+        const opt = typeof option === 'function' ? option(new MessageCommandOptionBuilder()) : MessageCommandOptionBuilder.from(option);
+        MessageCommandOptionValidators.isValidMessageCommandOptionResolvable(opt);
+
+        if (this.options.find(o => o.name === opt.name)) throw new RecipleError('An option with name "' + opt.name + '" already exists.');
+        if (this.options.length > 0 && this.options.some(o => !o.required) && opt.required) throw new RecipleError('All required options must be before optional options.');
+
+        this.options.push(MessageCommandOptionBuilder.resolve(opt));
         return this;
     }
 
     public setOptions(...options: RestOrArray<MessageCommandOptionResolvable|((builder: MessageCommandOptionBuilder) => MessageCommandOptionBuilder)>): this {
         options = normalizeArray(options);
         MessageCommandValidators.isValidOptions(options);
-        this.options = options.map(o => MessageCommandOptionBuilder.resolve(o));
+        this.options = [];
+
+        for (const option of options) {
+            this.addOption(option);
+        }
+
         return this;
     }
 
