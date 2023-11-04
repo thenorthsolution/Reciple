@@ -1,3 +1,4 @@
+import { fetchMentionOrId, getMentionId } from '@reciple/utils';
 import { CommandType, MessageCommandBuilder } from 'reciple';
 
 /**
@@ -16,7 +17,7 @@ export default {
                 .setRequired(true)
             )
             .setExecute(async ({ message, parserData }) => {
-                const text = parserData.args.join(' ');
+                const text = parserData.rawArgs;
 
                 await message.delete();
                 await message.channel.send(text);
@@ -25,10 +26,24 @@ export default {
         // Raw command data
         {
             command_type: CommandType.MessageCommand,
-            name: 'time',
-            description: 'Get current time',
-            execute: async ({ message }) => {
-                await message.reply((new Date()).toString());
+            name: 'avatar',
+            description: 'Get user avatar',
+            options: [
+                {
+                    name: 'user',
+                    description: 'Target user',
+                    required: true,
+                    validate: value => getMentionId(value),
+                    resolve_value: (value, message, client) => fetchMentionOrId({ user: value, client })
+                }
+            ],
+            execute: async ({ message, options }) => {
+                const user = await options.getOptionValue('user', { required: true, resolveValue: true });
+                await message.reply({
+                    files: [
+                        user.displayAvatarURL()
+                    ]
+                });
             }
         }
     ],
