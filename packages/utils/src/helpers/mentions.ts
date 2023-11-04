@@ -11,7 +11,7 @@ export interface FetchMentionOrIdOptions {
 export function getMentionId(user: UserResolvable|APIUser|APIMessage|`<@${string}>`): string|null {
     const id = typeof user === 'string'
         ? user.match(FormattingPatterns.User)?.[1] ?? null
-        : 'author' in user
+        : user && 'author' in user
             ? user.author.id
             : user.id;
 
