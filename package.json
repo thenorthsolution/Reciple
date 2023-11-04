@@ -15,8 +15,8 @@
     "docs": "rimraf -g ./packages/*/docs/docs.json && lerna run docs"
   },
   "devDependencies": {
-    "@types/node": "^20.8.3",
-    "lerna": "^7.4.1",
+    "@types/node": "^20.8.10",
+    "lerna": "^7.4.2",
     "nx-cloud": "^16.5.2",
     "rimraf": "^5.0.5",
     "ts-mixer": "^6.0.3",

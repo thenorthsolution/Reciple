@@ -108,5 +108,6 @@ export interface CommandData {
     prefix?: string;
     args: string[];
     raw: string;
+    rawArgs: string;
     separator: string;
 }

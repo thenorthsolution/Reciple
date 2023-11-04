@@ -33,11 +33,11 @@
     "@clack/prompts": "^0.7.0",
     "@reciple/utils": "^8.0.3",
     "commander": "^11.1.0",
-    "fallout-utility": "^2.7.1"
+    "fallout-utility": "^2.8.0"
   },
   "devDependencies": {
     "@reciple/core": "^8.1.6",
-    "@types/node": "^20.8.7",
+    "@types/node": "^20.8.10",
     "discord.js": "^14.13.0",
     "nodemon": "^3.0.1",
     "reciple": "^8.1.6",
