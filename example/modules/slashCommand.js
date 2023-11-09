@@ -1,3 +1,4 @@
+// @ts-check
 import { CommandType, SlashCommandBuilder } from 'reciple';
 import { ApplicationCommandOptionType } from 'discord.js';
 

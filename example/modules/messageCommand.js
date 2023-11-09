@@ -1,3 +1,4 @@
+// @ts-check
 import { fetchMentionOrId, getMentionId } from '@reciple/utils';
 import { CommandType, MessageCommandBuilder } from 'reciple';
 

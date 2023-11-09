@@ -1,3 +1,4 @@
+// @ts-check
 import { CommandType, ContextMenuCommandBuilder } from 'reciple';
 import { inlineCode } from 'discord.js';
 
