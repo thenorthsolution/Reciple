@@ -97,7 +97,7 @@ if (commonjs === null) {
 
 if (addons && !addons.length) {
     const selectedAddons = await multiselect<{ label?: string; hint?: string; value: string; }[], string>({
-        message: `Select a addons from Reciple`,
+        message: `Select a addons from Reciple ${kleur.gray('(Press space to select, and enter to submit)')}`,
         options: Object.keys(availableAddons).map(a => ({
             label: a,
             value: a
