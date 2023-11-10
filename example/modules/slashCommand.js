@@ -1,3 +1,4 @@
+// @ts-check
 import { CommandType, SlashCommandBuilder } from 'reciple';
 import { ApplicationCommandOptionType } from 'discord.js';
 
@@ -19,7 +20,7 @@ export default {
             )
             .setExecute(async ({ interaction }) => {
                 await interaction.deferReply({ ephemeral: true });
-                await interaction.channel.send(interaction.options.getString('text', true));
+                await interaction.channel?.send(interaction.options.getString('text', true));
                 await interaction.editReply(`Message sent!`);
             }),
 
@@ -41,7 +42,7 @@ export default {
                 await interaction.deferReply({ ephemeral: true });
 
                 const user = interaction.options.getUser('member', true);
-                const member = await interaction.guild.members.fetch(user.id);
+                const member = await interaction.guild?.members.fetch(user.id);
 
                 if (!member) {
                     await interaction.editReply(`User not found`);

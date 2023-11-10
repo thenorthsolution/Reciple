@@ -1,8 +1,7 @@
+// @ts-check
 import { CooldownPrecondition, CommandPermissionsPrecondition } from 'reciple';
 import { IntentsBitField } from 'discord.js';
 import { cliVersion } from 'reciple';
-
-// @ts-check
 
 /**
  * @satisfies {import('reciple').RecipleConfig}

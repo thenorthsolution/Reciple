@@ -1,3 +1,4 @@
+// @ts-check
 import { CommandType, ContextMenuCommandBuilder } from 'reciple';
 import { inlineCode } from 'discord.js';
 
@@ -14,7 +15,7 @@ export default {
             .setExecute(async ({ interaction }) => {
                 if (!interaction.isUserContextMenuCommand()) return;
 
-                await interaction.reply(interaction.targetMember.displayAvatarURL());
+                await interaction.reply(interaction.targetUser.displayAvatarURL());
             }),
 
         // Raw command data
@@ -25,7 +26,7 @@ export default {
             execute: async ({ interaction }) => {
                 if (!interaction.isUserContextMenuCommand()) return;
 
-                await interaction.reply(`${interaction.targetMember} ${inlineCode(interaction.targetMember.id)}`);
+                await interaction.reply(`${interaction.targetMember} ${inlineCode(interaction.targetId)}`);
             }
         }
     ],

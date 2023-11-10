@@ -1,3 +1,4 @@
+// @ts-check
 import { fetchMentionOrId, getMentionId } from '@reciple/utils';
 import { CommandType, MessageCommandBuilder } from 'reciple';
 
@@ -33,7 +34,7 @@ export default {
                     name: 'user',
                     description: 'Target user',
                     required: true,
-                    validate: value => getMentionId(value),
+                    validate: value => !!getMentionId(value),
                     resolve_value: (value, message, client) => fetchMentionOrId({ user: value, client })
                 }
             ],
