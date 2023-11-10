@@ -34,7 +34,7 @@ export const config = {
         }
     },
     applicationCommandRegister: {
-        enabled: true,
+        enabled: false,
         allowRegisterGlobally: true,
         allowRegisterToGuilds: true,
         registerEmptyCommands: true,

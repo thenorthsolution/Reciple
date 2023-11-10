@@ -56,7 +56,21 @@ export class ConfigReader {
         return defaultConfig;
     }
 
-    public static async readConfigJS(config: string): Promise<RecipleConfigJS> {
+    public static async readConfigJS(config: string|{ paths: string[]; default?: string; }, createIfNotExists?: true): Promise<RecipleConfigJS>;
+    public static async readConfigJS(config: string|{ paths: string[]; default?: string; }, createIfNotExists?: false): Promise<RecipleConfigJS|null>;
+    public static async readConfigJS(config: string|{ paths: string[]; default?: string; }, createIfNotExists: boolean = true): Promise<RecipleConfigJS|null> {
+        if (typeof config !== 'string') {
+            let data: RecipleConfigJS|null = null;
+
+            for (const file of config.paths) {
+                data = await this.readConfigJS(file, false);
+
+                if (data) break;
+            }
+
+            return data ?? this.readConfigJS(config.default ?? config.paths[0], createIfNotExists as true);
+        }
+
         const file = path.resolve(config);
         const isFile = path.isAbsolute(config) || existsSync(file) || ['reciple.js', 'reciple.mjs', 'reciple.cjs'].includes(config);
 
@@ -65,6 +79,8 @@ export class ConfigReader {
             const defaultConfig = await this.getDefaultConfigData(!file.endsWith('.mjs') && isCommonJS);
 
             if (!existsSync(file)) {
+                if (!createIfNotExists) return null;
+
                 await mkdir(path.dirname(file), { recursive: true });
                 await writeFile(file, defaultConfig);
             }

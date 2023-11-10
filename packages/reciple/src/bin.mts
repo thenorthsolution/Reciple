@@ -26,8 +26,19 @@ if (cli.cwd !== cli.nodeCwd || parentPort === null) {
 
 loadEnv({ path: cli.options.env });
 
+let configPaths = [path.resolve('./reciple.mjs'), path.resolve('./reciple.cjs'), path.resolve('./reciple.js')];
+
 const configPath = path.resolve(cli.options.config);
-const config = await ConfigReader.readConfigJS(configPath).then(c => c.config);
+const isCustomPath = !configPaths.includes(configPath);
+
+if (!isCustomPath) {
+    configPaths = configPaths.filter(p => p !== configPath);
+    configPaths.unshift(configPath);
+} else {
+    configPaths = [configPath];
+}
+
+const config = await ConfigReader.readConfigJS({ paths: configPaths }).then(c => c.config);
 const logger = config.logger instanceof Logger
     ? config.logger
     : config.logger?.enabled
