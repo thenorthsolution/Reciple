@@ -6,6 +6,7 @@ export interface CliOptions {
     esm: boolean|'null';
     commonjs: boolean|'null';
     packageManager: PackageManager|'null';
+    addons: string[]|boolean;
     [k: string]: any;
 }
 

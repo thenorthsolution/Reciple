@@ -9,6 +9,7 @@ import { existsSync } from 'node:fs';
 import { packageManagerPlaceholders, packages, root } from './constants.js';
 import { PackageManager } from '@reciple/utils';
 import { execSync } from 'node:child_process';
+import { installAddons } from './addons.js';
 
 export async function getTemplates(dir: string): Promise<TemplateMetadata[]> {
     if (!existsSync(dir)) {
@@ -65,7 +66,7 @@ export async function createDotEnv(dir: string): Promise<string> {
     return content;
 }
 
-export async function create(template: TemplateMetadata, dir: string, packageManager?: PackageManager): Promise<void> {
+export async function create(template: TemplateMetadata, dir: string, packageManager?: PackageManager, addons?: string[]): Promise<void> {
     if (!existsSync(dir)) mkdir(dir, { recursive: true });
 
     await recursiveCopyFiles(template.path, dir, f => f.replace('dot.', '.'));
@@ -88,11 +89,23 @@ export async function create(template: TemplateMetadata, dir: string, packageMan
 
     await writeFile(path.join(dir, 'package.json'), packageJsonData);
 
-    if (packageManager) runScript(placeholders['INSTALL_ALL'], dir);
+    if (packageManager) await runScript(placeholders['INSTALL_ALL'], dir);
 
-    runScript(`${packageManagerPlaceholders['npm']['BIN_EXEC']} reciple@${packages['RECIPLE']?.substring(1)} ${dir} --setup -c reciple.${template.type === 'commonjs' ? 'cjs' : 'mjs'}`, dir);
+    await runScript(`${packageManagerPlaceholders['npm']['BIN_EXEC']} reciple@${packages['RECIPLE']?.substring(1)} ${dir} --setup -c reciple.${template.type === 'commonjs' ? 'cjs' : 'mjs'}`, dir);
 
     await createDotEnv(dir);
+    if (addons?.length) await installAddons(
+        dir,
+        template.type === 'commonjs'
+            ? template.language === 'Javascript'
+                ? 'cjs'
+                : 'cts'
+            : template.language === 'Typescript'
+                ? 'mts'
+                : 'mjs',
+        addons,
+        placeholders['INSTALL_PKG']
+    );
 
     console.log(`${kleur.bold(kleur.green('✔') + ' Your project is ready!')}`);
     console.log(`\nStart developing:`);
@@ -101,10 +114,9 @@ export async function create(template: TemplateMetadata, dir: string, packageMan
         console.log(`  • ${kleur.cyan().bold('cd ' + path.relative(process.cwd(), dir))}`);
     }
 
-    if (packageManager) {
-        console.log(`  • ${kleur.cyan().bold(placeholders.INSTALL_ALL)} (or ${packageManagerPlaceholders.pnpm.INSTALL_ALL}, etc)`);
-        console.log(`  • ${kleur.cyan().bold(`${placeholders.BIN_EXEC} reciple`)}`);
-    }
+    if (!packageManager) console.log(`  • ${kleur.cyan().bold(placeholders.INSTALL_ALL)} (or ${packageManagerPlaceholders.pnpm.INSTALL_ALL}, etc)`);
+
+    console.log(`  • ${kleur.cyan().bold(`${placeholders.SCRIPT_RUN} dev`)}`);
 }
 
 export async function recursiveCopyFiles(from: string, to: string, rename?: (f: string) => string): Promise<void> {

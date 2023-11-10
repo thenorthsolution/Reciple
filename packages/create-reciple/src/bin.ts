@@ -4,11 +4,12 @@ import { packageJson, packageManagers, templatesFolder } from './utils/constants
 import { cancelPrompts, create, getTemplates, isDirEmpty } from './utils/helpers.js';
 import { PackageManager, resolvePackageManager } from '@reciple/utils';
 import { CliOptions } from './utils/types.js';
-import { confirm, intro, isCancel, outro, select, text } from '@clack/prompts';
+import { confirm, intro, isCancel, multiselect, outro, select, text } from '@clack/prompts';
 import { Command } from 'commander';
 import path from 'path';
 import { existsSync, statSync } from 'fs';
 import { kleur } from 'fallout-utility';
+import availableAddons from './utils/addons.js';
 
 const command = new Command()
     .name(packageJson.name!)
@@ -19,7 +20,9 @@ const command = new Command()
     .option('--typescript', 'Use typescript templates', 'null')
     .option('--esm', 'Use commonjs templates', 'null')
     .option('--commonjs', 'Use commonjs templates', 'null')
-    .option('--package-manager <npm,yarn,pnpm>', 'Set package manager', 'null');
+    .option('--package-manager <npm,yarn,pnpm>', 'Set package manager', 'null')
+    .option('--no-addons', 'Disable addons prompt', false)
+    .option('-a, --addons <addon...>', 'Add a Reciple official addons', []);
 
 command.parse(process.argv);
 
@@ -30,6 +33,7 @@ let dir: string|null = command.args[0] ?? null;
 let typescript: boolean|null = options.typescript !== 'null' ? options.typescript : null;
 let commonjs: boolean|null = options.esm === true ? false : options.commonjs !== 'null' ? options.commonjs : null;
 let packageManager: PackageManager|null = options.packageManager !== 'null' ? options.packageManager : null;
+let addons: string[]|false = Array.isArray(options.addons) ? options.addons : false;
 let setup: boolean = false;
 
 if (dir === null || typescript === null || commonjs === null || packageManager === null) {
@@ -91,6 +95,19 @@ if (commonjs === null) {
     commonjs = !isESM;
 }
 
+if (addons && !addons.length) {
+    const selectedAddons = await multiselect<{ label?: string; hint?: string; value: string; }[], string>({
+        message: `Select a addons from Reciple`,
+        options: Object.keys(availableAddons).map(a => ({
+            label: a,
+            value: a
+        }))
+    });
+
+    if (isCancel(selectedAddons)) cancelPrompts();
+    addons = selectedAddons;
+}
+
 if (packageManager === null) {
     const resolvedPackageManager = resolvePackageManager();
     let firstPackageManagerIndex = packageManagers.findIndex(p => resolvedPackageManager && resolvedPackageManager === p.value);
@@ -113,4 +130,4 @@ if (!template) cancelPrompts({ reason: `Template not found` });
 if (packageManager && !packageManagers.some(p => p.value === packageManager)) cancelPrompts({ reason: `Invalid package manager` });
 if (setup) outro(`Setup Done! Creating from ${kleur.cyan().bold(template.name)} template`);
 
-await create(template, dir, packageManager ?? undefined);
+await create(template, dir, packageManager ?? undefined, addons || []);
