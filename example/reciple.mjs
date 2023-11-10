@@ -1,7 +1,6 @@
+// @ts-check
 import { CooldownPrecondition, CommandPermissionsPrecondition } from 'reciple';
 import { IntentsBitField } from 'discord.js';
-
-// @ts-check
 
 /**
  * @type {import('reciple').RecipleConfig}
@@ -9,7 +8,7 @@ import { IntentsBitField } from 'discord.js';
 export const config = {
     token: process.env.TOKEN ?? '',
     commands: {
-        contextMenuCommands: {
+        contextMenuCommand: {
             enabled: true,
             enableCooldown: true,
             acceptRepliedInteractions: false,
