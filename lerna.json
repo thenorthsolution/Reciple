@@ -4,7 +4,5 @@
   "exact": false,
   "preid": "dev",
   "preDistTag": "dev",
-  "gitTagVersion": true,
-  "signGitTag": true,
-  "signGitCommit": true
+  "gitTagVersion": true
 }
