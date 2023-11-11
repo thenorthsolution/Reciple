@@ -101,7 +101,8 @@ if (addons && !addons.length) {
         options: Object.keys(availableAddons).map(a => ({
             label: a,
             value: a
-        }))
+        })),
+        required: false
     });
 
     if (isCancel(selectedAddons)) cancelPrompts();
