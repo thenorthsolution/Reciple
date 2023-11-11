@@ -28,8 +28,8 @@ loadEnv({ path: cli.options.env });
 
 let configPaths = [path.resolve('./reciple.mjs'), path.resolve('./reciple.cjs'), path.resolve('./reciple.js')];
 
-const configPath = path.resolve(cli.options.config);
-const isCustomPath = !configPaths.includes(configPath);
+const configPath = path.resolve(cli.options.config ?? 'reciple.mjs');
+const isCustomPath = !configPaths.includes(configPath) || !!cli.options.config;
 
 if (!isCustomPath) {
     configPaths = configPaths.filter(p => p !== configPath);

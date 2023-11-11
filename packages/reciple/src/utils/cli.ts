@@ -16,7 +16,7 @@ export let command = new Command()
     .version(`Reciple CLI: ${version}\nReciple Client: ${buildVersion}`, '-v, --version')
     .argument('[cwd]', 'Change the current working directory')
     .option('-t, --token <token>', 'Replace used bot token')
-    .option('-c, --config <dir>', 'Set path to a config file', 'reciple.mjs')
+    .option('-c, --config <dir>', 'Set path to a config file')
     .option('-D, --debugmode', 'Enable debug mode')
     .option('-y, --yes', 'Agree to all Reciple confirmation prompts')
     .option('--env <file>', '.env file location')
@@ -27,7 +27,7 @@ export let command = new Command()
 export interface CLIOptions {
     version?: string;
     token?: string;
-    config: string;
+    config?: string;
     debugmode?: boolean;
     yes?: boolean;
     env?: string;
