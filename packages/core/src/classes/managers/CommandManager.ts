@@ -1,4 +1,4 @@
-import { ApplicationCommand, ApplicationCommandDataResolvable, ChatInputCommandInteraction, Collection, ContextMenuCommandInteraction, JSONEncodable, Message, RESTPostAPIChatInputApplicationCommandsJSONBody, RESTPostAPIContextMenuApplicationCommandsJSONBody, RestOrArray, isJSONEncodable, mergeDefault, normalizeArray } from 'discord.js';
+import { ApplicationCommand, ApplicationCommandDataResolvable, ChatInputCommandInteraction, Collection, ContextMenuCommandInteraction, JSONEncodable, Message, RESTPostAPIChatInputApplicationCommandsJSONBody, RESTPostAPIContextMenuApplicationCommandsJSONBody, RestOrArray, isJSONEncodable, normalizeArray } from 'discord.js';
 import { AnyCommandBuilder, AnyCommandExecuteData, AnyCommandResolvable, RecipleClientConfig, RecipleClientInteractionBasedCommandConfigOptions } from '../../types/structures';
 import { CommandPrecondition, CommandPreconditionResolvable, CommandPreconditionTriggerData } from '../structures/CommandPrecondition';
 import { AnySlashCommandBuilder, SlashCommandBuilder, SlashCommandExecuteData } from '../builders/SlashCommandBuilder';
@@ -7,6 +7,7 @@ import { MessageCommandBuilder, MessageCommandExecuteData } from '../builders/Me
 import { RecipleClient } from '../structures/RecipleClient';
 import { CommandType } from '../../types/constants';
 import { Utils } from '../structures/Utils';
+import { merge } from 'lodash';
 
 export interface CommandManagerRegisterCommandsOptions extends Omit<Exclude<RecipleClientConfig['applicationCommandRegister'], undefined>, 'enabled'> {
     contextMenuCommands?: Partial<RecipleClientInteractionBasedCommandConfigOptions> & {
@@ -145,7 +146,7 @@ export class CommandManager {
 
     public async registerApplicationCommands(options?: CommandManagerRegisterCommandsOptions): Promise<{ global: Collection<string, ApplicationCommand>; guilds: Collection<string, Collection<string, ApplicationCommand>> }> {
         const store = { global: new Collection<string, ApplicationCommand>(), guilds: new Collection<string, Collection<string, ApplicationCommand>>() };
-        const config = mergeDefault({ ...this.client.config.commands, ...this.client.config.applicationCommandRegister }, options) as CommandManagerRegisterCommandsOptions;
+        const config = merge({ ...this.client.config.commands, ...this.client.config.applicationCommandRegister }, options) as CommandManagerRegisterCommandsOptions;
 
         const contextMenuCommands = (options?.contextMenuCommands?.commands ?? Array.from(this.contextMenuCommands.values())).map(c => isJSONEncodable(c) ? c.toJSON() : c);
         const slashCommands = (options?.slashCommands?.commands ?? Array.from(this.slashCommands.values())).map(c => isJSONEncodable(c) ? c.toJSON() : c);
