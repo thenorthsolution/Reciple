@@ -80,7 +80,7 @@ export class RecipleModule<Data extends RecipleModuleData = RecipleModuleData> {
     }
 
     public async load(): Promise<void> {
-        if (!this.data.onLoad || this.status === RecipleModuleStatus.Loaded) return;
+        if (!this.data.onLoad || this.status === RecipleModuleStatus.Loaded || !this.client.isReady()) return;
 
         const data = await Promise.resolve(this.data.onLoad({
             client: this.client,
@@ -93,7 +93,7 @@ export class RecipleModule<Data extends RecipleModuleData = RecipleModuleData> {
     }
 
     public async unload(): Promise<void> {
-        if (!this.data.onUnload || this.status === RecipleModuleStatus.Unloaded) return;
+        if (!this.data.onUnload || this.status === RecipleModuleStatus.Unloaded || !this.client.isReady()) return;
 
         const data = await Promise.resolve(this.data.onUnload({
             client: this.client,

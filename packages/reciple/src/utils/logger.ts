@@ -55,7 +55,7 @@ export async function createLogger(config?: Omit<PartialDeep<Exclude<RecipleConf
     return logger;
 }
 
-export function addEventListenersToClient(client: RecipleClient<true>): void {
+export function addEventListenersToClient(client: RecipleClient): void {
     client.on('recipleDebug', debug => client.logger?.debug(debug));
 
     client.modules.on('resolveModuleFileError', (file, error) => client.logger?.err(`Failed to resolve module ${kleur.yellow(quoteString(file))}:`, error));
