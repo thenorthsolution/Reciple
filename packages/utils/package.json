@@ -36,12 +36,12 @@
     "access": "public"
   },
   "dependencies": {
-    "@discordjs/collection": "^1.5.2",
-    "discord-api-types": "^0.37.62",
+    "@discordjs/collection": "^2.0.0",
+    "discord-api-types": "^0.37.63",
     "dotenv": "^16.3.1",
     "fallout-utility": "^2.8.0"
   },
   "devDependencies": {
-    "discord.js": "^14.13.0"
+    "discord.js": "^14.14.1"
   }
 }

@@ -46,7 +46,7 @@
     "commander": "^11.1.0",
     "dotenv": "^16.3.1",
     "fallout-utility": "^2.8.0",
-    "globby": "^13.2.1",
+    "globby": "^14.0.0",
     "lodash.mergewith": "^4.6.2",
     "micromatch": "^4.0.5",
     "prompts": "^2.4.2",
@@ -55,9 +55,9 @@
   },
   "devDependencies": {
     "@reciple/core": "^8.1.7",
-    "@types/micromatch": "^4.0.4",
-    "@types/semver": "^7.5.4",
-    "discord.js": "^14.13.0"
+    "@types/micromatch": "^4.0.5",
+    "@types/semver": "^7.5.5",
+    "discord.js": "^14.14.1"
   },
   "peerDependencies": {
     "@reciple/core": "^8.0.0",
