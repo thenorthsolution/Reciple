@@ -65,7 +65,7 @@ export class MessageCommandOptionManager extends DataManager<MessageCommandOptio
     }
 
     private async _parseOptions(): Promise<void> {
-        if (!this.command.options?.length) return;
+        if (!this.command.options?.length || !this.client.isReady()) return;
 
         for (const i in this.command.options) {
             const arg = this.args[i];
