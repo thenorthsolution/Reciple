@@ -21,6 +21,7 @@ const command = new Command()
     .option('--esm', 'Use commonjs templates', 'null')
     .option('--commonjs', 'Use commonjs templates', 'null')
     .option('--package-manager <npm,yarn,pnpm>', 'Set package manager', 'null')
+    .option('-t, --token <DiscordToken>', 'Add token to created .env')
     .option('--no-addons', 'Disable addons prompt', false)
     .option('-a, --addons <addon...>', 'Add a Reciple official addons', []);
 
@@ -33,6 +34,7 @@ let dir: string|null = command.args[0] ?? null;
 let typescript: boolean|null = options.typescript !== 'null' ? options.typescript : null;
 let commonjs: boolean|null = options.esm === true ? false : options.commonjs !== 'null' ? options.commonjs : null;
 let packageManager: PackageManager|null = options.packageManager !== 'null' ? options.packageManager : null;
+let token: string|null = options.token ?? null;
 let addons: string[]|false = Array.isArray(options.addons) ? options.addons : false;
 let setup: boolean = false;
 
@@ -126,9 +128,18 @@ if (packageManager === null) {
     packageManager = newPackageManager !== 'none' ? newPackageManager : null;
 }
 
+if (token === null) {
+    const newToken = await text({
+        message: `Enter your Discord bot token from Developers Portal`,
+        placeholder: `Your Discord Bot Token`
+    });
+
+    if (isCancel(newToken)) cancelPrompts();
+}
+
 const template = templates.find(p => p.type === (commonjs ? 'commonjs' : 'module') && p.language === (typescript ? 'Typescript' : 'Javascript'));
 if (!template) cancelPrompts({ reason: `Template not found` });
 if (packageManager && !packageManagers.some(p => p.value === packageManager)) cancelPrompts({ reason: `Invalid package manager` });
 if (setup) outro(`Setup Done! Creating from ${kleur.cyan().bold(template.name)} template`);
 
-await create(template, dir, packageManager ?? undefined, addons || []);
+await create(template, dir, packageManager ?? undefined, addons || [], token ?? undefined);

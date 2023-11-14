@@ -51,14 +51,14 @@ export function cancelPrompts(options?: { reason?: string; code?: number; }): ne
     exit(options?.code ?? 1);
 }
 
-export async function createDotEnv(dir: string): Promise<string> {
+export async function createDotEnv(dir: string, defaultToken?: string): Promise<string> {
     const file = path.resolve(path.join(dir, '.env'));
 
     let content: string = '';
     if (existsSync(file)) content = await readFile(file, 'utf-8');
 
     if (!content.includes('TOKEN=')) {
-        content += `\n# Replace this value to your Discord bot token from https://discord.com/developers/applications\nTOKEN=""`;
+        content += `\n# Replace this value to your Discord bot token from https://discord.com/developers/applications\nTOKEN="${defaultToken ?? ''}"`;
         content = content.trim();
     }
 
@@ -66,7 +66,7 @@ export async function createDotEnv(dir: string): Promise<string> {
     return content;
 }
 
-export async function create(template: TemplateMetadata, dir: string, packageManager?: PackageManager, addons?: string[]): Promise<void> {
+export async function create(template: TemplateMetadata, dir: string, packageManager?: PackageManager, addons?: string[], token?: string): Promise<void> {
     if (!existsSync(dir)) mkdir(dir, { recursive: true });
 
     await recursiveCopyFiles(template.path, dir, f => f.replace('dot.', '.'));
@@ -92,8 +92,8 @@ export async function create(template: TemplateMetadata, dir: string, packageMan
     if (packageManager) await runScript(placeholders['INSTALL_ALL'], dir);
 
     await runScript(`${packageManagerPlaceholders['npm']['BIN_EXEC']} reciple@${packages['RECIPLE']?.substring(1)} ${dir} --setup -c reciple.${template.type === 'commonjs' ? 'cjs' : 'mjs'}`, dir);
+    await createDotEnv(dir, token);
 
-    await createDotEnv(dir);
     if (addons?.length) await installAddons(
         dir,
         template.type === 'commonjs'
