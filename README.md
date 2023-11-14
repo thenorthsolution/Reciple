@@ -46,3 +46,8 @@ npm create reciple@latest
 - [@reciple/utils](./packages/utils) - Global utilities used by reciple packages
 - [create-reciple](./packages/create-reciple/) - A tool used to easily create Reciple projects
 - [reciple](./packages/reciple/) - A CLI tool for loading modules and running Reciple based Discord bots
+
+<center>
+    <h3>Setup with <code>npm create reciple@latest</code></h3>
+    <img src="https://i.imgur.com/Sxfczjz.gif" height="150">
+</center>
