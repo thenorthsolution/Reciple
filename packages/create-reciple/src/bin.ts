@@ -4,7 +4,7 @@ import { packageJson, packageManagers, templatesFolder } from './utils/constants
 import { cancelPrompts, create, getTemplates, isDirEmpty } from './utils/helpers.js';
 import { PackageManager, resolvePackageManager } from '@reciple/utils';
 import { CliOptions } from './utils/types.js';
-import { confirm, intro, isCancel, multiselect, outro, select, text } from '@clack/prompts';
+import { confirm, intro, isCancel, multiselect, outro, password, select, text } from '@clack/prompts';
 import { Command } from 'commander';
 import path from 'path';
 import { existsSync, statSync } from 'fs';
@@ -129,12 +129,14 @@ if (packageManager === null) {
 }
 
 if (token === null) {
-    const newToken = await text({
+    const newToken = await password({
         message: `Enter your Discord bot token from Developers Portal`,
-        placeholder: `Your Discord Bot Token`
+        mask: '*'
     });
 
     if (isCancel(newToken)) cancelPrompts();
+
+    token = newToken;
 }
 
 const template = templates.find(p => p.type === (commonjs ? 'commonjs' : 'module') && p.language === (typescript ? 'Typescript' : 'Javascript'));
