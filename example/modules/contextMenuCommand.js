@@ -1,5 +1,5 @@
 // @ts-check
-import { CommandType, ContextMenuCommandBuilder } from 'reciple';
+import { CommandHaltReason, CommandType, ContextMenuCommandBuilder } from 'reciple';
 import { inlineCode } from 'discord.js';
 
 /**
@@ -16,6 +16,15 @@ export default {
                 if (!interaction.isUserContextMenuCommand()) return;
 
                 await interaction.reply(interaction.targetUser.displayAvatarURL());
+            })
+            .setRequiredBotPermissions('AttachFiles')
+            .setHalt(data => {
+                if (data.reason === CommandHaltReason.PreconditionTrigger) {
+                    console.log(data.message, data.data);
+                    return true;
+                }
+
+                return false;
             }),
 
         // Raw command data
