@@ -11,9 +11,9 @@ export class CommandPermissionsPrecondition extends CommandPrecondition {
     public static data: CommandPreconditionData = {
         id: CommandPermissionsPrecondition.id,
         disabled: false,
-        contextMenuCommandExecute: () => true,
+        contextMenuCommandExecute: (data, precondition) => CommandPermissionsPrecondition._execute(data, precondition),
         messageCommandExecute: (data, precondition) => CommandPermissionsPrecondition._execute(data, precondition),
-        slashCommandExecute: () => true,
+        slashCommandExecute: (data, precondition) => CommandPermissionsPrecondition._execute(data, precondition),
     };
 
     private static async _execute(data: MessageCommandExecuteData|SlashCommandExecuteData|ContextMenuCommandExecuteData, precondition: CommandPermissionsPrecondition): Promise<boolean|CommandPreconditionTriggerData> {
@@ -118,8 +118,8 @@ export class CommandPermissionsPrecondition extends CommandPrecondition {
         return new PermissionsBitField(permissions?.missing(requiredPermissions));
     }
 
-    public static isCommandPermissionsPreconditionTriggerData(data: unknown): data is CommandPermissionsPreconditionTriggerData<AnyCommandExecuteData> {
-        return ((data as CommandPermissionsPreconditionTriggerData<AnyCommandExecuteData>).precondition instanceof CommandPermissionsPrecondition);
+    public static isCommandPermissionsPreconditionTriggerData<T extends AnyCommandExecuteData = AnyCommandExecuteData>(data: unknown): data is CommandPermissionsPreconditionTriggerData<T> {
+        return ((data as CommandPermissionsPreconditionTriggerData<T>).precondition instanceof CommandPermissionsPrecondition);
     }
 
     public static create(): CommandPermissionsPrecondition {
