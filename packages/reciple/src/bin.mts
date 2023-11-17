@@ -72,7 +72,7 @@ logger?.info(`Starting Reciple client v${buildVersion} - ${new Date()}`);
 
 const client = new RecipleClient(config);
 
-client.setLogger(logger)
+client.setLogger(logger);
 
 addEventListenersToClient(client);
 

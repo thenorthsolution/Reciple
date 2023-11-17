@@ -61,8 +61,9 @@ export const config = {
     },
     modules: {
         dirs: [
-            './modules/loader',
-            './modules'
+            './modules/utils',
+            './modules/*',
+            './modules/*/*'
         ],
         exclude: [],
         disableModuleVersionCheck: false
