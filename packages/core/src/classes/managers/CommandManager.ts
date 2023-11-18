@@ -7,7 +7,7 @@ import { MessageCommandBuilder, MessageCommandExecuteData } from '../builders/Me
 import { RecipleClient } from '../structures/RecipleClient';
 import { CommandType } from '../../types/constants';
 import { Utils } from '../structures/Utils';
-import { merge } from 'lodash';
+import { defaultsDeep } from 'lodash';
 
 export interface CommandManagerRegisterCommandsOptions extends Omit<Exclude<RecipleClientConfig['applicationCommandRegister'], undefined>, 'enabled'> {
     contextMenuCommands?: Partial<RecipleClientInteractionBasedCommandConfigOptions> & {
@@ -146,7 +146,7 @@ export class CommandManager {
 
     public async registerApplicationCommands(options?: CommandManagerRegisterCommandsOptions): Promise<{ global: Collection<string, ApplicationCommand>; guilds: Collection<string, Collection<string, ApplicationCommand>> }> {
         const store = { global: new Collection<string, ApplicationCommand>(), guilds: new Collection<string, Collection<string, ApplicationCommand>>() };
-        const config = merge({ ...this.client.config.commands, ...this.client.config.applicationCommandRegister }, options) as CommandManagerRegisterCommandsOptions;
+        const config = defaultsDeep({ ...this.client.config.commands, ...this.client.config.applicationCommandRegister }, options) as CommandManagerRegisterCommandsOptions;
 
         const contextMenuCommands = (options?.contextMenuCommands?.commands ?? Array.from(this.contextMenuCommands.values())).map(c => isJSONEncodable(c) ? c.toJSON() : c);
         const slashCommands = (options?.slashCommands?.commands ?? Array.from(this.slashCommands.values())).map(c => isJSONEncodable(c) ? c.toJSON() : c);
