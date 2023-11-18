@@ -90,7 +90,7 @@ export default {
                 createResponse(replyOptions);
                 return true;
             case CommandHaltReason.PreconditionTrigger:
-                if (CommandPermissionsPrecondition.isCommandPermissionsPreconditionTriggerData(haltData.data)) {
+                if (CommandPermissionsPrecondition.isPermissionsPreconditionData(haltData.data)) {
                     preconditionSwitch: switch (haltData.data.data?.type) {
                         case CommandPermissionsPreconditionTriggerDataType.BotNotAllowed: return true;
                         case CommandPermissionsPreconditionTriggerDataType.ClientNotEnoughPermissions:
