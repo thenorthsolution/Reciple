@@ -3,7 +3,7 @@
   "description": "Reciple core implementations",
   "homepage": "https://reciple.js.org/docs/client",
   "license": "GPL-3.0",
-  "version": "8.2.2",
+  "version": "8.2.3",
   "main": "./dist/index.js",
   "module": "./dist/esm.mjs",
   "types": "./dist/index.d.ts",
