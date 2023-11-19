@@ -1,4 +1,4 @@
-import { ApplicationCommand, ApplicationCommandDataResolvable, ChatInputCommandInteraction, Collection, ContextMenuCommandInteraction, JSONEncodable, Message, RESTPostAPIChatInputApplicationCommandsJSONBody, RESTPostAPIContextMenuApplicationCommandsJSONBody, RestOrArray, isJSONEncodable, normalizeArray } from 'discord.js';
+import { ApplicationCommand, ApplicationCommandDataResolvable, ChatInputCommandInteraction, Collection, ContextMenuCommandInteraction, FetchApplicationCommandOptions, JSONEncodable, Message, RESTPostAPIChatInputApplicationCommandsJSONBody, RESTPostAPIContextMenuApplicationCommandsJSONBody, RestOrArray, isJSONEncodable, normalizeArray } from 'discord.js';
 import { AnyCommandBuilder, AnyCommandExecuteData, AnyCommandResolvable, RecipleClientConfig, RecipleClientInteractionBasedCommandConfigOptions } from '../../types/structures';
 import { CommandPrecondition, CommandPreconditionResolvable, CommandPreconditionTriggerData } from '../structures/CommandPrecondition';
 import { AnySlashCommandBuilder, SlashCommandBuilder, SlashCommandExecuteData } from '../builders/SlashCommandBuilder';
@@ -211,8 +211,10 @@ export class CommandManager {
         return this.client.application?.commands.cache.find(c => command && (guildId ? c.guildId === guildId : c.guildId === null));
     }
 
-    public async fetchApplicationCommand(command: string, guildId?: string): Promise<ApplicationCommand|undefined> {
-        const commands = await this.client.application?.commands.fetch({ guildId });
+    public async fetchApplicationCommand(command: string, guildId?: string): Promise<ApplicationCommand|undefined>;
+    public async fetchApplicationCommand(command: string, options?: FetchApplicationCommandOptions): Promise<ApplicationCommand|undefined>;
+    public async fetchApplicationCommand(command: string, options?: string|FetchApplicationCommandOptions): Promise<ApplicationCommand|undefined> {
+        const commands = await this.client.application?.commands.fetch(typeof options === 'string' ? { guildId: options } : options ?? {});
         return commands?.find(c => c.name === command);
     }
 
