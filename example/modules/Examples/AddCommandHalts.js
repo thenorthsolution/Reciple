@@ -1,5 +1,8 @@
-// @ts-check
+/**
+ * This module adds halt function to every loaded command
+ */
 
+// @ts-check
 import { inlineCode, time } from "discord.js";
 import { CommandHaltReason, CommandPermissionsPrecondition, CommandPermissionsPreconditionTriggerDataType, CommandType } from "reciple";
 
