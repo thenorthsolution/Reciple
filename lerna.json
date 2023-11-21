@@ -4,5 +4,6 @@
   "exact": false,
   "preid": "dev",
   "preDistTag": "dev",
+  "distTag": "lts",
   "gitTagVersion": true
 }
