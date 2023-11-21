@@ -1,4 +1,4 @@
-import { ApplicationCommand, ApplicationCommandDataResolvable, ChatInputCommandInteraction, Collection, ContextMenuCommandInteraction, mergeDefault, Message, RESTPostAPIApplicationCommandsJSONBody, RestOrArray, normalizeArray } from 'discord.js';
+import { ApplicationCommand, ApplicationCommandDataResolvable, ChatInputCommandInteraction, Collection, ContextMenuCommandInteraction, Message, RESTPostAPIApplicationCommandsJSONBody, RestOrArray, normalizeArray } from 'discord.js';
 import { AnyCommandBuilder, AnyCommandData, AnyCommandExecuteData, AnyCommandPreconditionFunction, ApplicationCommandBuilder, CommandType } from '../../types/commands';
 import { AnySlashCommandBuilder, SlashCommandBuilder, SlashCommandPreconditionFunction, SlashCommandResolvable } from '../builders/SlashCommandBuilder';
 import { ContextMenuCommandBuilder, ContextMenuCommandPreconditionFunction, ContextMenuCommandResolvable } from '../builders/ContextMenuCommandBuilder';
@@ -9,6 +9,7 @@ import { BaseCommandBuilderData } from '../builders/BaseCommandBuilder';
 import { RecipleError } from '../errors/RecipleError';
 import { RecipleClient } from '../RecipleClient';
 import { isJSONEncodable } from 'fallout-utility';
+import lodash from 'lodash';
 
 export interface CommandManagerOptions {
     client: RecipleClient;
@@ -131,7 +132,7 @@ export class CommandManager {
 
     public async registerApplicationCommands(options?: RecipleCommandsRegisterOptions): Promise<{ global: Collection<string, ApplicationCommand>; guilds: Collection<string, Collection<string, ApplicationCommand>> }> {
         const store = { global: new Collection<string, ApplicationCommand>(), guilds: new Collection<string, Collection<string, ApplicationCommand>>() };
-        const config = mergeDefault({ ...this.client.config.commands, ...this.client.config.applicationCommandRegister }, options) as RecipleCommandsRegisterOptions;
+        const config = lodash.defaultsDeep({ ...this.client.config.commands, ...this.client.config.applicationCommandRegister }, options) as RecipleCommandsRegisterOptions;
 
         if (config?.enabled === false) return store;
 

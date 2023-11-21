@@ -38,10 +38,12 @@
     "@reciple/utils": "^7.1.3",
     "@sapphire/shapeshift": "^3.9.2",
     "fallout-utility": "^2.7.1",
+    "lodash": "^4.17.21",
     "semver": "^7.5.4",
     "ts-mixer": "^6.0.2"
   },
   "devDependencies": {
+    "@types/lodash": "^4.14.202",
     "@types/semver": "^7.5.2",
     "discord.js": "^14.13.0"
   },
