@@ -30,6 +30,7 @@
   },
   "files": [
     "dist",
+    "assets",
     "README.md"
   ],
   "publishConfig": {
