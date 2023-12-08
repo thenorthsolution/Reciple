@@ -1,16 +1,5 @@
 {
   "$schema": "./node_modules/nx/schemas/nx-schema.json",
-  "tasksRunnerOptions": {
-    "default": {
-      "runner": "nx-cloud",
-      "options": {
-        "cacheableOperations": [
-          "build"
-        ],
-        "accessToken": "NDc2NWU1ZjktYWYxYy00YTYwLTgzOWUtZWM0MjhlNTcxZmNlfHJlYWQtd3JpdGU="
-      }
-    }
-  },
   "targetDefaults": {
     "build": {
       "dependsOn": [
@@ -21,7 +10,8 @@
       ],
       "inputs": [
         "{projectRoot}/src/**/*"
-      ]
+      ],
+      "cache": true
     },
     "docs": {
       "outputs": [
@@ -41,5 +31,6 @@
     "production": [
       "default"
     ]
-  }
+  },
+  "nxCloudAccessToken": "NDc2NWU1ZjktYWYxYy00YTYwLTgzOWUtZWM0MjhlNTcxZmNlfHJlYWQtd3JpdGU="
 }

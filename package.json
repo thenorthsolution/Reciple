@@ -15,11 +15,10 @@
     "docs": "rimraf -g ./packages/*/docs/docs.json && lerna run docs"
   },
   "devDependencies": {
-    "@types/node": "^20.8.10",
-    "lerna": "^7.4.2",
-    "nx-cloud": "^16.5.2",
+    "@types/node": "^20.10.4",
+    "lerna": "^8.0.0",
     "rimraf": "^5.0.5",
     "ts-mixer": "^6.0.3",
-    "typescript": "^5.2.2"
+    "typescript": "^5.3.3"
   }
 }

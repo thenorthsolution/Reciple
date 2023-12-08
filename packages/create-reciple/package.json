@@ -37,11 +37,11 @@
   },
   "devDependencies": {
     "@reciple/core": "^8.2.5",
-    "@types/node": "^20.9.0",
+    "@types/node": "^20.10.4",
     "discord.js": "^14.14.1",
-    "nodemon": "^3.0.1",
+    "nodemon": "^3.0.2",
     "reciple": "^8.2.5",
     "rimraf": "^5.0.5",
-    "typescript": "^5.2.2"
+    "typescript": "^5.3.3"
   }
 }

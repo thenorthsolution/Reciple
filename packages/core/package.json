@@ -36,15 +36,15 @@
   ],
   "dependencies": {
     "@reciple/utils": "^8.1.1",
-    "@sapphire/shapeshift": "^3.9.3",
+    "@sapphire/shapeshift": "^3.9.4",
     "fallout-utility": "^2.8.0",
     "lodash": "^4.17.21",
     "semver": "^7.5.4",
     "ts-mixer": "^6.0.2"
   },
   "devDependencies": {
-    "@types/lodash": "^4.14.201",
-    "@types/semver": "^7.5.5",
+    "@types/lodash": "^4.14.202",
+    "@types/semver": "^7.5.6",
     "discord.js": "^14.14.1"
   },
   "peerDependencies": {
