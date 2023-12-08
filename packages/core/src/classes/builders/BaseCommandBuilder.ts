@@ -13,6 +13,7 @@ export interface BaseCommandBuilderData {
     required_bot_permissions?: PermissionResolvable;
     required_member_permissions?: PermissionResolvable;
     preconditions?: CommandPreconditionResolvable[];
+    disabled_preconditions?: CommandPreconditionResolvable[];
     halt?: AnyCommandHaltFunction;
     execute: AnyCommandExecuteFunction;
 }
@@ -23,6 +24,7 @@ export abstract class BaseCommandBuilder implements BaseCommandBuilderData {
     public required_bot_permissions?: bigint;
     public required_member_permissions?: bigint;
     public preconditions: CommandPreconditionResolvable[] = [];
+    public disabled_preconditions: CommandPreconditionResolvable[] = [];
     public halt?: AnyCommandHaltFunction;
     public execute: AnyCommandExecuteFunction = () => {};
 
@@ -64,6 +66,20 @@ export abstract class BaseCommandBuilder implements BaseCommandBuilderData {
         const ids = normalizeArray(preconditionIds);
         BaseCommandValidators.isValidPreconditions(ids);
         this.preconditions = ids;
+        return this;
+    }
+
+    public addDisabledPreconditions(...preconditionIds: RestOrArray<CommandPreconditionResolvable>): this {
+        const ids = normalizeArray(preconditionIds);
+        BaseCommandValidators.isValidPreconditions(ids);
+        this.disabled_preconditions.push(...ids);
+        return this;
+    }
+
+    public setDisabledPreconditions(...preconditionIds: RestOrArray<CommandPreconditionResolvable>): this {
+        const ids = normalizeArray(preconditionIds);
+        BaseCommandValidators.isValidPreconditions(ids);
+        this.disabled_preconditions = ids;
         return this;
     }
 

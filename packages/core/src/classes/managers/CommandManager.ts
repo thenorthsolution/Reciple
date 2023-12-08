@@ -92,6 +92,7 @@ export class CommandManager {
 
     public async executePreconditions<T extends AnyCommandExecuteData = AnyCommandExecuteData>(executeData: T): Promise<CommandPreconditionTriggerData<T>|null> {
         const preconditions = Array.from(this.preconditions.values());
+        const disabledPreconditions = executeData.builder.disabled_preconditions.map(p => CommandPrecondition.resolve(p));
 
         for (const precondition of executeData.builder.preconditions) {
             const data = CommandPrecondition.resolve(precondition);
@@ -101,7 +102,7 @@ export class CommandManager {
         }
 
         for (const precondition of preconditions) {
-            if (precondition.disabled) continue;
+            if (precondition.disabled || disabledPreconditions.some(p => p.id === precondition.id)) continue;
 
             const data = await precondition.execute(executeData);
             if (!data.successful) return data;
