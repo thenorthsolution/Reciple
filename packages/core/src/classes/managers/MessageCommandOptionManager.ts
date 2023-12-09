@@ -10,17 +10,20 @@ export interface MessageCommandOptionManagerOptions {
     client: RecipleClient<true>;
     message: Message;
     args: string[];
+    rawArgs: string;
 }
 
 export interface MessageCommandOptionManagerParseOptionsData extends Omit<MessageCommandOptionParseOptionValueOptions, 'option'|'value'> {
     command: MessageCommandBuilder;
     args: string[];
+    rawArgs: string;
 }
 
 export class MessageCommandOptionManager extends DataManager<MessageCommandOptionValue> {
     readonly command: MessageCommandBuilder;
     readonly message: Message;
     readonly args: string[];
+    readonly rawArgs: string;
 
     protected constructor(data: MessageCommandOptionManagerOptions) {
         super(data.client);
@@ -28,6 +31,7 @@ export class MessageCommandOptionManager extends DataManager<MessageCommandOptio
         this.command = data.command;
         this.message = data.message;
         this.args = data.args;
+        this.rawArgs = data.rawArgs;
     }
 
     get hasMissingOptions() {
@@ -84,7 +88,8 @@ export class MessageCommandOptionManager extends DataManager<MessageCommandOptio
             command: options.command,
             client: options.client,
             message: options.message,
-            args: options.args
+            args: options.args,
+            rawArgs: options.rawArgs
         });
 
         await manager._parseOptions();

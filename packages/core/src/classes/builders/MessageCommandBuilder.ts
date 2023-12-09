@@ -186,6 +186,7 @@ export class MessageCommandBuilder extends BaseCommandBuilder {
                 client,
                 command: builder,
                 args: parserData.args,
+                rawArgs: parserData.rawArgs,
                 message
             })
         };
