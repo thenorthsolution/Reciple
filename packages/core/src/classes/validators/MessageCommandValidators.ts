@@ -1,15 +1,14 @@
 import { MessageCommandOptionValidators } from './MessageCommandOptionValidators';
 import { MessageCommandBuilderData } from '../builders/MessageCommandBuilder';
 import { BaseCommandValidators } from './BaseCommandValidators';
-import { s } from '@sapphire/shapeshift';
 
 export class MessageCommandValidators extends BaseCommandValidators {
-    public static name = s.string.lengthGreaterThanOrEqual(1).lengthLessThanOrEqual(32).regex(/^[\p{Ll}\p{Lm}\p{Lo}\p{N}\p{sc=Devanagari}\p{sc=Thai}_-]+$/u);
-    public static description = s.string.lengthGreaterThanOrEqual(1).lengthLessThanOrEqual(100);
+    public static name = this.s.string.lengthGreaterThanOrEqual(1).lengthLessThanOrEqual(32).regex(/^[\p{Ll}\p{Lm}\p{Lo}\p{N}\p{sc=Devanagari}\p{sc=Thai}_-]+$/u);
+    public static description = this.s.string.lengthGreaterThanOrEqual(1).lengthLessThanOrEqual(100);
     public static aliases = MessageCommandValidators.name.array.optional;
-    public static validate_options = s.boolean.optional;
-    public static dm_permission = s.boolean.optional;
-    public static allow_bot = s.boolean.optional;
+    public static validate_options = this.s.boolean.optional;
+    public static dm_permission = this.s.boolean.optional;
+    public static allow_bot = this.s.boolean.optional;
     public static options = MessageCommandOptionValidators.MessageCommandOptionResolvable.array.optional;
 
     public static isValidName(name: unknown): asserts name is MessageCommandBuilderData['name'] {

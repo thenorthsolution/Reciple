@@ -1,18 +1,17 @@
 import { BaseCommandValidators } from './BaseCommandValidators';
 import { RecipleModuleData } from '../structures/RecipleModule';
 import { Validators } from './Validators';
-import { s } from '@sapphire/shapeshift';
 
 export class RecipleModuleDataValidators extends Validators {
-    public static id = s.string.regex(/^[a-zA-Z0-9_.-]+$/).optional;
-    public static name = s.string.optional;
-    public static versions = s.union(s.string, s.string.array);
-    public static commands = s.union(BaseCommandValidators.BaseCommandBuilderData, RecipleModuleDataValidators.jsonEncodable).array.optional;
-    public static onStart = s.instance(Function);
-    public static onLoad = s.instance(Function).optional;
-    public static onUnload = s.instance(Function).optional;
+    public static id = this.s.string.regex(/^[a-zA-Z0-9_.-]+$/).optional;
+    public static name = this.s.string.optional;
+    public static versions = this.s.union(this.s.string, this.s.string.array);
+    public static commands = this.s.union(BaseCommandValidators.BaseCommandBuilderData, RecipleModuleDataValidators.jsonEncodable).array.optional;
+    public static onStart = this.s.instance(Function);
+    public static onLoad = this.s.instance(Function).optional;
+    public static onUnload = this.s.instance(Function).optional;
 
-    public static RecipleModuleData = s.object({
+    public static RecipleModuleData = this.s.object({
         id: RecipleModuleDataValidators.id,
         name: RecipleModuleDataValidators.name,
         versions: RecipleModuleDataValidators.versions,

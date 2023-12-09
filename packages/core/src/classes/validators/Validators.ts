@@ -1,7 +1,9 @@
 import { BitField, PermissionFlagsBits, PermissionsBitField, isValidationEnabled } from 'discord.js';
-import { s } from '@sapphire/shapeshift';
+import { Shapes, s } from '@sapphire/shapeshift';
 
 export class Validators {
+    protected static readonly s: Shapes = s;
+
     protected static _isValidationEnabled: boolean|null = null;
 
     protected constructor() {}
@@ -15,17 +17,17 @@ export class Validators {
         return Validators.isValidationEnabled();
     }
 
-    public static permissionStringPredicate = s.enum<keyof typeof PermissionFlagsBits>(...(Object.keys(PermissionFlagsBits) as (keyof typeof PermissionFlagsBits)[]));
-    public static permissionResolvable = s.union(
-        s.instance(PermissionsBitField),
-        s.instance(BitField),
+    public static permissionStringPredicate = this.s.enum<keyof typeof PermissionFlagsBits>(...(Object.keys(PermissionFlagsBits) as (keyof typeof PermissionFlagsBits)[]));
+    public static permissionResolvable = this.s.union(
+        this.s.instance(PermissionsBitField),
+        this.s.instance(BitField),
         Validators.permissionStringPredicate.array,
         Validators.permissionStringPredicate,
-        s.bigint,
-        s.bigint.array
+        this.s.bigint,
+        this.s.bigint.array
     );
 
-    public static jsonEncodable = s.object({
-        toJSON: s.instance(Function)
+    public static jsonEncodable = this.s.object({
+        toJSON: this.s.instance(Function)
     });
 }

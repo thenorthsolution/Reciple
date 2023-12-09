@@ -1,18 +1,17 @@
 import { BaseCommandBuilderData } from '../builders/BaseCommandBuilder';
 import { CommandType } from '../../types/constants';
 import { Validators } from './Validators';
-import { s } from '@sapphire/shapeshift';
 
 export class BaseCommandValidators extends Validators {
-    public static command_type = s.nativeEnum(CommandType);
-    public static cooldown = s.number.finite.positive.lessThanOrEqual(2147483647).optional;
+    public static command_type = this.s.nativeEnum(CommandType);
+    public static cooldown = this.s.number.finite.positive.lessThanOrEqual(2147483647).optional;
     public static required_bot_permissions = BaseCommandValidators.permissionResolvable.optional;
     public static required_member_permissions = BaseCommandValidators.permissionResolvable.optional;
-    public static preconditions = s.string.array.optional;
-    public static halt = s.instance(Function).optional;
-    public static execute = s.instance(Function);
+    public static preconditions = this.s.string.array.optional;
+    public static halt = this.s.instance(Function).optional;
+    public static execute = this.s.instance(Function);
 
-    public static BaseCommandBuilderData = s.object({
+    public static BaseCommandBuilderData = this.s.object({
         command_type: BaseCommandValidators.command_type,
         cooldown: BaseCommandValidators.cooldown,
         required_bot_permissions: BaseCommandValidators.required_bot_permissions,

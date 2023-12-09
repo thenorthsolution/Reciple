@@ -1,16 +1,15 @@
 import { MessageCommandOptionBuilderData, MessageCommandOptionResolvable } from '../builders/MessageCommandOptionBuilder';
 import { BaseCommandValidators } from './BaseCommandValidators';
 import { isJSONEncodable } from 'discord.js';
-import { s } from '@sapphire/shapeshift';
 
 export class MessageCommandOptionValidators extends BaseCommandValidators {
-    public static name = s.string.lengthGreaterThanOrEqual(1).lengthLessThanOrEqual(32).regex(/^[\p{Ll}\p{Lm}\p{Lo}\p{N}\p{sc=Devanagari}\p{sc=Thai}_-]+$/u);
-    public static description = s.string.lengthGreaterThanOrEqual(1).lengthLessThanOrEqual(100);
-    public static required = s.boolean.optional;
-    public static validate = s.instance(Function).optional;
-    public static resolve_value = s.instance(Function).optional;
+    public static name = this.s.string.lengthGreaterThanOrEqual(1).lengthLessThanOrEqual(32).regex(/^[\p{Ll}\p{Lm}\p{Lo}\p{N}\p{sc=Devanagari}\p{sc=Thai}_-]+$/u);
+    public static description = this.s.string.lengthGreaterThanOrEqual(1).lengthLessThanOrEqual(100);
+    public static required = this.s.boolean.optional;
+    public static validate = this.s.instance(Function).optional;
+    public static resolve_value = this.s.instance(Function).optional;
 
-    public static MessageCommandOptionBuilderData = s.object({
+    public static MessageCommandOptionBuilderData = this.s.object({
         name: MessageCommandOptionValidators.name,
         description: MessageCommandOptionValidators.description,
         required: MessageCommandOptionValidators.required,
@@ -18,7 +17,7 @@ export class MessageCommandOptionValidators extends BaseCommandValidators {
         resolve_value: MessageCommandOptionValidators.resolve_value
     });
 
-    public static MessageCommandOptionResolvable = s.union(MessageCommandOptionValidators.MessageCommandOptionBuilderData, MessageCommandOptionValidators.jsonEncodable);
+    public static MessageCommandOptionResolvable = this.s.union(MessageCommandOptionValidators.MessageCommandOptionBuilderData, MessageCommandOptionValidators.jsonEncodable);
 
     public static isValidName(name: unknown): asserts name is MessageCommandOptionBuilderData['name'] {
         MessageCommandOptionValidators.name.setValidationEnabled(MessageCommandOptionValidators.isValidationEnabled).parse(name);
