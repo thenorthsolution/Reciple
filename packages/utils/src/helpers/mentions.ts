@@ -12,7 +12,6 @@ export interface FetchMentionOrIdOptions {
 /**
  * Get user id from mention or user object
  * @param user User resolvable
- * @returns 
  */
 export function getMentionId(user: UserResolvable|APIUser|APIMessage|`<@${string}>`): string|null {
     const id = typeof user === 'string'
