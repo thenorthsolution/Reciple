@@ -119,5 +119,3 @@ export abstract class BaseCommandBuilder implements BaseCommandBuilderData {
         };
     }
 }
-
-// TODO: Command scope precondition
