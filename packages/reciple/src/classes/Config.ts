@@ -41,7 +41,7 @@ export class ConfigReader {
     }
 
     public static async getDefaultConfigData(useCommonJS?: boolean): Promise<string> {
-        let defaultConfig = await readFile(this.defaultConfigFile, 'utf-8');
+        let defaultConfig = (await readFile(this.defaultConfigFile, 'utf-8')).replaceAll('\r\n', '\n');
 
         defaultConfig = defaultConfig.replace(`import { cliVersion } from 'reciple';\n`, '');
         defaultConfig = defaultConfig.replace('version: `^${cliVersion}`', 'version: `^'+ cliVersion +'`');
