@@ -108,4 +108,13 @@ export class RecipleModule<Data extends RecipleModuleData = RecipleModuleData> {
     public toString() {
         return this.displayName;
     }
+
+    public toJSON() {
+        return {
+            id: this.id,
+            data: this.data,
+            file: this.file,
+            status: this.status
+        };
+    }
 }

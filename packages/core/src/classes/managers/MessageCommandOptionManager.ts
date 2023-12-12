@@ -68,6 +68,17 @@ export class MessageCommandOptionManager extends DataManager<MessageCommandOptio
         return options.resolveValue ? Promise.resolve(value.resolveValue(options.required) ?? value.value) : value.value;
     }
 
+    public toJSON() {
+        return {
+            commandName: this.command.name,
+            guildId: this.message.guildId,
+            channelId: this.message.channelId,
+            messageId: this.message.id,
+            args: this.args,
+            rawArgs: this.rawArgs
+        };
+    }
+
     private async _parseOptions(): Promise<void> {
         if (!this.command.options?.length || !this.client.isReady()) return;
 

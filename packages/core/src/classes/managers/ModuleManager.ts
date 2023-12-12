@@ -186,6 +186,10 @@ export class ModuleManager extends Mixin(DataManager<RecipleModule>, TypedEmitte
         return modules;
     }
 
+    public toJSON() {
+        return this.cache.map(m => m.toJSON());
+    }
+
     public _throwError<E extends keyof ModuleManagerEvents>(error: Error, event: { name: E; values: ModuleManagerEvents[E]; }, throwWhenNoListener: boolean = true): void {
         if (!this.listenerCount(event.name)) {
             if (!throwWhenNoListener) return;
