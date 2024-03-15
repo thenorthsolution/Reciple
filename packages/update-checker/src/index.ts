@@ -1,7 +1,7 @@
-import type { AbbreviatedMetadata, FullMetadataOptions, Options } from './types/types.js';
+import type { AbbreviatedMetadata, FullMetadata, Options } from './types/types.js';
 import { SemVer, satisfies } from 'semver';
 
-export type { AbbreviatedMetadata, FullMetadataOptions, Options } from './types/types.js';
+export type { FullMetadata, Options } from './types/types.js';
 
 export enum UpdateType {
     None,
@@ -22,9 +22,9 @@ export interface UpdateData {
 }
 
 export async function fetchPackageData<T extends AbbreviatedMetadata = AbbreviatedMetadata>(pkg: string, options?: Options): Promise<T>;
-export async function fetchPackageData<T extends FullMetadataOptions = FullMetadataOptions>(pkg: string, options?: FullMetadataOptions): Promise<T>;
-export async function fetchPackageData<T extends FullMetadataOptions|AbbreviatedMetadata = FullMetadataOptions|AbbreviatedMetadata>(pkg: string, options?: FullMetadataOptions|Options): Promise<T> {
-    return (await import('package-json')).default(pkg, options ?? { allVersions: true }) as Promise<T>;
+export async function fetchPackageData<T extends FullMetadata = FullMetadata>(pkg: string, options?: FullMetadata): Promise<T>;
+export async function fetchPackageData<T extends FullMetadata|AbbreviatedMetadata = FullMetadata|AbbreviatedMetadata>(pkg: string, options?: FullMetadata|Options): Promise<T> {
+    return (await import('package-json')).default(pkg, { ...options, allVersions: true }) as Promise<T>;
 }
 
 export async function checkLatestUpdate(pkg: string, version: string, allowMajor: boolean = false): Promise<UpdateData> {
