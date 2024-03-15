@@ -3,15 +3,15 @@ import { CommandType } from '../../types/constants';
 import { Validators } from './Validators';
 
 export class BaseCommandValidators extends Validators {
-    public static command_type = this.s.nativeEnum(CommandType);
-    public static cooldown = this.s.number.finite.positive.lessThanOrEqual(2147483647).optional;
+    public static command_type = BaseCommandValidators.s.nativeEnum(CommandType);
+    public static cooldown = BaseCommandValidators.s.number.finite.positive.lessThanOrEqual(2147483647).optional;
     public static required_bot_permissions = BaseCommandValidators.permissionResolvable.optional;
     public static required_member_permissions = BaseCommandValidators.permissionResolvable.optional;
-    public static preconditions = this.s.string.array.optional;
-    public static halt = this.s.instance(Function).optional;
-    public static execute = this.s.instance(Function);
+    public static preconditions = Validators.commandPreconditionResolvable.array;
+    public static halt = BaseCommandValidators.s.instance(Function).optional;
+    public static execute = BaseCommandValidators.s.instance(Function);
 
-    public static BaseCommandBuilderData = this.s.object({
+    public static BaseCommandBuilderData = BaseCommandValidators.s.object({
         command_type: BaseCommandValidators.command_type,
         cooldown: BaseCommandValidators.cooldown,
         required_bot_permissions: BaseCommandValidators.required_bot_permissions,

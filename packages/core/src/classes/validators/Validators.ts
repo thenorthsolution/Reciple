@@ -17,17 +17,30 @@ export class Validators {
         return Validators.isValidationEnabled();
     }
 
-    public static permissionStringPredicate = this.s.enum<keyof typeof PermissionFlagsBits>(...(Object.keys(PermissionFlagsBits) as (keyof typeof PermissionFlagsBits)[]));
-    public static permissionResolvable = this.s.union(
-        this.s.instance(PermissionsBitField),
-        this.s.instance(BitField),
+    public static permissionStringPredicate = Validators.s.enum<keyof typeof PermissionFlagsBits>(...(Object.keys(PermissionFlagsBits) as (keyof typeof PermissionFlagsBits)[]));
+    public static permissionResolvable = Validators.s.union(
+        Validators.s.instance(PermissionsBitField),
+        Validators.s.instance(BitField),
         Validators.permissionStringPredicate.array,
         Validators.permissionStringPredicate,
-        this.s.bigint,
-        this.s.bigint.array
+        Validators.s.bigint,
+        Validators.s.bigint.array
     );
 
-    public static jsonEncodable = this.s.object({
-        toJSON: this.s.instance(Function)
+    public static commandPreconditionData = Validators.s.object({
+        id: Validators.s.string.regex(/^[a-zA-Z0-9_.-]+$/),
+        disabled: Validators.s.boolean.optional,
+        contextMenuCommandExecute: Validators.s.instance(Function),
+        messageCommandExecute: Validators.s.instance(Function),
+        slashCommandExecute: Validators.s.instance(Function),
     });
+
+    public static jsonEncodable = Validators.s.object({
+        toJSON: Validators.s.instance(Function)
+    });
+
+    public static commandPreconditionResolvable = Validators.s.union(
+        Validators.commandPreconditionData,
+        Validators.jsonEncodable
+    );
 }

@@ -3,15 +3,15 @@ import { RecipleModuleData } from '../structures/RecipleModule';
 import { Validators } from './Validators';
 
 export class RecipleModuleDataValidators extends Validators {
-    public static id = this.s.string.regex(/^[a-zA-Z0-9_.-]+$/).optional;
-    public static name = this.s.string.optional;
-    public static versions = this.s.union(this.s.string, this.s.string.array);
-    public static commands = this.s.union(BaseCommandValidators.BaseCommandBuilderData, RecipleModuleDataValidators.jsonEncodable).array.optional;
-    public static onStart = this.s.instance(Function);
-    public static onLoad = this.s.instance(Function).optional;
-    public static onUnload = this.s.instance(Function).optional;
+    public static id = RecipleModuleDataValidators.s.string.regex(/^[a-zA-Z0-9_.-]+$/).optional;
+    public static name = RecipleModuleDataValidators.s.string.optional;
+    public static versions = RecipleModuleDataValidators.s.union(RecipleModuleDataValidators.s.string, RecipleModuleDataValidators.s.string.array);
+    public static commands = RecipleModuleDataValidators.s.union(BaseCommandValidators.BaseCommandBuilderData, RecipleModuleDataValidators.jsonEncodable).array.optional;
+    public static onStart = RecipleModuleDataValidators.s.instance(Function);
+    public static onLoad = RecipleModuleDataValidators.s.instance(Function).optional;
+    public static onUnload = RecipleModuleDataValidators.s.instance(Function).optional;
 
-    public static RecipleModuleData = this.s.object({
+    public static RecipleModuleData = RecipleModuleDataValidators.s.object({
         id: RecipleModuleDataValidators.id,
         name: RecipleModuleDataValidators.name,
         versions: RecipleModuleDataValidators.versions,
