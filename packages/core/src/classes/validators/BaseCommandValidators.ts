@@ -1,6 +1,8 @@
 import { BaseCommandBuilderData } from '../builders/BaseCommandBuilder';
 import { CommandType } from '../../types/constants';
 import { Validators } from './Validators';
+import { RestOrArray, normalizeArray } from 'discord.js';
+import { CommandPreconditionResolvable } from '../structures/CommandPrecondition';
 
 export class BaseCommandValidators extends Validators {
     public static command_type = BaseCommandValidators.s.nativeEnum(CommandType);
@@ -38,7 +40,13 @@ export class BaseCommandValidators extends Validators {
     }
 
     public static isValidPreconditions(preconditions: unknown): asserts preconditions is BaseCommandBuilderData['preconditions'] {
-        BaseCommandValidators.preconditions.setValidationEnabled(BaseCommandValidators.isValidationEnabled).parse(preconditions);
+        BaseCommandValidators.s.any.array.setValidationEnabled(BaseCommandValidators.isValidationEnabled).parse(preconditions);
+
+        const data = normalizeArray(preconditions as RestOrArray<CommandPreconditionResolvable>);
+
+        for (const precondition of data) {
+            Validators.commandPreconditionData.setValidationEnabled(BaseCommandValidators.isValidationEnabled).parse(precondition);
+        }
     }
 
     public static isValidHalt(halt: unknown): asserts halt is BaseCommandBuilderData['halt'] {
