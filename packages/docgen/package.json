@@ -40,8 +40,8 @@
   },
   "dependencies": {
     "@discordjs/collection": "^2.0.0",
-    "commander": "^11.1.0",
-    "typedoc": "^0.25.4",
+    "commander": "^12.0.0",
+    "typedoc": "^0.25.12",
     "typedoc-json-parser": "^9.0.1"
   }
 }

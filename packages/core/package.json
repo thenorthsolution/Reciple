@@ -35,16 +35,18 @@
     "README.md"
   ],
   "dependencies": {
+    "-": "^0.0.1",
+    "@reciple/update-checker": "^8.2.0",
     "@reciple/utils": "^8.2.0",
-    "@sapphire/shapeshift": "^3.9.4",
+    "@sapphire/shapeshift": "^3.9.6",
     "fallout-utility": "^2.8.0",
     "lodash": "^4.17.21",
-    "semver": "^7.5.4",
-    "ts-mixer": "^6.0.2"
+    "semver": "^7.6.0",
+    "ts-mixer": "^6.0.4"
   },
   "devDependencies": {
-    "@types/lodash": "^4.14.202",
-    "@types/semver": "^7.5.6",
+    "@types/lodash": "^4.17.0",
+    "@types/semver": "^7.5.8",
     "discord.js": "^14.14.1"
   },
   "peerDependencies": {

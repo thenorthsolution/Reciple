@@ -41,20 +41,21 @@
     "README.md"
   ],
   "dependencies": {
+    "-": "^0.0.1",
     "@reciple/update-checker": "^8.2.0",
     "@reciple/utils": "^8.2.0",
-    "commander": "^11.1.0",
-    "dotenv": "^16.3.1",
+    "commander": "^12.0.0",
+    "dotenv": "^16.4.5",
     "fallout-utility": "^2.8.0",
-    "globby": "^14.0.0",
+    "globby": "^14.0.1",
     "micromatch": "^4.0.5",
     "prompts": "^2.4.2",
-    "semver": "^7.5.4"
+    "semver": "^7.6.0"
   },
   "devDependencies": {
     "@reciple/core": "^8.3.1",
     "@types/micromatch": "^4.0.6",
-    "@types/semver": "^7.5.6",
+    "@types/semver": "^7.5.8",
     "discord.js": "^14.14.1"
   },
   "peerDependencies": {
