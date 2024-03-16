@@ -1,7 +1,7 @@
 // @ts-check
 import { CooldownPrecondition, CommandPermissionsPrecondition } from 'reciple';
 import { IntentsBitField } from 'discord.js';
-import MyPrecondition from './modules/Preconditions/MyPrecondition';
+import MyPrecondition from './modules/Preconditions/MyPrecondition.js';
 
 /**
  * @type {import('reciple').RecipleConfig}
