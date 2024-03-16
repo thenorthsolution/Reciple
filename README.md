@@ -41,7 +41,6 @@ npm create reciple@latest
 - [@reciple/actions](./packages/actions/) - Used by our github workflow to generate docs.json
 - [@reciple/core](./packages/core/) - Extends [discord.js](https://npmjs.com/package/discord.js) Client to simplify working with Discord API
 - [@reciple/docgen](./packages/docgen/) - Parses Typescript file to generate json file for documentation
-- [@reciple/npm-loader](./packages/npm-loader) - A reciple module that loads Reciple modules from node_modules
 - [@reciple/update-checker](./packages/update-checker) - Checks for an update for a given package name from npm registry
 - [@reciple/utils](./packages/utils) - Global utilities used by reciple packages
 - [create-reciple](./packages/create-reciple/) - A tool used to easily create Reciple projects

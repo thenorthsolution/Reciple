@@ -9,7 +9,6 @@
   },
   "dependencies": {
     "@reciple/core": "^8.1.4",
-    "@reciple/npm-loader": "^8.0.1",
     "discord.js": "^14.14.1",
     "reciple": "^8.1.4"
   },
