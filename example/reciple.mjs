@@ -1,6 +1,7 @@
 // @ts-check
 import { CooldownPrecondition, CommandPermissionsPrecondition } from 'reciple';
 import { IntentsBitField } from 'discord.js';
+import MyPrecondition from './modules/Preconditions/MyPrecondition';
 
 /**
  * @type {import('reciple').RecipleConfig}
@@ -65,13 +66,14 @@ export const config = {
             './modules/*/*'
         ],
         exclude: [
-            './Preconditions'
+            'Preconditions'
         ],
         disableModuleVersionCheck: false
     },
     preconditions: [
         CooldownPrecondition.create(),
-        CommandPermissionsPrecondition.create()
+        CommandPermissionsPrecondition.create(),
+        MyPrecondition
     ],
     cooldownSweeperOptions: {
         timer: 1000 * 60 * 60
