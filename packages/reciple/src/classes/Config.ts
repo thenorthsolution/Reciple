@@ -1,10 +1,9 @@
 import { Logger, RecipleClientConfig, RecipleError } from '@reciple/core';
-import { recursiveDefaults, getDirModuleType } from '@reciple/utils';
+import { recursiveDefaults, getDirModuleType, existsAsync } from '@reciple/utils';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { kleur } from 'fallout-utility/strings';
 import { cliVersion } from '../utils/cli';
 import { Awaitable } from 'discord.js';
-import { existsSync } from 'node:fs';
 import path from 'node:path';
 
 export interface RecipleConfig extends RecipleClientConfig {
@@ -72,13 +71,13 @@ export class ConfigReader {
         }
 
         const file = path.resolve(config);
-        const isFile = path.isAbsolute(config) || existsSync(file) || ['reciple.js', 'reciple.mjs', 'reciple.cjs'].includes(config);
+        const isFile = path.isAbsolute(config) || await existsAsync(file) || ['reciple.js', 'reciple.mjs', 'reciple.cjs'].includes(config);
 
         if (isFile) {
             const isCommonJS = file.endsWith('.cjs') || ((await getDirModuleType(path.dirname(file))) === 'commonjs');
             const defaultConfig = await this.getDefaultConfigData(!file.endsWith('.mjs') && isCommonJS);
 
-            if (!existsSync(file)) {
+            if (!await existsAsync(file)) {
                 if (!createIfNotExists) return null;
 
                 await mkdir(path.dirname(file), { recursive: true });

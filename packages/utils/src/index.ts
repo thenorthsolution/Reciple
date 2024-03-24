@@ -1,5 +1,6 @@
 export * from './classes/MessageURLData';
 
+export * from './helpers/fileSystem';
 export * from './helpers/mentions';
 export * from './helpers/messageURL';
 export * from './helpers/modules';

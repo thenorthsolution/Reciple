@@ -5,14 +5,13 @@ import { kleur } from 'fallout-utility/strings';
 import path from 'node:path';
 import { cancel } from '@clack/prompts';
 import { exit } from 'node:process';
-import { existsSync } from 'node:fs';
 import { packageManagerPlaceholders, packages, root } from './constants.js';
-import { PackageManager } from '@reciple/utils';
+import { PackageManager, existsAsync } from '@reciple/utils';
 import { execSync } from 'node:child_process';
 import { installAddons } from './addons.js';
 
 export async function getTemplates(dir: string): Promise<TemplateMetadata[]> {
-    if (!existsSync(dir)) {
+    if (!await existsAsync(dir)) {
         await mkdir(dir, { recursive: true });
         return [];
     }
@@ -55,7 +54,7 @@ export async function createDotEnv(dir: string, defaultToken?: string): Promise<
     const file = path.resolve(path.join(dir, '.env'));
 
     let content: string = '';
-    if (existsSync(file)) content = await readFile(file, 'utf-8');
+    if (await existsAsync(file)) content = await readFile(file, 'utf-8');
 
     if (!content.includes('TOKEN=')) {
         content += `\n# Replace this value to your Discord bot token from https://discord.com/developers/applications\nTOKEN="${defaultToken ?? ''}"`;
@@ -67,11 +66,11 @@ export async function createDotEnv(dir: string, defaultToken?: string): Promise<
 }
 
 export async function create(template: TemplateMetadata, dir: string, packageManager?: PackageManager, addons?: string[], token?: string): Promise<void> {
-    if (!existsSync(dir)) mkdir(dir, { recursive: true });
+    if (!await existsAsync(dir)) mkdir(dir, { recursive: true });
 
     await recursiveCopyFiles(template.path, dir, f => f.replace('dot.', '.'));
 
-    if (existsSync(path.join(root, 'assets'))) {
+    if (await existsAsync(path.join(root, 'assets'))) {
         await recursiveCopyFiles(path.join(root, 'assets'), dir, f => f.replace('dot.', '.'));
     }
 
@@ -146,7 +145,7 @@ export async function runScript(command: string, cwd?: string) {
 }
 
 export async function isDirEmpty(dir: string): Promise<boolean> {
-    if (!existsSync(dir)) return true;
+    if (!await existsAsync(dir)) return true;
 
     const contents = (await readdir(dir)).filter(f => !f.startsWith('.'));
     return contents.length === 0;

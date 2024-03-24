@@ -4,7 +4,7 @@ import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import type { ProjectParser } from 'typedoc-json-parser';
 import { dirname, join, resolve } from 'node:path';
 import { Collection } from '@discordjs/collection';
-import { existsSync } from 'node:fs';
+import { existsAsync } from '@reciple/utils';
 
 export interface DocsParserOptions extends Omit<ProjectParser.Options, 'data'> {
     files: string[];
@@ -99,7 +99,7 @@ export class DocsParser {
     }
 
     public async save(options: { file: string; encoder?: ((data: Docs) => (string|PromiseLike<string>)); pretty?: boolean; }): Promise<void> {
-        if (!existsSync(options.file)) await mkdir(dirname(options.file), { recursive: true });
+        if (!await existsAsync(options.file)) await mkdir(dirname(options.file), { recursive: true });
 
         const data = options.encoder ? await Promise.resolve(options.encoder(this.toJSON())) : JSON.stringify(this.toJSON(), null, options.pretty ? 2 : undefined);
 

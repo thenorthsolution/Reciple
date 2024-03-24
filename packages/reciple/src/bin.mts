@@ -5,19 +5,18 @@ import { createLogger, addEventListenersToClient } from './utils/logger.js';
 import { setTimeout as setTimeoutAsync } from 'node:timers/promises';
 import { command, cli, cliVersion, checkForUpdates } from './utils/cli.js';
 import { ProcessInformation, RecipleClient, findModules } from './index.js';
-import { resolveEnvProtocol } from '@reciple/utils';
+import { existsAsync, resolveEnvProtocol } from '@reciple/utils';
 import { ConfigReader } from './classes/Config.js';
 import { config as loadEnv } from 'dotenv';
 import { mkdir } from 'node:fs/promises';
 import { kleur } from 'fallout-utility';
-import { existsSync } from 'node:fs';
 import { parentPort, threadId } from 'node:worker_threads';
 import path from 'node:path';
 import semver from 'semver';
 
 command.parse();
 
-if (!existsSync(cli.cwd)) await mkdir(cli.cwd, { recursive: true });
+if (!await existsAsync(cli.cwd)) await mkdir(cli.cwd, { recursive: true });
 
 if (cli.cwd !== cli.nodeCwd || parentPort === null) {
     process.chdir(cli.cwd);

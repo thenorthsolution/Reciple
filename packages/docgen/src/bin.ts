@@ -4,7 +4,7 @@ import { DocsParser } from './index.js';
 import { Command } from 'commander';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { existsSync } from 'node:fs';
+import { existsAsync } from '@reciple/utils';
 
 interface Options {
     input: string[];
@@ -35,7 +35,7 @@ const readme = resolve(options.readme);
 const parser = new DocsParser({
     files: options.input,
     custom: options.custom,
-    readme: existsSync(readme) ? readme : undefined
+    readme: await existsAsync(readme) ? readme : undefined
 });
 
 await parser.parse();

@@ -1,7 +1,7 @@
 import { PackageJson } from 'fallout-utility';
 import { readFile } from 'node:fs/promises';
-import { existsSync } from 'node:fs';
 import path from 'node:path';
+import { existsAsync } from '../helpers/fileSystem';
 
 export type ModuleType = 'module'|'commonjs';
 export interface RecursiveDefault<T = unknown> {
@@ -14,10 +14,10 @@ export interface RecursiveDefault<T = unknown> {
  * @param defaultType Default module type if none is detected
  */
 export async function getDirModuleType(dir: string, defaultType: ModuleType = 'commonjs'): Promise<ModuleType> {
-    if (!existsSync(dir)) return defaultType;
+    if (!await existsAsync(dir)) return defaultType;
 
     const packageJSON = path.join(dir, 'package.json');
-    if (!existsSync(packageJSON)) return defaultType;
+    if (!await existsAsync(packageJSON)) return defaultType;
 
     const data: PackageJson = JSON.parse(await readFile(packageJSON, 'utf-8'));
 
