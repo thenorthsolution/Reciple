@@ -38,7 +38,7 @@
     "-": "^0.0.1",
     "@reciple/update-checker": "^9.0.0",
     "@reciple/utils": "^8.2.1",
-    "@sapphire/shapeshift": "^3.9.6",
+    "@sapphire/shapeshift": "^3.9.7",
     "fallout-utility": "^2.8.0",
     "lodash": "^4.17.21",
     "semver": "^7.6.0",
