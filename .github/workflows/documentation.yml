@@ -1,8 +1,10 @@
 name: Generate Docs
+
 on:
+
   push:
-    paths:
-      - 'packages/*/**'
+    branches: ['main']
+    paths: ['packages/*/src/**']
     tags: ['**']
   workflow_dispatch:
 concurrency:
