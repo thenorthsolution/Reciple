@@ -4,3 +4,5 @@ dist
 bin
 logs
 .env
+/.nx
+/packages
