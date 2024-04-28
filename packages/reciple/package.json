@@ -54,7 +54,7 @@
   },
   "devDependencies": {
     "@reciple/core": "^8.3.2",
-    "@types/micromatch": "^4.0.6",
+    "@types/micromatch": "^4.0.7",
     "@types/semver": "^7.5.8",
     "discord.js": "^14.14.1"
   },

@@ -38,7 +38,7 @@
   },
   "dependencies": {
     "@discordjs/collection": "^2.0.0",
-    "discord-api-types": "^0.37.78",
+    "discord-api-types": "^0.37.83",
     "dotenv": "^16.4.5",
     "fallout-utility": "^2.8.0"
   },
