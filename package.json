@@ -7,7 +7,7 @@
     "example"
   ],
   "scripts": {
-    "clean": "rimraf ./packages/bin ./packages/dist ./node_modules/.bin",
+    "clean": "rimraf -g ./packages/*/bin ./packages/*/dist",
     "build": "lerna run build",
     "watch": "tsc --watch --noEmit",
     "test": "npm run start -w example",
