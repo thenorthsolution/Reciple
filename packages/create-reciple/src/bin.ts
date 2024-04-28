@@ -6,8 +6,8 @@ import { PackageManager, resolvePackageManager } from '@reciple/utils';
 import { CliOptions } from './utils/types.js';
 import { confirm, intro, isCancel, multiselect, outro, password, select, text } from '@clack/prompts';
 import { Command } from 'commander';
-import path from 'path';
-import { existsSync, statSync } from 'fs';
+import path from 'node:path';
+import { existsSync, statSync } from 'node:fs';
 import { kleur } from 'fallout-utility';
 import availableAddons from './utils/addons.js';
 

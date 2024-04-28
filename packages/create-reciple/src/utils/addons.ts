@@ -1,6 +1,6 @@
-import { writeFile } from 'fs/promises';
+import { writeFile } from 'node:fs/promises';
 import { runScript } from './helpers.js';
-import path from 'path';
+import path from 'node:path';
 
 export type AddonModuleType = 'cjs'|'cts'|'mjs'|'mts';
 
