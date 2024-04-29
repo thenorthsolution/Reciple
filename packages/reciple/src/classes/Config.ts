@@ -24,6 +24,12 @@ export interface RecipleConfig extends RecipleClientConfig {
         filter?: (file: string) => Awaitable<boolean>;
         disableModuleVersionCheck?: boolean;
     };
+    watch?: {
+        enabled?: boolean;
+        include?: string[];
+        reloadTriggerEvent?: 'all'|'add'|'addDir'|'change'|'unlink'|'unlinkDir';
+        preLoadScript?: string;
+    };
     checkForUpdates?: boolean;
     version?: string;
 }

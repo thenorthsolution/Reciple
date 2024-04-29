@@ -78,6 +78,10 @@ export const config = {
     cooldownSweeperOptions: {
         timer: 1000 * 60 * 60
     },
+    watch: {
+        enabled: true,
+        include: ['./modules']
+    },
     checkForUpdates: false,
     version: `^8.0.0`
 };

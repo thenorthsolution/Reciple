@@ -3,7 +3,7 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "start": "node ../packages/reciple/dist/bin.mjs -c ./reciple.mjs",
+    "start": "node ../packages/reciple/dist/bin.mjs --watch -c ./reciple.mjs",
     "shard": "node shards.js -c reciple.mjs",
     "dev": "nodemon --ext js,mjs,cjs,json --exec \"node ../packages/reciple/dist/bin.mjs -c reciple.mjs\" --signal SIGHUP"
   },

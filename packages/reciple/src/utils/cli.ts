@@ -20,6 +20,7 @@ export let command = new Command()
     .option('-D, --debugmode', 'Enable debug mode')
     .option('-y, --yes', 'Agree to all Reciple confirmation prompts')
     .option('--env <file>', '.env file location')
+    .option('--watch', 'Reload modules on when file changes')
     .option('--shardmode', 'Modifies some functionalities to support sharding')
     .option('--setup', 'Create required config without starting the bot')
     .allowUnknownOption(true);
