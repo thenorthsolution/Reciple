@@ -25,7 +25,6 @@ export interface RecipleConfig extends RecipleClientConfig {
         disableModuleVersionCheck?: boolean;
     };
     watch?: {
-        enabled?: boolean;
         include?: string[];
         ignored?: string|RegExp|((text: string) => boolean)|(string|RegExp|((text: string) => boolean))[];
         reloadTriggerEvent?: 'all'|'add'|'addDir'|'change'|'unlink'|'unlinkDir';

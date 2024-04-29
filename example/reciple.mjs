@@ -79,7 +79,6 @@ export const config = {
         timer: 1000 * 60 * 60
     },
     watch: {
-        enabled: true,
         include: ['./modules']
     },
     checkForUpdates: false,

@@ -73,6 +73,10 @@ export const config = {
     cooldownSweeperOptions: {
         timer: 1000 * 60 * 60
     },
+    watch: {
+        include: ['.'],
+        reloadTriggerEvent: 'all'
+    },
     checkForUpdates: true,
     version: `^${cliVersion}`
 };

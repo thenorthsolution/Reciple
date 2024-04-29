@@ -34,6 +34,7 @@ export interface CLIOptions {
     env?: string;
     shardmode?: boolean;
     setup?: boolean;
+    watch?: boolean;
     [k: string]: any;
 }
 

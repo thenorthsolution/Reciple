@@ -50,8 +50,8 @@ if (cli.shardmode) config.applicationCommandRegister = { ...config.applicationCo
 if (cli.options.token) config.token = resolveEnvProtocol(cli.options.token) ?? config.token;
 
 const processErrorHandler = (err: any) => logger?.error(err);
-const watcher = config.watch?.enabled ? watch(config.watch?.include ?? '.', {
-    ignored: config.watch.ignored,
+const watcher = cli.options.watch ? watch(config.watch?.include ?? '.', {
+    ignored: config.watch?.ignored,
     cwd: cli.cwd
 }) : null;
 
