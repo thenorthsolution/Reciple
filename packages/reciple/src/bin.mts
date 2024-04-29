@@ -101,6 +101,12 @@ async function initializeClient() {
     process.once('uncaughtException', processErrorHandler);
     process.once('unhandledRejection', processErrorHandler);
 
+    if (publicClient) {
+        await publicClient.destroy(true);
+        publicClient = null;
+        initializing = true;
+    }
+
     if (watcher) {
         console.clear();
 
@@ -109,12 +115,6 @@ async function initializeClient() {
     }
 
     logger?.info(`Starting Reciple client v${buildVersion} - ${new Date()}`);
-
-    if (publicClient) {
-        await publicClient.destroy(true);
-        publicClient = null;
-        initializing = true;
-    }
 
     const client = new RecipleClient(config);
     if (logger) client.setLogger(logger);
