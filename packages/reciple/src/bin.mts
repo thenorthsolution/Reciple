@@ -116,6 +116,9 @@ async function initializeClient() {
     }
 
     if (watcher) {
+        process.stdout.write("\u001b[3J\u001b[2J\u001b[1J");
+        console.clear();
+
         logger?.info(kleur.cyan().bold(`\nCurrently On Watch Mode!`));
         logger?.info(kleur.green(`Listening to file changes...\n`));
     }
