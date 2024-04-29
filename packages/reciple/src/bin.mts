@@ -86,6 +86,7 @@ watcher?.on('all', async event => {
             const child = spawn('npm', ['run', config.watch.preLoadScript], {
                 cwd: cli.cwd,
                 env: process.env,
+                shell: true,
                 stdio: ['ignore', 'inherit', 'inherit']
             });
 
