@@ -75,6 +75,7 @@ export const config = {
     },
     watch: {
         include: ['.'],
+        ignore: [/(^|[\/\\])\../],
         reloadTriggerEvent: 'all'
     },
     checkForUpdates: true,

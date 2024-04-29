@@ -54,7 +54,7 @@ if (cli.options.token) config.token = resolveEnvProtocol(cli.options.token) ?? c
 
 const processErrorHandler = (err: any) => logger?.error(err);
 const watcher = cli.options.watch ? watch(config.watch?.include ?? '.', {
-    ignored: config.watch?.ignored,
+    ignored: config.watch?.ignore ?? /(^|[\/\\])\../,
     cwd: cli.cwd
 }) : null;
 

@@ -26,7 +26,7 @@ export interface RecipleConfig extends RecipleClientConfig {
     };
     watch?: {
         include?: string[];
-        ignored?: string|RegExp|((text: string) => boolean)|(string|RegExp|((text: string) => boolean))[];
+        ignore?: string|RegExp|((text: string) => boolean)|(string|RegExp|((text: string) => boolean))[];
         reloadTriggerEvent?: 'all'|'add'|'addDir'|'change'|'unlink'|'unlinkDir';
         preLoadScript?: string;
     };
