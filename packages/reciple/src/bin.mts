@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { ContextMenuCommandBuilder, Logger, MessageCommandBuilder, SlashCommandBuilder, buildVersion } from '@reciple/core';
+import { ContextMenuCommandBuilder, Logger, MessageCommandBuilder, RecipleError, SlashCommandBuilder, buildVersion } from '@reciple/core';
 import { createLogger } from './utils/logger.js';
 import { command, cli, cliVersion, checkForUpdates } from './utils/cli.js';
 import { ProcessInformation, RecipleClient } from './index.js';
@@ -94,10 +94,7 @@ watcher?.on('all', async event => {
                 child.on('error', rej);
             });
 
-            if (code) {
-                logger?.error(`Watch pre-load script exited with code (${code})`);
-                return;
-            }
+            if (code) throw new RecipleError(`Watch pre-load script exited with code (${code})`);
         } catch (err) {
             logger?.error(`An error occured executing pre-load script:`, err);
             return;
@@ -118,8 +115,8 @@ async function initializeClient() {
     }
 
     if (watcher) {
-        logger?.info(kleur.cyan().bold(`Currently On Watch Mode!`));
-        logger?.info(kleur.green(`Listening to file changes...`));
+        logger?.info(kleur.cyan().bold(`\nCurrently On Watch Mode!`));
+        logger?.info(kleur.green(`Listening to file changes...\n`));
     }
 
     logger?.info(`Starting Reciple client v${buildVersion} - ${new Date()}`);
