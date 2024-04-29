@@ -16,7 +16,7 @@ export function formatLogMessage(message: string, logger: Logger, config: Partia
             case LoggerLevel.DEBUG:
                 return kleur.cyan(msg);
             default:
-                return msg;
+                return kleur.reset(msg);
         }
     };
 
