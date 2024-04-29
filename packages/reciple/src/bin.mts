@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
-import { Logger, buildVersion } from '@reciple/core';
+import { ContextMenuCommandBuilder, Logger, MessageCommandBuilder, SlashCommandBuilder, buildVersion } from '@reciple/core';
 import { createLogger } from './utils/logger.js';
-import { command, cli, cliVersion } from './utils/cli.js';
+import { command, cli, cliVersion, checkForUpdates } from './utils/cli.js';
 import { ProcessInformation, RecipleClient } from './index.js';
 import { existsAsync, resolveEnvProtocol } from '@reciple/utils';
 import { ConfigReader } from './classes/Config.js';
@@ -12,8 +12,11 @@ import { parentPort, threadId } from 'node:worker_threads';
 import path from 'node:path';
 import semver from 'semver';
 import { watch } from 'chokidar';
-import { createClient } from './utils/modules.js';
+import { defaultModuleFilesFilter, findModules } from './utils/modules.js';
+import { addEventListenersToClient } from './utils/logger.js';
 import { spawn } from 'node:child_process';
+import { kleur } from 'fallout-utility';
+import { setTimeout as setTimeoutAsync } from 'node:timers/promises';
 
 command.parse();
 
@@ -69,9 +72,8 @@ if (config.version && !semver.satisfies(cliVersion, config.version)) {
     process.exit(1);
 }
 
-logger?.info(`Starting Reciple client v${buildVersion} - ${new Date()}`);
-
-let client = new RecipleClient(config);
+let initializing: boolean = false;
+let publicClient: RecipleClient|null = null;
 
 await initializeClient();
 
@@ -92,19 +94,112 @@ watcher?.on('all', async event => {
         }
     }
 
-    await initializeClient();
-})
+    if (!initializing) await initializeClient();
+});
 
 async function initializeClient() {
     process.once('uncaughtException', processErrorHandler);
     process.once('unhandledRejection', processErrorHandler);
 
-    if (client) {
-        await client.destroy(true);
+    if (watcher) {
         console.clear();
+
+        logger?.info(kleur.cyan(`Currently on watch mode`));
+        logger?.info(kleur.cyan(`Listening to file changes...`));
     }
 
-    client = await createClient(config, logger);
+    logger?.info(`Starting Reciple client v${buildVersion} - ${new Date()}`);
+
+    if (publicClient) {
+        await publicClient.destroy(true);
+        publicClient = null;
+        initializing = true;
+    }
+
+    const client = new RecipleClient(config);
+    if (logger) client.setLogger(logger);
+
+    addEventListenersToClient(client);
+
+    const modules = await client.modules.resolveModuleFiles({
+        files: await findModules(config.modules, (f) => defaultModuleFilesFilter(f)),
+        disableVersionCheck: config.modules?.disableModuleVersionCheck
+    });
+
+    const startedModules = await client.modules.startModules();
+    const failedToStartModules = modules.length - startedModules.length;
+
+    if (failedToStartModules > 0) logger?.error(`Failed to start (${failedToStartModules}) modules.`);
+
+    client.once('ready', async () => {
+        if (!client.isReady()) return;
+
+        logger?.debug(`Client is ready!`);
+
+        const loadedModules = await client.modules.loadModules({ cacheCommands: true });
+        const failedToLoadModules = startedModules.length - loadedModules.length;
+
+        if (failedToLoadModules > 0) logger?.debug(`Failed to load (${failedToLoadModules}) modules.`);
+
+        let stopping = false;
+
+        const unloadModulesAndStopProcess = async (signal: NodeJS.Signals) => {
+            if (stopping) return;
+
+            logger?.debug(`Received exit signal: ${signal}`);
+
+            stopping = true;
+
+            await client.destroy(true);
+
+            const signalString = signal === 'SIGINT' ? 'keyboard interrupt' : signal === 'SIGTERM' ? 'terminate' : String(signal);
+
+            logger?.warn(`Process exited: ${kleur.yellow(signalString)}`);
+            logger?.closeWriteStream();
+
+            await setTimeoutAsync(10);
+            process.exit(0);
+        };
+
+        process.stdin.resume();
+
+        process.once('SIGHUP', unloadModulesAndStopProcess);
+        process.once('SIGINT', unloadModulesAndStopProcess);
+        process.once('SIGQUIT', unloadModulesAndStopProcess);
+        process.once('SIGABRT',unloadModulesAndStopProcess);
+        process.once('SIGALRM', unloadModulesAndStopProcess);
+        process.once('SIGTERM', unloadModulesAndStopProcess);
+        process.once('SIGBREAK', unloadModulesAndStopProcess);
+        process.once('SIGUSR2', unloadModulesAndStopProcess);
+
+        client.on('interactionCreate', interaction => {
+            if (interaction.isContextMenuCommand()) {
+                ContextMenuCommandBuilder.execute({ client, interaction });
+            } else if (interaction.isChatInputCommand()) {
+                SlashCommandBuilder.execute({ client, interaction });
+            }
+        });
+
+        client.on('messageCreate', message => {
+            MessageCommandBuilder.execute({ client, message });
+        });
+
+        if (config.applicationCommandRegister?.enabled !== false) await client.commands.registerApplicationCommands();
+
+        logger?.warn(`Logged in as ${kleur.bold().cyan(client.user.tag)} ${kleur.magenta('(' + client.user.id + ')')}`);
+
+        logger?.log(`Loaded ${client.commands.contextMenuCommands.size} context menu command(s)`);
+        logger?.log(`Loaded ${client.commands.messageCommands.size} message command(s)`);
+        logger?.log(`Loaded ${client.commands.slashCommands.size} slash command(s)`);
+        logger?.log(`Loaded ${client.commands.preconditions.size} precondition(s)`);
+
+        if (config.checkForUpdates) await checkForUpdates(logger ?? undefined);
+    });
+
+    await client.login().then(() => logger?.debug(`Login successful`));
+
+    publicClient = client;
+    initializing = false;
 
     process.removeListener('uncaughtException', processErrorHandler);
     process.removeListener('unhandledRejection', processErrorHandler);
