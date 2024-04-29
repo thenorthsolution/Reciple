@@ -79,22 +79,32 @@ await initializeClient();
 
 watcher?.on('all', async event => {
     if (config.watch?.reloadTriggerEvent && config.watch?.reloadTriggerEvent !== 'all' && config.watch?.reloadTriggerEvent !== event) return;
+    if (initializing) return;
 
     if (config.watch?.preLoadScript) {
-        const child = spawn('npm', ['run', config.watch.preLoadScript], {
-            cwd: cli.cwd,
-            env: process.env,
-            stdio: ['ignore', 'inherit', 'inherit']
-        });
+        try {
+            const child = spawn('npm', ['run', config.watch.preLoadScript], {
+                cwd: cli.cwd,
+                env: process.env,
+                stdio: ['ignore', 'inherit', 'inherit']
+            });
 
-        const code = await new Promise(res => child.on('exit', code => res(code)));
-        if (code) {
-            logger?.error(`Watch pre-load script exited with code (${code})`);
+            const code = await new Promise((res, rej) => {
+                child.on('exit', res);
+                child.on('error', rej);
+            });
+
+            if (code) {
+                logger?.error(`Watch pre-load script exited with code (${code})`);
+                return;
+            }
+        } catch (err) {
+            logger?.error(`An error occured executing pre-load script:`, err);
             return;
         }
     }
 
-    if (!initializing) await initializeClient();
+    await initializeClient();
 });
 
 async function initializeClient() {
@@ -108,10 +118,8 @@ async function initializeClient() {
     }
 
     if (watcher) {
-        console.clear();
-
-        logger?.info(kleur.cyan(`Currently on watch mode`));
-        logger?.info(kleur.cyan(`Listening to file changes...`));
+        logger?.info(kleur.cyan().bold(`Currently On Watch Mode!`));
+        logger?.info(kleur.green(`Listening to file changes...`));
     }
 
     logger?.info(`Starting Reciple client v${buildVersion} - ${new Date()}`);
@@ -156,7 +164,7 @@ async function initializeClient() {
 
             logger?.warn(`Process exited: ${kleur.yellow(signalString)}`);
             logger?.closeWriteStream();
-
+            await watcher?.close();
             await setTimeoutAsync(10);
             process.exit(0);
         };
