@@ -79,7 +79,7 @@ await initializeClient();
 
 watcher?.on('all', async event => {
     if (config.watch?.reloadTriggerEvent && config.watch?.reloadTriggerEvent !== 'all' && config.watch?.reloadTriggerEvent !== event) return;
-    if (initializing || publicClient === null) return;
+    if (initializing) return;
 
     if (config.watch?.preLoadScript) {
         try {
@@ -139,9 +139,18 @@ async function initializeClient() {
     const failedToStartModules = modules.length - startedModules.length;
 
     if (failedToStartModules > 0) logger?.error(`Failed to start (${failedToStartModules}) modules.`);
+    if (publicClient) {
+        await clearClient(client);
+        return;
+    }
 
-    client.once('ready', async () => {
-        if (!client.isReady()) return;
+    client.login().then(() => logger?.debug(`Login successful`));
+
+    await new Promise(res => client.once('ready', async () => {
+        if (publicClient || !client.isReady()) {
+            await clearClient(client);
+            return res(client);
+        }
 
         logger?.debug(`Client is ready!`);
 
@@ -203,13 +212,17 @@ async function initializeClient() {
         logger?.log(`Loaded ${client.commands.preconditions.size} precondition(s)`);
 
         if (config.checkForUpdates) await checkForUpdates(logger ?? undefined);
-    });
 
-    await client.login().then(() => logger?.debug(`Login successful`));
-
-    publicClient = client;
-    initializing = false;
+        publicClient = client;
+        initializing = false;
+        res(client);
+    }));
 
     process.removeListener('uncaughtException', processErrorHandler);
     process.removeListener('unhandledRejection', processErrorHandler);
+}
+
+async function clearClient(client: RecipleClient) {
+    await client.setLogger(null).destroy();
+    initializing = false;
 }
