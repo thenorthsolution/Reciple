@@ -83,7 +83,7 @@ watcher?.on('all', async event => {
 
     if (config.watch?.preLoadScript) {
         try {
-            const child = spawn('npm', ['run', config.watch.preLoadScript], {
+            const child = spawn('npm', ['run', cli.options.watchPreloadScript ?? config.watch.preLoadScript], {
                 cwd: cli.cwd,
                 env: process.env,
                 shell: true,

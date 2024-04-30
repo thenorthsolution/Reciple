@@ -37,8 +37,7 @@ export const packages = {
     'TYPESCRIPT': packageJson.devDependencies!['typescript'],
     'RIMRAF': packageJson.devDependencies!['rimraf'],
     'RECIPLE': packageJson.devDependencies!['reciple'],
-    'DISCORDJS': packageJson.devDependencies!['discord.js'],
-    'NODEMON': packageJson.devDependencies!['nodemon']
+    'DISCORDJS': packageJson.devDependencies!['discord.js']
 };
 
 export const packageManagerPlaceholders = {
