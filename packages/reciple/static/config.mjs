@@ -75,7 +75,7 @@ export const config = {
     },
     watch: {
         include: ['.'],
-        ignore: [/(^|[\/\\])\../],
+        ignore: [/(^|[\/\\])\../, './logs', './node_modules'],
         reloadTriggerEvent: 'all'
     },
     checkForUpdates: true,
