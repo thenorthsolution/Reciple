@@ -106,8 +106,8 @@ watcher?.on('all', async event => {
 });
 
 async function initializeClient() {
-    process.once('uncaughtException', processErrorHandler);
-    process.once('unhandledRejection', processErrorHandler);
+    process.on('uncaughtException', processErrorHandler);
+    process.on('unhandledRejection', processErrorHandler);
 
     if (publicClient) {
         await publicClient.destroy(true);
@@ -131,7 +131,7 @@ async function initializeClient() {
     addEventListenersToClient(client);
 
     const modules = await client.modules.resolveModuleFiles({
-        files: await findModules(config.modules, (f) => defaultModuleFilesFilter(f)),
+        files: (await findModules(config.modules, (f) => defaultModuleFilesFilter(f))).map(f => watcher ? `${f}?time=${Date.now()}` : f),
         disableVersionCheck: config.modules?.disableModuleVersionCheck
     });
 
