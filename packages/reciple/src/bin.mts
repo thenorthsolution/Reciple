@@ -79,7 +79,7 @@ await initializeClient();
 
 watcher?.on('all', async event => {
     if (config.watch?.reloadTriggerEvent && config.watch?.reloadTriggerEvent !== 'all' && config.watch?.reloadTriggerEvent !== event) return;
-    if (initializing) return;
+    if (initializing || publicClient === null) return;
 
     if (config.watch?.preLoadScript) {
         try {
