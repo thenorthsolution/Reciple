@@ -41,13 +41,13 @@
     "@sapphire/shapeshift": "^3.9.7",
     "fallout-utility": "^2.8.0",
     "lodash": "^4.17.21",
-    "semver": "^7.6.0",
+    "semver": "^7.6.1",
     "ts-mixer": "^6.0.4"
   },
   "devDependencies": {
-    "@types/lodash": "^4.17.0",
+    "@types/lodash": "^4.17.1",
     "@types/semver": "^7.5.8",
-    "discord.js": "^14.14.1"
+    "discord.js": "^14.15.2"
   },
   "peerDependencies": {
     "discord.js": "^14.9.0"

@@ -50,13 +50,13 @@
     "globby": "^14.0.1",
     "micromatch": "^4.0.5",
     "prompts": "^2.4.2",
-    "semver": "^7.6.0"
+    "semver": "^7.6.1"
   },
   "devDependencies": {
     "@reciple/core": "^8.3.2",
     "@types/micromatch": "^4.0.7",
     "@types/semver": "^7.5.8",
-    "discord.js": "^14.14.1"
+    "discord.js": "^14.15.2"
   },
   "peerDependencies": {
     "@reciple/core": "^8.0.0",
