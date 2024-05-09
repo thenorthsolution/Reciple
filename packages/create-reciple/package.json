@@ -37,8 +37,8 @@
   },
   "devDependencies": {
     "@reciple/core": "^8.3.2",
-    "@types/node": "^20.12.7",
-    "discord.js": "^14.14.1",
+    "@types/node": "^20.12.11",
+    "discord.js": "^14.15.2",
     "nodemon": "^3.1.0",
     "reciple": "^8.3.2",
     "rimraf": "^5.0.5",
