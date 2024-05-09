@@ -1,10 +1,10 @@
-import { ApplicationCommandType, Awaitable, ChatInputCommandInteraction, isJSONEncodable, JSONEncodable, SlashCommandBuilder as DiscordJsSlashCommandBuilder, SharedSlashCommandOptions, RESTPostAPIChatInputApplicationCommandsJSONBody, SlashCommandSubcommandGroupBuilder, SlashCommandSubcommandBuilder, SlashCommandAttachmentOption, SlashCommandBooleanOption, SlashCommandChannelOption, SlashCommandIntegerOption, SlashCommandMentionableOption, SlashCommandNumberOption, SlashCommandRoleOption, SlashCommandStringOption, SlashCommandUserOption, ApplicationCommandOptionType, ApplicationCommandOptionAllowedChannelTypes, PermissionResolvable, PermissionsBitField } from 'discord.js';
+import { Awaitable, ChatInputCommandInteraction, JSONEncodable, SlashCommandBuilder as DiscordJsSlashCommandBuilder, RESTPostAPIChatInputApplicationCommandsJSONBody, ApplicationCommandType, SharedSlashCommandOptions, ApplicationCommandOptionType, SlashCommandStringOption, SlashCommandIntegerOption, SlashCommandBooleanOption, SlashCommandUserOption, SlashCommandChannelOption, ApplicationCommandOptionAllowedChannelTypes, SlashCommandRoleOption, SlashCommandMentionableOption, SlashCommandNumberOption, SlashCommandAttachmentOption, SlashCommandSubcommandBuilder, SlashCommandSubcommandGroupBuilder, isJSONEncodable, PermissionsBitField, PermissionResolvable } from 'discord.js';
 import { AnyNonSubcommandSlashCommandOptionBuilder, AnySlashCommandOptionBuilder, AnySlashCommandOptionData, CommandHaltData } from '../../types/structures';
 import { BaseCommandBuilder, BaseCommandBuilderData } from './BaseCommandBuilder';
 import { CommandHaltReason, CommandType } from '../../types/constants';
 import { RecipleClient } from '../structures/RecipleClient';
-import { CooldownData } from '../structures/Cooldown';
 import { Mixin } from 'ts-mixer';
+import { CooldownData } from '../structures/Cooldown';
 
 export interface SlashCommandExecuteData {
     type: CommandType.SlashCommand;
@@ -37,30 +37,30 @@ export interface SlashCommandBuilder extends DiscordJsSlashCommandBuilder, BaseC
     addSubcommandGroup(input: SlashCommandSubcommandGroupBuilder|((subcommandGroup: SlashCommandSubcommandGroupBuilder) => SlashCommandSubcommandGroupBuilder)): Omit<this, SlashCommandBuilderNonSubcommandAddOptionMethods>;
     addSubcommand(input: SlashCommandSubcommandBuilder|((subcommandGroup: SlashCommandSubcommandBuilder) => SlashCommandSubcommandBuilder)): Omit<this, SlashCommandBuilderNonSubcommandAddOptionMethods>;
 
-    addBooleanOption(input: SlashCommandBooleanOption|((builder: SlashCommandBooleanOption) => SlashCommandBooleanOption)): Omit<this, SlashCommandBuilderSubcommandAddOptionMethods>;
-    addUserOption(input: SlashCommandUserOption|((builder: SlashCommandUserOption) => SlashCommandUserOption)): Omit<this, SlashCommandBuilderSubcommandAddOptionMethods>;
-    addChannelOption(input: SlashCommandChannelOption|((builder: SlashCommandChannelOption) => SlashCommandChannelOption)): Omit<this, SlashCommandBuilderSubcommandAddOptionMethods>;
-    addRoleOption(input: SlashCommandRoleOption|((builder: SlashCommandRoleOption) => SlashCommandRoleOption)): Omit<this, SlashCommandBuilderSubcommandAddOptionMethods>;
-    addAttachmentOption(input: SlashCommandAttachmentOption|((builder: SlashCommandAttachmentOption) => SlashCommandAttachmentOption)): Omit<this, SlashCommandBuilderSubcommandAddOptionMethods>;
-    addMentionableOption(input: SlashCommandMentionableOption|((builder: SlashCommandMentionableOption) => SlashCommandMentionableOption)): Omit<this, SlashCommandBuilderSubcommandAddOptionMethods>;
+    addBooleanOption(input: SlashCommandBooleanOption|((builder: SlashCommandBooleanOption) => SlashCommandBooleanOption)): SharedSlashCommandOptions<any> & Omit<this, SlashCommandBuilderSubcommandAddOptionMethods>;
+    addUserOption(input: SlashCommandUserOption|((builder: SlashCommandUserOption) => SlashCommandUserOption)): SharedSlashCommandOptions<any> & Omit<this, SlashCommandBuilderSubcommandAddOptionMethods>;
+    addChannelOption(input: SlashCommandChannelOption|((builder: SlashCommandChannelOption) => SlashCommandChannelOption)): SharedSlashCommandOptions<any> & Omit<this, SlashCommandBuilderSubcommandAddOptionMethods>;
+    addRoleOption(input: SlashCommandRoleOption|((builder: SlashCommandRoleOption) => SlashCommandRoleOption)): SharedSlashCommandOptions<any> & Omit<this, SlashCommandBuilderSubcommandAddOptionMethods>;
+    addAttachmentOption(input: SlashCommandAttachmentOption|((builder: SlashCommandAttachmentOption) => SlashCommandAttachmentOption)): SharedSlashCommandOptions<any> & Omit<this, SlashCommandBuilderSubcommandAddOptionMethods>;
+    addMentionableOption(input: SlashCommandMentionableOption|((builder: SlashCommandMentionableOption) => SlashCommandMentionableOption)): SharedSlashCommandOptions<any> & Omit<this, SlashCommandBuilderSubcommandAddOptionMethods>;
     addStringOption(input:
         | SlashCommandStringOption
         | Omit<SlashCommandStringOption, 'setAutocomplete'>
         | Omit<SlashCommandStringOption, 'addChoices'>
         | ((builder: SlashCommandStringOption) => SlashCommandStringOption | Omit<SlashCommandStringOption, 'setAutocomplete'> | Omit<SlashCommandStringOption, 'addChoices'>)
-    ): Omit<this, SlashCommandBuilderSubcommandAddOptionMethods>;
+    ): SharedSlashCommandOptions<any> & Omit<this, SlashCommandBuilderSubcommandAddOptionMethods>;
     addIntegerOption(input:
         | SlashCommandIntegerOption
         | Omit<SlashCommandIntegerOption, 'setAutocomplete'>
         | Omit<SlashCommandIntegerOption, 'addChoices'>
         | ((builder: SlashCommandIntegerOption) => SlashCommandIntegerOption | Omit<SlashCommandIntegerOption, 'setAutocomplete'> | Omit<SlashCommandIntegerOption, 'addChoices'>)
-    ): Omit<this, SlashCommandBuilderSubcommandAddOptionMethods>;
+    ): SharedSlashCommandOptions<any> & Omit<this, SlashCommandBuilderSubcommandAddOptionMethods>;
     addNumberOption(input:
         | SlashCommandNumberOption
         | Omit<SlashCommandNumberOption, 'setAutocomplete'>
         | Omit<SlashCommandNumberOption, 'addChoices'>
         | ((builder: SlashCommandNumberOption) => SlashCommandNumberOption | Omit<SlashCommandNumberOption, 'setAutocomplete'> | Omit<SlashCommandNumberOption, 'addChoices'>)
-    ): Omit<this, SlashCommandBuilderSubcommandAddOptionMethods>;
+    ): SharedSlashCommandOptions<any> & Omit<this, SlashCommandBuilderSubcommandAddOptionMethods>;
 }
 
 export class SlashCommandBuilder extends Mixin(DiscordJsSlashCommandBuilder, BaseCommandBuilder) {
@@ -105,7 +105,7 @@ export class SlashCommandBuilder extends Mixin(DiscordJsSlashCommandBuilder, Bas
         }
     }
 
-    public static addOption<Builder extends SharedSlashCommandOptions>(builder: Builder, option: AnySlashCommandOptionBuilder): Builder {
+    public static addOption<Builder extends SharedSlashCommandOptions<any>>(builder: Builder, option: AnySlashCommandOptionBuilder): Builder {
         if (option instanceof SlashCommandAttachmentOption) {
             builder.addAttachmentOption(option);
         } else if (option instanceof SlashCommandBooleanOption) {
