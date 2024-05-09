@@ -1,4 +1,4 @@
-import { Base64Resolvable, BufferResolvable, DiscordjsError, DiscordjsErrorCodes, DiscordjsTypeError, ResolvedFile } from 'discord.js';
+import { Base64Resolvable, BufferResolvable, DiscordjsErrorCodes, ResolvedFile } from 'discord.js';
 import { readFile, stat } from 'node:fs/promises';
 import path from 'node:path';
 
@@ -41,10 +41,10 @@ export class ImageBase64 {
             const file = path.resolve(resource);
             const stats = await stat(file);
 
-            if (!stats.isFile()) throw new DiscordjsError(DiscordjsErrorCodes.FileNotFound, file);
+            if (!stats.isFile()) throw new Error(DiscordjsErrorCodes.FileNotFound, { cause: file });
             return { data: await readFile(file) };
         }
 
-        throw new DiscordjsTypeError(DiscordjsErrorCodes.ReqResourceType);
+        throw new Error(DiscordjsErrorCodes.ReqResourceType);
     }
 }
