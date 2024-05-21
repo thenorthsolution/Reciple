@@ -27,6 +27,8 @@ export interface SlashCommandBuilderData extends BaseCommandBuilderData, Omit<RE
 export type SlashCommandBuilderNonSubcommandAddOptionMethods = 'addBooleanOption'|'addUserOption'|'addChannelOption'|'addRoleOption'|'addAttachmentOption'|'addMentionableOption'|'addStringOption'|'addIntegerOption'|'addNumberOption';
 export type SlashCommandBuilderSubcommandAddOptionMethods = 'addSubcommand'|'addSubcommandGroup';
 
+export class SlashCommandSharedPrivateOptions extends SharedSlashCommandOptions<any> {}
+
 export interface SlashCommandBuilder extends DiscordJsSlashCommandBuilder, BaseCommandBuilder {
     halt?: SlashCommandHaltFunction;
     execute: SlashCommandExecuteFunction;
@@ -37,30 +39,30 @@ export interface SlashCommandBuilder extends DiscordJsSlashCommandBuilder, BaseC
     addSubcommandGroup(input: SlashCommandSubcommandGroupBuilder|((subcommandGroup: SlashCommandSubcommandGroupBuilder) => SlashCommandSubcommandGroupBuilder)): Omit<this, SlashCommandBuilderNonSubcommandAddOptionMethods>;
     addSubcommand(input: SlashCommandSubcommandBuilder|((subcommandGroup: SlashCommandSubcommandBuilder) => SlashCommandSubcommandBuilder)): Omit<this, SlashCommandBuilderNonSubcommandAddOptionMethods>;
 
-    addBooleanOption(input: SlashCommandBooleanOption|((builder: SlashCommandBooleanOption) => SlashCommandBooleanOption)): SharedSlashCommandOptions<any> & Omit<this, SlashCommandBuilderSubcommandAddOptionMethods>;
-    addUserOption(input: SlashCommandUserOption|((builder: SlashCommandUserOption) => SlashCommandUserOption)): SharedSlashCommandOptions<any> & Omit<this, SlashCommandBuilderSubcommandAddOptionMethods>;
-    addChannelOption(input: SlashCommandChannelOption|((builder: SlashCommandChannelOption) => SlashCommandChannelOption)): SharedSlashCommandOptions<any> & Omit<this, SlashCommandBuilderSubcommandAddOptionMethods>;
-    addRoleOption(input: SlashCommandRoleOption|((builder: SlashCommandRoleOption) => SlashCommandRoleOption)): SharedSlashCommandOptions<any> & Omit<this, SlashCommandBuilderSubcommandAddOptionMethods>;
-    addAttachmentOption(input: SlashCommandAttachmentOption|((builder: SlashCommandAttachmentOption) => SlashCommandAttachmentOption)): SharedSlashCommandOptions<any> & Omit<this, SlashCommandBuilderSubcommandAddOptionMethods>;
-    addMentionableOption(input: SlashCommandMentionableOption|((builder: SlashCommandMentionableOption) => SlashCommandMentionableOption)): SharedSlashCommandOptions<any> & Omit<this, SlashCommandBuilderSubcommandAddOptionMethods>;
+    addBooleanOption(input: SlashCommandBooleanOption|((builder: SlashCommandBooleanOption) => SlashCommandBooleanOption)): Omit<this, SlashCommandBuilderSubcommandAddOptionMethods> & SlashCommandSharedPrivateOptions;
+    addUserOption(input: SlashCommandUserOption|((builder: SlashCommandUserOption) => SlashCommandUserOption)): Omit<this, SlashCommandBuilderSubcommandAddOptionMethods> & SlashCommandSharedPrivateOptions;
+    addChannelOption(input: SlashCommandChannelOption|((builder: SlashCommandChannelOption) => SlashCommandChannelOption)): Omit<this, SlashCommandBuilderSubcommandAddOptionMethods> & SlashCommandSharedPrivateOptions;
+    addRoleOption(input: SlashCommandRoleOption|((builder: SlashCommandRoleOption) => SlashCommandRoleOption)): Omit<this, SlashCommandBuilderSubcommandAddOptionMethods> & SlashCommandSharedPrivateOptions;
+    addAttachmentOption(input: SlashCommandAttachmentOption|((builder: SlashCommandAttachmentOption) => SlashCommandAttachmentOption)): Omit<this, SlashCommandBuilderSubcommandAddOptionMethods> & SlashCommandSharedPrivateOptions;
+    addMentionableOption(input: SlashCommandMentionableOption|((builder: SlashCommandMentionableOption) => SlashCommandMentionableOption)): Omit<this, SlashCommandBuilderSubcommandAddOptionMethods> & SlashCommandSharedPrivateOptions;
     addStringOption(input:
         | SlashCommandStringOption
         | Omit<SlashCommandStringOption, 'setAutocomplete'>
         | Omit<SlashCommandStringOption, 'addChoices'>
         | ((builder: SlashCommandStringOption) => SlashCommandStringOption | Omit<SlashCommandStringOption, 'setAutocomplete'> | Omit<SlashCommandStringOption, 'addChoices'>)
-    ): SharedSlashCommandOptions<any> & Omit<this, SlashCommandBuilderSubcommandAddOptionMethods>;
+    ): Omit<this, SlashCommandBuilderSubcommandAddOptionMethods> & SlashCommandSharedPrivateOptions;
     addIntegerOption(input:
         | SlashCommandIntegerOption
         | Omit<SlashCommandIntegerOption, 'setAutocomplete'>
         | Omit<SlashCommandIntegerOption, 'addChoices'>
         | ((builder: SlashCommandIntegerOption) => SlashCommandIntegerOption | Omit<SlashCommandIntegerOption, 'setAutocomplete'> | Omit<SlashCommandIntegerOption, 'addChoices'>)
-    ): SharedSlashCommandOptions<any> & Omit<this, SlashCommandBuilderSubcommandAddOptionMethods>;
+    ): Omit<this, SlashCommandBuilderSubcommandAddOptionMethods> & SlashCommandSharedPrivateOptions;
     addNumberOption(input:
         | SlashCommandNumberOption
         | Omit<SlashCommandNumberOption, 'setAutocomplete'>
         | Omit<SlashCommandNumberOption, 'addChoices'>
         | ((builder: SlashCommandNumberOption) => SlashCommandNumberOption | Omit<SlashCommandNumberOption, 'setAutocomplete'> | Omit<SlashCommandNumberOption, 'addChoices'>)
-    ): SharedSlashCommandOptions<any> & Omit<this, SlashCommandBuilderSubcommandAddOptionMethods>;
+    ): Omit<this, SlashCommandBuilderSubcommandAddOptionMethods> & SlashCommandSharedPrivateOptions;
 }
 
 export class SlashCommandBuilder extends Mixin(DiscordJsSlashCommandBuilder, BaseCommandBuilder) {
