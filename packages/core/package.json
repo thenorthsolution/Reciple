@@ -35,7 +35,6 @@
     "README.md"
   ],
   "dependencies": {
-    "-": "^0.0.1",
     "@reciple/update-checker": "^9.1.0",
     "@reciple/utils": "^8.3.0",
     "@sapphire/shapeshift": "^3.9.7",
