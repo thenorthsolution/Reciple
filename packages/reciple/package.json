@@ -41,7 +41,6 @@
     "README.md"
   ],
   "dependencies": {
-    "-": "^0.0.1",
     "@reciple/update-checker": "^9.1.0",
     "@reciple/utils": "^8.3.0",
     "commander": "^12.0.0",
