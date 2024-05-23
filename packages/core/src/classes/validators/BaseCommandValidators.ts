@@ -5,13 +5,31 @@ import { RestOrArray, normalizeArray } from 'discord.js';
 import { CommandPreconditionResolvable } from '../structures/CommandPrecondition';
 
 export class BaseCommandValidators extends Validators {
-    public static command_type = BaseCommandValidators.s.nativeEnum(CommandType);
-    public static cooldown = BaseCommandValidators.s.number().finite().positive().lessThanOrEqual(2147483647).optional();
-    public static required_bot_permissions = BaseCommandValidators.permissionResolvable.optional();
-    public static required_member_permissions = BaseCommandValidators.permissionResolvable.optional();
-    public static preconditions = Validators.commandPreconditionResolvable.array();
-    public static halt = BaseCommandValidators.s.instance(Function).optional();
-    public static execute = BaseCommandValidators.s.instance(Function);
+    public static command_type = BaseCommandValidators.s
+        .nativeEnum(CommandType, { message: 'Expected an enum for .command_type' });
+
+    public static cooldown = BaseCommandValidators.s
+        .number({ message: 'Expected number for .cooldown' })
+        .finite({ message: 'Command cooldowns only accepts finite values' })
+        .positive({ message: 'Command cooldowns only accepts positive number' })
+        .lessThanOrEqual(2147483647, { message: 'Command cooldown exceeded safe integer limit' })
+        .optional();
+
+    public static required_bot_permissions = BaseCommandValidators.permissionResolvable
+        .optional();
+
+    public static required_member_permissions = BaseCommandValidators.permissionResolvable
+        .optional();
+
+    public static preconditions = Validators.commandPreconditionResolvable
+        .array({ message: 'Expected an array of preconditions for .preconditions' });
+
+    public static halt = BaseCommandValidators.s
+        .instance(Function, { message: 'Expected a function for .halt' })
+        .optional();
+
+    public static execute = BaseCommandValidators.s
+        .instance(Function, { message: 'Expected a function for .execute' });
 
     public static BaseCommandBuilderData = BaseCommandValidators.s.object({
         command_type: BaseCommandValidators.command_type,
