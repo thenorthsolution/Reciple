@@ -43,13 +43,13 @@
   "dependencies": {
     "@reciple/update-checker": "^9.1.0",
     "@reciple/utils": "^8.3.0",
-    "commander": "^12.0.0",
+    "commander": "^12.1.0",
     "dotenv": "^16.4.5",
-    "fallout-utility": "^2.8.0",
+    "fallout-utility": "^2.9.0",
     "globby": "^14.0.1",
-    "micromatch": "^4.0.5",
+    "micromatch": "^4.0.7",
     "prompts": "^2.4.2",
-    "semver": "^7.6.1"
+    "semver": "^7.6.2"
   },
   "devDependencies": {
     "@reciple/core": "^8.4.2",
