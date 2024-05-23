@@ -3,13 +3,13 @@ import { RecipleModuleData } from '../structures/RecipleModule';
 import { Validators } from './Validators';
 
 export class RecipleModuleDataValidators extends Validators {
-    public static id = RecipleModuleDataValidators.s.string.regex(/^[a-zA-Z0-9_.-]+$/).optional;
-    public static name = RecipleModuleDataValidators.s.string.optional;
-    public static versions = RecipleModuleDataValidators.s.union(RecipleModuleDataValidators.s.string, RecipleModuleDataValidators.s.string.array);
-    public static commands = RecipleModuleDataValidators.s.union(BaseCommandValidators.BaseCommandBuilderData, RecipleModuleDataValidators.jsonEncodable).array.optional;
+    public static id = RecipleModuleDataValidators.s.string().regex(/^[a-zA-Z0-9_.-]+$/).optional();
+    public static name = RecipleModuleDataValidators.s.string().optional();
+    public static versions = RecipleModuleDataValidators.s.union([RecipleModuleDataValidators.s.string(), RecipleModuleDataValidators.s.string().array()]);
+    public static commands = RecipleModuleDataValidators.s.union([BaseCommandValidators.BaseCommandBuilderData, RecipleModuleDataValidators.jsonEncodable]).array().optional();
     public static onStart = RecipleModuleDataValidators.s.instance(Function);
-    public static onLoad = RecipleModuleDataValidators.s.instance(Function).optional;
-    public static onUnload = RecipleModuleDataValidators.s.instance(Function).optional;
+    public static onLoad = RecipleModuleDataValidators.s.instance(Function).optional();
+    public static onUnload = RecipleModuleDataValidators.s.instance(Function).optional();
 
     public static RecipleModuleData = RecipleModuleDataValidators.s.object({
         id: RecipleModuleDataValidators.id,

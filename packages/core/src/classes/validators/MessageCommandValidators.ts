@@ -3,13 +3,13 @@ import { MessageCommandBuilderData } from '../builders/MessageCommandBuilder';
 import { BaseCommandValidators } from './BaseCommandValidators';
 
 export class MessageCommandValidators extends BaseCommandValidators {
-    public static name = MessageCommandValidators.s.string.lengthGreaterThanOrEqual(1).lengthLessThanOrEqual(32).regex(/^[\p{Ll}\p{Lm}\p{Lo}\p{N}\p{sc=Devanagari}\p{sc=Thai}_-]+$/u);
-    public static description = MessageCommandValidators.s.string.lengthGreaterThanOrEqual(1).lengthLessThanOrEqual(100);
-    public static aliases = MessageCommandValidators.name.array.optional;
-    public static validate_options = MessageCommandValidators.s.boolean.optional;
-    public static dm_permission = MessageCommandValidators.s.boolean.optional;
-    public static allow_bot = MessageCommandValidators.s.boolean.optional;
-    public static options = MessageCommandOptionValidators.MessageCommandOptionResolvable.array.optional;
+    public static name = MessageCommandValidators.s.string().lengthGreaterThanOrEqual(1).lengthLessThanOrEqual(32).regex(/^[\p{Ll}\p{Lm}\p{Lo}\p{N}\p{sc=Devanagari}\p{sc=Thai}_-]+$/u);
+    public static description = MessageCommandValidators.s.string().lengthGreaterThanOrEqual(1).lengthLessThanOrEqual(100);
+    public static aliases = MessageCommandValidators.name.array().optional();
+    public static validate_options = MessageCommandValidators.s.boolean().optional();
+    public static dm_permission = MessageCommandValidators.s.boolean().optional();
+    public static allow_bot = MessageCommandValidators.s.boolean().optional();
+    public static options = MessageCommandOptionValidators.MessageCommandOptionResolvable.array().optional();
 
     public static isValidName(name: unknown): asserts name is MessageCommandBuilderData['name'] {
         MessageCommandValidators.name.setValidationEnabled(MessageCommandValidators.isValidationEnabled).parse(name);

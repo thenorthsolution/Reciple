@@ -6,11 +6,11 @@ import { CommandPreconditionResolvable } from '../structures/CommandPrecondition
 
 export class BaseCommandValidators extends Validators {
     public static command_type = BaseCommandValidators.s.nativeEnum(CommandType);
-    public static cooldown = BaseCommandValidators.s.number.finite.positive.lessThanOrEqual(2147483647).optional;
-    public static required_bot_permissions = BaseCommandValidators.permissionResolvable.optional;
-    public static required_member_permissions = BaseCommandValidators.permissionResolvable.optional;
-    public static preconditions = Validators.commandPreconditionResolvable.array;
-    public static halt = BaseCommandValidators.s.instance(Function).optional;
+    public static cooldown = BaseCommandValidators.s.number().finite().positive().lessThanOrEqual(2147483647).optional();
+    public static required_bot_permissions = BaseCommandValidators.permissionResolvable.optional();
+    public static required_member_permissions = BaseCommandValidators.permissionResolvable.optional();
+    public static preconditions = Validators.commandPreconditionResolvable.array();
+    public static halt = BaseCommandValidators.s.instance(Function).optional();
     public static execute = BaseCommandValidators.s.instance(Function);
 
     public static BaseCommandBuilderData = BaseCommandValidators.s.object({
@@ -40,7 +40,7 @@ export class BaseCommandValidators extends Validators {
     }
 
     public static isValidPreconditions(preconditions: unknown): asserts preconditions is BaseCommandBuilderData['preconditions'] {
-        BaseCommandValidators.s.any.array.setValidationEnabled(BaseCommandValidators.isValidationEnabled).parse(preconditions);
+        BaseCommandValidators.s.any().array().setValidationEnabled(BaseCommandValidators.isValidationEnabled).parse(preconditions);
 
         const data = normalizeArray(preconditions as RestOrArray<CommandPreconditionResolvable>);
 
