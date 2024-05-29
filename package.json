@@ -11,8 +11,8 @@
     "build": "turbo run build",
     "watch": "tsc --watch --noEmit",
     "test": "npm run start -w example",
-    "publish:dev": "changeset version && changeset publish",
-    "publish": "changeset version && changeset publish",
+    "publish-packages:dev": "changeset version && changeset publish",
+    "publish-packages": "changeset version && changeset publish",
     "docs": "rimraf -g ./packages/*/docs/docs.json && turbo run docs"
   },
   "devDependencies": {
