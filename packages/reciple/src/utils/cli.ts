@@ -1,5 +1,5 @@
 import { isMainThread, parentPort, threadId } from 'node:worker_threads';
-import { UpdateData, checkLatestUpdate } from '@reciple/update-checker';
+import { UpdateData, checkLatestUpdate } from '@reciple/utils';
 import { Logger, buildVersion } from '@reciple/core';
 import { fileURLToPath } from 'node:url';
 import { kleur } from 'fallout-utility';

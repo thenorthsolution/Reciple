@@ -9,5 +9,4 @@
 ### Patch Changes
 
 - Updated dependencies [5705459]
-  - @reciple/update-checker@10.0.0
   - @reciple/utils@9.0.0
