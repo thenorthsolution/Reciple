@@ -8,13 +8,11 @@
       "outputs": ["dist"],
       "inputs": ["src/**"],
       "cache": true,
-      "dependsOn": ["^build"],
-      "outputMode": "errors-only"
+      "dependsOn": ["^build"]
     },
     "docs": {
       "outputs": ["./docs/docs.json"],
-      "inputs": ["./src/**/*"],
-      "outputMode": "errors-only"
+      "inputs": ["./src/**/*"]
     }
   }
 }
