@@ -1,11 +1,11 @@
 import { RecipleModuleDataValidators } from '../validators/RecipleModuleDataValidators.js';
 import { Awaitable, Collection, Constructable, isJSONEncodable } from 'discord.js';
 import { RecipleModule, RecipleModuleData } from '../structures/RecipleModule.js';
+import { StrictTypedEmitter } from 'fallout-utility/StrictTypedEmitter';
 import { RecursiveDefault, recursiveDefaults } from '@reciple/utils';
 import { AnyCommandResolvable } from '../../types/structures.js';
 import { RecipleClient } from '../structures/RecipleClient.js';
 import { RecipleError } from '../structures/RecipleError.js';
-import { TypedEmitter } from 'fallout-utility/TypedEmitter';
 import { CommandType } from '../../types/constants.js';
 import { DataManager } from './DataManager.js';
 import { Mixin } from 'ts-mixer';
@@ -47,9 +47,9 @@ export interface ModuleManagerResolveModuleFiles<D extends RecipleModuleData = R
     cacheModules?: boolean;
 }
 
-export interface ModuleManager extends DataManager<RecipleModule>, TypedEmitter<ModuleManagerEvents> {}
+export interface ModuleManager extends DataManager<RecipleModule>, StrictTypedEmitter<ModuleManagerEvents> {}
 
-export class ModuleManager extends Mixin(DataManager<RecipleModule>, TypedEmitter as Constructable<TypedEmitter<ModuleManagerEvents>>) {
+export class ModuleManager extends Mixin(DataManager<RecipleModule>, StrictTypedEmitter as Constructable<StrictTypedEmitter<ModuleManagerEvents>>) {
     constructor(client: RecipleClient) {
         super(client);
     }
