@@ -1,10 +1,11 @@
 import { Logger, RecipleClientConfig, RecipleError } from '@reciple/core';
-import { recursiveDefaults, getDirModuleType, existsAsync } from '@reciple/utils';
+import { recursiveDefaults, existsAsync } from '@reciple/utils';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { kleur } from 'fallout-utility/strings';
-import { cliVersion } from '../utils/cli';
+import { cliVersion } from '../utils/cli.js';
 import { Awaitable } from 'discord.js';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 export interface RecipleConfig extends RecipleClientConfig {
     logger?: {
@@ -33,24 +34,17 @@ export interface RecipleConfigJS {
 }
 
 export class ConfigReader {
-    public static defaultConfigFile = path.join(__dirname, '../../static/config.mjs');
+    public static defaultConfigFile = path.join(path.dirname(fileURLToPath(import.meta.url)), '../../static/config.mjs');
 
     public static async readDefaultConfig(): Promise<RecipleConfigJS> {
         return recursiveDefaults<RecipleConfigJS>(await import(this.defaultConfigFile))!;
     }
 
-    public static async getDefaultConfigData(useCommonJS?: boolean): Promise<string> {
+    public static async getDefaultConfigData(): Promise<string> {
         let defaultConfig = (await readFile(this.defaultConfigFile, 'utf-8')).replaceAll('\r\n', '\n');
 
         defaultConfig = defaultConfig.replace(`import { cliVersion } from 'reciple';\n`, '');
         defaultConfig = defaultConfig.replace('version: `^${cliVersion}`', 'version: `^'+ cliVersion +'`');
-
-        if (useCommonJS) {
-            defaultConfig = defaultConfig.replace(`import { CooldownPrecondition, CommandPermissionsPrecondition } from 'reciple';`, `const { CooldownPrecondition, CommandPermissionsPrecondition } = require('reciple');`);
-            defaultConfig = defaultConfig.replace(`import { IntentsBitField } from 'discord.js';`, `const { IntentsBitField } = require('discord.js');`);
-            defaultConfig = defaultConfig.replace(`export const config`, `const config`);
-            defaultConfig += `\nmodule.exports = { config };\n`;
-        }
 
         return defaultConfig;
     }
@@ -71,11 +65,10 @@ export class ConfigReader {
         }
 
         const file = path.resolve(config);
-        const isFile = path.isAbsolute(config) || await existsAsync(file) || ['reciple.js', 'reciple.mjs', 'reciple.cjs'].includes(config);
+        const isFile = path.isAbsolute(config) || await existsAsync(file) || ['reciple.js', 'reciple.mjs'].includes(config);
 
         if (isFile) {
-            const isCommonJS = file.endsWith('.cjs') || ((await getDirModuleType(path.dirname(file))) === 'commonjs');
-            const defaultConfig = await this.getDefaultConfigData(!file.endsWith('.mjs') && isCommonJS);
+            const defaultConfig = await this.getDefaultConfigData();
 
             if (!await existsAsync(file)) {
                 if (!createIfNotExists) return null;

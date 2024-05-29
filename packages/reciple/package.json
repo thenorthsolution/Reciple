@@ -4,10 +4,10 @@
   "homepage": "https://reciple.js.org/docs/reciple",
   "license": "GPL-3.0",
   "version": "8.4.2",
-  "main": "./dist/index.js",
   "module": "./dist/esm.mjs",
   "types": "./dist/index.d.ts",
   "bin": "./dist/bin.mjs",
+  "type": "module",
   "keywords": [
     "reciple",
     "discord.js",
@@ -22,8 +22,7 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/esm.mjs",
-      "require": "./dist/index.js"
+      "import": "./dist/esm.mjs"
     },
     "./config.mjs": {
       "types": "./static/config.d.mts",

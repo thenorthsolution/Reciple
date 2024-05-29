@@ -1,8 +1,8 @@
 import { RecipleClient as Client } from '@reciple/core';
-import { RecipleConfig } from './classes/Config';
+import { RecipleConfig } from './classes/Config.js';
 
 export * from '@reciple/core';
-export * from './exports';
+export * from './exports.js';
 
 export { config as loadEnv } from 'dotenv';
 

@@ -1,11 +1,11 @@
+import { isMainThread, parentPort, threadId } from 'node:worker_threads';
+import { UpdateData, checkLatestUpdate } from '@reciple/update-checker';
 import { Logger, buildVersion } from '@reciple/core';
+import { kleur } from 'fallout-utility';
 import { readFileSync } from 'node:fs';
 import { Command } from 'commander';
 import { coerce } from 'semver';
 import path from 'node:path';
-import { UpdateData, checkLatestUpdate } from '@reciple/update-checker';
-import { kleur } from 'fallout-utility';
-import { isMainThread, parentPort, threadId } from 'node:worker_threads';
 
 const { version, description } = JSON.parse(readFileSync(path.join(__dirname, '../../package.json'), 'utf-8'));
 const originalCwd = process.cwd();

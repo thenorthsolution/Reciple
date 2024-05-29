@@ -2,15 +2,15 @@
 
 import { ContextMenuCommandBuilder, Logger, MessageCommandBuilder, SlashCommandBuilder, buildVersion } from '@reciple/core';
 import { createLogger, addEventListenersToClient } from './utils/logger.js';
-import { setTimeout as setTimeoutAsync } from 'node:timers/promises';
 import { command, cli, cliVersion, checkForUpdates } from './utils/cli.js';
 import { ProcessInformation, RecipleClient, findModules } from './index.js';
+import { setTimeout as setTimeoutAsync } from 'node:timers/promises';
 import { existsAsync, resolveEnvProtocol } from '@reciple/utils';
+import { parentPort, threadId } from 'node:worker_threads';
 import { ConfigReader } from './classes/Config.js';
 import { config as loadEnv } from 'dotenv';
 import { mkdir } from 'node:fs/promises';
 import { kleur } from 'fallout-utility';
-import { parentPort, threadId } from 'node:worker_threads';
 import path from 'node:path';
 import semver from 'semver';
 
