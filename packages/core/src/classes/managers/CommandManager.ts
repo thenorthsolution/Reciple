@@ -7,7 +7,7 @@ import { MessageCommandBuilder, MessageCommandExecuteData } from '../builders/Me
 import { RecipleClient } from '../structures/RecipleClient.js';
 import { CommandType } from '../../types/constants.js';
 import { Utils } from '../structures/Utils.js';
-import { defaultsDeep } from 'lodash';
+import defaultsDeep from 'lodash.defaultsdeep';
 
 export interface CommandManagerRegisterCommandsOptions extends Omit<Exclude<RecipleClientConfig['applicationCommandRegister'], undefined>, 'enabled'> {
     contextMenuCommands?: Partial<RecipleClientInteractionBasedCommandConfigOptions> & {
