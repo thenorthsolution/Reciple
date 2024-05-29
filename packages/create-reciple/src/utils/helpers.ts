@@ -1,14 +1,13 @@
-import { TemplateJson, TemplateMetadata } from './types.js';
 import { copyFile, mkdir, readFile, readdir, stat, writeFile } from 'node:fs/promises';
-import { PackageJson } from 'fallout-utility/types';
-import { kleur } from 'fallout-utility/strings';
-import path from 'node:path';
-import { cancel } from '@clack/prompts';
-import { exit } from 'node:process';
 import { packageManagerPlaceholders, packages, root } from './constants.js';
 import { PackageManager, existsAsync } from '@reciple/utils';
+import { TemplateJson, TemplateMetadata } from './types.js';
+import { kleur } from 'fallout-utility/strings';
 import { execSync } from 'node:child_process';
 import { installAddons } from './addons.js';
+import { cancel } from '@clack/prompts';
+import { exit } from 'node:process';
+import path from 'node:path';
 
 export async function getTemplates(dir: string): Promise<TemplateMetadata[]> {
     if (!await existsAsync(dir)) {
@@ -28,13 +27,11 @@ export async function getTemplates(dir: string): Promise<TemplateMetadata[]> {
         if (!files.includes(path.join(file, 'template.json')) || !files.includes(path.join(file, 'package.json'))) continue;
 
         const metadata: TemplateJson = JSON.parse(await readFile(path.join(file, 'template.json'), 'utf-8'));
-        const packageJson: PackageJson = JSON.parse(await readFile(path.join(file, 'package.json'), 'utf-8'));
 
         const data: TemplateMetadata = {
             id,
             name: metadata.name,
             language: metadata.language,
-            type: packageJson.type ?? "commonjs",
             files: files.filter(f => !f.endsWith('template.json')),
             path: file
         };
@@ -90,18 +87,12 @@ export async function create(template: TemplateMetadata, dir: string, packageMan
 
     if (packageManager) await runScript(placeholders['INSTALL_ALL'], dir);
 
-    await runScript(`${packageManagerPlaceholders['npm']['BIN_EXEC']} reciple@${packages['RECIPLE']?.substring(1)} "${dir}" --setup -c reciple.${template.type === 'commonjs' ? 'cjs' : 'mjs'}`, dir);
+    await runScript(`${packageManagerPlaceholders['npm']['BIN_EXEC']} reciple@${packages['RECIPLE']?.substring(1)} "${dir}" --setup -c reciple.js`, dir);
     await createDotEnv(dir, token);
 
     if (addons?.length) await installAddons(
         dir,
-        template.type === 'commonjs'
-            ? template.language === 'Javascript'
-                ? 'cjs'
-                : 'cts'
-            : template.language === 'Typescript'
-                ? 'mts'
-                : 'mjs',
+        template.language === 'Typescript' ? 'ts' : 'js',
         addons,
         placeholders['INSTALL_PKG']
     );

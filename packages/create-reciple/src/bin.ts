@@ -1,15 +1,15 @@
 #!/usr/bin/env node
 
+import { confirm, intro, isCancel, multiselect, outro, password, select, text } from '@clack/prompts';
 import { packageJson, packageManagers, templatesFolder } from './utils/constants.js';
 import { cancelPrompts, create, getTemplates, isDirEmpty } from './utils/helpers.js';
 import { PackageManager, resolvePackageManager } from '@reciple/utils';
+import availableAddons from './utils/addons.js';
+import { existsSync, statSync } from 'node:fs';
 import { CliOptions } from './utils/types.js';
-import { confirm, intro, isCancel, multiselect, outro, password, select, text } from '@clack/prompts';
+import { kleur } from 'fallout-utility';
 import { Command } from 'commander';
 import path from 'node:path';
-import { existsSync, statSync } from 'node:fs';
-import { kleur } from 'fallout-utility';
-import availableAddons from './utils/addons.js';
 
 const command = new Command()
     .name(packageJson.name!)
@@ -18,8 +18,6 @@ const command = new Command()
     .argument('[dir]', 'Create template in this folder')
     .option('--force', 'Force override existing files in directory', false)
     .option('--typescript', 'Use typescript templates', 'null')
-    .option('--esm', 'Use commonjs templates', 'null')
-    .option('--commonjs', 'Use commonjs templates', 'null')
     .option('--package-manager <npm,yarn,pnpm>', 'Set package manager', 'null')
     .option('-t, --token <DiscordToken>', 'Add token to created .env')
     .option('--no-addons', 'Disable addons prompt', false)
@@ -32,13 +30,12 @@ const templates = await getTemplates(templatesFolder);
 
 let dir: string|null = command.args[0] ?? null;
 let typescript: boolean|null = options.typescript !== 'null' ? options.typescript : null;
-let commonjs: boolean|null = options.esm === true ? false : options.commonjs !== 'null' ? options.commonjs : null;
 let packageManager: PackageManager|null = options.packageManager !== 'null' ? options.packageManager : null;
 let token: string|null = options.token ?? null;
 let addons: string[]|false = Array.isArray(options.addons) ? options.addons : false;
 let setup: boolean = false;
 
-if (dir === null || typescript === null || commonjs === null || packageManager === null) {
+if (dir === null || typescript === null || packageManager === null) {
     setup = true;
     intro(kleur.cyan().bold(`${packageJson.name} v${packageJson.version}`));
 }
@@ -85,18 +82,6 @@ if (typescript === null) {
     typescript = isTypescript;
 }
 
-if (commonjs === null) {
-    const isESM = await confirm({
-        message: `Would you like to use ES Modules? (uses import() instead of require())`,
-        initialValue: true,
-        active: `Yes`,
-        inactive: `No`
-    });
-
-    if (isCancel(isESM)) cancelPrompts();
-    commonjs = !isESM;
-}
-
 if (addons && !addons.length) {
     const selectedAddons = await multiselect<{ label?: string; hint?: string; value: string; }[], string>({
         message: `Select a addons from Reciple ${kleur.gray('(Press space to select, and enter to submit)')}`,
@@ -139,7 +124,7 @@ if (token === null) {
     token = newToken;
 }
 
-const template = templates.find(p => p.type === (commonjs ? 'commonjs' : 'module') && p.language === (typescript ? 'Typescript' : 'Javascript'));
+const template = templates.find(p => p.language === (typescript ? 'Typescript' : 'Javascript'));
 if (!template) cancelPrompts({ reason: `Template not found` });
 if (packageManager && !packageManagers.some(p => p.value === packageManager)) cancelPrompts({ reason: `Invalid package manager` });
 if (setup) outro(`Setup Done! Creating from ${kleur.cyan().bold(template.name)} template`);
