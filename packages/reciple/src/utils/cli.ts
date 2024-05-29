@@ -8,7 +8,7 @@ import { Command } from 'commander';
 import { coerce } from 'semver';
 import path from 'node:path';
 
-const { version, description } = JSON.parse(readFileSync(path.join(__dirname, '../../package.json'), 'utf-8'));
+const { version, description } = JSON.parse(readFileSync(path.join(path.dirname(fileURLToPath(import.meta.url)), '../../package.json'), 'utf-8'));
 const originalCwd = process.cwd();
 
 export let command = new Command()
