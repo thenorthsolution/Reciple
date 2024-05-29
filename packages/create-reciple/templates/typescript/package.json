@@ -4,9 +4,9 @@
   "private": true,
   "scripts": {
     "build": "rimraf ./modules && tsc",
-    "start": "reciple -c reciple.js",
-    "build:start": "SCRIPT_RUN build && reciple -c reciple.js",
-    "dev": "nodemon --ext ts,mts,json --ignore ./modules --exec \"SCRIPT_RUN build && reciple -c reciple.js\" --signal SIGHUP"
+    "start": "reciple -c reciple.mjs",
+    "build:start": "SCRIPT_RUN build && reciple -c reciple.mjs",
+    "dev": "nodemon --ext ts,mts,json --ignore ./modules --exec \"SCRIPT_RUN build && reciple -c reciple.mjs\" --signal SIGHUP"
   },
   "dependencies": {
     "@reciple/core": "RECIPLE_CORE",

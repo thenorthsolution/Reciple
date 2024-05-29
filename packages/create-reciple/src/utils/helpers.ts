@@ -87,7 +87,7 @@ export async function create(template: TemplateMetadata, dir: string, packageMan
 
     if (packageManager) await runScript(placeholders['INSTALL_ALL'], dir);
 
-    await runScript(`${packageManagerPlaceholders['npm']['BIN_EXEC']} reciple@${packages['RECIPLE']?.substring(1)} "${dir}" --setup -c reciple.js`, dir);
+    await runScript(`${packageManagerPlaceholders['npm']['BIN_EXEC']} reciple@${packages['RECIPLE']?.substring(1)} "${dir}" --setup -c reciple.mjs`, dir);
     await createDotEnv(dir, token);
 
     if (addons?.length) await installAddons(
