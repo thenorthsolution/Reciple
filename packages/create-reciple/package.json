@@ -40,7 +40,7 @@
     "@types/node": "^20.12.12",
     "discord.js": "^14.15.2",
     "nodemon": "^3.1.2",
-    "reciple": "^9.0.0",
+    "reciple": "^8.4.2",
     "rimraf": "^5.0.7",
     "typescript": "^5.4.5"
   }
