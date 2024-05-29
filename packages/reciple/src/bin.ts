@@ -2,8 +2,8 @@
 
 import { ContextMenuCommandBuilder, Logger, MessageCommandBuilder, SlashCommandBuilder, buildVersion } from '@reciple/core';
 import { createLogger, addEventListenersToClient } from './utils/logger.js';
-import { command, cli, cliVersion, checkForUpdates } from './utils/cli.js';
 import { ProcessInformation, RecipleClient, findModules } from './index.js';
+import { command, cli, cliVersion, updateChecker } from './utils/cli.js';
 import { setTimeout as setTimeoutAsync } from 'node:timers/promises';
 import { existsAsync, resolveEnvProtocol } from '@reciple/utils';
 import { parentPort, threadId } from 'node:worker_threads';
@@ -152,7 +152,11 @@ client.once('ready', async () => {
     logger?.log(`Loaded ${client.commands.slashCommands.size} slash command(s)`);
     logger?.log(`Loaded ${client.commands.preconditions.size} precondition(s)`);
 
-    if (config.checkForUpdates) await checkForUpdates(logger ?? undefined);
+    if (!config.checkForUpdates) return;
+
+    updateChecker.on('updateAvailable', data => logger?.warn(`An update is available for ${kleur.cyan(data.package)}: ${kleur.red(data.currentVersion)} ${kleur.gray('->')} ${kleur.green().bold(data.updatedVersion)}`));
+    updateChecker.on('updateError', (pkg, error) => logger?.debug(`An error occured while checking for updates for ${pkg}:`, error));
+    updateChecker.startCheckInterval(1000 * 60 * 60);
 });
 
 logger?.debug(`Logging in...`);

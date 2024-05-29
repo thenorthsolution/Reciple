@@ -1,12 +1,11 @@
 import { isMainThread, parentPort, threadId } from 'node:worker_threads';
-import { UpdateData, checkLatestUpdate } from '@reciple/utils';
-import { Logger, buildVersion } from '@reciple/core';
+import { buildVersion } from '@reciple/core';
 import { fileURLToPath } from 'node:url';
-import { kleur } from 'fallout-utility';
 import { readFileSync } from 'node:fs';
 import { Command } from 'commander';
 import { coerce } from 'semver';
 import path from 'node:path';
+import { PackageUpdateChecker } from '@reciple/utils';
 
 const { version, description } = JSON.parse(readFileSync(path.join(path.dirname(fileURLToPath(import.meta.url)), '../../package.json'), 'utf-8'));
 const originalCwd = process.cwd();
@@ -55,22 +54,9 @@ export const cli = {
 
 export const cliVersion = `${coerce(version)}`;
 export const cliBuildVersion = version;
-
-export async function checkForUpdates(logger?: Logger): Promise<Record<'reciple'|'@reciple/core', UpdateData|null>> {
-    const updates = await Promise.all([
-        checkLatestUpdate('reciple', cliBuildVersion).catch(() => null),
-        checkLatestUpdate('@reciple/core', buildVersion).catch(() => null),
-    ]);
-
-    if (logger) for (const update of updates) {
-        logger.debug(`Update checked for ${update?.package}`, update);
-        if (!update?.updateType) continue;
-
-        logger.warn(`An update is available for ${kleur.cyan(update.package)}: ${kleur.red(update.currentVersion)} ${kleur.gray('->')} ${kleur.green().bold(update.updatedVersion)}`);
-    }
-
-    return {
-        'reciple': updates.find(u => u?.package === 'reciple') ?? null,
-        '@reciple/core': updates.find(u => u?.package === '@reciple/core') ?? null,
-    };
-}
+export const updateChecker = new PackageUpdateChecker({
+    packages: [
+        { package: 'reciple', currentVersion: cliBuildVersion },
+        { package: '@reciple/core', currentVersion: buildVersion }
+    ]
+});
