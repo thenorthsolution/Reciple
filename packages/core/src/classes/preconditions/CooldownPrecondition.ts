@@ -1,7 +1,7 @@
-import { CommandPrecondition, CommandPreconditionData } from '../structures/CommandPrecondition';
-import { AnyCommandExecuteData } from '../../types/structures';
-import { CooldownData } from '../structures/Cooldown';
-import { CommandType } from '../../types/constants';
+import { CommandPrecondition, CommandPreconditionData } from '../structures/CommandPrecondition.js';
+import { AnyCommandExecuteData } from '../../types/structures.js';
+import { CooldownData } from '../structures/Cooldown.js';
+import { CommandType } from '../../types/constants.js';
 
 export class CooldownPrecondition extends CommandPrecondition {
     public static id: string = 'org.reciple.js.cooldowns';

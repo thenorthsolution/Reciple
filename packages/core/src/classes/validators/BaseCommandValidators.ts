@@ -1,8 +1,8 @@
-import { BaseCommandBuilderData } from '../builders/BaseCommandBuilder';
-import { CommandType } from '../../types/constants';
-import { Validators } from './Validators';
+import { CommandPreconditionResolvable } from '../structures/CommandPrecondition.js';
+import { BaseCommandBuilderData } from '../builders/BaseCommandBuilder.js';
 import { RestOrArray, normalizeArray } from 'discord.js';
-import { CommandPreconditionResolvable } from '../structures/CommandPrecondition';
+import { CommandType } from '../../types/constants.js';
+import { Validators } from './Validators.js';
 
 export class BaseCommandValidators extends Validators {
     public static command_type = BaseCommandValidators.s

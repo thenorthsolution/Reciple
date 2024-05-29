@@ -1,12 +1,12 @@
-import { AnyCommandExecuteData, AnyCommandHaltData, RecipleClientConfig } from '../../types/structures';
+import { AnyCommandExecuteData, AnyCommandHaltData, RecipleClientConfig } from '../../types/structures.js';
 import { ApplicationCommand, Awaitable, Client, ClientEvents, Collection } from 'discord.js';
-import { CommandHaltReason, CommandType, version } from '../../types/constants';
-import { CommandPreconditionTriggerData } from './CommandPrecondition';
-import { CooldownManager } from '../managers/CooldownManager';
-import { CommandManager } from '../managers/CommandManager';
-import { ModuleManager } from '../managers/ModuleManager';
+import { CommandHaltReason, CommandType, version } from '../../types/constants.js';
+import { CommandPreconditionTriggerData } from './CommandPrecondition.js';
+import { CooldownManager } from '../managers/CooldownManager.js';
+import { CommandManager } from '../managers/CommandManager.js';
+import { ModuleManager } from '../managers/ModuleManager.js';
+import { RecipleError } from './RecipleError.js';
 import { Logger } from 'fallout-utility/Logger';
-import { RecipleError } from './RecipleError';
 import { If } from 'fallout-utility/types';
 
 export interface RecipleClientEvents extends ClientEvents {

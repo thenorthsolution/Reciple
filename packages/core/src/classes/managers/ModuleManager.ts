@@ -1,13 +1,13 @@
-import { RecipleModuleDataValidators } from '../validators/RecipleModuleDataValidators';
+import { RecipleModuleDataValidators } from '../validators/RecipleModuleDataValidators.js';
 import { Awaitable, Collection, Constructable, isJSONEncodable } from 'discord.js';
-import { RecipleModule, RecipleModuleData } from '../structures/RecipleModule';
+import { RecipleModule, RecipleModuleData } from '../structures/RecipleModule.js';
 import { RecursiveDefault, recursiveDefaults } from '@reciple/utils';
+import { AnyCommandResolvable } from '../../types/structures.js';
+import { RecipleClient } from '../structures/RecipleClient.js';
+import { RecipleError } from '../structures/RecipleError.js';
 import { TypedEmitter } from 'fallout-utility/TypedEmitter';
-import { RecipleClient } from '../structures/RecipleClient';
-import { AnyCommandResolvable } from '../../types/structures';
-import { RecipleError } from '../structures/RecipleError';
-import { CommandType } from '../../types/constants';
-import { DataManager } from './DataManager';
+import { CommandType } from '../../types/constants.js';
+import { DataManager } from './DataManager.js';
 import { Mixin } from 'ts-mixer';
 import path from 'node:path';
 

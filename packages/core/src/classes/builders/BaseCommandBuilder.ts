@@ -1,11 +1,11 @@
 import { PermissionResolvable, PermissionsBitField, RestOrArray, isJSONEncodable, normalizeArray } from 'discord.js';
-import { AnyCommandExecuteFunction, AnyCommandHaltFunction } from '../../types/structures';
-import { CommandPreconditionResolvable } from '../structures/CommandPrecondition';
-import { BaseCommandValidators } from '../validators/BaseCommandValidators';
-import { ContextMenuCommandBuilder } from './ContextMenuCommandBuilder';
-import { MessageCommandBuilder } from './MessageCommandBuilder';
-import { SlashCommandBuilder } from './SlashCommandBuilder';
-import { CommandType } from '../../types/constants';
+import { AnyCommandExecuteFunction, AnyCommandHaltFunction } from '../../types/structures.js';
+import { CommandPreconditionResolvable } from '../structures/CommandPrecondition.js';
+import { BaseCommandValidators } from '../validators/BaseCommandValidators.js';
+import { ContextMenuCommandBuilder } from './ContextMenuCommandBuilder.js';
+import { MessageCommandBuilder } from './MessageCommandBuilder.js';
+import { SlashCommandBuilder } from './SlashCommandBuilder.js';
+import { CommandType } from '../../types/constants.js';
 
 export interface BaseCommandBuilderData {
     command_type: CommandType;

@@ -1,5 +1,5 @@
-import { Cooldown, CooldownData } from '../structures/Cooldown';
-import { DataManager } from './DataManager';
+import { Cooldown, CooldownData } from '../structures/Cooldown.js';
+import { DataManager } from './DataManager.js';
 
 export interface CooldownSweeperOptions {
     timer: number;

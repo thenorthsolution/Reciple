@@ -1,8 +1,8 @@
-import { ContextMenuCommandBuilder, ContextMenuCommandResolvable } from '../builders/ContextMenuCommandBuilder';
-import { MessageCommandBuilder, MessageCommandResolvable } from '../builders/MessageCommandBuilder';
-import { SlashCommandBuilder, SlashCommandResolvable } from '../builders/SlashCommandBuilder';
-import { AnyCommandBuilder, AnyCommandResolvable } from '../../types/structures';
-import { CommandType } from '../../types/constants';
+import { ContextMenuCommandBuilder, ContextMenuCommandResolvable } from '../builders/ContextMenuCommandBuilder.js';
+import { MessageCommandBuilder, MessageCommandResolvable } from '../builders/MessageCommandBuilder.js';
+import { SlashCommandBuilder, SlashCommandResolvable } from '../builders/SlashCommandBuilder.js';
+import { AnyCommandBuilder, AnyCommandResolvable } from '../../types/structures.js';
+import { CommandType } from '../../types/constants.js';
 import { isJSONEncodable } from 'discord.js';
 
 export class Utils {

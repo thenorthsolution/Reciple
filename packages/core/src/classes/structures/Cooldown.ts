@@ -1,5 +1,5 @@
-import { CooldownManager } from '../managers/CooldownManager';
-import { CommandType } from '../../types/constants';
+import { CooldownManager } from '../managers/CooldownManager.js';
+import { CommandType } from '../../types/constants.js';
 import { TextBasedChannel } from 'discord.js';
 
 export interface CooldownData {

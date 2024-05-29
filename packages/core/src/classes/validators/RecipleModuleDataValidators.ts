@@ -1,6 +1,6 @@
-import { BaseCommandValidators } from './BaseCommandValidators';
-import { RecipleModuleData } from '../structures/RecipleModule';
-import { Validators } from './Validators';
+import { BaseCommandValidators } from './BaseCommandValidators.js';
+import { RecipleModuleData } from '../structures/RecipleModule.js';
+import { Validators } from './Validators.js';
 
 export class RecipleModuleDataValidators extends Validators {
     public static id = RecipleModuleDataValidators.s
