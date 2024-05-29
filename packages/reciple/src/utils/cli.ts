@@ -1,6 +1,7 @@
 import { isMainThread, parentPort, threadId } from 'node:worker_threads';
 import { UpdateData, checkLatestUpdate } from '@reciple/update-checker';
 import { Logger, buildVersion } from '@reciple/core';
+import { fileURLToPath } from 'node:url';
 import { kleur } from 'fallout-utility';
 import { readFileSync } from 'node:fs';
 import { Command } from 'commander';
@@ -48,7 +49,7 @@ export const cli = {
     threadId: !isMainThread && parentPort !== undefined ? threadId : undefined,
     isCwdUpdated: false,
     nodeCwd: process.cwd(),
-    binPath: path.join(__dirname, '../bin.mjs'),
+    binPath: path.join(path.dirname(fileURLToPath(import.meta.url)), '../bin.mjs'),
     logPath: undefined as string|undefined
 };
 

@@ -6,7 +6,7 @@
   "version": "8.4.2",
   "module": "./dist/esm.mjs",
   "types": "./dist/index.d.ts",
-  "bin": "./dist/bin.mjs",
+  "bin": "./dist/bin.js",
   "type": "module",
   "keywords": [
     "reciple",
@@ -22,7 +22,7 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/esm.mjs"
+      "import": "./dist/index.js"
     },
     "./config.mjs": {
       "types": "./static/config.d.mts",

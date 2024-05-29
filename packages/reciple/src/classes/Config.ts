@@ -3,9 +3,9 @@ import { recursiveDefaults, existsAsync } from '@reciple/utils';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { kleur } from 'fallout-utility/strings';
 import { cliVersion } from '../utils/cli.js';
+import { fileURLToPath } from 'node:url';
 import { Awaitable } from 'discord.js';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 
 export interface RecipleConfig extends RecipleClientConfig {
     logger?: {
