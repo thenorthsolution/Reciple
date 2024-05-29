@@ -1,5 +1,5 @@
 import { AbbreviatedMetadata, FullMetadata, Options } from '../types/types.js';
-import { UpdateCheckerUpdateType } from '../constants.js';
+import { PackageUpdateType } from '../constants.js';
 import packageJson from 'package-json';
 import { satisfies, SemVer } from 'semver';
 import { Collection } from '@discordjs/collection';
@@ -18,7 +18,7 @@ export interface PackageUpdateCheckerEvents {
 export interface PackageUpdateCheckerUpdateData {
     package: string;
     data: AbbreviatedMetadata;
-    updateType: UpdateCheckerUpdateType;
+    updateType: PackageUpdateType;
     currentVersion: string;
     updatedVersion: string;
     latestVersion: string;
@@ -84,15 +84,15 @@ export class PackageUpdateChecker extends StrictTypedEmitter<PackageUpdateChecke
             currentVersion: currentSemver.format(),
             updatedVersion: latest.format(),
             latestVersion: updateData['dist-tags'].latest,
-            updateType: UpdateCheckerUpdateType.None
+            updateType: PackageUpdateType.None
         };
 
         if (currentSemver.version === latest.version) return response;
-        if (latest.compareBuild(currentSemver) === 1) response.updateType = UpdateCheckerUpdateType.Build;
-        if (latest.comparePre(currentSemver) === 1) response.updateType = UpdateCheckerUpdateType.Prerelease;
-        if (currentSemver.patch !== latest.patch) response.updateType = UpdateCheckerUpdateType.Patch;
-        if (currentSemver.minor !== latest.minor) response.updateType = UpdateCheckerUpdateType.Minor;
-        if (currentSemver.major !== latest.major) response.updateType = UpdateCheckerUpdateType.Major;
+        if (latest.compareBuild(currentSemver) === 1) response.updateType = PackageUpdateType.Build;
+        if (latest.comparePre(currentSemver) === 1) response.updateType = PackageUpdateType.Prerelease;
+        if (currentSemver.patch !== latest.patch) response.updateType = PackageUpdateType.Patch;
+        if (currentSemver.minor !== latest.minor) response.updateType = PackageUpdateType.Minor;
+        if (currentSemver.major !== latest.major) response.updateType = PackageUpdateType.Major;
 
         return response;
     }
