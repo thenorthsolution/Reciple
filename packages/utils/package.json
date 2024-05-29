@@ -6,6 +6,7 @@
   "main": "./dist/index.js",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "type": "module",
   "keywords": [
     "reciple",
     "utility"
@@ -40,9 +41,11 @@
     "@discordjs/collection": "^2.1.0",
     "discord-api-types": "^0.37.86",
     "dotenv": "^16.4.5",
-    "fallout-utility": "^2.9.0"
+    "fallout-utility": "^2.9.1",
+    "semver": "^7.6.2"
   },
   "devDependencies": {
+    "@types/semver": "^7.5.8",
     "discord.js": "^14.15.2"
   }
 }
