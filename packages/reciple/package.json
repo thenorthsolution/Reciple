@@ -57,8 +57,8 @@
     "discord.js": "^14.15.2"
   },
   "peerDependencies": {
-    "@reciple/core": "^9.x",
-    "discord.js": "^14.7.1"
+    "@reciple/core": "^9 || ^9.0.0-dev",
+    "discord.js": "^14.15.0"
   },
   "gitHead": "c5620aa5f046aa426b832c052a4f933817270573"
 }
