@@ -7,6 +7,10 @@
   "types": "./dist/index.d.ts",
   "module": "./dist/index.js",
   "bin": "./dist/bin.js",
+  "keywords": [
+    "reciple",
+    "template"
+  ],
   "exports": {
     ".": {
       "import": "./dist/index.js",
