@@ -42,6 +42,7 @@
     "discord-api-types": "^0.37.86",
     "dotenv": "^16.4.5",
     "fallout-utility": "^2.9.1",
+    "package-json": "^10.0.0",
     "semver": "^7.6.2"
   },
   "devDependencies": {
