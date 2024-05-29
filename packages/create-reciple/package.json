@@ -6,7 +6,7 @@
   "type": "module",
   "types": "./dist/index.d.ts",
   "module": "./dist/index.js",
-  "bin": "./dist/bin.mjs",
+  "bin": "./dist/bin.js",
   "keywords": [
     "reciple",
     "template"

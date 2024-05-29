@@ -6,7 +6,7 @@
   "version": "9.0.0-dev.6",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "bin": "./dist/bin.mjs",
+  "bin": "./dist/bin.js",
   "type": "module",
   "keywords": [
     "reciple",
