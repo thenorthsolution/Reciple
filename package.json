@@ -8,16 +8,17 @@
   ],
   "scripts": {
     "clean": "rimraf -g ./packages/*/bin ./packages/*/dist",
-    "build": "turbo run build",
+    "build": "lerna run build",
     "watch": "tsc --watch --noEmit",
     "test": "npm run start -w example",
     "publish-packages:dev": "changeset version && changeset publish",
     "publish-packages": "changeset version && changeset publish",
-    "docs": "rimraf -g ./packages/*/docs/docs.json && turbo run docs"
+    "docs": "rimraf -g ./packages/*/docs/docs.json && lerna run docs"
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.5",
     "@types/node": "^20.12.12",
+    "lerna": "^8.1.3",
     "rimraf": "^5.0.7",
     "turbo": "^1.13.3",
     "typescript": "^5.4.5"
