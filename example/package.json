@@ -8,9 +8,9 @@
     "dev": "nodemon --ext js,mjs,cjs,json --exec \"node ../packages/reciple/dist/bin.mjs -c reciple.mjs\" --signal SIGHUP"
   },
   "dependencies": {
-    "@reciple/core": "^9.0.0",
+    "@reciple/core": "^8.1.4",
     "discord.js": "^14.15.2",
-    "reciple": "^9.0.0"
+    "reciple": "^8.1.4"
   },
   "devDependencies": {
     "@types/node": "^20.12.12",
