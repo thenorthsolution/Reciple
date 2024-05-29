@@ -3,8 +3,7 @@
   "description": "Check updates from npm registry",
   "license": "GPL-3.0",
   "version": "9.1.0",
-  "main": "./dist/index.js",
-  "module": "./dist/esm.mjs",
+  "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "keywords": [
     "reciple",
@@ -19,7 +18,7 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/esm.mjs",
+      "import": "./dist/index.js",
       "require": "./dist/index.js"
     }
   },
