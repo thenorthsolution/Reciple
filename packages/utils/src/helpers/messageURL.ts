@@ -1,5 +1,5 @@
+import { MessageURLData } from '../classes/MessageURLData.js';
 import { BaseFetchOptions, Client } from 'discord.js';
-import { MessageURLData } from '../classes/MessageURLData';
 
 /**
  * Parse Discord message URL

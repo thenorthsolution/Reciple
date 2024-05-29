@@ -1,7 +1,7 @@
+import { existsAsync } from '../helpers/fileSystem.js';
 import { PackageJson } from 'fallout-utility';
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
-import { existsAsync } from '../helpers/fileSystem';
 
 export type ModuleType = 'module'|'commonjs';
 export interface RecursiveDefault<T = unknown> {
