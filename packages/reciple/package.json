@@ -24,7 +24,7 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
     },
-    "./config.mjs": {
+    "./config": {
       "types": "./static/config.d.mts",
       "import": "./static/config.mjs"
     }
