@@ -40,7 +40,8 @@
     "README.md"
   ],
   "dependencies": {
-    "@reciple/utils": "workspace:*",
+    "@reciple/update-checker": "^9.1.0",
+    "@reciple/utils": "^9.0.0-dev.2",
     "commander": "^12.1.0",
     "dotenv": "^16.4.5",
     "fallout-utility": "^2.9.1",
@@ -50,13 +51,13 @@
     "semver": "^7.6.2"
   },
   "devDependencies": {
-    "@reciple/core": "workspace:*",
+    "@reciple/core": "^9.0.0-dev.2",
     "@types/micromatch": "^4.0.7",
     "@types/semver": "^7.5.8",
     "discord.js": "^14.15.2"
   },
   "peerDependencies": {
-    "@reciple/core": "^9 || ^9.0.0-dev",
+    "@reciple/core": "^9.x",
     "discord.js": "^14.7.1"
   },
   "gitHead": "c5620aa5f046aa426b832c052a4f933817270573"
