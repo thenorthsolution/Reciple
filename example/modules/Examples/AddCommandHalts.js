@@ -11,7 +11,7 @@ import { CommandHaltReason, CommandPermissionsPrecondition, CommandPermissionsPr
  * @satisfies {import("reciple").RecipleModuleData}
  */
 export default {
-    versions: '^8',
+    versions: '^9',
     commands: [],
     onStart() {
         return true;

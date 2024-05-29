@@ -7,7 +7,7 @@
  * @satisfies {import("reciple").RecipleModuleData}
  */
 export default {
-    versions: '^8',
+    versions: '^9',
     /**
      * @type {import("reciple").Logger|undefined}
      */

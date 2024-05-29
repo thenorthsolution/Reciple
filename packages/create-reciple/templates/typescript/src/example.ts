@@ -2,7 +2,7 @@ import { SlashCommandBuilder, ContextMenuCommandBuilder, MessageCommandBuilder, 
 
 export default {
     // Supported client versions
-    versions: ['^8'],
+    versions: ['^9'],
 
     // Module commands
     commands: [

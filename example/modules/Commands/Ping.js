@@ -5,7 +5,7 @@ import { MessageCommandBuilder } from 'reciple';
  * @type {import('reciple').RecipleModuleData}
  */
 export default {
-    versions: ['^8'],
+    versions: ['^9'],
     commands: [
         new MessageCommandBuilder()
             .setName('ping')

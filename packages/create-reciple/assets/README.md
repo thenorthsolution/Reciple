@@ -85,7 +85,7 @@ Reciple can load CommonJs and ESM modules at the same time.
 ```js
 // ESM
 export default {
-    versions: ['^8'],
+    versions: ['^9'],
     onStart: async ({ client }) => true, // Always return true if the module is loaded
     onLoad: async ({ client }) => {},
     onUnload: async ({ client }) => {}
@@ -93,7 +93,7 @@ export default {
 
 // CJS
 module.exports = {
-    versions: ['^8'],
+    versions: ['^9'],
     onStart: async ({ client }) => true, // Always return true if the module is loaded
     onLoad: async ({ client }) => {},
     onUnload: async ({ client }) => {}
@@ -105,7 +105,7 @@ module.exports = {
 
 // ESM
 export class MyModule {
-    versions = ['^8'];
+    versions = ['^9'];
 
     async onStart({ client }) {
         return true; // Always return true if the module is loaded
@@ -119,7 +119,7 @@ export default new MyModule();
 
 // CJS
 class MyModule {
-    versions = ['^8'];
+    versions = ['^9'];
 
     async onStart({ client }) {
         return true; // Always return true if the module is loaded
@@ -138,7 +138,7 @@ To add commands to your module, simply add `commands` propery to your module.
 
 ```js
 export default {
-    versions: ['^8'],
+    versions: ['^9'],
     commands: [], // Commands goes here
     onStart: async ({ client }) => true, // Always return true if the module is loaded
     onLoad: async ({ client }) => {},
@@ -166,7 +166,7 @@ Just create a new instance of a command builder in the commands array to add com
 import { ContextMenuCommandBuilder, MessageCommandBuilder, SlashCommandBuilder } from 'reciple';
 
 export default {
-    versions: ['^8'],
+    versions: ['^9'],
     commands: [
         new ContextMenuCommandBuilder()
             .setName('To Lowercase')
