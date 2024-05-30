@@ -66,7 +66,8 @@ export const config = {
             './modules/*/*'
         ],
         exclude: [
-            'Preconditions'
+            'Preconditions',
+            'Halts'
         ],
         disableModuleVersionCheck: false
     },
