@@ -18,7 +18,7 @@ export interface CommandHaltData<T extends CommandType = CommandType> {
                 : AnyCommandHaltFunction;
 }
 
-export type CommandHaltResultResolvable<T extends CommandType = CommandType, D extends any = any> = boolean|string|Omit<CommandHaltResultData<T, D>, 'halt'|'triggerData'>
+export type CommandHaltResultResolvable<T extends CommandType = CommandType, D extends any = any> = null|undefined|boolean|string|Omit<CommandHaltResultData<T, D>, 'halt'|'triggerData'>
 
 export interface CommandHaltResultData<T extends CommandType = CommandType, D extends any = any> {
     halt: CommandHalt<T>;
@@ -76,7 +76,7 @@ export class CommandHalt<T extends CommandType = CommandType> implements Command
             ? { successful: false, message: data }
             : typeof data === 'boolean'
                 ? { successful: data }
-                : data;
+                : data ?? { successful: true };
 
         const resultData: CommandHaltResultData<T['commandType'], D> = {
             ...data,
