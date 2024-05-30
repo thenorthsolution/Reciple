@@ -71,8 +71,8 @@ export const config = {
         disableModuleVersionCheck: false
     },
     preconditions: [
-        CooldownPrecondition.create(),
-        CommandPermissionsPrecondition.create(),
+        new CooldownPrecondition(),
+        new CommandPermissionsPrecondition(),
         MyPrecondition
     ],
     cooldownSweeperOptions: {
