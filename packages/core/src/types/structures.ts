@@ -7,7 +7,7 @@ import { MessageCommandOptionValue } from '../classes/structures/MessageCommandO
 import { CooldownSweeperOptions } from '../classes/managers/CooldownManager.js';
 import { CommandHaltReason, CommandType } from './constants.js';
 import { Cooldown } from '../classes/structures/Cooldown.js';
-import { CommandHaltResultData } from '../classes/structures/CommandHalt.js';
+import { CommandHaltResolvable, CommandHaltResultData } from '../classes/structures/CommandHalt.js';
 
 // Config
 export interface RecipleClientConfig {
@@ -29,6 +29,7 @@ export interface RecipleClientConfig {
     };
     cooldownSweeperOptions?: CooldownSweeperOptions;
     preconditions?: CommandPreconditionResolvable[];
+    commandHalts?: CommandHaltResolvable[];
     client: ClientOptions;
 }
 

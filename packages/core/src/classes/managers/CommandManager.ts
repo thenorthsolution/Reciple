@@ -8,7 +8,7 @@ import { RecipleClient } from '../structures/RecipleClient.js';
 import { CommandType } from '../../types/constants.js';
 import { Utils } from '../structures/Utils.js';
 import defaultsDeep from 'lodash.defaultsdeep';
-import { CommandHalt, CommandHaltResultData } from '../structures/CommandHalt.js';
+import { CommandHalt, CommandHaltResolvable, CommandHaltResultData } from '../structures/CommandHalt.js';
 
 export interface CommandManagerRegisterCommandsOptions extends Omit<Exclude<RecipleClientConfig['applicationCommandRegister'], undefined>, 'enabled'> {
     contextMenuCommands?: Partial<RecipleClientInteractionBasedCommandConfigOptions> & {
@@ -49,47 +49,9 @@ export class CommandManager {
         return preconditions;
     }
 
-    public removePreconditions(...data: RestOrArray<string>): CommandPrecondition[] {
-        const ids = normalizeArray(data);
-        const preconditions: CommandPrecondition[] = [];
-
-        for (const id of ids) {
-            const precondition = this.preconditions.get(id);
-            if (!precondition) continue;
-
-            preconditions.push(precondition);
-            this.preconditions.delete(id);
-        }
-
-        return preconditions;
-    }
-
-    public disablePreconditions(...data: RestOrArray<string|CommandPreconditionResolvable>): CommandPrecondition[] {
-        const ids = normalizeArray(data).map(id => typeof id === 'string' ? id : CommandPrecondition.resolve(id).id);
-        const preconditions: CommandPrecondition[] = [];
-
-        for (const id of ids) {
-            const precondition = this.preconditions.get(id);
-            if (!precondition) continue;
-
-            precondition.setDisabled(false);
-        }
-
-        return preconditions;
-    }
-
-    public enablePreconditions(...data: RestOrArray<string|CommandPreconditionResolvable>): CommandPrecondition[] {
-        const ids = normalizeArray(data).map(id => typeof id === 'string' ? id : CommandPrecondition.resolve(id).id);
-        const preconditions: CommandPrecondition[] = [];
-
-        for (const id of ids) {
-            const precondition = this.preconditions.get(id);
-            if (!precondition) continue;
-
-            precondition.setDisabled(false);
-        }
-
-        return preconditions;
+    public setPreconditions(...data: RestOrArray<CommandPreconditionResolvable>): CommandPrecondition[] {
+        this.preconditions.clear();
+        return this.addPreconditions(normalizeArray(data));
     }
 
     public async executePreconditions<T extends AnyCommandExecuteData = AnyCommandExecuteData>(executeData: T): Promise<CommandPreconditionResultData<T>|null> {
@@ -111,6 +73,21 @@ export class CommandManager {
         }
 
         return null;
+    }
+
+    public addHalts(...data: RestOrArray<CommandHaltResolvable>): CommandHalt[] {
+        const halts = normalizeArray(data).map(h => CommandHalt.resolve(h));
+
+        for (const halt of halts) {
+            this.halts.set(halt.id, halt);
+        }
+
+        return halts;
+    }
+
+    public setHalts(...data: RestOrArray<CommandHaltResolvable>): CommandHalt[] {
+        this.halts.clear();
+        return this.addHalts(normalizeArray(data));
     }
 
     public async executeHalts<T extends AnyCommandHaltTriggerData = AnyCommandHaltTriggerData>(trigger: T): Promise<CommandHaltResultData<T['commandType']>|null> {
