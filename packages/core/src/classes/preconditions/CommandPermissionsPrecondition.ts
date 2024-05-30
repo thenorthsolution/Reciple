@@ -16,6 +16,10 @@ export class CommandPermissionsPrecondition extends CommandPrecondition {
         slashCommandExecute: (data, precondition) => CommandPermissionsPrecondition._execute(data, precondition),
     };
 
+    constructor() {
+        super(CommandPermissionsPrecondition.data);
+    }
+
     private static async _execute(data: MessageCommandExecuteData|SlashCommandExecuteData|ContextMenuCommandExecuteData, precondition: CommandPermissionsPrecondition): Promise<boolean|CommandPreconditionTriggerData> {
         const requiredBotPermissions = data.builder.required_bot_permissions;
         const requiredMemberPermissions = data.builder.required_member_permissions;
@@ -127,10 +131,6 @@ export class CommandPermissionsPrecondition extends CommandPrecondition {
 
     public static isPermissionsPreconditionData<T extends AnyCommandExecuteData = AnyCommandExecuteData>(data: unknown): data is CommandPermissionsPreconditionTriggerData<T> {
         return ((data as CommandPermissionsPreconditionTriggerData<T>).precondition instanceof CommandPermissionsPrecondition);
-    }
-
-    public static create(): CommandPermissionsPrecondition {
-        return new CommandPermissionsPrecondition(CommandPermissionsPrecondition.data);
     }
 }
 

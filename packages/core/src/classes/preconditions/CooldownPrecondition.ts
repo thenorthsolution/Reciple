@@ -13,6 +13,10 @@ export class CooldownPrecondition extends CommandPrecondition {
         messageCommandExecute: data => CooldownPrecondition._execute(data),
     };
 
+    constructor() {
+        super(CooldownPrecondition.data);
+    }
+
     private static _execute(data: AnyCommandExecuteData): boolean {
         const duration = data.builder.cooldown;
         if (!duration) return true;
@@ -48,13 +52,5 @@ export class CooldownPrecondition extends CommandPrecondition {
         });
 
         return true;
-    }
-
-    private constructor(data: CommandPreconditionData) {
-        super(data);
-    }
-
-    public static create(): CooldownPrecondition {
-        return new CooldownPrecondition(CooldownPrecondition.data);
     }
 }
