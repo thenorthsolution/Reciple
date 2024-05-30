@@ -13,7 +13,7 @@ export class BaseCommandValidators extends Validators {
         .finite({ message: 'Command cooldowns only accepts finite values' })
         .positive({ message: 'Command cooldowns only accepts positive number' })
         .lessThanOrEqual(2147483647, { message: 'Command cooldown exceeded safe integer limit' })
-        .optional();
+        .nullish();
 
     public static required_bot_permissions = BaseCommandValidators.permissionResolvable
         .optional();
@@ -24,8 +24,7 @@ export class BaseCommandValidators extends Validators {
     public static preconditions = Validators.commandPreconditionResolvable
         .array({ message: 'Expected an array of preconditions for .preconditions' });
 
-    public static halts = BaseCommandValidators.s
-        .instance(Function, { message: 'Expected a function for .halts' })
+    public static halts = BaseCommandValidators.commandHaltResolvabable
         .array({ message: 'Expected an array for .halts' })
         .optional();
 
@@ -64,12 +63,38 @@ export class BaseCommandValidators extends Validators {
         const data = normalizeArray(preconditions as RestOrArray<CommandPreconditionResolvable>);
 
         for (const precondition of data) {
-            Validators.commandPreconditionData.setValidationEnabled(BaseCommandValidators.isValidationEnabled).parse(precondition);
+            BaseCommandValidators.preconditions.setValidationEnabled(BaseCommandValidators.isValidationEnabled).parse(precondition);
+        }
+    }
+
+    public static isValidDisabledPreconditions(preconditions: unknown): asserts preconditions is BaseCommandBuilderData['disabled_preconditions'] {
+        BaseCommandValidators.s.any().array().setValidationEnabled(BaseCommandValidators.isValidationEnabled).parse(preconditions);
+
+        const data = normalizeArray(preconditions as RestOrArray<CommandPreconditionResolvable>);
+
+        for (const precondition of data) {
+            Validators.s.union([
+                Validators.commandPreconditionResolvable,
+                Validators.s.string()
+            ]).setValidationEnabled(BaseCommandValidators.isValidationEnabled).parse(precondition);
         }
     }
 
     public static isValidHalts(halts: unknown): asserts halts is BaseCommandBuilderData['halts'] {
         BaseCommandValidators.halts.setValidationEnabled(BaseCommandValidators.isValidationEnabled()).parse(halts);
+    }
+
+    public static isValidDisabledHalts(halts: unknown): asserts halts is BaseCommandBuilderData['disabled_halts'] {
+        BaseCommandValidators.s.any().array().setValidationEnabled(BaseCommandValidators.isValidationEnabled).parse(halts);
+
+        const data = normalizeArray(halts as RestOrArray<CommandPreconditionResolvable>);
+
+        for (const precondition of data) {
+            Validators.s.union([
+                Validators.commandHaltResolvabable,
+                Validators.s.string()
+            ]).setValidationEnabled(BaseCommandValidators.isValidationEnabled).parse(precondition);
+        }
     }
 
     public static isValidExecute(execute: unknown): asserts execute is BaseCommandBuilderData['execute'] {
@@ -84,7 +109,9 @@ export class BaseCommandValidators extends Validators {
         BaseCommandValidators.isValidRequiredBotPermissions(cmd.required_bot_permissions);
         BaseCommandValidators.isValidRequiredMemberPermissions(cmd.required_member_permissions);
         BaseCommandValidators.isValidPreconditions(cmd.preconditions);
+        BaseCommandValidators.isValidDisabledPreconditions(cmd.disabled_preconditions);
         BaseCommandValidators.isValidHalts(cmd.halts);
+        BaseCommandValidators.isValidDisabledHalts(cmd.disabled_halts);
         BaseCommandValidators.isValidExecute(cmd.execute);
     }
 }

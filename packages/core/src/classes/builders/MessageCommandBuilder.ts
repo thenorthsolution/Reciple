@@ -5,11 +5,12 @@ import { MessageCommandOptionManager } from '../managers/MessageCommandOptionMan
 import { MessageCommandValidators } from '../validators/MessageCommandValidators.js';
 import { BaseCommandBuilder, BaseCommandBuilderData } from './BaseCommandBuilder.js';
 import { CommandHaltReason, CommandType } from '../../types/constants.js';
-import { CommandData, CommandHaltData } from '../../types/structures.js';
+import { CommandData, CommandHaltTriggerData } from '../../types/structures.js';
 import { RecipleClient } from '../structures/RecipleClient.js';
 import { RecipleError } from '../structures/RecipleError.js';
 import { CooldownData } from '../structures/Cooldown.js';
 import { getCommand } from 'fallout-utility/commands';
+import { CommandHalt, CommandHaltResolvable, CommandHaltResultResolvable } from '../structures/CommandHalt.js';
 
 export interface MessageCommandExecuteData {
     type: CommandType.MessageCommand;
@@ -20,14 +21,14 @@ export interface MessageCommandExecuteData {
     builder: MessageCommandBuilder;
 }
 
-export type MessageCommandHaltData = CommandHaltData<CommandType.MessageCommand>;
+export type MessageCommandHaltTriggerData = CommandHaltTriggerData<CommandType.MessageCommand>;
 
 export type MessageCommandExecuteFunction = (executeData: MessageCommandExecuteData) => Awaitable<void>;
-export type MessageCommandHaltFunction = (haltData: MessageCommandHaltData) => Awaitable<boolean>;
+export type MessageCommandHaltFunction = (haltData: MessageCommandHaltTriggerData) => Awaitable<CommandHaltResultResolvable<CommandType.MessageCommand>>;
 
 export interface MessageCommandBuilderData extends BaseCommandBuilderData {
     command_type: CommandType.MessageCommand;
-    halts?: MessageCommandHaltFunction[];
+    halts?: CommandHaltResolvable<CommandType.MessageCommand>[];
     execute: MessageCommandExecuteFunction;
     name: string;
     description: string;
@@ -48,10 +49,10 @@ export interface MessageCommandBuilderData extends BaseCommandBuilderData {
 }
 
 export interface MessageCommandBuilder extends BaseCommandBuilder {
-    halts: MessageCommandHaltFunction[];
+    halts: CommandHalt<CommandType.MessageCommand>[];
     execute: MessageCommandExecuteFunction;
 
-    setHalts(...halts: RestOrArray<MessageCommandHaltFunction>): this;
+    setHalts(...halts: RestOrArray<CommandHaltResolvable<CommandType.MessageCommand>>): this;
     setExecute(execute: MessageCommandExecuteFunction): this;
 }
 
@@ -153,7 +154,7 @@ export class MessageCommandBuilder extends BaseCommandBuilder {
             dm_permission: this.dm_permission,
             allow_bot: this.allow_bot,
             options: this.options,
-            ...super._toJSON()
+            ...super._toJSON<CommandType.MessageCommand, MessageCommandExecuteFunction>()
         };
     }
 
@@ -202,7 +203,7 @@ export class MessageCommandBuilder extends BaseCommandBuilder {
             const cooldown = client.cooldowns.findCooldown(cooldownData);
 
             if (cooldown) {
-                await client.executeCommandBuilderHalt({
+                await client.commands.executeHalts({
                     reason: CommandHaltReason.Cooldown,
                     commandType: builder.command_type,
                     cooldown,
@@ -214,7 +215,7 @@ export class MessageCommandBuilder extends BaseCommandBuilder {
 
         const commandPreconditionTrigger = await client.commands.executePreconditions(executeData);
         if (commandPreconditionTrigger) {
-            await client.executeCommandBuilderHalt({
+            await client.commands.executeHalts({
                 reason: CommandHaltReason.PreconditionTrigger,
                 commandType: builder.command_type,
                 ...commandPreconditionTrigger
@@ -224,7 +225,7 @@ export class MessageCommandBuilder extends BaseCommandBuilder {
 
         if (builder.validate_options) {
             if (executeData.options.hasInvalidOptions) {
-                await client.executeCommandBuilderHalt({
+                await client.commands.executeHalts({
                     commandType: builder.command_type,
                     reason: CommandHaltReason.InvalidArguments,
                     executeData,
@@ -234,7 +235,7 @@ export class MessageCommandBuilder extends BaseCommandBuilder {
             }
 
             if (executeData.options.hasMissingOptions) {
-                await client.executeCommandBuilderHalt({
+                await client.commands.executeHalts({
                     commandType: builder.command_type,
                     reason: CommandHaltReason.MissingArguments,
                     executeData,

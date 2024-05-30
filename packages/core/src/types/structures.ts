@@ -1,12 +1,13 @@
 import { Awaitable, ClientOptions, Collection, Guild, Message, SlashCommandAttachmentOption, SlashCommandBooleanOption, SlashCommandChannelOption, SlashCommandIntegerOption, SlashCommandMentionableOption, SlashCommandNumberOption, SlashCommandRoleOption, SlashCommandStringOption, SlashCommandSubcommandBuilder, SlashCommandSubcommandGroupBuilder, SlashCommandUserOption } from 'discord.js';
-import { ContextMenuCommandBuilder, ContextMenuCommandBuilderData, ContextMenuCommandExecuteData, ContextMenuCommandExecuteFunction, ContextMenuCommandHaltData, ContextMenuCommandHaltFunction, ContextMenuCommandResolvable } from '../classes/builders/ContextMenuCommandBuilder.js';
-import { MessageCommandBuilder, MessageCommandBuilderData, MessageCommandExecuteData, MessageCommandExecuteFunction, MessageCommandExecuteOptions, MessageCommandHaltData, MessageCommandHaltFunction, MessageCommandResolvable } from '../classes/builders/MessageCommandBuilder.js';
-import { AnySlashCommandBuilder, SlashCommandBuilderData, SlashCommandExecuteData, SlashCommandExecuteFunction, SlashCommandHaltData, SlashCommandHaltFunction, SlashCommandResolvable } from '../classes/builders/SlashCommandBuilder.js';
-import { CommandPreconditionResolvable, CommandPreconditionTriggerData } from '../classes/structures/CommandPrecondition.js';
+import { ContextMenuCommandBuilder, ContextMenuCommandBuilderData, ContextMenuCommandExecuteData, ContextMenuCommandExecuteFunction, ContextMenuCommandHaltTriggerData, ContextMenuCommandHaltFunction, ContextMenuCommandResolvable } from '../classes/builders/ContextMenuCommandBuilder.js';
+import { MessageCommandBuilder, MessageCommandBuilderData, MessageCommandExecuteData, MessageCommandExecuteFunction, MessageCommandExecuteOptions, MessageCommandHaltTriggerData, MessageCommandHaltFunction, MessageCommandResolvable } from '../classes/builders/MessageCommandBuilder.js';
+import { AnySlashCommandBuilder, SlashCommandBuilderData, SlashCommandExecuteData, SlashCommandExecuteFunction, SlashCommandHaltTriggerData, SlashCommandHaltFunction, SlashCommandResolvable } from '../classes/builders/SlashCommandBuilder.js';
+import { CommandPreconditionResolvable, CommandPreconditionResultData } from '../classes/structures/CommandPrecondition.js';
 import { MessageCommandOptionValue } from '../classes/structures/MessageCommandOptionValue.js';
 import { CooldownSweeperOptions } from '../classes/managers/CooldownManager.js';
 import { CommandHaltReason, CommandType } from './constants.js';
 import { Cooldown } from '../classes/structures/Cooldown.js';
+import { CommandHaltResultData } from '../classes/structures/CommandHalt.js';
 
 // Config
 export interface RecipleClientConfig {
@@ -48,7 +49,8 @@ export interface RecipleClientInteractionBasedCommandConfigOptions extends Recip
 export type AnyCommandBuilderData = ContextMenuCommandBuilderData|MessageCommandBuilderData|SlashCommandBuilderData;
 export type AnyCommandBuilder = ContextMenuCommandBuilder|MessageCommandBuilder|AnySlashCommandBuilder;
 export type AnyCommandResolvable = ContextMenuCommandResolvable|MessageCommandResolvable|SlashCommandResolvable;
-export type AnyCommandHaltData = ContextMenuCommandHaltData|MessageCommandHaltData|SlashCommandHaltData;
+export type AnyCommandHaltTriggerData = ContextMenuCommandHaltTriggerData|MessageCommandHaltTriggerData|SlashCommandHaltTriggerData;
+export type AnyCommandHaltResultData = CommandHaltResultData<CommandType.ContextMenuCommand>|CommandHaltResultData<CommandType.MessageCommand>|CommandHaltResultData<CommandType.SlashCommand>;
 export type AnyCommandHaltFunction = ContextMenuCommandHaltFunction|MessageCommandHaltFunction|SlashCommandHaltFunction;
 export type AnyCommandExecuteData = ContextMenuCommandExecuteData|MessageCommandExecuteData|SlashCommandExecuteData;
 export type AnyCommandExecuteFunction = ContextMenuCommandExecuteFunction|MessageCommandExecuteFunction|SlashCommandExecuteFunction;
@@ -60,13 +62,13 @@ export type AnySlashCommandOptionBuilder = AnyNonSubcommandSlashCommandOptionBui
 export type AnySlashCommandOptionData = AnyNonSubcommandSlashCommandOptionData|AnySubcommandSlashCommandOptionData;
 
 // Command Halt
-export type CommandHaltData<T extends CommandType> =
-    | CommandErrorHaltData<T>
-    | CommandCooldownHaltData<T>
-    | (T extends CommandType.MessageCommand ? CommandInvalidArgumentsHaltData<T> | CommandMissingArgumentsHaltData<T> : never)
-    | CommandPreconditionTriggerHaltData<T>;
+export type CommandHaltTriggerData<T extends CommandType> =
+    | CommandErrorHaltTriggerData<T>
+    | CommandCooldownHaltTriggerData<T>
+    | (T extends CommandType.MessageCommand ? CommandInvalidArgumentsHaltTriggerData<T> | CommandMissingArgumentsHaltTriggerData<T> : never)
+    | CommandPreconditionTriggerHaltTriggerData<T>;
 
-export interface BaseCommandHaltData<T extends CommandType> {
+export interface BaseCommandHaltTriggerData<T extends CommandType> {
     reason: CommandHaltReason;
     commandType: T;
     executeData: T extends CommandType.ContextMenuCommand
@@ -78,27 +80,27 @@ export interface BaseCommandHaltData<T extends CommandType> {
                 : never;
 }
 
-export interface CommandErrorHaltData<T extends CommandType> extends BaseCommandHaltData<T> {
+export interface CommandErrorHaltTriggerData<T extends CommandType> extends BaseCommandHaltTriggerData<T> {
     reason: CommandHaltReason.Error;
     error: any;
 }
 
-export interface CommandCooldownHaltData<T extends CommandType> extends BaseCommandHaltData<T> {
+export interface CommandCooldownHaltTriggerData<T extends CommandType> extends BaseCommandHaltTriggerData<T> {
     reason: CommandHaltReason.Cooldown;
     cooldown: Cooldown;
 }
 
-export interface CommandInvalidArgumentsHaltData<T extends CommandType> extends BaseCommandHaltData<T> {
+export interface CommandInvalidArgumentsHaltTriggerData<T extends CommandType> extends BaseCommandHaltTriggerData<T> {
     reason: CommandHaltReason.InvalidArguments;
     invalidOptions: Collection<string, MessageCommandOptionValue>;
 }
 
-export interface CommandMissingArgumentsHaltData<T extends CommandType> extends BaseCommandHaltData<T> {
+export interface CommandMissingArgumentsHaltTriggerData<T extends CommandType> extends BaseCommandHaltTriggerData<T> {
     reason: CommandHaltReason.MissingArguments;
     missingOptions: Collection<string, MessageCommandOptionValue>;
 }
 
-export interface CommandPreconditionTriggerHaltData<T extends CommandType> extends BaseCommandHaltData<T>, Omit<CommandPreconditionTriggerData, 'executeData'> {
+export interface CommandPreconditionTriggerHaltTriggerData<T extends CommandType> extends BaseCommandHaltTriggerData<T>, Omit<CommandPreconditionResultData, 'executeData'> {
     reason: CommandHaltReason.PreconditionTrigger;
 }
 

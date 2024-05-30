@@ -1,6 +1,6 @@
 import { ApplicationCommand, ApplicationCommandDataResolvable, ChatInputCommandInteraction, Collection, ContextMenuCommandInteraction, FetchApplicationCommandOptions, JSONEncodable, Message, RESTPostAPIChatInputApplicationCommandsJSONBody, RESTPostAPIContextMenuApplicationCommandsJSONBody, RestOrArray, isJSONEncodable, normalizeArray } from 'discord.js';
-import { AnyCommandBuilder, AnyCommandExecuteData, AnyCommandResolvable, RecipleClientConfig, RecipleClientInteractionBasedCommandConfigOptions } from '../../types/structures.js';
-import { CommandPrecondition, CommandPreconditionResolvable, CommandPreconditionTriggerData } from '../structures/CommandPrecondition.js';
+import { AnyCommandBuilder, AnyCommandExecuteData, AnyCommandHaltTriggerData, AnyCommandResolvable, RecipleClientConfig, RecipleClientInteractionBasedCommandConfigOptions } from '../../types/structures.js';
+import { CommandPrecondition, CommandPreconditionResolvable, CommandPreconditionResultData } from '../structures/CommandPrecondition.js';
 import { AnySlashCommandBuilder, SlashCommandBuilder, SlashCommandExecuteData } from '../builders/SlashCommandBuilder.js';
 import { ContextMenuCommandBuilder, ContextMenuCommandExecuteData } from '../builders/ContextMenuCommandBuilder.js';
 import { MessageCommandBuilder, MessageCommandExecuteData } from '../builders/MessageCommandBuilder.js';
@@ -8,6 +8,7 @@ import { RecipleClient } from '../structures/RecipleClient.js';
 import { CommandType } from '../../types/constants.js';
 import { Utils } from '../structures/Utils.js';
 import defaultsDeep from 'lodash.defaultsdeep';
+import { CommandHalt, CommandHaltResultData } from '../structures/CommandHalt.js';
 
 export interface CommandManagerRegisterCommandsOptions extends Omit<Exclude<RecipleClientConfig['applicationCommandRegister'], undefined>, 'enabled'> {
     contextMenuCommands?: Partial<RecipleClientInteractionBasedCommandConfigOptions> & {
@@ -23,6 +24,7 @@ export class CommandManager {
     readonly messageCommands: Collection<string, MessageCommandBuilder> = new Collection();
     readonly slashCommands: Collection<string, AnySlashCommandBuilder> = new Collection();
     readonly preconditions: Collection<string, CommandPrecondition> = new Collection();
+    readonly halts: Collection<string, CommandHalt> = new Collection();
 
     constructor(readonly client: RecipleClient<true>) {}
 
@@ -90,21 +92,44 @@ export class CommandManager {
         return preconditions;
     }
 
-    public async executePreconditions<T extends AnyCommandExecuteData = AnyCommandExecuteData>(executeData: T): Promise<CommandPreconditionTriggerData<T>|null> {
+    public async executePreconditions<T extends AnyCommandExecuteData = AnyCommandExecuteData>(executeData: T): Promise<CommandPreconditionResultData<T>|null> {
         const preconditions = Array.from(this.preconditions.values());
-        const disabledPreconditions = executeData.builder.disabled_preconditions.map(p => CommandPrecondition.resolve(p));
+        const disabledPreconditions = executeData.builder.disabled_preconditions;
 
         for (const precondition of executeData.builder.preconditions) {
             const data = CommandPrecondition.resolve(precondition);
-            if (preconditions.some(p => p.id === data.id)) continue;
+            if (preconditions.some(p => p.id === data.id) || disabledPreconditions.includes(data.id)) continue;
 
             preconditions.push(data);
         }
 
         for (const precondition of preconditions) {
-            if (precondition.disabled || disabledPreconditions.some(p => p.id === precondition.id)) continue;
+            if (precondition.disabled || disabledPreconditions.some(p => p === precondition.id)) continue;
 
             const data = await precondition.execute(executeData);
+            if (!data.successful) return data;
+        }
+
+        return null;
+    }
+
+    public async executeHalts<T extends AnyCommandHaltTriggerData = AnyCommandHaltTriggerData>(trigger: T): Promise<CommandHaltResultData<T['commandType']>|null> {
+        const halts: CommandHalt<T['commandType']>[] = [];
+        const disabledHalts = trigger.executeData.builder.disabled_halts;
+
+        for (const halt of trigger.executeData.builder.halts) {
+            const data = CommandHalt.resolve<T['commandType']>(halt);
+            if (halts.some(p => p.id === data.id)  || disabledHalts.includes(data.id)) continue;
+
+            halts.push(data);
+        }
+
+        halts.push(...this.halts.values());
+
+        for (const halt of halts) {
+            if (halt.disabled || disabledHalts.some(p => p === halt.id)) continue;
+
+            const data = await halt.execute(trigger);
             if (!data.successful) return data;
         }
 
