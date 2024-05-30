@@ -40,7 +40,6 @@
     "README.md"
   ],
   "dependencies": {
-    "@reciple/update-checker": "^9.1.0",
     "@reciple/utils": "^9.0.0-dev.2",
     "commander": "^12.1.0",
     "dotenv": "^16.4.5",
