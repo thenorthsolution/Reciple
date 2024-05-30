@@ -1,6 +1,12 @@
 import { MessageCommandOptionValidators } from '../validators/MessageCommandOptionValidators.js';
-import { Awaitable, isJSONEncodable, Message, JSONEncodable } from 'discord.js';
+import { Awaitable, isJSONEncodable, JSONEncodable, Message } from 'discord.js';
 import { RecipleClient } from '../structures/RecipleClient.js';
+
+export interface MessageCommandOptionBuilderResolveValueOptions {
+    value: string;
+    message: Message;
+    client: RecipleClient<true>;
+}
 
 export interface MessageCommandOptionBuilderData<T extends any = any> {
     name: string;
@@ -9,8 +15,8 @@ export interface MessageCommandOptionBuilderData<T extends any = any> {
      * @default false
      */
     required?: boolean;
-    validate?: (value: string, message: Message, client: RecipleClient<true>) => Awaitable<boolean>;
-    resolve_value?: (value: string, message: Message, client: RecipleClient<true>) => Awaitable<T>;
+    validate?: (options: MessageCommandOptionBuilderResolveValueOptions) => Awaitable<boolean|string|Error>;
+    resolve_value?: (options: MessageCommandOptionBuilderResolveValueOptions) => Awaitable<T>;
 }
 
 export class MessageCommandOptionBuilder<T extends any = any> implements MessageCommandOptionBuilderData<T> {

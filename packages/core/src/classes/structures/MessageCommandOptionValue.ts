@@ -8,6 +8,7 @@ export interface MessageCommandOptionValueData<T extends any = any> {
     value: string|null;
     missing: boolean;
     invalid: boolean;
+    error?: string|Error;
 }
 
 export interface MessageCommandOptionParseOptionValueOptions<T extends any = any> {
@@ -24,6 +25,7 @@ export class MessageCommandOptionValue<T extends any = any> implements MessageCo
     readonly missing: boolean;
     readonly invalid: boolean;
     readonly message: Message;
+    readonly error?: Error;
     readonly client: RecipleClient<true>;
 
     protected constructor(options: MessageCommandOptionValueData<T> & { client: RecipleClient<true>; message: Message; }) {
@@ -34,13 +36,14 @@ export class MessageCommandOptionValue<T extends any = any> implements MessageCo
         this.invalid = options.invalid;
         this.message = options.message;
         this.client = options.client;
+        this.error = typeof options.error === 'string' ? new Error(options.error) : options.error;
     }
 
     public async resolveValue(required?: boolean): Promise<T|null>;
     public async resolveValue(required?: true): Promise<T>;
     public async resolveValue(required: boolean = false): Promise<T|null> {
         if (this.value === null) return null;
-        return this.option.resolve_value ? Promise.resolve(this.option.resolve_value(this.value, this.message, this.client)) : null;
+        return this.option.resolve_value ? Promise.resolve(this.option.resolve_value({ value: this.value, message: this.message, client: this.client })) : null;
     }
 
     public toJSON(): MessageCommandOptionValueData {
@@ -55,16 +58,23 @@ export class MessageCommandOptionValue<T extends any = any> implements MessageCo
 
     public static async parseOptionValue<T>(options: MessageCommandOptionParseOptionValueOptions<T>): Promise<MessageCommandOptionValue<T>> {
         const missing = !!options.option.required && typeof options.value !== 'string';
-        const invalid = missing || (options.option.validate && options.value ? !(await Promise.resolve(options.option.validate(options.value, options.message, options.client))) : false);
+        const validateData = !missing
+            ? options.option.validate && options.value
+                ? await Promise.resolve(options.option.validate({ value: options.value, message: options.message, client: options.client }))
+                : false
+            : false;
 
         return new MessageCommandOptionValue({
             name: options.option.name,
             option: options.option,
             value: options.value ?? null,
             missing,
-            invalid,
+            invalid: validateData !== true,
             client: options.client,
-            message: options.message
+            message: options.message,
+            error: typeof validateData !== 'boolean'
+                ? typeof validateData === 'string' ? new Error(validateData) : validateData
+                : undefined
         });
     }
 }
