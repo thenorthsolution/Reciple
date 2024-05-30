@@ -12,8 +12,8 @@ body:
         - '@reciple/utils'
         - 'create-reciple'
         - 'reciple'
-      validations:
-        required: true
+    validations:
+      required: true
   - id: description
     type: textarea
     attributes:
@@ -25,8 +25,8 @@ body:
         2. Do thing in Discord client
         3. Observe behavior
         4. See error logs below
-      validations:
-        required: true
+    validations:
+      required: true
   - type: textarea
     id: snippet
     attributes:
@@ -45,8 +45,8 @@ body:
       label: Versions
       description: List necessary versions here. This includes your package version, runtime version, operating system etc.
       placeholder: |
-        - @reciple/core 9.0.0 (`npm ls @reciple/core`) 
-        - reciple 9.0.0 (`npm ls reciple`) 
+        - @reciple/core 9.0.0 (`npm ls @reciple/core`)
+        - reciple 9.0.0 (`npm ls reciple`)
         - discord.js 14.12.1 (`npm ls discord.js`)
         - Node.js 16.11.0 (`node --version`)
         - TypeScript 5.1.6 (`npm ls typescript` if you use it)
