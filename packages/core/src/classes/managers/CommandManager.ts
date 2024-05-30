@@ -5,10 +5,11 @@ import { AnySlashCommandBuilder, SlashCommandBuilder, SlashCommandExecuteData } 
 import { ContextMenuCommandBuilder, ContextMenuCommandExecuteData } from '../builders/ContextMenuCommandBuilder.js';
 import { MessageCommandBuilder, MessageCommandExecuteData } from '../builders/MessageCommandBuilder.js';
 import { RecipleClient } from '../structures/RecipleClient.js';
-import { CommandType } from '../../types/constants.js';
+import { CommandHaltReason, CommandType } from '../../types/constants.js';
 import { Utils } from '../structures/Utils.js';
 import defaultsDeep from 'lodash.defaultsdeep';
 import { CommandHalt, CommandHaltResolvable, CommandHaltResultData } from '../structures/CommandHalt.js';
+import { RecipleError } from '../structures/RecipleError.js';
 
 export interface CommandManagerRegisterCommandsOptions extends Omit<Exclude<RecipleClientConfig['applicationCommandRegister'], undefined>, 'enabled'> {
     contextMenuCommands?: Partial<RecipleClientInteractionBasedCommandConfigOptions> & {
@@ -264,6 +265,44 @@ export class CommandManager {
         }
 
         return null;
+    }
+
+    /**
+     * Execute a command with execute data
+     * @param data The command execute data.
+     */
+    public async executeCommandBuilderExecute(data: AnyCommandExecuteData): Promise<boolean> {
+        try {
+            switch (data.type) {
+                case CommandType.ContextMenuCommand:
+                    await data.builder.execute(data);
+                    break;
+                case CommandType.MessageCommand:
+                    await data.builder.execute(data);
+                    break;
+                case CommandType.SlashCommand:
+                    await data.builder.execute(data);
+                    break;
+            }
+
+            return this.client.emit('recipleCommandExecute', data);
+        } catch (error) {
+            // @ts-expect-error Types is broken here
+            const haltData = await this.executeHalts({
+                commandType: data.type,
+                reason: CommandHaltReason.Error,
+                executeData: data,
+                error
+            })
+            .catch(err => {
+                this.client._throwError(new RecipleError(RecipleError.createCommandHaltErrorOptions(data.builder, err)));
+                return null;
+            });
+
+            if (haltData === false) this.client._throwError(new RecipleError(RecipleError.createCommandExecuteErrorOptions(data.builder, error)))
+        }
+
+        return false;
     }
 
     public toJSON() {

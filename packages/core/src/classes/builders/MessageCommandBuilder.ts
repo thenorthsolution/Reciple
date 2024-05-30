@@ -296,7 +296,7 @@ export class MessageCommandBuilder extends BaseCommandBuilder implements Message
             }
         }
 
-        return (await client.executeCommandBuilderExecute(executeData)) ? executeData : null;
+        return (await client.commands.executeCommandBuilderExecute(executeData)) ? executeData : null;
     }
 }
 

@@ -1,12 +1,11 @@
 import { AnyCommandExecuteData, RecipleClientConfig } from '../../types/structures.js';
 import { ApplicationCommand, Awaitable, Client, ClientEvents, Collection } from 'discord.js';
-import { CommandHaltReason, CommandType, version } from '../../types/constants.js';
+import { version } from '../../types/constants.js';
 import { CommandPreconditionResultData } from './CommandPrecondition.js';
 import { CooldownManager } from '../managers/CooldownManager.js';
 import { CommandManager } from '../managers/CommandManager.js';
 import { ModuleManager } from '../managers/ModuleManager.js';
 import { CommandHaltResultData } from './CommandHalt.js';
-import { RecipleError } from './RecipleError.js';
 import { Logger } from 'fallout-utility/Logger';
 import { If } from 'fallout-utility/types';
 
@@ -55,6 +54,11 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
         super(config.client);
     }
 
+    /**
+     * Sets the logger for the client.
+     * @param logger The instance of the logger.
+     * @returns 
+     */
     public setLogger(logger: Logger|null): this {
         this.logger = logger ?? null;
         return this;
@@ -84,40 +88,6 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
         this._cooldowns = null;
 
         if (clearModules) this.modules.cache.clear();
-    }
-
-    public async executeCommandBuilderExecute(data: AnyCommandExecuteData): Promise<boolean> {
-        try {
-            switch (data.type) {
-                case CommandType.ContextMenuCommand:
-                    await data.builder.execute(data);
-                    break;
-                case CommandType.MessageCommand:
-                    await data.builder.execute(data);
-                    break;
-                case CommandType.SlashCommand:
-                    await data.builder.execute(data);
-                    break;
-            }
-
-            return this.emit('recipleCommandExecute', data);
-        } catch (error) {
-            // @ts-expect-error Types is broken here
-            const haltData = await this.commands!.executeHalts({
-                commandType: data.type,
-                reason: CommandHaltReason.Error,
-                executeData: data,
-                error
-            })
-            .catch(err => {
-                this._throwError(new RecipleError(RecipleError.createCommandHaltErrorOptions(data.builder, err)));
-                return null;
-            });
-
-            if (haltData === false) this._throwError(new RecipleError(RecipleError.createCommandExecuteErrorOptions(data.builder, error)))
-        }
-
-        return false;
     }
 
     public _throwError(error: Error, throwWhenNoListener: boolean = true): void {

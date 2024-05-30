@@ -140,7 +140,7 @@ export class ContextMenuCommandBuilder extends Mixin(DiscordJsContextMenuCommand
             return null;
         }
 
-        return (await client.executeCommandBuilderExecute(executeData)) ? executeData : null;
+        return (await client.commands.executeCommandBuilderExecute(executeData)) ? executeData : null;
     }
 }
 
