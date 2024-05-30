@@ -14,3 +14,42 @@ body:
         - 'reciple'
       validations:
         required: true
+  - id: description
+    type: textarea
+    attributes:
+      label: Issue description
+      description: Describe the issue in as much detail as possible.
+      placeholder: |
+        Steps to reproduce with below code sample:
+        1. Do thing
+        2. Do thing in Discord client
+        3. Observe behavior
+        4. See error logs below
+      validations:
+        required: true
+  - type: textarea
+    id: snippet
+    attributes:
+      label: Code sample
+      description: |
+        Your code sample should be:
+        1. Minimal - Use as little code as possible that still produces the same problem (and is understandable)
+        2. Complete - Provide all parts someone else needs to reproduce your problem
+        3. Reproducible - Test the code you're about to provide to make sure it reproduces the problem
+
+        This will be automatically formatted into code, so no need for backticks.
+      render: typescript
+  - type: textarea
+    id: versions
+    attributes:
+      label: Versions
+      description: List necessary versions here. This includes your package version, runtime version, operating system etc.
+      placeholder: |
+        - @reciple/core 9.0.0 (`npm ls @reciple/core`) 
+        - reciple 9.0.0 (`npm ls reciple`) 
+        - discord.js 14.12.1 (`npm ls discord.js`)
+        - Node.js 16.11.0 (`node --version`)
+        - TypeScript 5.1.6 (`npm ls typescript` if you use it)
+        - macOS Ventura 13.3.1
+    validations:
+      required: true
