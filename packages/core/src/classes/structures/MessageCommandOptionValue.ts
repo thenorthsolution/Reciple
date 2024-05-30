@@ -3,11 +3,29 @@ import { RecipleClient } from './RecipleClient.js';
 import { Message } from 'discord.js';
 
 export interface MessageCommandOptionValueData<T extends any = any> {
+    /**
+     * The name of the option.
+     */
     name: string;
+    /**
+     * The builder that is used to create the option.
+     */
     option: MessageCommandOptionBuilder<T>;
+    /**
+     * The raw value of the option.
+     */
     value: string|null;
+    /**
+     * Whether the option is missing.
+     */
     missing: boolean;
+    /**
+     * Whether the option is invalid.
+     */
     invalid: boolean;
+    /**
+     * The error that occurred while parsing the option.
+     */
     error?: string|Error;
 }
 
@@ -39,6 +57,10 @@ export class MessageCommandOptionValue<T extends any = any> implements MessageCo
         this.error = typeof options.error === 'string' ? new Error(options.error) : options.error;
     }
 
+    /**
+     * Resolves the raw value of the option.
+     * @param required Whether the option is required.
+     */
     public async resolveValue(required?: boolean): Promise<T|null>;
     public async resolveValue(required?: true): Promise<T>;
     public async resolveValue(required: boolean = false): Promise<T|null> {

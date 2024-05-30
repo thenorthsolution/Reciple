@@ -1,4 +1,5 @@
 import { Cooldown, CooldownData } from '../structures/Cooldown.js';
+import { RecipleClient } from '../structures/RecipleClient.js';
 import { DataManager } from './DataManager.js';
 
 export interface CooldownSweeperOptions {
@@ -9,6 +10,10 @@ export interface CooldownSweeperOptions {
 
 export class CooldownManager extends DataManager<Cooldown> {
     private _sweeper?: NodeJS.Timeout;
+
+    constructor(readonly client: RecipleClient) {
+        super();
+    }
 
     public create(data: CooldownData): Cooldown {
         const isExists = this.findCooldown(data);

@@ -9,12 +9,37 @@ import { Utils } from './Utils.js';
 import semver from 'semver';
 
 export interface RecipleModuleData {
+    /**
+     * The id of your module.
+     * The id only accepts lowercase letters and cannot contain spaces or special characters.
+     */
     id?: string;
+    /**
+     * The name of your module. This is used to display when logging the module into the console.
+     */
     name?: string;
+    /**
+     * The supported reciple client versions of the module.
+     */
     versions?: string|string[];
+    /**
+     * The commands that the module will use.
+     */
     commands?: AnyCommandResolvable[];
+    /**
+     * The function that is executed when the module is resolved. (Bot's Pre-login)
+     * @param data The data that is passed to the module.
+     */
     onStart(data: RecipleModuleStartData): boolean|string|Error|Promise<boolean|string|Error>;
+    /**
+     * The function that is executed when the module is loaded. (Bot's Post-login)
+     * @param data The data that is passed to the module.
+     */
     onLoad?(data: RecipleModuleLoadData): void|string|Error|Promise<void|string|Error>;
+    /**
+     * The function that is executed when the module is unloaded. (Bot's Pre-logout)
+     * @param data The data that is passed to the module.
+     */
     onUnload?(data: RecipleModuleUnloadData): void|string|Error|Promise<void|string|Error>;
 }
 

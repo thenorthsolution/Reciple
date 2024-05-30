@@ -6,10 +6,32 @@ import { AnyCommandExecuteData } from '../../types/structures.js';
 import { CommandType } from '../../types/constants.js';
 
 export interface CommandPreconditionData {
+    /**
+     * The id of the precondition.
+     * The id only accepts lowercase letters and cannot contain spaces or special characters.
+     */
     id: string;
+    /**
+     * Whether the precondition is disabled.
+     */
     disabled?: boolean;
+    /**
+     * The execute function for context menu commands.
+     * @param execute Execute data for the command.
+     * @param precondition The precondition that is being executed.
+     */
     contextMenuCommandExecute?: (execute: ContextMenuCommandExecuteData, precondition: CommandPrecondition) => Awaitable<CommandPreconditionResultResolvable<ContextMenuCommandExecuteData>>;
+    /**
+     * The execute function for message commands.
+     * @param execute Execute data for the command.
+     * @param precondition The precondition that is being executed.
+     */
     messageCommandExecute?: (execute: MessageCommandExecuteData, precondition: CommandPrecondition) => Awaitable<CommandPreconditionResultResolvable<MessageCommandExecuteData>>;
+    /**
+     * The execute function for slash commands.
+     * @param execute Execute data for the command.
+     * @param precondition The precondition that is being executed.
+     */
     slashCommandExecute?: (execute: SlashCommandExecuteData, precondition: CommandPrecondition) => Awaitable<CommandPreconditionResultResolvable<SlashCommandExecuteData>>;
 }
 
@@ -39,6 +61,10 @@ export class CommandPrecondition implements CommandPreconditionData {
         this.slashCommandExecute = data.slashCommandExecute;
     }
 
+    /**
+     * Sets the disabled state of the precondition.
+     * @param disabled Disabled state of the precondition.
+     */
     public setDisabled(disabled: boolean): this {
         this.disabled = disabled;
         return this;
