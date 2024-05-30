@@ -70,6 +70,7 @@ export const config = {
         new CooldownPrecondition(),
         new CommandPermissionsPrecondition()
     ],
+    commandHalts: [],
     cooldownSweeperOptions: {
         timer: 1000 * 60 * 60
     },
