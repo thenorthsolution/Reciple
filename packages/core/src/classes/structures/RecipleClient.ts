@@ -114,7 +114,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
                 return null;
             });
 
-            if (haltData !== null && !haltData.successful) this._throwError(new RecipleError(RecipleError.createCommandExecuteErrorOptions(data.builder, haltData.message || error)))
+            if (haltData === false) this._throwError(new RecipleError(RecipleError.createCommandExecuteErrorOptions(data.builder, error)))
         }
 
         return false;

@@ -90,7 +90,7 @@ export class CommandManager {
         return this.addHalts(normalizeArray(data));
     }
 
-    public async executeHalts<T extends AnyCommandHaltTriggerData = AnyCommandHaltTriggerData>(trigger: T): Promise<CommandHaltResultData<T['commandType']>|null> {
+    public async executeHalts<T extends AnyCommandHaltTriggerData = AnyCommandHaltTriggerData>(trigger: T): Promise<CommandHaltResultData<T['commandType']>|boolean> {
         const halts: CommandHalt<T['commandType']>[] = [];
         const disabledHalts = trigger.executeData.builder.disabled_halts;
 
@@ -103,15 +103,19 @@ export class CommandManager {
 
         halts.push(...this.halts.values());
 
+        let handled = false;
+
         for (const halt of halts) {
             if (halt.disabled || disabledHalts.some(p => p === halt.id) || !halt.commandTypes.includes(trigger.commandType)) continue;
 
             const data = await halt.execute(trigger);
             if (data === null) continue;
             if (!data.successful) return data;
+
+            handled = true;
         }
 
-        return null;
+        return handled;
     }
 
     public get(command: string, type: CommandType.ContextMenuCommand): ContextMenuCommandBuilder|undefined;
