@@ -16,11 +16,29 @@ export interface PackageUpdateCheckerEvents {
 }
 
 export interface PackageUpdateCheckerUpdateData {
+    /**
+     * A string representing the name of the package.
+     */
     package: string;
+    /**
+     * Package metadata from the registry
+     */
     data: AbbreviatedMetadata;
+    /**
+     *  It could be major, minor, or patch, which typically represent changes to the package that are incompatible, backward-compatible, or fully backward-compatible with the previous version, respectively.
+     */
     updateType: PackageUpdateType;
+    /**
+     * This property is a string that represents the current version of the package before the update.
+     */
     currentVersion: string;
+    /**
+     * This property is also a string that represents the version of the package after it has been updated.
+     */
     updatedVersion: string;
+    /**
+     * This property is a string that represents the latest available version of the package at the time of the update check.
+     */
     latestVersion: string;
 }
 
