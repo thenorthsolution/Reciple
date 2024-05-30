@@ -8,10 +8,12 @@ import { CommandType } from '../../types/constants.js';
 export interface CommandPreconditionData {
     id: string;
     disabled?: boolean;
-    contextMenuCommandExecute: (execute: ContextMenuCommandExecuteData, precondition: CommandPrecondition) => Awaitable<boolean|string|Omit<CommandPreconditionTriggerData, 'executeData'|'precondition'>>;
-    messageCommandExecute: (execute: MessageCommandExecuteData, precondition: CommandPrecondition) => Awaitable<boolean|string|Omit<CommandPreconditionTriggerData, 'executeData'|'precondition'>>;
-    slashCommandExecute: (execute: SlashCommandExecuteData, precondition: CommandPrecondition) => Awaitable<boolean|string|Omit<CommandPreconditionTriggerData, 'executeData'|'precondition'>>;
+    contextMenuCommandExecute?: (execute: ContextMenuCommandExecuteData, precondition: CommandPrecondition) => Awaitable<CommandPreconditionTriggerResolvable<ContextMenuCommandExecuteData>>;
+    messageCommandExecute?: (execute: MessageCommandExecuteData, precondition: CommandPrecondition) => Awaitable<CommandPreconditionTriggerResolvable<MessageCommandExecuteData>>;
+    slashCommandExecute?: (execute: SlashCommandExecuteData, precondition: CommandPrecondition) => Awaitable<CommandPreconditionTriggerResolvable<SlashCommandExecuteData>>;
 }
+
+export type CommandPreconditionTriggerResolvable<T extends AnyCommandExecuteData = AnyCommandExecuteData> = boolean|string|Omit<CommandPreconditionTriggerData<T>, 'executeData'|'precondition'>;
 
 export interface CommandPreconditionTriggerData<T extends AnyCommandExecuteData = AnyCommandExecuteData, D extends any = any> {
     precondition: CommandPrecondition;
@@ -23,9 +25,9 @@ export interface CommandPreconditionTriggerData<T extends AnyCommandExecuteData 
 
 export class CommandPrecondition implements CommandPreconditionData {
     public readonly id: string;
-    public readonly contextMenuCommandExecute: CommandPreconditionData['contextMenuCommandExecute'];
-    public readonly messageCommandExecute: CommandPreconditionData['messageCommandExecute'];
-    public readonly slashCommandExecute: CommandPreconditionData['slashCommandExecute'];
+    public readonly contextMenuCommandExecute?: CommandPreconditionData['contextMenuCommandExecute'];
+    public readonly messageCommandExecute?: CommandPreconditionData['messageCommandExecute'];
+    public readonly slashCommandExecute?: CommandPreconditionData['slashCommandExecute'];
 
     public disabled: boolean = false;
 
@@ -47,13 +49,13 @@ export class CommandPrecondition implements CommandPreconditionData {
 
         switch (execute.type) {
             case CommandType.ContextMenuCommand:
-                data = await Promise.resolve(this.contextMenuCommandExecute(execute, this));
+                data = this.contextMenuCommandExecute ? await Promise.resolve(this.contextMenuCommandExecute(execute, this)) : true;
                 break;
             case CommandType.MessageCommand:
-                data = await Promise.resolve(this.messageCommandExecute(execute, this));
+                data = this.messageCommandExecute ? await Promise.resolve(this.messageCommandExecute(execute, this)) : true;
                 break;
             case CommandType.SlashCommand:
-                data = await Promise.resolve(this.slashCommandExecute(execute, this));
+                data = this.slashCommandExecute ? await Promise.resolve(this.slashCommandExecute(execute, this)) : true;
                 break;
         }
 
