@@ -1,0 +1,31 @@
+name: Feature Request
+description: Request a new feature
+labels: ['Type: Feature']
+body:
+  - id: package
+    type: dropdown
+    attributes:
+      label: Which package is this feature request for?
+      options:
+        - '@reciple/core'
+        - '@reciple/docgen'
+        - '@reciple/utils'
+        - 'create-reciple'
+        - 'reciple'
+    validations:
+      required: true
+  - id: description
+    type: textarea
+    attributes:
+      label: Feature description
+      description: A clear and concise description of what the problem is, or what feature you want to be implemented.
+      placeholder: Something new...
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context
+      description: Any other context, screenshots, or file uploads that help us understand your feature request.
+    validations:
+      required: true
