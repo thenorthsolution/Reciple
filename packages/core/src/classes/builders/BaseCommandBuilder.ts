@@ -72,14 +72,14 @@ export abstract class BaseCommandBuilder implements BaseCommandBuilderData {
         return this;
     }
 
-    public addDisabledPreconditions(...preconditionIds: RestOrArray<CommandPreconditionResolvable>): this {
+    public addDisabledPreconditions(...preconditionIds: RestOrArray<CommandPreconditionResolvable|string>): this {
         const ids = normalizeArray(preconditionIds);
         BaseCommandValidators.isValidDisabledPreconditions(ids);
         this.disabled_preconditions.push(...ids.map(p => typeof p === 'string' ? p : CommandPrecondition.resolve(p).id));
         return this;
     }
 
-    public setDisabledPreconditions(...preconditionIds: RestOrArray<CommandPreconditionResolvable>): this {
+    public setDisabledPreconditions(...preconditionIds: RestOrArray<CommandPreconditionResolvable|string>): this {
         const ids = normalizeArray(preconditionIds);
         BaseCommandValidators.isValidDisabledPreconditions(ids);
         this.disabled_preconditions = ids.map(p => typeof p === 'string' ? p : CommandPrecondition.resolve(p).id);
@@ -100,14 +100,14 @@ export abstract class BaseCommandBuilder implements BaseCommandBuilderData {
         return this;
     }
 
-    public addDisabledHalts(...haltIds: RestOrArray<CommandHaltResolvable>): this {
+    public addDisabledHalts(...haltIds: RestOrArray<CommandHaltResolvable|string>): this {
         const ids = normalizeArray(haltIds);
         BaseCommandValidators.isValidDisabledHalts(ids);
         this.disabled_halts.push(...ids.map(h => typeof h === 'string' ? h : CommandHalt.resolve(h).id));
         return this;
     }
 
-    public setDisabledHalts(...haltIds: RestOrArray<CommandHaltResolvable>): this {
+    public setDisabledHalts(...haltIds: RestOrArray<CommandHaltResolvable|string>): this {
         const ids = normalizeArray(haltIds);
         BaseCommandValidators.isValidDisabledHalts(ids);
         this.disabled_halts = ids.map(h => typeof h === 'string' ? h : CommandHalt.resolve(h).id);
