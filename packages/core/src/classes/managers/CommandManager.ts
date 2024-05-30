@@ -107,6 +107,7 @@ export class CommandManager {
             if (halt.disabled || disabledHalts.some(p => p === halt.id) || !halt.commandTypes.includes(trigger.commandType)) continue;
 
             const data = await halt.execute(trigger);
+            if (data === null) continue;
             if (!data.successful) return data;
         }
 

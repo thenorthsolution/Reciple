@@ -57,7 +57,7 @@ export class CommandHalt<T extends CommandType = CommandType> implements Command
         return { ...this };
     }
 
-    public async execute<T extends AnyCommandHaltTriggerData = AnyCommandHaltTriggerData, D extends any = any>(trigger: T): Promise<CommandHaltResultData<T['commandType'], D>> {
+    public async execute<T extends AnyCommandHaltTriggerData = AnyCommandHaltTriggerData, D extends any = any>(trigger: T): Promise<CommandHaltResultData<T['commandType'], D>|null> {
         let data: CommandHaltResultResolvable<T['commandType'], D>;
 
         switch (trigger.commandType) {
@@ -76,7 +76,9 @@ export class CommandHalt<T extends CommandType = CommandType> implements Command
             ? { successful: false, message: data }
             : typeof data === 'boolean'
                 ? { successful: data }
-                : data ?? { successful: true };
+                : data ?? null;
+
+        if (data === null) return data;
 
         const resultData: CommandHaltResultData<T['commandType'], D> = {
             ...data,
