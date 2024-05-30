@@ -122,13 +122,6 @@ export class CommandPermissionsPrecondition extends CommandPrecondition {
         return new PermissionsBitField(permissions?.missing(requiredPermissions));
     }
 
-    /**
-     * @deprecated Use `isPermissionsPreconditionData` instead
-     */
-    public static isCommandPermissionsPreconditionTriggerData<T extends AnyCommandExecuteData = AnyCommandExecuteData>(data: unknown): data is CommandPermissionsPreconditionTriggerData<T> {
-        return this.isPermissionsPreconditionData<T>(data);
-    }
-
     public static isPermissionsPreconditionData<T extends AnyCommandExecuteData = AnyCommandExecuteData>(data: unknown): data is CommandPermissionsPreconditionTriggerData<T> {
         return ((data as CommandPermissionsPreconditionTriggerData<T>).precondition instanceof CommandPermissionsPrecondition);
     }
