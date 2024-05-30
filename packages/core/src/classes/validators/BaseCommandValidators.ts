@@ -24,8 +24,9 @@ export class BaseCommandValidators extends Validators {
     public static preconditions = Validators.commandPreconditionResolvable
         .array({ message: 'Expected an array of preconditions for .preconditions' });
 
-    public static halt = BaseCommandValidators.s
-        .instance(Function, { message: 'Expected a function for .halt' })
+    public static halts = BaseCommandValidators.s
+        .instance(Function, { message: 'Expected a function for .halts' })
+        .array({ message: 'Expected an array for .halts' })
         .optional();
 
     public static execute = BaseCommandValidators.s
@@ -37,7 +38,7 @@ export class BaseCommandValidators extends Validators {
         required_bot_permissions: BaseCommandValidators.required_bot_permissions,
         required_member_permissions: BaseCommandValidators.required_member_permissions,
         preconditions: BaseCommandValidators.preconditions,
-        halt: BaseCommandValidators.halt,
+        halts: BaseCommandValidators.halts,
         execute: BaseCommandValidators.execute,
     });
 
@@ -67,8 +68,8 @@ export class BaseCommandValidators extends Validators {
         }
     }
 
-    public static isValidHalt(halt: unknown): asserts halt is BaseCommandBuilderData['halt'] {
-        BaseCommandValidators.halt.setValidationEnabled(BaseCommandValidators.isValidationEnabled()).parse(halt);
+    public static isValidHalts(halts: unknown): asserts halts is BaseCommandBuilderData['halts'] {
+        BaseCommandValidators.halts.setValidationEnabled(BaseCommandValidators.isValidationEnabled()).parse(halts);
     }
 
     public static isValidExecute(execute: unknown): asserts execute is BaseCommandBuilderData['execute'] {
@@ -83,7 +84,7 @@ export class BaseCommandValidators extends Validators {
         BaseCommandValidators.isValidRequiredBotPermissions(cmd.required_bot_permissions);
         BaseCommandValidators.isValidRequiredMemberPermissions(cmd.required_member_permissions);
         BaseCommandValidators.isValidPreconditions(cmd.preconditions);
-        BaseCommandValidators.isValidHalt(cmd.halt);
+        BaseCommandValidators.isValidHalts(cmd.halts);
         BaseCommandValidators.isValidExecute(cmd.execute);
     }
 }

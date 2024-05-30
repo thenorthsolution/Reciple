@@ -27,7 +27,7 @@ export type MessageCommandHaltFunction = (haltData: MessageCommandHaltData) => A
 
 export interface MessageCommandBuilderData extends BaseCommandBuilderData {
     command_type: CommandType.MessageCommand;
-    halt?: MessageCommandHaltFunction;
+    halts?: MessageCommandHaltFunction[];
     execute: MessageCommandExecuteFunction;
     name: string;
     description: string;
@@ -48,10 +48,10 @@ export interface MessageCommandBuilderData extends BaseCommandBuilderData {
 }
 
 export interface MessageCommandBuilder extends BaseCommandBuilder {
-    halt?: MessageCommandHaltFunction;
+    halts: MessageCommandHaltFunction[];
     execute: MessageCommandExecuteFunction;
 
-    setHalt(halt: MessageCommandHaltFunction|null): this;
+    setHalts(...halts: RestOrArray<MessageCommandHaltFunction>): this;
     setExecute(execute: MessageCommandExecuteFunction): this;
 }
 

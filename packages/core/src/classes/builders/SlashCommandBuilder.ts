@@ -1,4 +1,4 @@
-import { Awaitable, ChatInputCommandInteraction, JSONEncodable, SlashCommandBuilder as DiscordJsSlashCommandBuilder, RESTPostAPIChatInputApplicationCommandsJSONBody, ApplicationCommandType, SharedSlashCommandOptions, ApplicationCommandOptionType, SlashCommandStringOption, SlashCommandIntegerOption, SlashCommandBooleanOption, SlashCommandUserOption, SlashCommandChannelOption, ApplicationCommandOptionAllowedChannelTypes, SlashCommandRoleOption, SlashCommandMentionableOption, SlashCommandNumberOption, SlashCommandAttachmentOption, SlashCommandSubcommandBuilder, SlashCommandSubcommandGroupBuilder, isJSONEncodable, PermissionsBitField, PermissionResolvable } from 'discord.js';
+import { Awaitable, ChatInputCommandInteraction, JSONEncodable, SlashCommandBuilder as DiscordJsSlashCommandBuilder, RESTPostAPIChatInputApplicationCommandsJSONBody, ApplicationCommandType, SharedSlashCommandOptions, ApplicationCommandOptionType, SlashCommandStringOption, SlashCommandIntegerOption, SlashCommandBooleanOption, SlashCommandUserOption, SlashCommandChannelOption, ApplicationCommandOptionAllowedChannelTypes, SlashCommandRoleOption, SlashCommandMentionableOption, SlashCommandNumberOption, SlashCommandAttachmentOption, SlashCommandSubcommandBuilder, SlashCommandSubcommandGroupBuilder, isJSONEncodable, PermissionsBitField, PermissionResolvable, RestOrArray } from 'discord.js';
 import { AnyNonSubcommandSlashCommandOptionBuilder, AnySlashCommandOptionBuilder, AnySlashCommandOptionData, CommandHaltData } from '../../types/structures.js';
 import { BaseCommandBuilder, BaseCommandBuilderData } from './BaseCommandBuilder.js';
 import { CommandHaltReason, CommandType } from '../../types/constants.js';
@@ -20,7 +20,7 @@ export type SlashCommandHaltFunction = (haltData: SlashCommandHaltData) => Await
 
 export interface SlashCommandBuilderData extends BaseCommandBuilderData, Omit<RESTPostAPIChatInputApplicationCommandsJSONBody, 'type'> {
     command_type: CommandType.SlashCommand;
-    halt?: SlashCommandHaltFunction;
+    halts?: SlashCommandHaltFunction[];
     execute: SlashCommandExecuteFunction;
 }
 
@@ -30,10 +30,10 @@ export type SlashCommandBuilderSubcommandAddOptionMethods = 'addSubcommand'|'add
 export class SlashCommandSharedPrivateOptions extends SharedSlashCommandOptions<any> {}
 
 export interface SlashCommandBuilder extends DiscordJsSlashCommandBuilder, BaseCommandBuilder {
-    halt?: SlashCommandHaltFunction;
+    halts: SlashCommandHaltFunction[];
     execute: SlashCommandExecuteFunction;
 
-    setHalt(halt: SlashCommandHaltFunction): this;
+    setHalts(...halt: RestOrArray<SlashCommandHaltFunction>): this;
     setExecute(execute: SlashCommandExecuteFunction): this;
 
     addSubcommandGroup(input: SlashCommandSubcommandGroupBuilder|((subcommandGroup: SlashCommandSubcommandGroupBuilder) => SlashCommandSubcommandGroupBuilder)): Omit<this, SlashCommandBuilderNonSubcommandAddOptionMethods>;

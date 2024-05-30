@@ -1,4 +1,4 @@
-import { ApplicationCommandType, Awaitable, ContextMenuCommandInteraction, ContextMenuCommandType, ContextMenuCommandBuilder as DiscordJsContextMenuCommandBuilder, JSONEncodable, PermissionsBitField, PermissionResolvable, RESTPostAPIContextMenuApplicationCommandsJSONBody, SlashCommandAssertions, isJSONEncodable } from 'discord.js';
+import { ApplicationCommandType, Awaitable, ContextMenuCommandInteraction, ContextMenuCommandType, ContextMenuCommandBuilder as DiscordJsContextMenuCommandBuilder, JSONEncodable, PermissionsBitField, PermissionResolvable, RestOrArray, RESTPostAPIContextMenuApplicationCommandsJSONBody, SlashCommandAssertions, isJSONEncodable } from 'discord.js';
 import { BaseCommandBuilder, BaseCommandBuilderData } from './BaseCommandBuilder.js';
 import { CommandHaltReason, CommandType } from '../../types/constants.js';
 import { RecipleClient } from '../structures/RecipleClient.js';
@@ -21,15 +21,15 @@ export type ContextMenuCommandHaltFunction = (haltData: ContextMenuCommandHaltDa
 export interface ContextMenuCommandBuilderData extends BaseCommandBuilderData, Omit<RESTPostAPIContextMenuApplicationCommandsJSONBody, 'options'|'description'|'description_localizations'|'type'> {
     command_type: CommandType.ContextMenuCommand;
     type: ContextMenuCommandType|'Message'|'User';
-    halt?: ContextMenuCommandHaltFunction;
+    halts?: ContextMenuCommandHaltFunction[];
     execute: ContextMenuCommandExecuteFunction;
 }
 
 export interface ContextMenuCommandBuilder extends DiscordJsContextMenuCommandBuilder, BaseCommandBuilder {
-    halt?: ContextMenuCommandHaltFunction;
+    halts: ContextMenuCommandHaltFunction[];
     execute: ContextMenuCommandExecuteFunction;
 
-    setHalt(halt: ContextMenuCommandHaltFunction|null): this;
+    setHalts(...halt: RestOrArray<ContextMenuCommandHaltFunction>): this;
     setExecute(execute: ContextMenuCommandExecuteFunction): this;
 }
 
@@ -43,7 +43,7 @@ export class ContextMenuCommandBuilder extends Mixin(DiscordJsContextMenuCommand
         if (data?.dm_permission) this.setDMPermission(data.dm_permission);
         if (data?.default_permission !== undefined) this.setDefaultPermission(data.default_permission);
         if (data?.execute) this.setExecute(data.execute);
-        if (data?.halt) this.setHalt(data.halt);
+        if (data?.halts) this.setHalts(data.halts);
         if (data?.name) this.setName(data.name);
         if (data?.name_localizations) this.setNameLocalizations(data.name_localizations);
         if (data?.nsfw) this.setNSFW(data.nsfw);

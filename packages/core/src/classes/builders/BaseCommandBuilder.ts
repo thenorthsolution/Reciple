@@ -14,7 +14,7 @@ export interface BaseCommandBuilderData {
     required_member_permissions?: PermissionResolvable;
     preconditions?: CommandPreconditionResolvable[];
     disabled_preconditions?: CommandPreconditionResolvable[];
-    halt?: AnyCommandHaltFunction;
+    halts?: AnyCommandHaltFunction[];
     execute: AnyCommandExecuteFunction;
 }
 
@@ -25,7 +25,7 @@ export abstract class BaseCommandBuilder implements BaseCommandBuilderData {
     public required_member_permissions?: bigint;
     public preconditions: CommandPreconditionResolvable[] = [];
     public disabled_preconditions: CommandPreconditionResolvable[] = [];
-    public halt?: AnyCommandHaltFunction;
+    public halts: AnyCommandHaltFunction[] = [];
     public execute: AnyCommandExecuteFunction = () => {};
 
     constructor(data?: Omit<Partial<BaseCommandBuilderData>, 'command_type'>) {
@@ -33,7 +33,7 @@ export abstract class BaseCommandBuilder implements BaseCommandBuilderData {
         if (data?.required_bot_permissions) this.setRequiredBotPermissions(data.required_bot_permissions);
         if (data?.required_member_permissions) this.setRequiredMemberPermissions(data.required_member_permissions);
         if (data?.preconditions) this.setPreconditions(data.preconditions);
-        if (data?.halt) this.setHalt(data.halt);
+        if (data?.halts) this.setHalts(data.halts);
         if (data?.execute) this.setExecute(data.execute);
     }
 
@@ -83,9 +83,17 @@ export abstract class BaseCommandBuilder implements BaseCommandBuilderData {
         return this;
     }
 
-    public setHalt(halt: AnyCommandHaltFunction|null): this {
-        BaseCommandValidators.isValidHalt(halt ?? undefined);
-        this.halt = halt ?? undefined;
+    public addHalts(...halts: RestOrArray<AnyCommandHaltFunction>): this {
+        halts = normalizeArray(halts);
+        BaseCommandValidators.isValidHalts(halts);
+        this.halts.push(...halts);
+        return this;
+    }
+
+    public setHalts(...halts: RestOrArray<AnyCommandHaltFunction>): this {
+        halts = normalizeArray(halts);
+        BaseCommandValidators.isValidHalts(halts);
+        this.halts = halts;
         return this;
     }
 
@@ -107,14 +115,14 @@ export abstract class BaseCommandBuilder implements BaseCommandBuilderData {
         return this.command_type === CommandType.SlashCommand;
     }
 
-    protected _toJSON<C extends CommandType = CommandType, H extends AnyCommandHaltFunction = AnyCommandHaltFunction, E extends AnyCommandExecuteFunction = AnyCommandExecuteFunction>(): Omit<BaseCommandBuilderData, 'command_type'|'halt'|'execute'> & { command_type: C; halt?: H; execute: E; } {
+    protected _toJSON<C extends CommandType = CommandType, H extends AnyCommandHaltFunction = AnyCommandHaltFunction, E extends AnyCommandExecuteFunction = AnyCommandExecuteFunction>(): Omit<BaseCommandBuilderData, 'command_type'|'halt'|'execute'> & { command_type: C; halts?: H[]; execute: E; } {
         return {
             command_type: this.command_type as C,
             cooldown: this.cooldown,
             required_bot_permissions: this.required_bot_permissions,
             required_member_permissions: this.required_member_permissions,
             preconditions: this.preconditions.map(p => isJSONEncodable(p) ? p.toJSON() : p),
-            halt: this.halt as H,
+            halts: this.halts as H[],
             execute: this.execute as E,
         };
     }
