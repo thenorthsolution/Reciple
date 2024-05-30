@@ -14,6 +14,7 @@ export * from './classes/managers/ModuleManager.js';
 export * from './classes/preconditions/CooldownPrecondition.js';
 export * from './classes/preconditions/CommandPermissionsPrecondition.js';
 
+export * from './classes/structures/CommandHalt.js';
 export * from './classes/structures/CommandPrecondition.js';
 export * from './classes/structures/Cooldown.js';
 export * from './classes/structures/MessageCommandOptionValue.js';
