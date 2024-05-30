@@ -6,9 +6,22 @@ import { MessageCommandHaltFunction, MessageCommandHaltTriggerData } from '../bu
 import { SlashCommandHaltFunction, SlashCommandHaltTriggerData } from '../builders/SlashCommandBuilder.js';
 
 export interface CommandHaltData<T extends CommandType = CommandType> {
+    /**
+     * The id of the command halt.
+     * The id only accepts lowercase letters and cannot contain spaces or special characters.
+     */
     id: string;
+    /**
+     * Whether the command halt is disabled.
+     */
     disabled?: boolean;
+    /**
+     * The command types that the command halt will be used for.
+     */
     commandTypes: T[];
+    /**
+     * The function that will be called when the command halt is triggered.
+     */
     halt: T extends CommandType.ContextMenuCommand
         ? ContextMenuCommandHaltFunction
         : T extends CommandType.MessageCommand
@@ -21,10 +34,25 @@ export interface CommandHaltData<T extends CommandType = CommandType> {
 export type CommandHaltResultResolvable<T extends CommandType = CommandType, D extends any = any> = null|undefined|boolean|string|Omit<CommandHaltResultData<T, D>, 'halt'|'triggerData'>
 
 export interface CommandHaltResultData<T extends CommandType = CommandType, D extends any = any> {
+    /**
+     * The command halt that was triggered.
+     */
     halt: CommandHalt<T>;
+    /**
+     * Whether the command halt was successful.
+     */
     successful: boolean;
+    /**
+     * Custom string message about the result of the command halt.
+     */
     message?: string;
+    /**
+     * Custom object result of the command halt.
+     */
     data?: D;
+    /**
+     * The trigger data of the command halt.
+     */
     triggerData: T extends CommandType.ContextMenuCommand
         ? ContextMenuCommandHaltTriggerData
         : T extends CommandType.MessageCommand
@@ -48,6 +76,10 @@ export class CommandHalt<T extends CommandType = CommandType> implements Command
         this.halt = data.halt;
     }
 
+    /**
+     * Sets whether the command halt is disabled.
+     * @param disabled Disable the command halt.
+     */
     public setDisabled(disabled: boolean): this {
         this.disabled = disabled;
         return this;
