@@ -1,4 +1,4 @@
-import { ApplicationCommand, ApplicationCommandDataResolvable, ChatInputCommandInteraction, Collection, ContextMenuCommandInteraction, FetchApplicationCommandOptions, JSONEncodable, Message, RESTPostAPIChatInputApplicationCommandsJSONBody, RESTPostAPIContextMenuApplicationCommandsJSONBody, RestOrArray, isJSONEncodable, normalizeArray } from 'discord.js';
+import { ApplicationCommand, ApplicationCommandDataResolvable, ChatInputCommandInteraction, Collection, ContextMenuCommandInteraction, JSONEncodable, Message, RESTPostAPIChatInputApplicationCommandsJSONBody, RESTPostAPIContextMenuApplicationCommandsJSONBody, RestOrArray, isJSONEncodable, normalizeArray } from 'discord.js';
 import { AnyCommandBuilder, AnyCommandExecuteData, AnyCommandHaltTriggerData, AnyCommandResolvable, RecipleClientConfig, RecipleClientInteractionBasedCommandConfigOptions } from '../../types/structures.js';
 import { CommandPrecondition, CommandPreconditionResolvable, CommandPreconditionResultData } from '../structures/CommandPrecondition.js';
 import { AnySlashCommandBuilder, SlashCommandBuilder, SlashCommandExecuteData } from '../builders/SlashCommandBuilder.js';
@@ -39,6 +39,10 @@ export class CommandManager {
         ];
     }
 
+    /**
+     * Adds preconditions to the global preconditions.
+     * @param data Preconditions resolvable.
+     */
     public addPreconditions(...data: RestOrArray<CommandPreconditionResolvable>): CommandPrecondition[] {
         const preconditions = normalizeArray(data).map(p => CommandPrecondition.resolve(p));
 
@@ -49,11 +53,19 @@ export class CommandManager {
         return preconditions;
     }
 
+    /**
+     * Sets the preconditions in global preconditions.
+     * @param data Preconditions resolvable.
+     */
     public setPreconditions(...data: RestOrArray<CommandPreconditionResolvable>): CommandPrecondition[] {
         this.preconditions.clear();
         return this.addPreconditions(normalizeArray(data));
     }
 
+    /**
+     * Executes a preconditions for a command.
+     * @param executeData Execute data of the command.
+     */
     public async executePreconditions<T extends AnyCommandExecuteData = AnyCommandExecuteData>(executeData: T): Promise<CommandPreconditionResultData<T>|null> {
         const preconditions = Array.from(this.preconditions.values());
         const disabledPreconditions = executeData.builder.disabled_preconditions;
@@ -75,6 +87,10 @@ export class CommandManager {
         return null;
     }
 
+    /**
+     * Adds halt to the global halts.
+     * @param data Halts resolvable.
+     */
     public addHalts(...data: RestOrArray<CommandHaltResolvable>): CommandHalt[] {
         const halts = normalizeArray(data).map(h => CommandHalt.resolve(h));
 
@@ -85,11 +101,19 @@ export class CommandManager {
         return halts;
     }
 
+    /**
+     * Sets halts in global halts.
+     * @param data Halts resolvable.
+     */
     public setHalts(...data: RestOrArray<CommandHaltResolvable>): CommandHalt[] {
         this.halts.clear();
         return this.addHalts(normalizeArray(data));
     }
 
+    /**
+     * Executes a halt for a command.
+     * @param trigger Trigger data of the command.
+     */
     public async executeHalts<T extends AnyCommandHaltTriggerData = AnyCommandHaltTriggerData>(trigger: T): Promise<CommandHaltResultData<T['commandType']>|boolean> {
         const halts: CommandHalt<T['commandType']>[] = [];
         const disabledHalts = trigger.executeData.builder.disabled_halts;
@@ -132,6 +156,10 @@ export class CommandManager {
         }
     }
 
+    /**
+     * Adds new command to the manager.
+     * @param commands Any command resolvable.
+     */
     public add(...commands: RestOrArray<AnyCommandResolvable>): AnyCommandBuilder[] {
         const resolved = normalizeArray(commands).map(c => Utils.resolveCommandBuilder(c));
 
@@ -152,6 +180,10 @@ export class CommandManager {
         return resolved;
     }
 
+    /**
+     * Registers the application commands.
+     * @param options Register application commands options.
+     */
     public async registerApplicationCommands(options?: CommandManagerRegisterCommandsOptions): Promise<{ global: Collection<string, ApplicationCommand>; guilds: Collection<string, Collection<string, ApplicationCommand>> }> {
         const store = { global: new Collection<string, ApplicationCommand>(), guilds: new Collection<string, Collection<string, ApplicationCommand>>() };
         const config = defaultsDeep({ ...this.client.config.commands, ...this.client.config.applicationCommandRegister }, options) as CommandManagerRegisterCommandsOptions;
@@ -215,17 +247,10 @@ export class CommandManager {
         return store;
     }
 
-    public getApplicationCommand(command: string, guildId?: string): ApplicationCommand|undefined {
-        return this.client.application?.commands.cache.find(c => command && (guildId ? c.guildId === guildId : c.guildId === null));
-    }
-
-    public async fetchApplicationCommand(command: string, guildId?: string): Promise<ApplicationCommand|undefined>;
-    public async fetchApplicationCommand(command: string, options?: FetchApplicationCommandOptions): Promise<ApplicationCommand|undefined>;
-    public async fetchApplicationCommand(command: string, options?: string|FetchApplicationCommandOptions): Promise<ApplicationCommand|undefined> {
-        const commands = await this.client.application?.commands.fetch(typeof options === 'string' ? { guildId: options } : options ?? {});
-        return commands?.find(c => c.name === command);
-    }
-
+    /**
+     * Executes a command.
+     * @param interaction The object that triggered the command.
+     */
     public async execute(interaction: ContextMenuCommandInteraction): Promise<ContextMenuCommandExecuteData|null>;
     public async execute(message: Message): Promise<MessageCommandExecuteData|null>;
     public async execute(interaction: ChatInputCommandInteraction): Promise<SlashCommandExecuteData|null>;
