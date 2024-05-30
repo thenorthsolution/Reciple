@@ -1,0 +1,16 @@
+name: Bug Report
+description: Report an issue with Reciple or another package.
+labels: ['Type: Bug']
+body:
+  - id: package
+    type: dropdown
+    attributes:
+      label: Which package is this bug report for?
+      options:
+        - '@reciple/core'
+        - '@reciple/docgen'
+        - '@reciple/utils'
+        - 'create-reciple'
+        - 'reciple'
+      validations:
+        required: true
