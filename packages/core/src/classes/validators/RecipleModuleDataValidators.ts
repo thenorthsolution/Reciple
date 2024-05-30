@@ -16,7 +16,8 @@ export class RecipleModuleDataValidators extends Validators {
         .union([
             RecipleModuleDataValidators.s.string(),
             RecipleModuleDataValidators.s.string().array()
-        ], { message: 'Expected string or array of strings for module .versions' });
+        ], { message: 'Expected string or array of strings for module .versions' })
+        .optional();
 
     public static commands = RecipleModuleDataValidators.s
         .union([

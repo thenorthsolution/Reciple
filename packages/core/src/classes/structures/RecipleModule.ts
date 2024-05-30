@@ -11,7 +11,7 @@ import semver from 'semver';
 export interface RecipleModuleData {
     id?: string;
     name?: string;
-    versions: string|string[];
+    versions?: string|string[];
     commands?: AnyCommandResolvable[];
     onStart(data: RecipleModuleStartData): boolean|string|Error|Promise<boolean|string|Error>;
     onLoad?(data: RecipleModuleLoadData): void|string|Error|Promise<void|string|Error>;
@@ -49,7 +49,7 @@ export class RecipleModule<Data extends RecipleModuleData = RecipleModuleData> {
 
     get name(): string|undefined { return this.data.name; }
     get displayName(): string { return this.name ?? this.file ?? this.id; }
-    get versions(): string[] { return normalizeArray([this.data.versions] as RestOrArray<string>); }
+    get versions(): string[] { return normalizeArray([this.data.versions ?? 'latest'] as RestOrArray<string>); }
     get commands(): AnyCommandBuilder[] { return this.data.commands?.map(c => Utils.resolveCommandBuilder(c)) ?? []; }
     get supported(): boolean { return this.versions.some(v => v === "latest" || semver.satisfies(this.client.version, v)); }
 
