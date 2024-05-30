@@ -21,6 +21,9 @@ export type ContextMenuCommandHaltFunction = (haltData: ContextMenuCommandHaltTr
 
 export interface ContextMenuCommandBuilderData extends BaseCommandBuilderData, Omit<RESTPostAPIContextMenuApplicationCommandsJSONBody, 'options'|'description'|'description_localizations'|'type'> {
     command_type: CommandType.ContextMenuCommand;
+    /**
+     * The type of the data that will be returned when the command is executed.
+     */
     type: ContextMenuCommandType|'Message'|'User';
     halts?: CommandHaltResolvable<CommandType.ContextMenuCommand>[];
     execute: ContextMenuCommandExecuteFunction;

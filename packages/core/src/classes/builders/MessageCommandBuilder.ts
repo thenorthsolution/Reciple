@@ -30,21 +30,36 @@ export interface MessageCommandBuilderData extends BaseCommandBuilderData {
     command_type: CommandType.MessageCommand;
     halts?: CommandHaltResolvable<CommandType.MessageCommand>[];
     execute: MessageCommandExecuteFunction;
+    /**
+     * The name of the command.
+     */
     name: string;
+    /**
+     * The description of the command.
+     */
     description: string;
+    /**
+     * The aliases of the command.
+     */
     aliases?: string[];
     /**
+     * Whether to validate options or not.
      * @default true
      */
     validate_options?: boolean;
     /**
+     * Allows commands to be executed in DMs.
      * @default false
      */
     dm_permission?: boolean;
     /**
+     * Allow bots to execute this command.
      * @default false
      */
     allow_bot?: boolean;
+    /**
+     * The options of the command.
+     */
     options?: MessageCommandOptionResolvable[];
 }
 
@@ -56,7 +71,7 @@ export interface MessageCommandBuilder extends BaseCommandBuilder {
     setExecute(execute: MessageCommandExecuteFunction): this;
 }
 
-export class MessageCommandBuilder extends BaseCommandBuilder {
+export class MessageCommandBuilder extends BaseCommandBuilder implements MessageCommandBuilderData {
     public readonly command_type: CommandType.MessageCommand = CommandType.MessageCommand;
     public name: string = '';
     public description: string = '';
@@ -78,18 +93,30 @@ export class MessageCommandBuilder extends BaseCommandBuilder {
         if (data?.options) this.setOptions(data.options);
     }
 
+    /**
+     * Sets the name of the command.
+     * @param name Name of the command.
+     */
     public setName(name: string): this {
         MessageCommandValidators.isValidName(name);
         this.name = name;
         return this;
     }
 
+    /**
+     * Sets the description of the command.
+     * @param description Description of the command.
+     */
     public setDescription(description: string): this {
         MessageCommandValidators.isValidDescription(description);
         this.description = description;
         return this;
     }
 
+    /**
+     * Adds aliases to the command.
+     * @param aliases Aliases of the command.
+     */
     public addAliases(...aliases: RestOrArray<string>): this {
         aliases = normalizeArray(aliases);
         MessageCommandValidators.isValidAliases(aliases);
@@ -97,6 +124,10 @@ export class MessageCommandBuilder extends BaseCommandBuilder {
         return this;
     }
 
+    /**
+     * Sets aliases to the command.
+     * @param aliases Aliases of the command.
+     */
     public setAliases(...aliases: RestOrArray<string>): this {
         aliases = normalizeArray(aliases);
         MessageCommandValidators.isValidAliases(aliases);
@@ -104,24 +135,40 @@ export class MessageCommandBuilder extends BaseCommandBuilder {
         return this;
     }
 
+    /**
+     * Set whether to validate options or not.
+     * @param enabled Enable option validation.
+     */
     public setValidateOptions(enabled: boolean): this {
         MessageCommandValidators.isValidValidateOptions(enabled);
         this.validate_options = enabled;
         return this;
     }
 
+    /**
+     * Sets whether the command is available in DMs or not.
+     * @param DMPermission Enable command in Dms.
+     */
     public setDMPermission(DMPermission: boolean): this {
         MessageCommandValidators.isValidDMPermission(DMPermission);
         this.dm_permission = DMPermission;
         return this;
     }
 
+    /**
+     * Sets whether bots can use the command or not.
+     * @param enabled Enable bot usage of the command.
+     */
     public setAllowBot(enabled: boolean): this {
         MessageCommandValidators.isValidAllowBot(enabled);
         this.allow_bot = enabled;
         return this;
     }
 
+    /**
+     * Adds new option to the command.
+     * @param option Option data or builder.
+     */
     public addOption(option: MessageCommandOptionResolvable|((builder: MessageCommandOptionBuilder) => MessageCommandOptionBuilder)): this {
         const opt = typeof option === 'function' ? option(new MessageCommandOptionBuilder()) : MessageCommandOptionBuilder.from(option);
         MessageCommandOptionValidators.isValidMessageCommandOptionResolvable(opt);
@@ -133,6 +180,10 @@ export class MessageCommandBuilder extends BaseCommandBuilder {
         return this;
     }
 
+    /**
+     * Sets the options of the command.
+     * @param options Options data or builders.
+     */
     public setOptions(...options: RestOrArray<MessageCommandOptionResolvable|((builder: MessageCommandOptionBuilder) => MessageCommandOptionBuilder)>): this {
         options = normalizeArray(options);
         MessageCommandValidators.isValidOptions(options);
