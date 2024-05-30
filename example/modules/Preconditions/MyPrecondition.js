@@ -7,12 +7,12 @@ export default {
     id: 'command.precondition.lol',
     disabled: false,
     contextMenuCommandExecute: execute => {
-        return false;
+        return true;
     },
     messageCommandExecute: excute => {
-        return false;
+        return true;
     },
     slashCommandExecute: execute => {
-        return false;
+        return true;
     }
 };
