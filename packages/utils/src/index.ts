@@ -4,7 +4,6 @@ export * from './classes/PackageUpdateChecker.js';
 
 export * from './helpers/fileSystem.js';
 export * from './helpers/mentions.js';
-export * from './helpers/messageURL.js';
 export * from './helpers/modules.js';
 export * from './helpers/resolvers.js';
 export * from './helpers/validators.js';
