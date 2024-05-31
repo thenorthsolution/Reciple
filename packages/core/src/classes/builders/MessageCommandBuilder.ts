@@ -71,7 +71,7 @@ export interface MessageCommandBuilder extends BaseCommandBuilder {
     setExecute(execute: MessageCommandExecuteFunction): this;
 }
 
-export class MessageCommandBuilder extends BaseCommandBuilder implements MessageCommandBuilderData {
+export class MessageCommandBuilder extends BaseCommandBuilder implements MessageCommandBuilder, MessageCommandBuilderData {
     public readonly command_type: CommandType.MessageCommand = CommandType.MessageCommand;
     public name: string = '';
     public description: string = '';

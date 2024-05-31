@@ -37,7 +37,7 @@ export interface ContextMenuCommandBuilder extends DiscordJsContextMenuCommandBu
     setExecute(execute: ContextMenuCommandExecuteFunction): this;
 }
 
-export class ContextMenuCommandBuilder extends Mixin(DiscordJsContextMenuCommandBuilder, BaseCommandBuilder) {
+export class ContextMenuCommandBuilder extends Mixin(DiscordJsContextMenuCommandBuilder, BaseCommandBuilder) implements ContextMenuCommandBuilder {
     public readonly command_type: CommandType.ContextMenuCommand = CommandType.ContextMenuCommand;
 
     constructor(data?: Omit<Partial<ContextMenuCommandBuilderData>, 'command_type'>) {

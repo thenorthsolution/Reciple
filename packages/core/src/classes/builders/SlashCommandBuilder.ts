@@ -66,7 +66,7 @@ export interface SlashCommandBuilder extends DiscordJsSlashCommandBuilder, BaseC
     ): Omit<this, SlashCommandBuilderSubcommandAddOptionMethods> & SlashCommandSharedPrivateOptions;
 }
 
-export class SlashCommandBuilder extends Mixin(DiscordJsSlashCommandBuilder, BaseCommandBuilder) {
+export class SlashCommandBuilder extends Mixin(DiscordJsSlashCommandBuilder, BaseCommandBuilder) implements SlashCommandBuilder {
     public readonly command_type: CommandType.SlashCommand = CommandType.SlashCommand;
     public readonly type?: ApplicationCommandType.ChatInput = ApplicationCommandType.ChatInput;
 
