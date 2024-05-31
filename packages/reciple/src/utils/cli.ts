@@ -10,7 +10,7 @@ import { isMainThread, parentPort, threadId } from 'node:worker_threads';
 const { version, description } = JSON.parse(readFileSync(path.join(__dirname, '../../package.json'), 'utf-8'));
 const originalCwd = process.cwd();
 
-export let command = new Command()
+export const command = new Command()
     .name('reciple')
     .description(description)
     .version(`Reciple CLI: ${version}\nReciple Client: ${buildVersion}`, '-v, --version')
