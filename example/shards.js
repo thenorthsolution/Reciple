@@ -12,8 +12,8 @@ process.chdir(cli.cwd);
 
 loadEnv({ path: cli.options.env });
 
-const config = (await ConfigReader.readConfigJS(cli.options.config)).config;
-const logsFolder = process.env.LOGS_FOLDER ?? path.join(process.cwd(), (config.logger.logToFile.logsFolder || 'logs'));
+const config = (await ConfigReader.readConfigJS(cli.options.config ?? 'reciple.mjs')).config;
+const logsFolder = process.env.LOGS_FOLDER ?? path.join(process.cwd(), ((typeof config.logger?.logToFile !== 'function' ? config.logger?.logToFile.logsFolder : null) ?? 'logs'));
 
 const logger = await (await createLogger({
     debugmode: true,
