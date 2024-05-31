@@ -7,4 +7,4 @@ export enum PackageUpdateType {
     Patch,
     Prerelease,
     Build
-};
+}

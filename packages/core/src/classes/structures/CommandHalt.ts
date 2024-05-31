@@ -94,13 +94,13 @@ export class CommandHalt<T extends CommandType = CommandType> implements Command
 
         switch (trigger.commandType) {
             case CommandType.ContextMenuCommand:
-                data = await Promise.resolve((this.halt as ContextMenuCommandHaltFunction)(trigger));;
+                data = await Promise.resolve((this.halt as ContextMenuCommandHaltFunction)(trigger));
                 break;
             case CommandType.MessageCommand:
-                data = await Promise.resolve((this.halt as MessageCommandHaltFunction)(trigger));;
+                data = await Promise.resolve((this.halt as MessageCommandHaltFunction)(trigger));
                 break;
             case CommandType.SlashCommand:
-                data = await Promise.resolve((this.halt as SlashCommandHaltFunction)(trigger));;
+                data = await Promise.resolve((this.halt as SlashCommandHaltFunction)(trigger));
                 break;
         }
 
