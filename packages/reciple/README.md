@@ -45,15 +45,7 @@ To use templates use the following command in your terminal:
 npm create reciple@latest
 ```
 
-After that configure the template you want to use.
-
-## Manual Installation
-
-To install the handler, run the following command in your terminal:
-
-```bash
-npm i reciple @reciple/core discord.js
-```
+After that configure the template you want to use. [Learn More](https://reciple.js.org/guide/getting-started/installation)
 
 ## CLI usage
 
@@ -63,20 +55,18 @@ Usage: reciple [options] [cwd]
 Reciple is a Discord.js bot framework
 
 Arguments:
-  cwd                      Change the current working directory
+  cwd                  Change the current working directory
 
 Options:
-  -v, --version            output the version number
-  -t, --token <token>      Replace used bot token
-  -c, --config <dir>       Set path to a config file (default: "reciple.mjs")
-  -D, --debugmode          Enable debug mode
-  -y, --yes                Agree to all Reciple confirmation prompts
-  --env <file>             .env file location
-  --shardmode              Modifies some functionalities to support sharding
-  --setup                  Create required config without starting the bot
-  --cache-config <file>    Add custom caching config
-  --sweeper-config <file>  Add custom sweeper config
-  -h, --help               display help for command
+  -v, --version        output the version number
+  -t, --token <token>  Replace used bot token
+  -c, --config <dir>   Set path to a config file
+  -D, --debugmode      Enable debug mode
+  -y, --yes            Agree to all Reciple confirmation prompts
+  --env <file>         .env file location
+  --shardmode          Modifies some functionalities to support sharding
+  --setup              Create required config without starting the bot
+  -h, --help           display help for command
 ```
 
 ## Message Commands
@@ -109,8 +99,8 @@ new MessageCommandBuilder()
         .setName("quantity")
         .setDescription("Must be a number")
         .setRequired(true) // A required option
-        .setValidate(val => !isNaN(Number(val))) // Validate value
-        .setResolveValue(val => Number(val)) // Resolves the option value
+        .setValidate(({ value }) => !isNaN(Number(value))) // Validate value
+        .setResolveValue(({ value }) => Number(value)) // Resolves the option value
     )
     .setExecute(async command => {
         /**
@@ -135,7 +125,10 @@ new ContextMenuCommandBuilder()
     .setType(ApplicationCommandType.User)
     .setExecute(async ({ interaction }) => {
         if (!interaction.inCachedGuild()) return;
+
+        await interaction.deferReply();
         await interaction.targetMember.ban();
+        await interaction.editReply(`Banned ${interaction.targetUser}`);
     });
 ```
 
@@ -150,7 +143,9 @@ import { SlashCommandMenuBuilder } from 'reciple';
 new SlashCommandBuilder()
     .setName("ping")
     .setDescription("Pong")
-    .setExecute(async ({ interaction }) => interaction.reply(`Pong!`));
+    .setExecute(async ({ interaction }) => {
+        await interaction.reply(`Pong!`);
+    });
 ```
 
 ## Command Cooldowns
@@ -165,24 +160,30 @@ new ContextMenuCommandBuilder()
     .setName("Context Menu")
     .setType(ApplicationCommandType.Message)
     .setCooldown(1000 * 5) // 5 seconds cooldown
-    .setExecute(async ({ interaction }) => interaction.reply(`Hello!`));
+    .setExecute(async ({ interaction }) => {
+        await interaction.reply(`Hello!`);
+    });
 
 new MessageCommandBuilder()
     .setName("message-command")
     .setDescription(`Your command`)
     .setCooldown(1000 * 5) // 5 seconds cooldown
-    .setExecute(async ({ message }) => message.reply(`Hello!`));
+    .setExecute(async ({ message }) => {
+        await message.reply(`Hello!`);
+    });
 
 new SlashCommandBuilder()
     .setName("slash-command")
     .setDescription(`Your command`)
     .setCooldown(1000 * 5) // 5 seconds cooldown
-    .setExecute(async ({ interaction }) => interaction.reply(`Hello!`));
+    .setExecute(async ({ interaction }) => {
+        await interaction.reply(`Hello!`);
+    });
 ```
 
 ## Config
 
-You can configure the bot in `reciple.mjs` or `reciple.cjs` usually located in the bot's root directory.
+You can configure the bot in `reciple.mjs` usually located in the bot's root directory.
 
 ### Token
 

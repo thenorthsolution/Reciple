@@ -33,31 +33,31 @@
 ## Usage
 
 ```js
+// @ts-check
 import { RecipleClient, SlashCommandBuilder } from '@reciple/core';
 
 const client = new RecipleClient({
-    token: 'MTExIHlvdSEgpHJpZWQgMTEx.O5rKAA.dQw4w9WgXxQ_wpV-gGg4PSk_bm8',
+    token: 'YOUR_TOKEN',
     client: {
-        intents: [
-            'Guilds',
-            'GuildMessages',
-            'MessageContent'
-        ]
+        intents: ['Guilds']
     }
 });
 
 await client.login();
 
-client.commands.add(
+client.commands?.add(
     new SlashCommandBuilder()
         .setName('ping')
-        .setDescription('Ping bot')
-        .setExecute(async ({ interaction }) => interaction.reply(`Pong!`))
-);
+        .setDescription('Replies with pong!')
+        .setExecute(async ({ interaction }) => {
+            await interaction.reply('Pong!');
+        }),
+)
 
-await client.commands.registerApplicationCommands();
+await client.commands?.registerApplicationCommands();
 
 client.on('interactionCreate', async interaction => {
-    if (interaction.isChatInputCommand()) await client.commands.execute(interaction);
+    if (interaction.isChatInputCommand()) await client.commands?.execute(interaction);
 });
+
 ```

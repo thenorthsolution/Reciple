@@ -33,25 +33,19 @@
 ## Usage
 
 ```js
-import { parseMessageURL, resolveFromCachedCollection } from '@reciple/utils';
+import { MessageURLData } from '@reciple/utils';
 import { RecipleClient } from '@reciple/core';
 
 const client = new RecipleClient({
     token: process.env.TOKEN,
     client: {
-        intents: []
+        intents: ['Guilds']
     }
 });
 
-const message = parseMessageURL('https://discord.com/channels/0000000000000000000/0000000000000000000/0000000000000000000');
+const messageData = await MessageURLData.fetch('https://discord.com/channels/0000000000000000000/0000000000000000000/0000000000000000000', client);
 
-if (message.guildId) {
-    const guild = await resolveFromCachedCollection(message.guildId, client.guilds);
-    const channel = await resolveFromCachedCollection(message.channelId, guild.channels);
-    const message = await resolveFromCachedCollection(message.messageId, channel.messages);
-
-    await message.reply('yeah');
-}
+if (messageData.inGuild()) await messageData.message.reply('yeah');
 
 await client.login();
 ```
