@@ -19,7 +19,7 @@
     <br>
     <div style="padding-top: 1rem">
         <a href="https://discord.gg/thenorthsolution">
-            <img src="https://discord.com/api/guilds/1032785824686817291/embed.png?style=banner2">
+            <img src="http://invidget.switchblade.xyz/thenorthsolution">
         </a>
     </div>
 </h3>
