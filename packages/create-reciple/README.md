@@ -13,8 +13,8 @@
     <a href="https://github.com/thenorthsolution/Reciple/tree/main/packages/create-reciple">
         <img src="https://img.shields.io/npm/dt/create-reciple?maxAge=3600">
     </a>
-    <a href="https://www.codefactor.io/repository/github/falloutstudios/reciple/overview/main">
-        <img src="https://www.codefactor.io/repository/github/falloutstudios/reciple/badge/main">
+    <a href="https://www.codefactor.io/repository/github/thenorthsolution/reciple">
+        <img src="https://www.codefactor.io/repository/github/thenorthsolution/reciple/badge">
     </a>
     <br>
     <div style="padding-top: 1rem">
