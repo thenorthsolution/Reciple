@@ -1,5 +1,5 @@
 <h1 align="center">
-    <img src="https://i.imgur.com/DWM0tJL.png" width="50%">
+    <img src="/assets/reciple-contained.png" width="50%">
     <br>
 </h1>
 
