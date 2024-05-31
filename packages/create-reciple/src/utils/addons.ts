@@ -12,11 +12,8 @@ export const addonCreators = {
 };
 
 export function createAddonModuleFileContent(pkg: string, imports: string[]|string, classExport: string, type: AddonModuleType, params?: string): string {
-    let importStatement: string;
-    let exportStatement: string;
-
-    importStatement = `import ${typeof imports === 'string' ? imports : ('{ ' + imports.join(', ') + ' }')} from '${pkg}';`;
-    exportStatement = `export default new ${classExport}(${params ?? ''});`;
+    const importStatement = `import ${typeof imports === 'string' ? imports : ('{ ' + imports.join(', ') + ' }')} from '${pkg}';`;
+    const exportStatement = `export default new ${classExport}(${params ?? ''});`;
 
     return importStatement + '\n\n' + exportStatement;
 }
