@@ -47,7 +47,7 @@ export async function addRecipleRegistryCache(dir: string, type: AddonModuleType
 }
 
 export async function installAddons(dir: string, type: AddonModuleType, addons: string[], installPackage?: string): Promise<void> {
-    await runScript((installPackage ?? 'npm i') + ' ' + addons.map(a => a + '@3').join(' '), dir);
+    await runScript((installPackage ?? 'npm i') + ' ' + addons.map(a => a + '@^3').join(' '), dir);
 
     for (const addon of addons) {
         await addonCreators[addon as keyof typeof addonCreators](dir, type);
