@@ -12,7 +12,7 @@
     "watch": "tsc --watch --noEmit",
     "test": "npm run start -w example",
     "publish-dev": "lerna run build && lerna publish prerelease",
-    "publish-packages": "lerna run build && lerna publish",
+    "publish-latest": "lerna run build && lerna publish",
     "docs": "rimraf -g ./packages/*/docs/docs.json && lerna run docs"
   },
   "devDependencies": {
