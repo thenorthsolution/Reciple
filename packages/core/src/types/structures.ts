@@ -67,7 +67,7 @@ export type CommandHaltTriggerData<T extends CommandType> =
     | CommandErrorHaltTriggerData<T>
     | CommandCooldownHaltTriggerData<T>
     | (T extends CommandType.MessageCommand ? CommandInvalidArgumentsHaltTriggerData<T> | CommandMissingArgumentsHaltTriggerData<T> : never)
-    | CommandPreconditionTriggerHaltTriggerData<T>;
+    | CommandPreconditionResultHaltTriggerData<T>;
 
 export interface BaseCommandHaltTriggerData<T extends CommandType> {
     reason: CommandHaltReason;
@@ -101,7 +101,7 @@ export interface CommandMissingArgumentsHaltTriggerData<T extends CommandType> e
     missingOptions: Collection<string, MessageCommandOptionValue>;
 }
 
-export interface CommandPreconditionTriggerHaltTriggerData<T extends CommandType> extends BaseCommandHaltTriggerData<T>, Omit<CommandPreconditionResultData, 'executeData'> {
+export interface CommandPreconditionResultHaltTriggerData<T extends CommandType> extends BaseCommandHaltTriggerData<T>, Omit<CommandPreconditionResultData, 'executeData'> {
     reason: CommandHaltReason.PreconditionTrigger;
 }
 
