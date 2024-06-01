@@ -68,12 +68,12 @@ export class CommandHalt implements CommandHaltData {
 
     public disabled: boolean;
 
-    constructor(data: CommandHaltData) {
+    constructor(readonly data: CommandHaltData) {
         this.id = data.id;
         this.disabled = data.disabled ?? false;
-        this.contextMenuCommandHalt = data.contextMenuCommandHalt;
-        this.messageCommandHalt = data.messageCommandHalt;
-        this.slashCommandHalt = data.slashCommandHalt;
+        this.contextMenuCommandHalt = data.contextMenuCommandHalt ? (haltData => data.contextMenuCommandHalt!(haltData)) : undefined;
+        this.messageCommandHalt = data.messageCommandHalt ? (haltData => data.messageCommandHalt!(haltData)) : undefined;
+        this.slashCommandHalt = data.slashCommandHalt ? (haltData => data.slashCommandHalt!(haltData)) : undefined;
     }
 
     /**

@@ -53,12 +53,12 @@ export class CommandPrecondition implements CommandPreconditionData {
 
     public disabled: boolean;
 
-    constructor(data: CommandPreconditionData) {
+    constructor(readonly data: CommandPreconditionData) {
         this.id = data.id;
         this.disabled = data.disabled ?? false;
-        this.contextMenuCommandExecute = data.contextMenuCommandExecute;
-        this.messageCommandExecute = data.messageCommandExecute;
-        this.slashCommandExecute = data.slashCommandExecute;
+        this.contextMenuCommandExecute = data.contextMenuCommandExecute ? ((preconditionData, precondition) => data.contextMenuCommandExecute!(preconditionData, precondition)) : undefined;
+        this.messageCommandExecute = data.messageCommandExecute ? ((preconditionData, precondition) => data.messageCommandExecute!(preconditionData, precondition)) : undefined;
+        this.slashCommandExecute = data.slashCommandExecute ? ((preconditionData, precondition) => data.slashCommandExecute!(preconditionData, precondition)) : undefined;
     }
 
     /**
