@@ -2,11 +2,13 @@
 import { CommandHaltReason, CommandType } from 'reciple';
 
 /**
- * @type {import('reciple').CommandHaltData}
+ * @satisfies {import('reciple').CommandHaltData}
  */
 export default {
     id: 'org.reciple.js.handleerror',
-    commandTypes: [CommandType.ContextMenuCommand, CommandType.MessageCommand, CommandType.SlashCommand],
+    contextMenuCommandHalt(data){ return this.halt(data) },
+    messageCommandHalt(data){ return this.halt(data) },
+    slashCommandHalt(data){ return this.halt(data) },
     /**
      * 
      * @param {import('reciple').AnyCommandHaltTriggerData} data 
