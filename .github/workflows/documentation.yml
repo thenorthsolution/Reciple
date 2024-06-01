@@ -3,6 +3,7 @@ name: Generate Docs
 on:
   push:
     branches: ['main']
+    paths: ['packages/**/*']
     tags: ['**']
   workflow_dispatch:
 concurrency:
