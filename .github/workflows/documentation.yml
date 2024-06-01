@@ -16,7 +16,7 @@ jobs:
     if: github.repository_owner == 'thenorthsolution'
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: ${{ github.ref_name || '' }}
 
@@ -52,7 +52,7 @@ jobs:
         package: ['core', 'reciple', 'utils', 'docgen', 'create-reciple']
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: ${{ github.ref_name || '' }}
 
@@ -80,7 +80,7 @@ jobs:
           tag: ${{ github.ref_name }}
 
       - name: Checkout docs repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: 'tags'
           path: 'out'
