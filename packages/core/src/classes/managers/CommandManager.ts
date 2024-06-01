@@ -116,12 +116,12 @@ export class CommandManager {
      * @param trigger Trigger data of the command.
      */
     public async executeHalts<T extends AnyCommandHaltTriggerData = AnyCommandHaltTriggerData>(trigger: T): Promise<CommandHaltResultData<T['commandType']>|boolean> {
-        const halts: CommandHalt<T['commandType']>[] = [];
+        const halts: CommandHalt[] = [];
         const disabledHalts = trigger.executeData.builder.disabled_halts;
 
         for (const halt of trigger.executeData.builder.halts) {
-            const data = CommandHalt.resolve<T['commandType']>(halt);
-            if (halts.some(p => p.id === data.id)  || disabledHalts.includes(data.id) || !data.commandTypes.includes(trigger.commandType)) continue;
+            const data = CommandHalt.resolve(halt);
+            if (halts.some(p => p.id === data.id)  || disabledHalts.includes(data.id)) continue;
 
             halts.push(data);
         }
@@ -131,7 +131,7 @@ export class CommandManager {
         let handled = false;
 
         for (const halt of halts) {
-            if (halt.disabled || disabledHalts.some(p => p === halt.id) || !halt.commandTypes.includes(trigger.commandType)) continue;
+            if (halt.disabled || disabledHalts.some(p => p === halt.id)) continue;
 
             const data = await halt.execute(trigger);
             if (data === null) continue;
