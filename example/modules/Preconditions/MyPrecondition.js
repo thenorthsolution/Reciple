@@ -1,18 +1,23 @@
 // @ts-check
 
 /**
- * @type {import("reciple").CommandPreconditionData}
+ * @satisfies {import("reciple").CommandPreconditionData}
  */
-export default {
-    id: 'command.precondition.lol',
-    disabled: false,
-    contextMenuCommandExecute: execute => {
-        return false;
-    },
-    messageCommandExecute: excute => {
-        return false;
-    },
-    slashCommandExecute: execute => {
-        return false;
+export class ExamplePrecondition {
+    id = 'command.precondition.lol';
+    disabled = false;
+
+    contextMenuCommandExecute(execute) {
+        return true;
+    }
+
+    messageCommandExecute(excute) {
+        return true;
+    }
+
+    slashCommandExecute(execute) {
+        return true;
     }
 };
+
+export default new ExamplePrecondition();

@@ -1,10 +1,10 @@
-import { CommandPrecondition, CommandPreconditionData, CommandPreconditionTriggerData } from '../structures/CommandPrecondition';
+import { CommandPrecondition, CommandPreconditionData, CommandPreconditionResultData } from '../structures/CommandPrecondition.js';
 import { Guild, GuildBasedChannel, GuildMemberResolvable, Message, PermissionResolvable, PermissionsBitField } from 'discord.js';
-import { CommandPermissionsPreconditionTriggerDataType, CommandType } from '../../types/constants';
-import { ContextMenuCommandExecuteData } from '../builders/ContextMenuCommandBuilder';
-import { MessageCommandExecuteData } from '../builders/MessageCommandBuilder';
-import { SlashCommandExecuteData } from '../builders/SlashCommandBuilder';
-import { AnyCommandExecuteData } from '../../types/structures';
+import { CommandPermissionsPreconditionResultDataType, CommandType } from '../../types/constants.js';
+import { ContextMenuCommandExecuteData } from '../builders/ContextMenuCommandBuilder.js';
+import { MessageCommandExecuteData } from '../builders/MessageCommandBuilder.js';
+import { SlashCommandExecuteData } from '../builders/SlashCommandBuilder.js';
+import { AnyCommandExecuteData } from '../../types/structures.js';
 
 export class CommandPermissionsPrecondition extends CommandPrecondition {
     public static id: string = 'org.reciple.js.cmdpermissions';
@@ -16,13 +16,17 @@ export class CommandPermissionsPrecondition extends CommandPrecondition {
         slashCommandExecute: (data, precondition) => CommandPermissionsPrecondition._execute(data, precondition),
     };
 
-    private static async _execute(data: MessageCommandExecuteData|SlashCommandExecuteData|ContextMenuCommandExecuteData, precondition: CommandPermissionsPrecondition): Promise<boolean|CommandPreconditionTriggerData> {
+    constructor() {
+        super(CommandPermissionsPrecondition.data);
+    }
+
+    private static async _execute(data: MessageCommandExecuteData|SlashCommandExecuteData|ContextMenuCommandExecuteData, precondition: CommandPermissionsPrecondition): Promise<boolean|CommandPreconditionResultData> {
         const requiredBotPermissions = data.builder.required_bot_permissions;
         const requiredMemberPermissions = data.builder.required_member_permissions;
         const allowBot = 'allow_bot' in data.builder ? data.builder.allow_bot : false;
         const dmPermission = data.builder.dm_permission;
 
-        const triggerData: CommandPermissionsPreconditionTriggerData<AnyCommandExecuteData> = {
+        const triggerData: CommandPermissionsPreconditionResultData<AnyCommandExecuteData> = {
             executeData: data,
             precondition,
             successful: false
@@ -31,14 +35,14 @@ export class CommandPermissionsPrecondition extends CommandPrecondition {
         if (data.type === CommandType.MessageCommand) {
             if (!allowBot && data.message.author.bot) {
                 triggerData.message = 'Bot users cannot execute this message command';
-                triggerData.data = { type: CommandPermissionsPreconditionTriggerDataType.BotNotAllowed };
+                triggerData.data = { type: CommandPermissionsPreconditionResultDataType.BotNotAllowed };
 
                 return triggerData;
             }
 
             if (!dmPermission && !data.message.inGuild()) {
                 triggerData.message = 'Execute is not allowed outside a guild';
-                triggerData.data = { type: CommandPermissionsPreconditionTriggerDataType.NoDmPermission };
+                triggerData.data = { type: CommandPermissionsPreconditionResultDataType.NoDmPermission };
 
                 return triggerData;
             }
@@ -47,7 +51,7 @@ export class CommandPermissionsPrecondition extends CommandPrecondition {
                 if (requiredBotPermissions && !(await CommandPermissionsPrecondition.userHasPermissionsIn(data.message.channel, requiredBotPermissions))) {
                     triggerData.message = `Bot doesn't have enough permissions to execute this command in this channel`;
                     triggerData.data = {
-                        type: CommandPermissionsPreconditionTriggerDataType.ClientNotEnoughPermissions,
+                        type: CommandPermissionsPreconditionResultDataType.ClientNotEnoughPermissions,
                         requiredPermissions: await CommandPermissionsPrecondition.getMissingPermissionsIn(data.message.channel, requiredBotPermissions)
                     };
 
@@ -60,7 +64,7 @@ export class CommandPermissionsPrecondition extends CommandPrecondition {
                     if (!member.permissionsIn(data.message.channel).has(requiredMemberPermissions)) {
                         triggerData.message = `User doesn't have enough permissions to execute this command in this channel`;
                         triggerData.data = {
-                            type: CommandPermissionsPreconditionTriggerDataType.MemberNotEnoughPermissions,
+                            type: CommandPermissionsPreconditionResultDataType.MemberNotEnoughPermissions,
                             requiredPermissions: new PermissionsBitField(member.permissionsIn(data.message.channel).missing(requiredMemberPermissions))
                         };
 
@@ -78,7 +82,7 @@ export class CommandPermissionsPrecondition extends CommandPrecondition {
                 if (requiredBotPermissions && !(await CommandPermissionsPrecondition.userHasPermissionsIn(guildOrChannel, requiredBotPermissions))) {
                     triggerData.message = `Bot doesn't have enough permissions to execute this command in this channel`;
                     triggerData.data = {
-                        type: CommandPermissionsPreconditionTriggerDataType.ClientNotEnoughPermissions,
+                        type: CommandPermissionsPreconditionResultDataType.ClientNotEnoughPermissions,
                         requiredPermissions: await CommandPermissionsPrecondition.getMissingPermissionsIn(guildOrChannel, requiredBotPermissions)
                     };
 
@@ -118,25 +122,14 @@ export class CommandPermissionsPrecondition extends CommandPrecondition {
         return new PermissionsBitField(permissions?.missing(requiredPermissions));
     }
 
-    /**
-     * @deprecated Use `isPermissionsPreconditionData` instead
-     */
-    public static isCommandPermissionsPreconditionTriggerData<T extends AnyCommandExecuteData = AnyCommandExecuteData>(data: unknown): data is CommandPermissionsPreconditionTriggerData<T> {
-        return this.isPermissionsPreconditionData<T>(data);
-    }
-
-    public static isPermissionsPreconditionData<T extends AnyCommandExecuteData = AnyCommandExecuteData>(data: unknown): data is CommandPermissionsPreconditionTriggerData<T> {
-        return ((data as CommandPermissionsPreconditionTriggerData<T>).precondition instanceof CommandPermissionsPrecondition);
-    }
-
-    public static create(): CommandPermissionsPrecondition {
-        return new CommandPermissionsPrecondition(CommandPermissionsPrecondition.data);
+    public static isPermissionsPreconditionData<T extends AnyCommandExecuteData = AnyCommandExecuteData>(data: unknown): data is CommandPermissionsPreconditionResultData<T> {
+        return ((data as CommandPermissionsPreconditionResultData<T>).precondition instanceof CommandPermissionsPrecondition);
     }
 }
 
-export interface CommandPermissionsPreconditionNotEnoughPermissionsTriggerData {
-    type: CommandPermissionsPreconditionTriggerDataType.ClientNotEnoughPermissions|CommandPermissionsPreconditionTriggerDataType.MemberNotEnoughPermissions;
+export interface CommandPermissionsPreconditionNotEnoughPermissionsResultData {
+    type: CommandPermissionsPreconditionResultDataType.ClientNotEnoughPermissions|CommandPermissionsPreconditionResultDataType.MemberNotEnoughPermissions;
     requiredPermissions: PermissionsBitField;
 }
 
-export type CommandPermissionsPreconditionTriggerData<T extends AnyCommandExecuteData> = CommandPreconditionTriggerData<T, { type: Exclude<CommandPermissionsPreconditionTriggerDataType, CommandPermissionsPreconditionNotEnoughPermissionsTriggerData['type']>; }|CommandPermissionsPreconditionNotEnoughPermissionsTriggerData>;
+export type CommandPermissionsPreconditionResultData<T extends AnyCommandExecuteData> = CommandPreconditionResultData<T, { type: Exclude<CommandPermissionsPreconditionResultDataType, CommandPermissionsPreconditionNotEnoughPermissionsResultData['type']>; }|CommandPermissionsPreconditionNotEnoughPermissionsResultData>;

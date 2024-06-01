@@ -1,13 +1,13 @@
-import { RecipleModuleDataValidators } from '../validators/RecipleModuleDataValidators';
+import { RecipleModuleDataValidators } from '../validators/RecipleModuleDataValidators.js';
 import { Awaitable, Collection, Constructable, isJSONEncodable } from 'discord.js';
-import { RecipleModule, RecipleModuleData } from '../structures/RecipleModule';
+import { RecipleModule, RecipleModuleData } from '../structures/RecipleModule.js';
+import { StrictTypedEmitter } from 'fallout-utility/StrictTypedEmitter';
 import { RecursiveDefault, recursiveDefaults } from '@reciple/utils';
-import { TypedEmitter } from 'fallout-utility/TypedEmitter';
-import { RecipleClient } from '../structures/RecipleClient';
-import { AnyCommandResolvable } from '../../types/structures';
-import { RecipleError } from '../structures/RecipleError';
-import { CommandType } from '../../types/constants';
-import { DataManager } from './DataManager';
+import { AnyCommandResolvable } from '../../types/structures.js';
+import { RecipleClient } from '../structures/RecipleClient.js';
+import { RecipleError } from '../structures/RecipleError.js';
+import { CommandType } from '../../types/constants.js';
+import { DataManager } from './DataManager.js';
 import { Mixin } from 'ts-mixer';
 import path from 'node:path';
 
@@ -47,18 +47,25 @@ export interface ModuleManagerResolveModuleFiles<D extends RecipleModuleData = R
     cacheModules?: boolean;
 }
 
-export interface ModuleManager extends DataManager<RecipleModule>, TypedEmitter<ModuleManagerEvents> {}
+export interface ModuleManager extends DataManager<RecipleModule>, StrictTypedEmitter<ModuleManagerEvents> {}
 
-export class ModuleManager extends Mixin(DataManager<RecipleModule>, TypedEmitter as Constructable<TypedEmitter<ModuleManagerEvents>>) {
-    constructor(client: RecipleClient) {
-        super(client);
+export class ModuleManager extends Mixin(DataManager<RecipleModule>, StrictTypedEmitter as Constructable<StrictTypedEmitter<ModuleManagerEvents>>) {
+    constructor(readonly client: RecipleClient) {
+        super();
     }
 
+    /**
+     * Find the module where the command is defined.
+     * @param command Command to find the module for.
+     */
     public findCommandModule<D extends RecipleModuleData = RecipleModuleData>(command: AnyCommandResolvable): RecipleModule<D>|undefined {
         const data = isJSONEncodable(command) ? command.toJSON() : command;
         return (this.cache as Collection<string, RecipleModule<D>>).find(m => m.commands.some(c => c.command_type === data.command_type && c.name === data.name));
     }
 
+    /**
+     * Starts all the modules.
+     */
     public async startModules<D extends RecipleModuleData = RecipleModuleData>(options?: Partial<ModuleManagerModulesActionOptions<D>> & { cacheModules?: boolean; removeOnError?: boolean; }): Promise<RecipleModule<D>[]> {
         const startedModules: RecipleModule<D>[] = [];
 
@@ -82,6 +89,9 @@ export class ModuleManager extends Mixin(DataManager<RecipleModule>, TypedEmitte
         return startedModules;
     }
 
+    /**
+     * Loads all the modules.
+     */
     public async loadModules<D extends RecipleModuleData = RecipleModuleData>(options?: Partial<ModuleManagerModulesActionOptions<D>> & { cacheCommands?: boolean; removeOnError?: boolean; }): Promise<RecipleModule<D>[]> {
         const loadedModules: RecipleModule<D>[] = [];
 
@@ -106,6 +116,9 @@ export class ModuleManager extends Mixin(DataManager<RecipleModule>, TypedEmitte
         return loadedModules;
     }
 
+    /**
+     * Unloads all the modules.
+     */
     public async unloadModules<D extends RecipleModuleData = RecipleModuleData>(options?: Partial<ModuleManagerModulesActionOptions<D>> & { reason?: string; removeFromCache?: boolean; removeModuleCommands?: boolean; }): Promise<RecipleModule<D>[]> {
         const unloadedModules: RecipleModule<D>[] = [];
 
@@ -146,6 +159,10 @@ export class ModuleManager extends Mixin(DataManager<RecipleModule>, TypedEmitte
         return unloadedModules;
     }
 
+    /**
+     * Resolves module files from the given options.
+     * @param options The options to resolve the module files with.
+     */
     public async resolveModuleFiles<D extends RecipleModuleData = RecipleModuleData>(options: ModuleManagerResolveModuleFiles<D>): Promise<RecipleModule<D>[]> {
         const modules: RecipleModule<D>[] = [];
 

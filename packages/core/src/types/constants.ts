@@ -1,8 +1,9 @@
+import { fileURLToPath } from 'node:url';
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import semver from 'semver';
 
-export const buildVersion = JSON.parse(readFileSync(path.join(__dirname, '../../package.json'), 'utf-8')).version;
+export const buildVersion = JSON.parse(readFileSync(path.join(path.dirname(fileURLToPath(import.meta.url)), '../../package.json'), 'utf-8')).version;
 export const version = semver.coerce(buildVersion)!.toString();
 
 export enum CommandType {
@@ -25,7 +26,7 @@ export enum RecipleModuleStatus {
     Loaded
 }
 
-export enum CommandPermissionsPreconditionTriggerDataType {
+export enum CommandPermissionsPreconditionResultDataType {
     BotNotAllowed = 1,
     NoDmPermission,
     ClientNotEnoughPermissions,

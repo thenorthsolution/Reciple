@@ -30,9 +30,15 @@ export class Validators {
     public static commandPreconditionData = Validators.s.object({
         id: Validators.s.string().regex(/^[a-zA-Z0-9_.-]+$/),
         disabled: Validators.s.boolean().optional(),
-        contextMenuCommandExecute: Validators.s.instance(Function),
-        messageCommandExecute: Validators.s.instance(Function),
-        slashCommandExecute: Validators.s.instance(Function),
+        contextMenuCommandExecute: Validators.s.instance(Function).optional(),
+        messageCommandExecute: Validators.s.instance(Function).optional(),
+        slashCommandExecute: Validators.s.instance(Function).optional(),
+    });
+
+    public static commandHaltData = Validators.s.object({
+        id: Validators.s.string().regex(/^[a-zA-Z0-9_.-]+$/),
+        disabled: Validators.s.boolean().optional(),
+        halt: Validators.s.instance(Function)
     });
 
     public static jsonEncodable = Validators.s.object({
@@ -41,6 +47,11 @@ export class Validators {
 
     public static commandPreconditionResolvable = Validators.s.union([
         Validators.commandPreconditionData,
+        Validators.jsonEncodable
+    ]);
+
+    public static commandHaltResolvabable = Validators.s.union([
+        Validators.commandHaltData,
         Validators.jsonEncodable
     ]);
 }

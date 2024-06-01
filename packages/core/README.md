@@ -1,10 +1,10 @@
 <h1 align="center">
-    <img src="https://i.imgur.com/DWM0tJL.png" width="50%">
+    <img src="/assets/SVG/reciple.svg" width="50%">
     <br>
 </h1>
 
 <h3 align="center">
-    <a href="https://discord.ggthenorthsolution1">
+    <a href="https://discord.gg/thenorthsolution">
         <img src="https://img.shields.io/discord/1032785824686817291?color=5865F2&logo=discord&logoColor=white">
     </a>
     <a href="https://npmjs.org/package/@reciple/core">
@@ -13,13 +13,13 @@
     <a href="https://github.com/thenorthsolution/Reciple/tree/main/packages/core">
         <img src="https://img.shields.io/npm/dt/%40reciple/core?maxAge=3600">
     </a>
-    <a href="https://www.codefactor.io/repository/github/falloutstudios/reciple/overview/main">
-        <img src="https://www.codefactor.io/repository/github/falloutstudios/reciple/badge/main">
+    <a href="https://www.codefactor.io/repository/github/thenorthsolution/reciple">
+        <img src="https://www.codefactor.io/repository/github/thenorthsolution/reciple/badge">
     </a>
     <br>
     <div style="padding-top: 1rem">
-        <a href="https://discord.ggthenorthsolution1">
-            <img src="https://discord.com/api/guilds/1032785824686817291/embed.png?style=banner2">
+        <a href="https://discord.gg/thenorthsolution">
+            <img src="http://invidget.switchblade.xyz/thenorthsolution">
         </a>
     </div>
 </h3>
@@ -33,31 +33,31 @@
 ## Usage
 
 ```js
+// @ts-check
 import { RecipleClient, SlashCommandBuilder } from '@reciple/core';
 
 const client = new RecipleClient({
-    token: 'MTExIHlvdSEgpHJpZWQgMTEx.O5rKAA.dQw4w9WgXxQ_wpV-gGg4PSk_bm8',
+    token: 'YOUR_TOKEN',
     client: {
-        intents: [
-            'Guilds',
-            'GuildMessages',
-            'MessageContent'
-        ]
+        intents: ['Guilds']
     }
 });
 
 await client.login();
 
-client.commands.add(
+client.commands?.add(
     new SlashCommandBuilder()
         .setName('ping')
-        .setDescription('Ping bot')
-        .setExecute(async ({ interaction }) => interaction.reply(`Pong!`))
-);
+        .setDescription('Replies with pong!')
+        .setExecute(async ({ interaction }) => {
+            await interaction.reply('Pong!');
+        }),
+)
 
-await client.commands.registerApplicationCommands();
+await client.commands?.registerApplicationCommands();
 
 client.on('interactionCreate', async interaction => {
-    if (interaction.isChatInputCommand()) await client.commands.execute(interaction);
+    if (interaction.isChatInputCommand()) await client.commands?.execute(interaction);
 });
+
 ```

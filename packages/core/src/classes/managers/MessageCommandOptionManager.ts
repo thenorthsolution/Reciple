@@ -1,15 +1,30 @@
-import { MessageCommandOptionParseOptionValueOptions, MessageCommandOptionValue } from '../structures/MessageCommandOptionValue';
-import { MessageCommandBuilder } from '../builders/MessageCommandBuilder';
-import { RecipleClient } from '../structures/RecipleClient';
-import { RecipleError } from '../structures/RecipleError';
+import { MessageCommandOptionParseOptionValueOptions, MessageCommandOptionValue } from '../structures/MessageCommandOptionValue.js';
+import { MessageCommandBuilder } from '../builders/MessageCommandBuilder.js';
+import { RecipleClient } from '../structures/RecipleClient.js';
+import { RecipleError } from '../structures/RecipleError.js';
 import { Collection, Message } from 'discord.js';
-import { DataManager } from './DataManager';
+import { DataManager } from './DataManager.js';
 
 export interface MessageCommandOptionManagerOptions {
+    /**
+     * The command this option manager is for.
+     */
     command: MessageCommandBuilder;
+    /**
+     * The client this option manager is for.
+     */
     client: RecipleClient<true>;
+    /**
+     * The message this option manager is for.
+     */
     message: Message;
+    /**
+     * The array of args of this option manager.
+     */
     args: string[];
+    /**
+     * The raw args of this option manager.
+     */
     rawArgs: string;
 }
 
@@ -19,16 +34,18 @@ export interface MessageCommandOptionManagerParseOptionsData extends Omit<Messag
     rawArgs: string;
 }
 
-export class MessageCommandOptionManager extends DataManager<MessageCommandOptionValue> {
+export class MessageCommandOptionManager extends DataManager<MessageCommandOptionValue> implements MessageCommandOptionManagerOptions {
     readonly command: MessageCommandBuilder;
+    readonly client: RecipleClient<true>;
     readonly message: Message;
     readonly args: string[];
     readonly rawArgs: string;
 
     protected constructor(data: MessageCommandOptionManagerOptions) {
-        super(data.client);
+        super();
 
         this.command = data.command;
+        this.client = data.client;
         this.message = data.message;
         this.args = data.args;
         this.rawArgs = data.rawArgs;
@@ -59,6 +76,13 @@ export class MessageCommandOptionManager extends DataManager<MessageCommandOptio
         return option ?? null;
     }
 
+    /**
+     * Obtains the value of a message command option.
+     * @param name The name of the option.
+     * @param options The options to use when parsing the option value.
+     * @param options.required Whether the option is required or not.
+     * @param options.resolveValue Whether to resolve the value or not.
+     */
     public getOptionValue<V extends any = any>(name: string, options?: { required?: false; resolveValue?: false; }): string|null;
     public getOptionValue<V extends any = any>(name: string, options?: { required?: true; resolveValue?: false; }): string;
     public getOptionValue<V extends any = any>(name: string, options?: { required?: true; resolveValue?: true; }): Promise<V>;

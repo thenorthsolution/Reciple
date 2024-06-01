@@ -1,7 +1,7 @@
-import { CommandPrecondition, CommandPreconditionData } from '../structures/CommandPrecondition';
-import { AnyCommandExecuteData } from '../../types/structures';
-import { CooldownData } from '../structures/Cooldown';
-import { CommandType } from '../../types/constants';
+import { CommandPrecondition, CommandPreconditionData } from '../structures/CommandPrecondition.js';
+import { AnyCommandExecuteData } from '../../types/structures.js';
+import { CooldownData } from '../structures/Cooldown.js';
+import { CommandType } from '../../types/constants.js';
 
 export class CooldownPrecondition extends CommandPrecondition {
     public static id: string = 'org.reciple.js.cooldowns';
@@ -12,6 +12,10 @@ export class CooldownPrecondition extends CommandPrecondition {
         slashCommandExecute: data => CooldownPrecondition._execute(data),
         messageCommandExecute: data => CooldownPrecondition._execute(data),
     };
+
+    constructor() {
+        super(CooldownPrecondition.data);
+    }
 
     private static _execute(data: AnyCommandExecuteData): boolean {
         const duration = data.builder.cooldown;
@@ -48,13 +52,5 @@ export class CooldownPrecondition extends CommandPrecondition {
         });
 
         return true;
-    }
-
-    private constructor(data: CommandPreconditionData) {
-        super(data);
-    }
-
-    public static create(): CooldownPrecondition {
-        return new CooldownPrecondition(CooldownPrecondition.data);
     }
 }

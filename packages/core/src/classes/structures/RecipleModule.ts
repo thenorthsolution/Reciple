@@ -1,20 +1,45 @@
-import { AnyCommandBuilder, AnyCommandResolvable } from '../../types/structures';
-import { RecipleModuleStatus } from '../../types/constants';
-import { ModuleManager } from '../managers/ModuleManager';
+import { AnyCommandBuilder, AnyCommandResolvable } from '../../types/structures.js';
+import { RecipleModuleStatus } from '../../types/constants.js';
+import { ModuleManager } from '../managers/ModuleManager.js';
 import { RestOrArray, normalizeArray } from 'discord.js';
-import { RecipleClient } from './RecipleClient';
-import { RecipleError } from './RecipleError';
+import { RecipleClient } from './RecipleClient.js';
+import { RecipleError } from './RecipleError.js';
 import { kleur } from 'fallout-utility/strings';
-import { Utils } from './Utils';
+import { Utils } from './Utils.js';
 import semver from 'semver';
 
 export interface RecipleModuleData {
+    /**
+     * The id of your module.
+     * The id only accepts lowercase letters and cannot contain spaces or special characters.
+     */
     id?: string;
+    /**
+     * The name of your module. This is used to display when logging the module into the console.
+     */
     name?: string;
-    versions: string|string[];
+    /**
+     * The supported reciple client versions of the module.
+     */
+    versions?: string|string[];
+    /**
+     * The commands that the module will use.
+     */
     commands?: AnyCommandResolvable[];
+    /**
+     * The function that is executed when the module is resolved. (Bot's Pre-login)
+     * @param data The data that is passed to the module.
+     */
     onStart(data: RecipleModuleStartData): boolean|string|Error|Promise<boolean|string|Error>;
+    /**
+     * The function that is executed when the module is loaded. (Bot's Post-login)
+     * @param data The data that is passed to the module.
+     */
     onLoad?(data: RecipleModuleLoadData): void|string|Error|Promise<void|string|Error>;
+    /**
+     * The function that is executed when the module is unloaded. (Bot's Pre-logout)
+     * @param data The data that is passed to the module.
+     */
     onUnload?(data: RecipleModuleUnloadData): void|string|Error|Promise<void|string|Error>;
 }
 
@@ -49,7 +74,7 @@ export class RecipleModule<Data extends RecipleModuleData = RecipleModuleData> {
 
     get name(): string|undefined { return this.data.name; }
     get displayName(): string { return this.name ?? this.file ?? this.id; }
-    get versions(): string[] { return normalizeArray([this.data.versions] as RestOrArray<string>); }
+    get versions(): string[] { return normalizeArray([this.data.versions ?? 'latest'] as RestOrArray<string>); }
     get commands(): AnyCommandBuilder[] { return this.data.commands?.map(c => Utils.resolveCommandBuilder(c)) ?? []; }
     get supported(): boolean { return this.versions.some(v => v === "latest" || semver.satisfies(this.client.version, v)); }
 

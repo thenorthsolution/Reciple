@@ -1,10 +1,11 @@
-import { ApplicationCommandType, Awaitable, ContextMenuCommandInteraction, ContextMenuCommandType, ContextMenuCommandBuilder as DiscordJsContextMenuCommandBuilder, JSONEncodable, PermissionsBitField, PermissionResolvable, RESTPostAPIContextMenuApplicationCommandsJSONBody, SlashCommandAssertions, isJSONEncodable } from 'discord.js';
-import { BaseCommandBuilder, BaseCommandBuilderData } from './BaseCommandBuilder';
-import { CommandHaltReason, CommandType } from '../../types/constants';
-import { RecipleClient } from '../structures/RecipleClient';
-import { CommandHaltData } from '../../types/structures';
-import { CooldownData } from '../structures/Cooldown';
+import { ApplicationCommandType, Awaitable, ContextMenuCommandInteraction, ContextMenuCommandType, ContextMenuCommandBuilder as DiscordJsContextMenuCommandBuilder, JSONEncodable, PermissionsBitField, PermissionResolvable, RestOrArray, RESTPostAPIContextMenuApplicationCommandsJSONBody, SlashCommandAssertions, isJSONEncodable } from 'discord.js';
+import { BaseCommandBuilder, BaseCommandBuilderData } from './BaseCommandBuilder.js';
+import { CommandHaltReason, CommandType } from '../../types/constants.js';
+import { RecipleClient } from '../structures/RecipleClient.js';
+import { CommandHaltTriggerData } from '../../types/structures.js';
+import { CooldownData } from '../structures/Cooldown.js';
 import { Mixin } from 'ts-mixer';
+import { CommandHalt, CommandHaltResolvable, CommandHaltResultResolvable } from '../structures/CommandHalt.js';
 
 export interface ContextMenuCommandExecuteData {
     type: CommandType.ContextMenuCommand;
@@ -13,27 +14,30 @@ export interface ContextMenuCommandExecuteData {
     builder: ContextMenuCommandBuilder;
 }
 
-export type ContextMenuCommandHaltData = CommandHaltData<CommandType.ContextMenuCommand>;
+export type ContextMenuCommandHaltTriggerData = CommandHaltTriggerData<CommandType.ContextMenuCommand>;
 
 export type ContextMenuCommandExecuteFunction = (executeData: ContextMenuCommandExecuteData) => Awaitable<void>;
-export type ContextMenuCommandHaltFunction = (haltData: ContextMenuCommandHaltData) => Awaitable<boolean>;
+export type ContextMenuCommandHaltFunction = (haltData: ContextMenuCommandHaltTriggerData) => Awaitable<CommandHaltResultResolvable<CommandType.ContextMenuCommand>>;
 
 export interface ContextMenuCommandBuilderData extends BaseCommandBuilderData, Omit<RESTPostAPIContextMenuApplicationCommandsJSONBody, 'options'|'description'|'description_localizations'|'type'> {
     command_type: CommandType.ContextMenuCommand;
+    /**
+     * The type of the data that will be returned when the command is executed.
+     */
     type: ContextMenuCommandType|'Message'|'User';
-    halt?: ContextMenuCommandHaltFunction;
+    halts?: CommandHaltResolvable[];
     execute: ContextMenuCommandExecuteFunction;
 }
 
 export interface ContextMenuCommandBuilder extends DiscordJsContextMenuCommandBuilder, BaseCommandBuilder {
-    halt?: ContextMenuCommandHaltFunction;
+    halts: CommandHalt[];
     execute: ContextMenuCommandExecuteFunction;
 
-    setHalt(halt: ContextMenuCommandHaltFunction|null): this;
+    setHalts(...halt: RestOrArray<CommandHaltResolvable>): this;
     setExecute(execute: ContextMenuCommandExecuteFunction): this;
 }
 
-export class ContextMenuCommandBuilder extends Mixin(DiscordJsContextMenuCommandBuilder, BaseCommandBuilder) {
+export class ContextMenuCommandBuilder extends Mixin(DiscordJsContextMenuCommandBuilder, BaseCommandBuilder) implements ContextMenuCommandBuilder {
     public readonly command_type: CommandType.ContextMenuCommand = CommandType.ContextMenuCommand;
 
     constructor(data?: Omit<Partial<ContextMenuCommandBuilderData>, 'command_type'>) {
@@ -43,7 +47,7 @@ export class ContextMenuCommandBuilder extends Mixin(DiscordJsContextMenuCommand
         if (data?.dm_permission) this.setDMPermission(data.dm_permission);
         if (data?.default_permission !== undefined) this.setDefaultPermission(data.default_permission);
         if (data?.execute) this.setExecute(data.execute);
-        if (data?.halt) this.setHalt(data.halt);
+        if (data?.halts) this.setHalts(data.halts);
         if (data?.name) this.setName(data.name);
         if (data?.name_localizations) this.setNameLocalizations(data.name_localizations);
         if (data?.nsfw) this.setNSFW(data.nsfw);
@@ -80,7 +84,7 @@ export class ContextMenuCommandBuilder extends Mixin(DiscordJsContextMenuCommand
     public toJSON(): RESTPostAPIContextMenuApplicationCommandsJSONBody & ContextMenuCommandBuilderData {
         return {
             ...super.toJSON(),
-            ...super._toJSON()
+            ...super._toJSON<CommandType.ContextMenuCommand, ContextMenuCommandExecuteFunction>()
         }
     }
 
@@ -116,7 +120,7 @@ export class ContextMenuCommandBuilder extends Mixin(DiscordJsContextMenuCommand
             const cooldown = client.cooldowns.findCooldown(cooldownData);
 
             if (cooldown) {
-                await client.executeCommandBuilderHalt({
+                await client.commands.executeHalts({
                     reason: CommandHaltReason.Cooldown,
                     commandType: builder.command_type,
                     cooldown,
@@ -128,7 +132,7 @@ export class ContextMenuCommandBuilder extends Mixin(DiscordJsContextMenuCommand
 
         const commandPreconditionTrigger = await client.commands.executePreconditions(executeData);
         if (commandPreconditionTrigger) {
-            await client.executeCommandBuilderHalt({
+            await client.commands.executeHalts({
                 reason: CommandHaltReason.PreconditionTrigger,
                 commandType: builder.command_type,
                 ...commandPreconditionTrigger
@@ -136,7 +140,7 @@ export class ContextMenuCommandBuilder extends Mixin(DiscordJsContextMenuCommand
             return null;
         }
 
-        return (await client.executeCommandBuilderExecute(executeData)) ? executeData : null;
+        return (await client.commands.executeCommandBuilderExecute(executeData)) ? executeData : null;
     }
 }
 

@@ -1,4 +1,4 @@
-import { ModuleType, PackageManager } from '@reciple/utils';
+import { PackageManager } from '@reciple/utils';
 
 export interface CliOptions {
     force: boolean;
@@ -13,7 +13,6 @@ export interface CliOptions {
 
 export interface TemplateMetadata extends TemplateJson {
     id: string;
-    type: ModuleType;
     path: string;
     files: string[];
 }

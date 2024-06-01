@@ -1,15 +1,16 @@
+import { MessageCommandOptionBuilder, MessageCommandOptionResolvable } from './MessageCommandOptionBuilder.js';
 import { Awaitable, JSONEncodable, RestOrArray, Message, normalizeArray, isJSONEncodable } from 'discord.js';
-import { MessageCommandOptionBuilder, MessageCommandOptionResolvable } from './MessageCommandOptionBuilder';
-import { MessageCommandOptionValidators } from '../validators/MessageCommandOptionValidators';
-import { MessageCommandOptionManager } from '../managers/MessageCommandOptionManager';
-import { MessageCommandValidators } from '../validators/MessageCommandValidators';
-import { BaseCommandBuilder, BaseCommandBuilderData } from './BaseCommandBuilder';
-import { CommandHaltReason, CommandType } from '../../types/constants';
-import { CommandData, CommandHaltData } from '../../types/structures';
-import { RecipleError } from '../structures/RecipleError';
-import { RecipleClient } from '../structures/RecipleClient';
+import { MessageCommandOptionValidators } from '../validators/MessageCommandOptionValidators.js';
+import { MessageCommandOptionManager } from '../managers/MessageCommandOptionManager.js';
+import { MessageCommandValidators } from '../validators/MessageCommandValidators.js';
+import { BaseCommandBuilder, BaseCommandBuilderData } from './BaseCommandBuilder.js';
+import { CommandHaltReason, CommandType } from '../../types/constants.js';
+import { CommandData, CommandHaltTriggerData } from '../../types/structures.js';
+import { RecipleClient } from '../structures/RecipleClient.js';
+import { RecipleError } from '../structures/RecipleError.js';
+import { CooldownData } from '../structures/Cooldown.js';
 import { getCommand } from 'fallout-utility/commands';
-import { CooldownData } from '../structures/Cooldown';
+import { CommandHalt, CommandHaltResolvable, CommandHaltResultResolvable } from '../structures/CommandHalt.js';
 
 export interface MessageCommandExecuteData {
     type: CommandType.MessageCommand;
@@ -20,42 +21,57 @@ export interface MessageCommandExecuteData {
     builder: MessageCommandBuilder;
 }
 
-export type MessageCommandHaltData = CommandHaltData<CommandType.MessageCommand>;
+export type MessageCommandHaltTriggerData = CommandHaltTriggerData<CommandType.MessageCommand>;
 
 export type MessageCommandExecuteFunction = (executeData: MessageCommandExecuteData) => Awaitable<void>;
-export type MessageCommandHaltFunction = (haltData: MessageCommandHaltData) => Awaitable<boolean>;
+export type MessageCommandHaltFunction = (haltData: MessageCommandHaltTriggerData) => Awaitable<CommandHaltResultResolvable<CommandType.MessageCommand>>;
 
 export interface MessageCommandBuilderData extends BaseCommandBuilderData {
     command_type: CommandType.MessageCommand;
-    halt?: MessageCommandHaltFunction;
+    halts?: CommandHaltResolvable[];
     execute: MessageCommandExecuteFunction;
+    /**
+     * The name of the command.
+     */
     name: string;
+    /**
+     * The description of the command.
+     */
     description: string;
+    /**
+     * The aliases of the command.
+     */
     aliases?: string[];
     /**
+     * Whether to validate options or not.
      * @default true
      */
     validate_options?: boolean;
     /**
+     * Allows commands to be executed in DMs.
      * @default false
      */
     dm_permission?: boolean;
     /**
+     * Allow bots to execute this command.
      * @default false
      */
     allow_bot?: boolean;
+    /**
+     * The options of the command.
+     */
     options?: MessageCommandOptionResolvable[];
 }
 
 export interface MessageCommandBuilder extends BaseCommandBuilder {
-    halt?: MessageCommandHaltFunction;
+    halts: CommandHalt[];
     execute: MessageCommandExecuteFunction;
 
-    setHalt(halt: MessageCommandHaltFunction|null): this;
+    setHalts(...halts: RestOrArray<CommandHaltResolvable>): this;
     setExecute(execute: MessageCommandExecuteFunction): this;
 }
 
-export class MessageCommandBuilder extends BaseCommandBuilder {
+export class MessageCommandBuilder extends BaseCommandBuilder implements MessageCommandBuilder, MessageCommandBuilderData {
     public readonly command_type: CommandType.MessageCommand = CommandType.MessageCommand;
     public name: string = '';
     public description: string = '';
@@ -77,18 +93,30 @@ export class MessageCommandBuilder extends BaseCommandBuilder {
         if (data?.options) this.setOptions(data.options);
     }
 
+    /**
+     * Sets the name of the command.
+     * @param name Name of the command.
+     */
     public setName(name: string): this {
         MessageCommandValidators.isValidName(name);
         this.name = name;
         return this;
     }
 
+    /**
+     * Sets the description of the command.
+     * @param description Description of the command.
+     */
     public setDescription(description: string): this {
         MessageCommandValidators.isValidDescription(description);
         this.description = description;
         return this;
     }
 
+    /**
+     * Adds aliases to the command.
+     * @param aliases Aliases of the command.
+     */
     public addAliases(...aliases: RestOrArray<string>): this {
         aliases = normalizeArray(aliases);
         MessageCommandValidators.isValidAliases(aliases);
@@ -96,6 +124,10 @@ export class MessageCommandBuilder extends BaseCommandBuilder {
         return this;
     }
 
+    /**
+     * Sets aliases to the command.
+     * @param aliases Aliases of the command.
+     */
     public setAliases(...aliases: RestOrArray<string>): this {
         aliases = normalizeArray(aliases);
         MessageCommandValidators.isValidAliases(aliases);
@@ -103,24 +135,40 @@ export class MessageCommandBuilder extends BaseCommandBuilder {
         return this;
     }
 
+    /**
+     * Set whether to validate options or not.
+     * @param enabled Enable option validation.
+     */
     public setValidateOptions(enabled: boolean): this {
         MessageCommandValidators.isValidValidateOptions(enabled);
         this.validate_options = enabled;
         return this;
     }
 
+    /**
+     * Sets whether the command is available in DMs or not.
+     * @param DMPermission Enable command in Dms.
+     */
     public setDMPermission(DMPermission: boolean): this {
         MessageCommandValidators.isValidDMPermission(DMPermission);
         this.dm_permission = DMPermission;
         return this;
     }
 
+    /**
+     * Sets whether bots can use the command or not.
+     * @param enabled Enable bot usage of the command.
+     */
     public setAllowBot(enabled: boolean): this {
         MessageCommandValidators.isValidAllowBot(enabled);
         this.allow_bot = enabled;
         return this;
     }
 
+    /**
+     * Adds new option to the command.
+     * @param option Option data or builder.
+     */
     public addOption(option: MessageCommandOptionResolvable|((builder: MessageCommandOptionBuilder) => MessageCommandOptionBuilder)): this {
         const opt = typeof option === 'function' ? option(new MessageCommandOptionBuilder()) : MessageCommandOptionBuilder.from(option);
         MessageCommandOptionValidators.isValidMessageCommandOptionResolvable(opt);
@@ -132,6 +180,10 @@ export class MessageCommandBuilder extends BaseCommandBuilder {
         return this;
     }
 
+    /**
+     * Sets the options of the command.
+     * @param options Options data or builders.
+     */
     public setOptions(...options: RestOrArray<MessageCommandOptionResolvable|((builder: MessageCommandOptionBuilder) => MessageCommandOptionBuilder)>): this {
         options = normalizeArray(options);
         MessageCommandValidators.isValidOptions(options);
@@ -153,7 +205,7 @@ export class MessageCommandBuilder extends BaseCommandBuilder {
             dm_permission: this.dm_permission,
             allow_bot: this.allow_bot,
             options: this.options,
-            ...super._toJSON()
+            ...super._toJSON<CommandType.MessageCommand, MessageCommandExecuteFunction>()
         };
     }
 
@@ -202,7 +254,7 @@ export class MessageCommandBuilder extends BaseCommandBuilder {
             const cooldown = client.cooldowns.findCooldown(cooldownData);
 
             if (cooldown) {
-                await client.executeCommandBuilderHalt({
+                await client.commands.executeHalts({
                     reason: CommandHaltReason.Cooldown,
                     commandType: builder.command_type,
                     cooldown,
@@ -214,7 +266,7 @@ export class MessageCommandBuilder extends BaseCommandBuilder {
 
         const commandPreconditionTrigger = await client.commands.executePreconditions(executeData);
         if (commandPreconditionTrigger) {
-            await client.executeCommandBuilderHalt({
+            await client.commands.executeHalts({
                 reason: CommandHaltReason.PreconditionTrigger,
                 commandType: builder.command_type,
                 ...commandPreconditionTrigger
@@ -224,7 +276,7 @@ export class MessageCommandBuilder extends BaseCommandBuilder {
 
         if (builder.validate_options) {
             if (executeData.options.hasInvalidOptions) {
-                await client.executeCommandBuilderHalt({
+                await client.commands.executeHalts({
                     commandType: builder.command_type,
                     reason: CommandHaltReason.InvalidArguments,
                     executeData,
@@ -234,7 +286,7 @@ export class MessageCommandBuilder extends BaseCommandBuilder {
             }
 
             if (executeData.options.hasMissingOptions) {
-                await client.executeCommandBuilderHalt({
+                await client.commands.executeHalts({
                     commandType: builder.command_type,
                     reason: CommandHaltReason.MissingArguments,
                     executeData,
@@ -244,7 +296,7 @@ export class MessageCommandBuilder extends BaseCommandBuilder {
             }
         }
 
-        return (await client.executeCommandBuilderExecute(executeData)) ? executeData : null;
+        return (await client.commands.executeCommandBuilderExecute(executeData)) ? executeData : null;
     }
 }
 

@@ -1,34 +1,35 @@
-export * from './classes/builders/BaseCommandBuilder';
-export * from './classes/builders/ContextMenuCommandBuilder';
-export * from './classes/builders/MessageCommandBuilder';
-export * from './classes/builders/MessageCommandOptionBuilder';
-export * from './classes/builders/SlashCommandBuilder';
-export * from './classes/builders/MessageCommandBuilder';
+export * from './classes/builders/BaseCommandBuilder.js';
+export * from './classes/builders/ContextMenuCommandBuilder.js';
+export * from './classes/builders/MessageCommandBuilder.js';
+export * from './classes/builders/MessageCommandOptionBuilder.js';
+export * from './classes/builders/SlashCommandBuilder.js';
+export * from './classes/builders/MessageCommandBuilder.js';
 
-export * from './classes/managers/CommandManager';
-export * from './classes/managers/CooldownManager';
-export * from './classes/managers/DataManager';
-export * from './classes/managers/MessageCommandOptionManager';
-export * from './classes/managers/ModuleManager';
+export * from './classes/managers/CommandManager.js';
+export * from './classes/managers/CooldownManager.js';
+export * from './classes/managers/DataManager.js';
+export * from './classes/managers/MessageCommandOptionManager.js';
+export * from './classes/managers/ModuleManager.js';
 
-export * from './classes/preconditions/CooldownPrecondition';
-export * from './classes/preconditions/CommandPermissionsPrecondition';
+export * from './classes/preconditions/CooldownPrecondition.js';
+export * from './classes/preconditions/CommandPermissionsPrecondition.js';
 
-export * from './classes/structures/CommandPrecondition';
-export * from './classes/structures/Cooldown';
-export * from './classes/structures/MessageCommandOptionValue';
-export * from './classes/structures/RecipleClient';
-export * from './classes/structures/RecipleError';
-export * from './classes/structures/RecipleModule';
-export * from './classes/structures/Utils';
+export * from './classes/structures/CommandHalt.js';
+export * from './classes/structures/CommandPrecondition.js';
+export * from './classes/structures/Cooldown.js';
+export * from './classes/structures/MessageCommandOptionValue.js';
+export * from './classes/structures/RecipleClient.js';
+export * from './classes/structures/RecipleError.js';
+export * from './classes/structures/RecipleModule.js';
+export * from './classes/structures/Utils.js';
 
-export * from './classes/validators/BaseCommandValidators';
-export * from './classes/validators/MessageCommandOptionValidators';
-export * from './classes/validators/MessageCommandValidators';
-export * from './classes/validators/RecipleModuleDataValidators';
-export * from './classes/validators/Validators';
+export * from './classes/validators/BaseCommandValidators.js';
+export * from './classes/validators/MessageCommandOptionValidators.js';
+export * from './classes/validators/MessageCommandValidators.js';
+export * from './classes/validators/RecipleModuleDataValidators.js';
+export * from './classes/validators/Validators.js';
 
-export * from './types/constants';
-export * from './types/structures';
+export * from './types/constants.js';
+export * from './types/structures.js';
 
 export { Logger } from 'fallout-utility/Logger';

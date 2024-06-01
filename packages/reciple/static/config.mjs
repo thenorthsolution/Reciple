@@ -67,9 +67,10 @@ export const config = {
         disableModuleVersionCheck: false
     },
     preconditions: [
-        CooldownPrecondition.create(),
-        CommandPermissionsPrecondition.create()
+        new CooldownPrecondition(),
+        new CommandPermissionsPrecondition()
     ],
+    commandHalts: [],
     cooldownSweeperOptions: {
         timer: 1000 * 60 * 60
     },

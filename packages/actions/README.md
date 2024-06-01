@@ -1,10 +1,10 @@
 <h1 align="center">
-    <img src="https://i.imgur.com/DWM0tJL.png" width="50%">
+    <img src="https://i.imgur.com/h0ljJR5.png" width="50%">
     <br>
 </h1>
 
 <h3 align="center">
-    <a href="https://discord.ggthenorthsolution1">
+    <a href="https://discord.gg/thenorthsolution">
         <img src="https://img.shields.io/discord/1032785824686817291?color=5865F2&logo=discord&logoColor=white">
     </a>
     <a href="https://npmjs.org/package/reciple">
@@ -13,13 +13,13 @@
     <a href="https://github.com/thenorthsolution/Reciple/blob/main/LICENSE">
         <img src="https://img.shields.io/npm/dt/reciple.svg?maxAge=3600">
     </a>
-    <a href="https://www.codefactor.io/repository/github/falloutstudios/reciple/overview/main">
-        <img src="https://www.codefactor.io/repository/github/falloutstudios/reciple/badge/main">
+    <a href="https://www.codefactor.io/repository/github/thenorthsolution/reciple">
+        <img src="https://www.codefactor.io/repository/github/thenorthsolution/reciple/badge">
     </a>
     <br>
     <div style="padding-top: 1rem">
-        <a href="https://discord.ggthenorthsolution1">
-            <img src="https://discord.com/api/guilds/1032785824686817291/embed.png?style=banner2">
+        <a href="https://discord.gg/thenorthsolution">
+            <img src="http://invidget.switchblade.xyz/thenorthsolution">
         </a>
     </div>
 </h3>

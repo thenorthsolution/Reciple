@@ -6,7 +6,6 @@ import { SlashCommandBuilder } from 'reciple';
  * @type {import('reciple').RecipleModuleData}
  */
 export default {
-    versions: ['^8'],
     commands: [
         new SlashCommandBuilder()
             .setName('say')

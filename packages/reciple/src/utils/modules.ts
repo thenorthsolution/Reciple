@@ -1,9 +1,9 @@
 import { lstat, mkdir, readdir } from 'node:fs/promises';
+import { RecipleConfig } from '../classes/Config.js';
 import { Awaitable } from 'fallout-utility/types';
-import { RecipleConfig } from '../classes/Config';
+import { existsAsync } from '@reciple/utils';
 import micromatch from 'micromatch';
 import path from 'node:path';
-import { existsAsync } from '@reciple/utils';
 
 export async function findModules(config: RecipleConfig['modules'], filter?: (filename: string) => Awaitable<boolean>): Promise<string[]> {
     const modules: string[] = [];

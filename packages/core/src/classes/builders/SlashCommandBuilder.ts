@@ -1,10 +1,11 @@
-import { Awaitable, ChatInputCommandInteraction, JSONEncodable, SlashCommandBuilder as DiscordJsSlashCommandBuilder, RESTPostAPIChatInputApplicationCommandsJSONBody, ApplicationCommandType, SharedSlashCommandOptions, ApplicationCommandOptionType, SlashCommandStringOption, SlashCommandIntegerOption, SlashCommandBooleanOption, SlashCommandUserOption, SlashCommandChannelOption, ApplicationCommandOptionAllowedChannelTypes, SlashCommandRoleOption, SlashCommandMentionableOption, SlashCommandNumberOption, SlashCommandAttachmentOption, SlashCommandSubcommandBuilder, SlashCommandSubcommandGroupBuilder, isJSONEncodable, PermissionsBitField, PermissionResolvable } from 'discord.js';
-import { AnyNonSubcommandSlashCommandOptionBuilder, AnySlashCommandOptionBuilder, AnySlashCommandOptionData, CommandHaltData } from '../../types/structures';
-import { BaseCommandBuilder, BaseCommandBuilderData } from './BaseCommandBuilder';
-import { CommandHaltReason, CommandType } from '../../types/constants';
-import { RecipleClient } from '../structures/RecipleClient';
+import { Awaitable, ChatInputCommandInteraction, JSONEncodable, SlashCommandBuilder as DiscordJsSlashCommandBuilder, RESTPostAPIChatInputApplicationCommandsJSONBody, ApplicationCommandType, SharedSlashCommandOptions, ApplicationCommandOptionType, SlashCommandStringOption, SlashCommandIntegerOption, SlashCommandBooleanOption, SlashCommandUserOption, SlashCommandChannelOption, ApplicationCommandOptionAllowedChannelTypes, SlashCommandRoleOption, SlashCommandMentionableOption, SlashCommandNumberOption, SlashCommandAttachmentOption, SlashCommandSubcommandBuilder, SlashCommandSubcommandGroupBuilder, isJSONEncodable, PermissionsBitField, PermissionResolvable, RestOrArray } from 'discord.js';
+import { AnyNonSubcommandSlashCommandOptionBuilder, AnySlashCommandOptionBuilder, AnySlashCommandOptionData, CommandHaltTriggerData } from '../../types/structures.js';
+import { BaseCommandBuilder, BaseCommandBuilderData } from './BaseCommandBuilder.js';
+import { CommandHaltReason, CommandType } from '../../types/constants.js';
+import { RecipleClient } from '../structures/RecipleClient.js';
+import { CooldownData } from '../structures/Cooldown.js';
 import { Mixin } from 'ts-mixer';
-import { CooldownData } from '../structures/Cooldown';
+import { CommandHalt, CommandHaltResolvable, CommandHaltResultResolvable } from '../structures/CommandHalt.js';
 
 export interface SlashCommandExecuteData {
     type: CommandType.SlashCommand;
@@ -13,14 +14,14 @@ export interface SlashCommandExecuteData {
     builder: AnySlashCommandBuilder;
 }
 
-export type SlashCommandHaltData = CommandHaltData<CommandType.SlashCommand>;
+export type SlashCommandHaltTriggerData = CommandHaltTriggerData<CommandType.SlashCommand>;
 
 export type SlashCommandExecuteFunction = (executeData: SlashCommandExecuteData) => Awaitable<void>;
-export type SlashCommandHaltFunction = (haltData: SlashCommandHaltData) => Awaitable<boolean>;
+export type SlashCommandHaltFunction = (haltData: SlashCommandHaltTriggerData) => Awaitable<CommandHaltResultResolvable<CommandType.SlashCommand>>;
 
 export interface SlashCommandBuilderData extends BaseCommandBuilderData, Omit<RESTPostAPIChatInputApplicationCommandsJSONBody, 'type'> {
     command_type: CommandType.SlashCommand;
-    halt?: SlashCommandHaltFunction;
+    halts?: CommandHaltResolvable[];
     execute: SlashCommandExecuteFunction;
 }
 
@@ -30,10 +31,10 @@ export type SlashCommandBuilderSubcommandAddOptionMethods = 'addSubcommand'|'add
 export class SlashCommandSharedPrivateOptions extends SharedSlashCommandOptions<any> {}
 
 export interface SlashCommandBuilder extends DiscordJsSlashCommandBuilder, BaseCommandBuilder {
-    halt?: SlashCommandHaltFunction;
+    halts: CommandHalt[];
     execute: SlashCommandExecuteFunction;
 
-    setHalt(halt: SlashCommandHaltFunction): this;
+    setHalts(...halt: RestOrArray<CommandHaltResolvable>): this;
     setExecute(execute: SlashCommandExecuteFunction): this;
 
     addSubcommandGroup(input: SlashCommandSubcommandGroupBuilder|((subcommandGroup: SlashCommandSubcommandGroupBuilder) => SlashCommandSubcommandGroupBuilder)): Omit<this, SlashCommandBuilderNonSubcommandAddOptionMethods>;
@@ -65,7 +66,7 @@ export interface SlashCommandBuilder extends DiscordJsSlashCommandBuilder, BaseC
     ): Omit<this, SlashCommandBuilderSubcommandAddOptionMethods> & SlashCommandSharedPrivateOptions;
 }
 
-export class SlashCommandBuilder extends Mixin(DiscordJsSlashCommandBuilder, BaseCommandBuilder) {
+export class SlashCommandBuilder extends Mixin(DiscordJsSlashCommandBuilder, BaseCommandBuilder) implements SlashCommandBuilder {
     public readonly command_type: CommandType.SlashCommand = CommandType.SlashCommand;
     public readonly type?: ApplicationCommandType.ChatInput = ApplicationCommandType.ChatInput;
 
@@ -103,7 +104,7 @@ export class SlashCommandBuilder extends Mixin(DiscordJsSlashCommandBuilder, Bas
     public toJSON(): SlashCommandBuilderData & { type?: ApplicationCommandType.ChatInput; } {
         return {
             ...super.toJSON(),
-            ...super._toJSON()
+            ...super._toJSON<CommandType.SlashCommand, SlashCommandExecuteFunction>()
         }
     }
 
@@ -239,7 +240,7 @@ export class SlashCommandBuilder extends Mixin(DiscordJsSlashCommandBuilder, Bas
             const cooldown = client.cooldowns.findCooldown(cooldownData);
 
             if (cooldown) {
-                await client.executeCommandBuilderHalt({
+                await client.commands.executeHalts({
                     reason: CommandHaltReason.Cooldown,
                     commandType: builder.command_type,
                     cooldown,
@@ -251,7 +252,7 @@ export class SlashCommandBuilder extends Mixin(DiscordJsSlashCommandBuilder, Bas
 
         const commandPreconditionTrigger = await client.commands.executePreconditions(executeData);
         if (commandPreconditionTrigger) {
-            await client.executeCommandBuilderHalt({
+            await client.commands.executeHalts({
                 reason: CommandHaltReason.PreconditionTrigger,
                 commandType: builder.command_type,
                 ...commandPreconditionTrigger
@@ -259,7 +260,7 @@ export class SlashCommandBuilder extends Mixin(DiscordJsSlashCommandBuilder, Bas
             return null;
         }
 
-        return (await client.executeCommandBuilderExecute(executeData)) ? executeData : null;
+        return (await client.commands.executeCommandBuilderExecute(executeData)) ? executeData : null;
     }
 }
 

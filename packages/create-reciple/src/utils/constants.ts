@@ -1,8 +1,8 @@
-import { fileURLToPath } from 'node:url';
-import path from 'node:path';
-import { readFile } from 'node:fs/promises';
 import { PackageJson } from 'fallout-utility/types';
 import { PackageManager } from '@reciple/utils';
+import { readFile } from 'node:fs/promises';
+import { fileURLToPath } from 'node:url';
+import path from 'node:path';
 
 export const root = path.join(path.dirname(fileURLToPath(import.meta.url)), '../../');
 export const templatesFolder = path.join(root, 'templates');

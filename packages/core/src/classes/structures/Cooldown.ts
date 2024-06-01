@@ -1,13 +1,31 @@
-import { CooldownManager } from '../managers/CooldownManager';
-import { CommandType } from '../../types/constants';
+import { CooldownManager } from '../managers/CooldownManager.js';
+import { CommandType } from '../../types/constants.js';
 import { TextBasedChannel } from 'discord.js';
 
 export interface CooldownData {
+    /**
+     * The user id of the user that the cooldown is for.
+     */
     userId: string;
+    /**
+     * The date that the cooldown ends at.
+     */
     endsAt: Date;
+    /**
+     * The channel id of the channel that the cooldown is for.
+     */
     channelId?: string;
+    /**
+     * The guild id of the guild that the cooldown is for.
+     */
     guildId?: string;
+    /**
+     * The name of the command that the cooldown is for.
+     */
     commandName?: string;
+    /**
+     * The type of the command that the cooldown is for.
+     */
     commandType?: CommandType;
 }
 
@@ -49,6 +67,9 @@ export class Cooldown implements CooldownData {
         this.commandType = data.commandType;
     }
 
+    /**
+     * Check if the cooldown has ended.
+     */
     public isEnded(): boolean {
         return this.endsAt.getTime() <= Date.now();
     }

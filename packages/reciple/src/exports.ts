@@ -1,7 +1,7 @@
-export * from './classes/Config';
-export * from './utils/cli';
-export * from './utils/logger';
-export * from './utils/modules';
+export * from './classes/Config.js';
+export * from './utils/modules.js';
+export * from './utils/logger.js';
+export * from './utils/cli.js';
 
 export interface ProcessInformation {
     type: 'ProcessInfo';

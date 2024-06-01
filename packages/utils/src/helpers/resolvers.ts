@@ -1,5 +1,5 @@
-import { DotenvConfigOptions, config } from 'dotenv';
 import { RestOrArray, normalizeArray } from 'fallout-utility';
+import { DotenvConfigOptions, config } from 'dotenv';
 
 export type PackageManager = 'npm'|'yarn'|'pnpm';
 

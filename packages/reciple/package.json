@@ -3,11 +3,11 @@
   "description": "Reciple is a Discord.js bot framework",
   "homepage": "https://reciple.js.org/docs/reciple",
   "license": "GPL-3.0",
-  "version": "8.4.2",
-  "main": "./dist/index.js",
-  "module": "./dist/esm.mjs",
+  "version": "9.0.0-dev.12",
+  "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "bin": "./dist/bin.mjs",
+  "bin": "./dist/bin.js",
+  "type": "module",
   "keywords": [
     "reciple",
     "discord.js",
@@ -22,10 +22,9 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/esm.mjs",
-      "require": "./dist/index.js"
+      "import": "./dist/index.js"
     },
-    "./config.mjs": {
+    "./config": {
       "types": "./static/config.d.mts",
       "import": "./static/config.mjs"
     }
@@ -41,25 +40,24 @@
     "README.md"
   ],
   "dependencies": {
-    "@reciple/update-checker": "^9.1.0",
-    "@reciple/utils": "^8.3.0",
+    "@reciple/utils": "^9.0.0-dev.5",
     "commander": "^12.1.0",
     "dotenv": "^16.4.5",
-    "fallout-utility": "^2.9.0",
+    "fallout-utility": "^2.9.1",
     "globby": "^14.0.1",
     "micromatch": "^4.0.7",
     "prompts": "^2.4.2",
     "semver": "^7.6.2"
   },
   "devDependencies": {
-    "@reciple/core": "^8.4.2",
+    "@reciple/core": "^9.0.0-dev.8",
     "@types/micromatch": "^4.0.7",
     "@types/semver": "^7.5.8",
     "discord.js": "^14.15.2"
   },
   "peerDependencies": {
-    "@reciple/core": "^8.0.0",
-    "discord.js": "^14.7.1"
+    "@reciple/core": "^9 || ^9.0.0-dev",
+    "discord.js": "^14.15.0"
   },
   "gitHead": "c5620aa5f046aa426b832c052a4f933817270573"
 }

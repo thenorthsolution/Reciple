@@ -1,13 +1,15 @@
-import { ApplicationCommand, ApplicationCommandDataResolvable, ChatInputCommandInteraction, Collection, ContextMenuCommandInteraction, FetchApplicationCommandOptions, JSONEncodable, Message, RESTPostAPIChatInputApplicationCommandsJSONBody, RESTPostAPIContextMenuApplicationCommandsJSONBody, RestOrArray, isJSONEncodable, normalizeArray } from 'discord.js';
-import { AnyCommandBuilder, AnyCommandExecuteData, AnyCommandResolvable, RecipleClientConfig, RecipleClientInteractionBasedCommandConfigOptions } from '../../types/structures';
-import { CommandPrecondition, CommandPreconditionResolvable, CommandPreconditionTriggerData } from '../structures/CommandPrecondition';
-import { AnySlashCommandBuilder, SlashCommandBuilder, SlashCommandExecuteData } from '../builders/SlashCommandBuilder';
-import { ContextMenuCommandBuilder, ContextMenuCommandExecuteData } from '../builders/ContextMenuCommandBuilder';
-import { MessageCommandBuilder, MessageCommandExecuteData } from '../builders/MessageCommandBuilder';
-import { RecipleClient } from '../structures/RecipleClient';
-import { CommandType } from '../../types/constants';
-import { Utils } from '../structures/Utils';
-import { defaultsDeep } from 'lodash';
+import { ApplicationCommand, ApplicationCommandDataResolvable, ChatInputCommandInteraction, Collection, ContextMenuCommandInteraction, JSONEncodable, Message, RESTPostAPIChatInputApplicationCommandsJSONBody, RESTPostAPIContextMenuApplicationCommandsJSONBody, RestOrArray, isJSONEncodable, normalizeArray } from 'discord.js';
+import { AnyCommandBuilder, AnyCommandExecuteData, AnyCommandHaltTriggerData, AnyCommandResolvable, RecipleClientConfig, RecipleClientInteractionBasedCommandConfigOptions } from '../../types/structures.js';
+import { CommandPrecondition, CommandPreconditionResolvable, CommandPreconditionResultData } from '../structures/CommandPrecondition.js';
+import { AnySlashCommandBuilder, SlashCommandBuilder, SlashCommandExecuteData } from '../builders/SlashCommandBuilder.js';
+import { ContextMenuCommandBuilder, ContextMenuCommandExecuteData } from '../builders/ContextMenuCommandBuilder.js';
+import { MessageCommandBuilder, MessageCommandExecuteData } from '../builders/MessageCommandBuilder.js';
+import { RecipleClient } from '../structures/RecipleClient.js';
+import { CommandHaltReason, CommandType } from '../../types/constants.js';
+import { Utils } from '../structures/Utils.js';
+import defaultsDeep from 'lodash.defaultsdeep';
+import { CommandHalt, CommandHaltResolvable, CommandHaltResultData } from '../structures/CommandHalt.js';
+import { RecipleError } from '../structures/RecipleError.js';
 
 export interface CommandManagerRegisterCommandsOptions extends Omit<Exclude<RecipleClientConfig['applicationCommandRegister'], undefined>, 'enabled'> {
     contextMenuCommands?: Partial<RecipleClientInteractionBasedCommandConfigOptions> & {
@@ -23,6 +25,7 @@ export class CommandManager {
     readonly messageCommands: Collection<string, MessageCommandBuilder> = new Collection();
     readonly slashCommands: Collection<string, AnySlashCommandBuilder> = new Collection();
     readonly preconditions: Collection<string, CommandPrecondition> = new Collection();
+    readonly halts: Collection<string, CommandHalt> = new Collection();
 
     constructor(readonly client: RecipleClient<true>) {}
 
@@ -37,6 +40,10 @@ export class CommandManager {
         ];
     }
 
+    /**
+     * Adds preconditions to the global preconditions.
+     * @param data Preconditions resolvable.
+     */
     public addPreconditions(...data: RestOrArray<CommandPreconditionResolvable>): CommandPrecondition[] {
         const preconditions = normalizeArray(data).map(p => CommandPrecondition.resolve(p));
 
@@ -47,68 +54,93 @@ export class CommandManager {
         return preconditions;
     }
 
-    public removePreconditions(...data: RestOrArray<string>): CommandPrecondition[] {
-        const ids = normalizeArray(data);
-        const preconditions: CommandPrecondition[] = [];
-
-        for (const id of ids) {
-            const precondition = this.preconditions.get(id);
-            if (!precondition) continue;
-
-            preconditions.push(precondition);
-            this.preconditions.delete(id);
-        }
-
-        return preconditions;
+    /**
+     * Sets the preconditions in global preconditions.
+     * @param data Preconditions resolvable.
+     */
+    public setPreconditions(...data: RestOrArray<CommandPreconditionResolvable>): CommandPrecondition[] {
+        this.preconditions.clear();
+        return this.addPreconditions(normalizeArray(data));
     }
 
-    public disablePreconditions(...data: RestOrArray<string|CommandPreconditionResolvable>): CommandPrecondition[] {
-        const ids = normalizeArray(data).map(id => typeof id === 'string' ? id : CommandPrecondition.resolve(id).id);
-        const preconditions: CommandPrecondition[] = [];
-
-        for (const id of ids) {
-            const precondition = this.preconditions.get(id);
-            if (!precondition) continue;
-
-            precondition.setDisabled(false);
-        }
-
-        return preconditions;
-    }
-
-    public enablePreconditions(...data: RestOrArray<string|CommandPreconditionResolvable>): CommandPrecondition[] {
-        const ids = normalizeArray(data).map(id => typeof id === 'string' ? id : CommandPrecondition.resolve(id).id);
-        const preconditions: CommandPrecondition[] = [];
-
-        for (const id of ids) {
-            const precondition = this.preconditions.get(id);
-            if (!precondition) continue;
-
-            precondition.setDisabled(false);
-        }
-
-        return preconditions;
-    }
-
-    public async executePreconditions<T extends AnyCommandExecuteData = AnyCommandExecuteData>(executeData: T): Promise<CommandPreconditionTriggerData<T>|null> {
+    /**
+     * Executes a preconditions for a command.
+     * @param executeData Execute data of the command.
+     */
+    public async executePreconditions<T extends AnyCommandExecuteData = AnyCommandExecuteData>(executeData: T): Promise<CommandPreconditionResultData<T>|null> {
         const preconditions = Array.from(this.preconditions.values());
-        const disabledPreconditions = executeData.builder.disabled_preconditions.map(p => CommandPrecondition.resolve(p));
+        const disabledPreconditions = executeData.builder.disabled_preconditions;
 
         for (const precondition of executeData.builder.preconditions) {
             const data = CommandPrecondition.resolve(precondition);
-            if (preconditions.some(p => p.id === data.id)) continue;
+            if (preconditions.some(p => p.id === data.id) || disabledPreconditions.includes(data.id)) continue;
 
             preconditions.push(data);
         }
 
         for (const precondition of preconditions) {
-            if (precondition.disabled || disabledPreconditions.some(p => p.id === precondition.id)) continue;
+            if (precondition.disabled || disabledPreconditions.some(p => p === precondition.id)) continue;
 
             const data = await precondition.execute(executeData);
             if (!data.successful) return data;
         }
 
         return null;
+    }
+
+    /**
+     * Adds halt to the global halts.
+     * @param data Halts resolvable.
+     */
+    public addHalts(...data: RestOrArray<CommandHaltResolvable>): CommandHalt[] {
+        const halts = normalizeArray(data).map(h => CommandHalt.resolve(h));
+
+        for (const halt of halts) {
+            this.halts.set(halt.id, halt);
+        }
+
+        return halts;
+    }
+
+    /**
+     * Sets halts in global halts.
+     * @param data Halts resolvable.
+     */
+    public setHalts(...data: RestOrArray<CommandHaltResolvable>): CommandHalt[] {
+        this.halts.clear();
+        return this.addHalts(normalizeArray(data));
+    }
+
+    /**
+     * Executes a halt for a command.
+     * @param trigger Trigger data of the command.
+     */
+    public async executeHalts<T extends AnyCommandHaltTriggerData = AnyCommandHaltTriggerData>(trigger: T): Promise<CommandHaltResultData<T['commandType']>|boolean> {
+        const halts: CommandHalt[] = [];
+        const disabledHalts = trigger.executeData.builder.disabled_halts;
+
+        for (const halt of trigger.executeData.builder.halts) {
+            const data = CommandHalt.resolve(halt);
+            if (halts.some(p => p.id === data.id)  || disabledHalts.includes(data.id)) continue;
+
+            halts.push(data);
+        }
+
+        halts.push(...this.halts.values());
+
+        let handled = false;
+
+        for (const halt of halts) {
+            if (halt.disabled || disabledHalts.some(p => p === halt.id)) continue;
+
+            const data = await halt.execute(trigger);
+            if (data === null) continue;
+            if (!data.successful) return data;
+
+            handled = true;
+        }
+
+        return handled;
     }
 
     public get(command: string, type: CommandType.ContextMenuCommand): ContextMenuCommandBuilder|undefined;
@@ -125,6 +157,10 @@ export class CommandManager {
         }
     }
 
+    /**
+     * Adds new command to the manager.
+     * @param commands Any command resolvable.
+     */
     public add(...commands: RestOrArray<AnyCommandResolvable>): AnyCommandBuilder[] {
         const resolved = normalizeArray(commands).map(c => Utils.resolveCommandBuilder(c));
 
@@ -145,6 +181,10 @@ export class CommandManager {
         return resolved;
     }
 
+    /**
+     * Registers the application commands.
+     * @param options Register application commands options.
+     */
     public async registerApplicationCommands(options?: CommandManagerRegisterCommandsOptions): Promise<{ global: Collection<string, ApplicationCommand>; guilds: Collection<string, Collection<string, ApplicationCommand>> }> {
         const store = { global: new Collection<string, ApplicationCommand>(), guilds: new Collection<string, Collection<string, ApplicationCommand>>() };
         const config = defaultsDeep({ ...this.client.config.commands, ...this.client.config.applicationCommandRegister }, options) as CommandManagerRegisterCommandsOptions;
@@ -208,17 +248,10 @@ export class CommandManager {
         return store;
     }
 
-    public getApplicationCommand(command: string, guildId?: string): ApplicationCommand|undefined {
-        return this.client.application?.commands.cache.find(c => command && (guildId ? c.guildId === guildId : c.guildId === null));
-    }
-
-    public async fetchApplicationCommand(command: string, guildId?: string): Promise<ApplicationCommand|undefined>;
-    public async fetchApplicationCommand(command: string, options?: FetchApplicationCommandOptions): Promise<ApplicationCommand|undefined>;
-    public async fetchApplicationCommand(command: string, options?: string|FetchApplicationCommandOptions): Promise<ApplicationCommand|undefined> {
-        const commands = await this.client.application?.commands.fetch(typeof options === 'string' ? { guildId: options } : options ?? {});
-        return commands?.find(c => c.name === command);
-    }
-
+    /**
+     * Executes a command.
+     * @param interaction The object that triggered the command.
+     */
     public async execute(interaction: ContextMenuCommandInteraction): Promise<ContextMenuCommandExecuteData|null>;
     public async execute(message: Message): Promise<MessageCommandExecuteData|null>;
     public async execute(interaction: ChatInputCommandInteraction): Promise<SlashCommandExecuteData|null>;
@@ -232,6 +265,44 @@ export class CommandManager {
         }
 
         return null;
+    }
+
+    /**
+     * Execute a command with execute data
+     * @param data The command execute data.
+     */
+    public async executeCommandBuilderExecute(data: AnyCommandExecuteData): Promise<boolean> {
+        try {
+            switch (data.type) {
+                case CommandType.ContextMenuCommand:
+                    await data.builder.execute(data);
+                    break;
+                case CommandType.MessageCommand:
+                    await data.builder.execute(data);
+                    break;
+                case CommandType.SlashCommand:
+                    await data.builder.execute(data);
+                    break;
+            }
+
+            return this.client.emit('recipleCommandExecute', data);
+        } catch (error) {
+            // @ts-expect-error Types is broken here
+            const haltData = await this.executeHalts({
+                commandType: data.type,
+                reason: CommandHaltReason.Error,
+                executeData: data,
+                error
+            })
+            .catch(err => {
+                this.client._throwError(new RecipleError(RecipleError.createCommandHaltErrorOptions(data.builder, err)));
+                return null;
+            });
+
+            if (haltData === false) this.client._throwError(new RecipleError(RecipleError.createCommandExecuteErrorOptions(data.builder, error)))
+        }
+
+        return false;
     }
 
     public toJSON() {

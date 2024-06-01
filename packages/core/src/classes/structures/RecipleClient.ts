@@ -1,18 +1,18 @@
-import { AnyCommandExecuteData, AnyCommandHaltData, RecipleClientConfig } from '../../types/structures';
+import { AnyCommandExecuteData, RecipleClientConfig } from '../../types/structures.js';
 import { ApplicationCommand, Awaitable, Client, ClientEvents, Collection } from 'discord.js';
-import { CommandHaltReason, CommandType, version } from '../../types/constants';
-import { CommandPreconditionTriggerData } from './CommandPrecondition';
-import { CooldownManager } from '../managers/CooldownManager';
-import { CommandManager } from '../managers/CommandManager';
-import { ModuleManager } from '../managers/ModuleManager';
+import { version } from '../../types/constants.js';
+import { CommandPreconditionResultData } from './CommandPrecondition.js';
+import { CooldownManager } from '../managers/CooldownManager.js';
+import { CommandManager } from '../managers/CommandManager.js';
+import { ModuleManager } from '../managers/ModuleManager.js';
+import { CommandHaltResultData } from './CommandHalt.js';
 import { Logger } from 'fallout-utility/Logger';
-import { RecipleError } from './RecipleError';
 import { If } from 'fallout-utility/types';
 
 export interface RecipleClientEvents extends ClientEvents {
     recipleCommandExecute: [executeData: AnyCommandExecuteData];
-    recipleCommandHalt: [haltData: AnyCommandHaltData];
-    recipleCommandPrecondition: [executeData: CommandPreconditionTriggerData];
+    recipleCommandHalt: [haltData: CommandHaltResultData];
+    recipleCommandPrecondition: [executeData: CommandPreconditionResultData];
     recipleRegisterApplicationCommands: [commands: Collection<string, ApplicationCommand>, guildId?: string];
     recipleError: [error: Error];
     recipleDebug: [message: string];
@@ -26,7 +26,6 @@ export interface RecipleClient<Ready extends boolean = boolean> extends Client<R
     once<E extends string | symbol>(event: E, listener: (...args: any) => Awaitable<void>): this;
 
     emit<E extends keyof RecipleClientEvents>(event: E, ...args: RecipleClientEvents[E]): boolean;
-    emit<E extends string | symbol>(event: E, ...args: any): boolean;
 
     off<E extends keyof RecipleClientEvents>(event: E, listener: (...args: RecipleClientEvents[E]) => Awaitable<void>): this;
     off<E extends string | symbol>(event: E, listener: (...args: any) => Awaitable<void>): this;
@@ -55,6 +54,11 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
         super(config.client);
     }
 
+    /**
+     * Sets the logger for the client.
+     * @param logger The instance of the logger.
+     * @returns 
+     */
     public setLogger(logger: Logger|null): this {
         this.logger = logger ?? null;
         return this;
@@ -69,6 +73,7 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
         this.cooldowns?.setCooldownSweeper(this.config.cooldownSweeperOptions ?? { timer: 1000 * 60 * 60 });
 
         if (this.config.preconditions) this.commands?.addPreconditions(this.config.preconditions);
+        if (this.config.commandHalts) this.commands?.addHalts(this.config.commandHalts);
 
         token = await super.login(this.config.token);
 
@@ -83,60 +88,6 @@ export class RecipleClient<Ready extends boolean = boolean> extends Client<Ready
         this._cooldowns = null;
 
         if (clearModules) this.modules.cache.clear();
-    }
-
-    public async executeCommandBuilderHalt(data: AnyCommandHaltData): Promise<boolean> {
-        try {
-            if (data.executeData.builder.halt) {
-                switch (data.commandType) {
-                    case CommandType.ContextMenuCommand:
-                        await data.executeData.builder.halt(data);
-                        break;
-                    case CommandType.MessageCommand:
-                        await data.executeData.builder.halt(data);
-                        break;
-                    case CommandType.SlashCommand:
-                        await data.executeData.builder.halt(data);
-                        break;
-                }
-            }
-
-            return this.emit('recipleCommandHalt', data);
-        } catch (error) {
-            this._throwError(new RecipleError(RecipleError.createCommandHaltErrorOptions(data.executeData.builder, error)));
-        }
-
-        return false;
-    }
-
-    public async executeCommandBuilderExecute(data: AnyCommandExecuteData): Promise<boolean> {
-        try {
-            switch (data.type) {
-                case CommandType.ContextMenuCommand:
-                    await data.builder.execute(data);
-                    break;
-                case CommandType.MessageCommand:
-                    await data.builder.execute(data);
-                    break;
-                case CommandType.SlashCommand:
-                    await data.builder.execute(data);
-                    break;
-            }
-
-            return this.emit('recipleCommandExecute', data);
-        } catch (error) {
-            // @ts-expect-error Typing is broken here
-            const isHandled = await this.executeCommandBuilderHalt({
-                commandType: data.type,
-                reason: CommandHaltReason.Error,
-                executeData: data,
-                error
-            });
-
-            if (!isHandled) this._throwError(new RecipleError(RecipleError.createCommandExecuteErrorOptions(data.builder, error)));
-        }
-
-        return false;
     }
 
     public _throwError(error: Error, throwWhenNoListener: boolean = true): void {

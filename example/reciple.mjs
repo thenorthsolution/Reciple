@@ -2,6 +2,7 @@
 import { CooldownPrecondition, CommandPermissionsPrecondition } from 'reciple';
 import { IntentsBitField } from 'discord.js';
 import MyPrecondition from './modules/Preconditions/MyPrecondition.js';
+import HandleError from './modules/Halts/HandleError.js';
 
 /**
  * @type {import('reciple').RecipleConfig}
@@ -66,18 +67,22 @@ export const config = {
             './modules/*/*'
         ],
         exclude: [
-            'Preconditions'
+            'Preconditions',
+            'Halts'
         ],
         disableModuleVersionCheck: false
     },
     preconditions: [
-        CooldownPrecondition.create(),
-        CommandPermissionsPrecondition.create(),
+        new CooldownPrecondition(),
+        new CommandPermissionsPrecondition(),
         MyPrecondition
+    ],
+    commandHalts: [
+        HandleError
     ],
     cooldownSweeperOptions: {
         timer: 1000 * 60 * 60
     },
     checkForUpdates: false,
-    version: `^8.0.0`
+    version: `^9.0.0`
 };
