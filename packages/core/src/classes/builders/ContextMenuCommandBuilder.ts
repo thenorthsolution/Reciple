@@ -25,7 +25,7 @@ export interface ContextMenuCommandBuilderData extends BaseCommandBuilderData, O
      * The type of the data that will be returned when the command is executed.
      */
     type: ContextMenuCommandType|'Message'|'User';
-    halts?: CommandHaltResolvable<CommandType.ContextMenuCommand>[];
+    halts?: CommandHaltResolvable[];
     execute: ContextMenuCommandExecuteFunction;
 }
 
@@ -33,7 +33,7 @@ export interface ContextMenuCommandBuilder extends DiscordJsContextMenuCommandBu
     halts: CommandHalt[];
     execute: ContextMenuCommandExecuteFunction;
 
-    setHalts(...halt: RestOrArray<CommandHaltResolvable<CommandType.ContextMenuCommand>>): this;
+    setHalts(...halt: RestOrArray<CommandHaltResolvable>): this;
     setExecute(execute: ContextMenuCommandExecuteFunction): this;
 }
 

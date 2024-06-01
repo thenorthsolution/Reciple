@@ -1,11 +1,11 @@
 import { isJSONEncodable, JSONEncodable } from 'discord.js';
 import { CommandType } from '../../types/constants.js';
-import { AnyCommandHaltFunction, AnyCommandHaltTriggerData } from '../../types/structures.js';
+import { AnyCommandHaltTriggerData } from '../../types/structures.js';
 import { ContextMenuCommandHaltFunction, ContextMenuCommandHaltTriggerData } from '../builders/ContextMenuCommandBuilder.js';
 import { MessageCommandHaltFunction, MessageCommandHaltTriggerData } from '../builders/MessageCommandBuilder.js';
 import { SlashCommandHaltFunction, SlashCommandHaltTriggerData } from '../builders/SlashCommandBuilder.js';
 
-export interface CommandHaltData<T extends CommandType = CommandType> {
+export interface CommandHaltData {
     /**
      * The id of the command halt.
      * The id only accepts lowercase letters and cannot contain spaces or special characters.
@@ -16,19 +16,17 @@ export interface CommandHaltData<T extends CommandType = CommandType> {
      */
     disabled?: boolean;
     /**
-     * The command types that the command halt will be used for.
+     * The function that will be called when a context menu command halt is triggered.
      */
-    commandTypes: T[];
+    contextMenuCommandHalt?: ContextMenuCommandHaltFunction;
     /**
-     * The function that will be called when the command halt is triggered.
+     * The function that will be called when a message command halt is triggered.
      */
-    halt: T extends CommandType.ContextMenuCommand
-        ? ContextMenuCommandHaltFunction
-        : T extends CommandType.MessageCommand
-            ? MessageCommandHaltFunction
-            : T extends CommandType.SlashCommand
-                ? SlashCommandHaltFunction
-                : AnyCommandHaltFunction;
+    messageCommandHalt?: MessageCommandHaltFunction;
+    /**
+     * The function that will be called when a slash command halt is triggered.
+     */
+    slashCommandHalt?: SlashCommandHaltFunction;
 }
 
 export type CommandHaltResultResolvable<T extends CommandType = CommandType, D extends any = any> = null|undefined|boolean|string|Omit<CommandHaltResultData<T, D>, 'halt'|'triggerData'>
@@ -37,7 +35,7 @@ export interface CommandHaltResultData<T extends CommandType = CommandType, D ex
     /**
      * The command halt that was triggered.
      */
-    halt: CommandHalt<T>;
+    halt: CommandHalt;
     /**
      * Whether the command halt was successful.
      */
@@ -62,18 +60,20 @@ export interface CommandHaltResultData<T extends CommandType = CommandType, D ex
                 : AnyCommandHaltTriggerData;
 }
 
-export class CommandHalt<T extends CommandType = CommandType> implements CommandHaltData<T> {
+export class CommandHalt implements CommandHaltData {
     public readonly id: string;
-    public readonly commandTypes: T[];
-    public readonly halt: CommandHaltData<T>['halt'];
+    public readonly contextMenuCommandHalt?: ContextMenuCommandHaltFunction;
+    public readonly messageCommandHalt?: MessageCommandHaltFunction;
+    public readonly slashCommandHalt?: SlashCommandHaltFunction;
 
     public disabled: boolean;
 
-    constructor(data: CommandHaltData<T>) {
+    constructor(data: CommandHaltData) {
         this.id = data.id;
         this.disabled = data.disabled ?? false;
-        this.commandTypes = data.commandTypes;
-        this.halt = data.halt;
+        this.contextMenuCommandHalt = data.contextMenuCommandHalt;
+        this.messageCommandHalt = data.messageCommandHalt;
+        this.slashCommandHalt = data.slashCommandHalt;
     }
 
     /**
@@ -85,7 +85,7 @@ export class CommandHalt<T extends CommandType = CommandType> implements Command
         return this;
     }
 
-    public toJSON(): CommandHaltData<T> {
+    public toJSON(): CommandHaltData {
         return { ...this };
     }
 
@@ -94,13 +94,13 @@ export class CommandHalt<T extends CommandType = CommandType> implements Command
 
         switch (trigger.commandType) {
             case CommandType.ContextMenuCommand:
-                data = await Promise.resolve((this.halt as ContextMenuCommandHaltFunction)(trigger));
+                data = this.contextMenuCommandHalt ? await Promise.resolve(this.contextMenuCommandHalt(trigger)) : null;
                 break;
             case CommandType.MessageCommand:
-                data = await Promise.resolve((this.halt as MessageCommandHaltFunction)(trigger));
+                data = this.messageCommandHalt ? await Promise.resolve(this.messageCommandHalt(trigger)) : null;
                 break;
             case CommandType.SlashCommand:
-                data = await Promise.resolve((this.halt as SlashCommandHaltFunction)(trigger));
+                data = this.slashCommandHalt ? await Promise.resolve(this.slashCommandHalt(trigger)) : null;
                 break;
         }
 
@@ -121,13 +121,13 @@ export class CommandHalt<T extends CommandType = CommandType> implements Command
         return resultData;
     }
 
-    public static from<T extends CommandType = CommandType>(data: CommandHaltResolvable<T>): CommandHalt<T> {
-        return new CommandHalt((isJSONEncodable(data) ? data.toJSON() : data) as CommandHaltData<T>);
+    public static from(data: CommandHaltResolvable): CommandHalt {
+        return new CommandHalt((isJSONEncodable(data) ? data.toJSON() : data) as CommandHaltData);
     }
 
-    public static resolve<T extends CommandType = CommandType>(data: CommandHaltResolvable<T>): CommandHalt<T> {
+    public static resolve(data: CommandHaltResolvable): CommandHalt {
         return data instanceof CommandHalt ? data : this.from(data);
     }
 }
 
-export type CommandHaltResolvable<T extends CommandType = CommandType> = JSONEncodable<CommandHaltData<CommandType>>|CommandHaltData<CommandType>;
+export type CommandHaltResolvable = JSONEncodable<CommandHaltData>|CommandHaltData;

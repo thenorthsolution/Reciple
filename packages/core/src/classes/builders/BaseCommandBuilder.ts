@@ -55,7 +55,7 @@ export abstract class BaseCommandBuilder implements BaseCommandBuilderData {
     public preconditions: CommandPreconditionResolvable[] = [];
     public disabled_preconditions: string[] = [];
     public disabled_halts: string[] = [];
-    public halts: CommandHalt<CommandType>[] = [];
+    public halts: CommandHalt[] = [];
     public execute: AnyCommandExecuteFunction = () => {};
 
     constructor(data?: Omit<Partial<BaseCommandBuilderData>, 'command_type'>) {
@@ -63,6 +63,8 @@ export abstract class BaseCommandBuilder implements BaseCommandBuilderData {
         if (data?.required_bot_permissions) this.setRequiredBotPermissions(data.required_bot_permissions);
         if (data?.required_member_permissions) this.setRequiredMemberPermissions(data.required_member_permissions);
         if (data?.preconditions) this.setPreconditions(data.preconditions);
+        if (data?.disabled_preconditions) this.setDisabledPreconditions(data.disabled_preconditions);
+        if (data?.disabled_halts) this.setDisabledHalts(data.disabled_halts);
         if (data?.halts) this.setHalts(data.halts);
         if (data?.execute) this.setExecute(data.execute);
     }
@@ -156,7 +158,7 @@ export abstract class BaseCommandBuilder implements BaseCommandBuilderData {
      * Sets halts to the command.
      * @param halts Halts resolvable.
      */
-    public setHalts(...halts: RestOrArray<CommandHaltResolvable<CommandType>>): this {
+    public setHalts(...halts: RestOrArray<CommandHaltResolvable>): this {
         halts = normalizeArray(halts);
         BaseCommandValidators.isValidHalts(halts);
         this.halts = halts.map(h => CommandHalt.resolve(h));
@@ -207,14 +209,14 @@ export abstract class BaseCommandBuilder implements BaseCommandBuilderData {
         return this.command_type === CommandType.SlashCommand;
     }
 
-    protected _toJSON<C extends CommandType = CommandType, E extends AnyCommandExecuteFunction = AnyCommandExecuteFunction>(): Omit<BaseCommandBuilderData, 'command_type'|'halt'|'execute'> & { command_type: C; halts?: CommandHaltData<C>[]; execute: E; } {
+    protected _toJSON<C extends CommandType = CommandType, E extends AnyCommandExecuteFunction = AnyCommandExecuteFunction>(): Omit<BaseCommandBuilderData, 'command_type'|'halt'|'execute'> & { command_type: C; halts?: CommandHaltData[]; execute: E; } {
         return {
             command_type: this.command_type as C,
             cooldown: this.cooldown,
             required_bot_permissions: this.required_bot_permissions,
             required_member_permissions: this.required_member_permissions,
             preconditions: this.preconditions.map(p => isJSONEncodable(p) ? p.toJSON() : p),
-            halts: this.halts.map(h => isJSONEncodable(h) ? h.toJSON() : h) as CommandHaltData<C>[],
+            halts: this.halts.map(h => isJSONEncodable(h) ? h.toJSON() : h) as CommandHaltData[],
             execute: this.execute as E,
         };
     }

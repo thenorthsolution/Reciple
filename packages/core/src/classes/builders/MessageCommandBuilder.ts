@@ -28,7 +28,7 @@ export type MessageCommandHaltFunction = (haltData: MessageCommandHaltTriggerDat
 
 export interface MessageCommandBuilderData extends BaseCommandBuilderData {
     command_type: CommandType.MessageCommand;
-    halts?: CommandHaltResolvable<CommandType.MessageCommand>[];
+    halts?: CommandHaltResolvable[];
     execute: MessageCommandExecuteFunction;
     /**
      * The name of the command.
@@ -64,10 +64,10 @@ export interface MessageCommandBuilderData extends BaseCommandBuilderData {
 }
 
 export interface MessageCommandBuilder extends BaseCommandBuilder {
-    halts: CommandHalt<CommandType.MessageCommand>[];
+    halts: CommandHalt[];
     execute: MessageCommandExecuteFunction;
 
-    setHalts(...halts: RestOrArray<CommandHaltResolvable<CommandType.MessageCommand>>): this;
+    setHalts(...halts: RestOrArray<CommandHaltResolvable>): this;
     setExecute(execute: MessageCommandExecuteFunction): this;
 }
 
