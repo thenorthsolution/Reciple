@@ -1,5 +1,5 @@
 <h1 align="center">
-    <img src="/assets/SVG/reciple.svg" width="50%">
+    <img src="https://i.imgur.com/h0ljJR5.png" width="50%">
     <br>
 </h1>
 
