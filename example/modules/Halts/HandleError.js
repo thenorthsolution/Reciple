@@ -4,11 +4,9 @@ import { CommandHaltReason, CommandType } from 'reciple';
 /**
  * @satisfies {import('reciple').CommandHaltData}
  */
-export default {
-    id: 'org.reciple.js.handleerror',
-    contextMenuCommandHalt(data){ return this.halt(data) },
-    messageCommandHalt(data){ return this.halt(data) },
-    slashCommandHalt(data){ return this.halt(data) },
+export class ExampleHalt {
+    id = 'org.reciple.js.handleerror';
+
     /**
      * 
      * @param {import('reciple').AnyCommandHaltTriggerData} data 
@@ -39,4 +37,10 @@ export default {
 
         return true;
     }
+
+    contextMenuCommandHalt(data) { return this.halt(data); }
+    messageCommandHalt(data) { return this.halt(data); }
+    slashCommandHalt(data) { return this.halt(data); }
 };
+
+export default new ExampleHalt();
