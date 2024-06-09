@@ -1,8 +1,6 @@
 import { RestOrArray, normalizeArray } from 'fallout-utility';
 import { DotenvConfigOptions, config } from 'dotenv';
 
-export type PackageManager = 'npm'|'yarn'|'pnpm';
-
 /**
  * Resolve env from string
  * @param str env resolvable string
@@ -31,11 +29,17 @@ export function replacePlaceholders(message: string, ...placeholders: RestOrArra
     return message;
 }
 
-export function resolvePackageManager(): PackageManager|undefined {
+
+export type PackageManager = 'npm'|'yarn'|'pnpm'|'bun';
+
+export function resolvePackageManager(): PackageManager|null {
 	const npmConfigUserAgent = process.env.npm_config_user_agent?.toLowerCase();
 
-	if (!npmConfigUserAgent) return;
+	if (!npmConfigUserAgent) return null;
 	if (npmConfigUserAgent.startsWith('npm')) return 'npm';
 	if (npmConfigUserAgent.startsWith('yarn')) return 'yarn';
 	if (npmConfigUserAgent.startsWith('pnpm')) return 'pnpm';
+    if (npmConfigUserAgent.startsWith('bun')) return 'bun';
+
+    return null;
 }
