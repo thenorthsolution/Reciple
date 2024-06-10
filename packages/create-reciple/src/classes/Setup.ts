@@ -1,7 +1,7 @@
 import { cancel, confirm, intro, isCancel, multiselect, password, select, text } from '@clack/prompts';
-import { existsAsync, PackageManager, resolvePackageManager } from '@reciple/utils';
+import { PackageManager, resolvePackageManager } from '@reciple/utils';
 import { kleur } from 'fallout-utility/strings';
-import { statSync } from 'fs';
+import { existsSync, statSync } from 'fs';
 import path from 'path';
 import { Addon } from './Addon.js';
 import { packageJson, packageManagers } from '../utils/constants.js';
@@ -29,7 +29,7 @@ export class Setup implements SetupOptions {
     constructor(options?: SetupOptions) {
         this.dir = options?.dir;
         this.isTypescript = options?.isTypescript;
-        this.packageManager = options?.packageManager ?? null;
+        this.packageManager = options?.packageManager;
         this.addons = options?.addons;
         this.token = options?.token;
     }
@@ -39,7 +39,7 @@ export class Setup implements SetupOptions {
 
         intro(kleur.cyan().bold(`${packageJson.name} v${packageJson.version}`))
 
-        await this.promptDir();
+        await this.promptDir(this.dir);
 
         this.dir ||= process.cwd();
 
@@ -57,15 +57,15 @@ export class Setup implements SetupOptions {
             }
         }
 
-        await this.promptIsTypescript();
-        await this.promptPackageManager();
-        await this.promptAddons();
-        await this.promptToken();
+        await this.promptIsTypescript(this.isTypescript);
+        await this.promptPackageManager(this.packageManager);
+        await this.promptAddons(this.addons);
+        await this.promptToken(this.token);
 
         return this;
     }
 
-    public async promptDir(dir?: string|null): Promise<string|null> {
+    public async promptDir(dir?: string): Promise<string|null> {
         if (dir) return this.dir = dir;
 
         const newDir = await text({
@@ -75,7 +75,7 @@ export class Setup implements SetupOptions {
             validate: value => {
                 const dir = path.resolve(value);
 
-                if (!existsAsync(dir)) return;
+                if (!existsSync(dir)) return;
                 if (!statSync(dir).isDirectory()) return 'Invalid folder directory';
             }
         });
@@ -83,7 +83,7 @@ export class Setup implements SetupOptions {
         return isCancel(newDir) ? this.cancelPrompts() : this.dir = newDir;
     }
 
-    public async promptIsTypescript(isTypescript?: boolean|null): Promise<boolean|null> {
+    public async promptIsTypescript(isTypescript?: boolean): Promise<boolean|null> {
         if (typeof isTypescript === 'boolean') return this.isTypescript = isTypescript;
 
         const newIsTypescript = await confirm({
@@ -96,7 +96,7 @@ export class Setup implements SetupOptions {
         return isCancel(newIsTypescript) ? this.cancelPrompts() : this.isTypescript = newIsTypescript;
     }
 
-    public async promptAddons(addons?: string[]|null): Promise<string[]|null> {
+    public async promptAddons(addons?: string[]): Promise<string[]|null> {
         if (addons) return this.addons = addons;
 
         const newAddons = await multiselect<{ label?: string; hint?: string; value: string; }[], string>({
@@ -112,7 +112,7 @@ export class Setup implements SetupOptions {
     }
 
     public async promptPackageManager(packageManager?: PackageManager|null): Promise<PackageManager|null> {
-        if (packageManager) return this.packageManager = packageManager;
+        if (packageManager !== undefined) return this.packageManager = packageManager;
 
         const resolvedPackageManager = resolvePackageManager();
         let firstPackageManagerIndex = packageManagers.findIndex(p => resolvedPackageManager && resolvedPackageManager === p.value);
@@ -131,8 +131,8 @@ export class Setup implements SetupOptions {
         return this.packageManager = newPackageManager !== 'none' ? newPackageManager : null;
     }
 
-    public async promptToken(token?: string|null): Promise<string|null> {
-        if (token) return this.token = token;
+    public async promptToken(token?: string): Promise<string|null> {
+        if (typeof token === 'string') return this.token = token;
 
         const newToken = await password({
             message: `Enter your Discord bot token from Developers Portal`,
