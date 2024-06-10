@@ -108,6 +108,11 @@ export class TemplateBuilder implements TemplateBuilderOptions {
 
             const modulePath = path.join(modulesFolder, `${addon.module}.${this.setup.isTypescript ? 'ts' : 'js'}`);
             await writeFile(modulePath, moduleContent);
+
+            packageJson.dependencies = {
+                ...packageJson.dependencies,
+                [addon.module]: addon.version,
+            };
         }
 
         await writeFile(this.packageJsonPath, JSON.stringify(packageJson, null, packageJsonIndentSize), 'utf-8');
