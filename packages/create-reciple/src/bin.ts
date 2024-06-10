@@ -31,7 +31,7 @@ const setup = new Setup({
     isTypescript: (options.typescript !== 'null' ? options.typescript : '') || undefined,
     packageManager: (options.packageManager !== 'null' ? options.packageManager : '') || undefined,
     token: options.token || undefined,
-    addons: Array.isArray(options.addons) ? options.addons : undefined
+    addons: Array.isArray(options.addons) && options.addons.length ? options.addons : undefined
 });
 
 await setup.prompt(options.force || false);
