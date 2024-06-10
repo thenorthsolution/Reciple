@@ -9,6 +9,7 @@ import { Addon } from './Addon.js';
 import detectIndent from 'detect-indent';
 import { kleur, PackageJson } from 'fallout-utility';
 import { ConfigReader, RecipleConfig } from 'reciple';
+import ora, { Ora } from 'ora';
 
 export interface TemplateBuilderOptions {
     setup: SetupOptions;
@@ -20,6 +21,7 @@ export class TemplateBuilder implements TemplateBuilderOptions {
     public template: TemplateMetadata;
 
     public config?: RecipleConfig;
+    public spinner?: Ora;
 
     get dir() {
         return this.setup.dir ?? process.cwd();
@@ -39,6 +41,12 @@ export class TemplateBuilder implements TemplateBuilderOptions {
     }
 
     public async build(): Promise<void> {
+        this.spinner = ora({
+            text: '',
+            color: 'cyan',
+            spinner: 'bouncingBar'
+        });
+
         if (!await existsAsync(this.dir)) await mkdir(this.dir, { recursive: true });
 
         await this.copyTemplateFiles();
@@ -47,6 +55,8 @@ export class TemplateBuilder implements TemplateBuilderOptions {
         await this.setupConfig();
         await this.setupAddons();
         await this.setupEnv();
+
+        this.spinner.succeed('Template build successful.');
 
         if (this.setup.packageManager) await this.installDependencies();
 
@@ -63,21 +73,29 @@ export class TemplateBuilder implements TemplateBuilderOptions {
     }
 
     public async copyTemplateFiles(): Promise<void> {
+        this.setSpinnerText('Copying template files...');
         await recursiveCopyFiles(this.template.path, this.dir, f => f.replace('dot.', '.'));
     }
 
     public async copyAssets(): Promise<void> {
+        this.setSpinnerText('Copying asset files...');
+
         if (await existsAsync(path.join(root, 'assets'))) {
             await recursiveCopyFiles(path.join(root, 'assets'), this.dir, f => f.replace('dot.', '.'));
         }
     }
 
     public async setupPackageJson(): Promise<void> {
+        this.setSpinnerText(`Configuring ${kleur.green('package.json')} package versions...`);
+
         let packageJson = await readFile(this.packageJsonPath, 'utf-8');
 
         for (const pkg of (Object.keys(packages) as (keyof typeof packages)[])) {
             packageJson = packageJson.replaceAll(`"${pkg}"`, `"${packages[pkg] ?? "*"}"`);
         }
+
+
+        this.setSpinnerText(`Configuring ${kleur.green('package.json')} scripts...`);
 
         for (const placeholder of (Object.keys(this.packageManagerPlaceholders) as (keyof typeof this.packageManagerPlaceholders)[])) {
             packageJson = packageJson.replaceAll(placeholder, this.packageManagerPlaceholders[placeholder]);
@@ -87,6 +105,7 @@ export class TemplateBuilder implements TemplateBuilderOptions {
     }
 
     public async setupConfig(): Promise<void> {
+        this.setSpinnerText(`Configuring ${kleur.green('reciple.mjs')}...`);
         await ConfigReader.createConfigJS(path.join(this.dir, 'reciple.mjs'));
     }
 
@@ -94,14 +113,20 @@ export class TemplateBuilder implements TemplateBuilderOptions {
         const addons = (this.setup.addons ?? []).map(a => new Addon({ module: a, version: Addon.DEFAULT_ADDON_VERSIONS[a as keyof typeof Addon.DEFAULT_ADDON_VERSIONS] || undefined }));
         if (!addons.length) return;
 
+        this.setSpinnerText(`Installing ${kleur.cyan(addons.length + ' addons')} ${kleur.gray('(0/'+ addons.length +')')}...`);
+
         let packageJsonData = await readFile(this.packageJsonPath, 'utf-8');
         let packageJson = JSON.parse(packageJsonData) as PackageJson;
         let packageJsonIndentSize = detectIndent(packageJsonData).indent || '    ';
 
-        for (const addon of addons) {
+        await Promise.all(addons.map(async addon => {
             await addon.fetch();
             await addon.readTarball();
+        }));
 
+        let done: number = 0;
+
+        for (const addon of addons) {
             const moduleContent = this.setup.isTypescript ? addon.tarballData?.initialModuleContent.ts : addon.tarballData?.initialModuleContent.js;
             if (!moduleContent) continue;
 
@@ -115,6 +140,10 @@ export class TemplateBuilder implements TemplateBuilderOptions {
                 ...packageJson.dependencies,
                 [addon.module]: addon.version,
             };
+
+            done++;
+
+            this.setSpinnerText(`Installing ${kleur.cyan(addons.length + ' addons')} ${kleur.gray('('+ done +'/'+ addons.length +')')}...`);
         }
 
         await writeFile(this.packageJsonPath, JSON.stringify(packageJson, null, packageJsonIndentSize), 'utf-8');
@@ -136,5 +165,12 @@ export class TemplateBuilder implements TemplateBuilderOptions {
 
     public async installDependencies(): Promise<void> {
         await runScript(this.packageManagerPlaceholders.INSTALL_ALL, this.dir);
+    }
+
+    public setSpinnerText(text: string, render: boolean = true): void {
+        if (!this.spinner) return;
+
+        this.spinner.text = text;
+        if (render) this.spinner.render();
     }
 }

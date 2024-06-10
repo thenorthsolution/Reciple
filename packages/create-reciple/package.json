@@ -42,6 +42,7 @@
     "detect-indent": "^7.0.1",
     "discord.js": "^14.15.2",
     "fallout-utility": "^2.9.1",
+    "ora": "^8.0.1",
     "package-json": "^10.0.0",
     "reciple": "^9.0.4"
   },
