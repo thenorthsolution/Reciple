@@ -91,7 +91,8 @@ export class TemplateBuilder implements TemplateBuilderOptions {
     }
 
     public async setupAddons(): Promise<void> {
-        const addons = (this.setup.addons ?? []).map(a => new Addon({ module: a, version: Addon.DEFAULT_ADDON_VERSIONS[a as keyof typeof Addon.DEFAULT_ADDON_VERSIONS] || undefined  }));
+        const addons = (this.setup.addons ?? []).map(a => new Addon({ module: a, version: Addon.DEFAULT_ADDON_VERSIONS[a as keyof typeof Addon.DEFAULT_ADDON_VERSIONS] || undefined }));
+        if (!addons.length) return;
 
         await Promise.all(addons.map(async a => a.fetch()));
 
