@@ -5,6 +5,7 @@ import { createHash } from 'crypto';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { readFile } from 'fs/promises';
+import { existsAsync } from '@reciple/utils';
 
 export interface AddonOptions {
     module: string;
@@ -63,7 +64,7 @@ export class Addon implements AddonOptions {
         if (!this.tarball || !this.tmpDir) throw new Error('Tarball not downloaded');
         if (this.tarballData) return this.tarballData;
 
-        await tgz.uncompress(this.tarball, this.tmpDir);
+        if (!(await existsAsync(this.tmpDir))) await tgz.uncompress(this.tarball, this.tmpDir);
 
         const packageJson = JSON.parse(await readFile(path.join(this.tmpDir, 'package/package.json'), 'utf-8'));
         let initialModuleContent: Exclude<AddonReadTarballData['initialModuleContent'], undefined> = {};
