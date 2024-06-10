@@ -26,6 +26,8 @@ export class Setup implements SetupOptions {
         return !!(this.dir && this.isTypescript && this.packageManager !== undefined && this.addons && this.token);
     }
 
+    public introShown: boolean = false;
+
     constructor(options?: SetupOptions) {
         this.dir = options?.dir ? path.resolve(options?.dir) : undefined;
         this.isTypescript = options?.isTypescript;
@@ -38,6 +40,7 @@ export class Setup implements SetupOptions {
         if (this.isDone) return this;
 
         intro(kleur.cyan().bold(`${packageJson.name} v${packageJson.version}`))
+        this.introShown = true;
 
         await this.promptDir(this.dir);
 
