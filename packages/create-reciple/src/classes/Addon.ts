@@ -80,7 +80,7 @@ export class Addon implements AddonOptions {
             }
         }
 
-        return {
+        return this.tarballData = {
             packageJson,
             initialModuleContent
         };
