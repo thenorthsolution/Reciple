@@ -87,7 +87,7 @@ export class TemplateBuilder implements TemplateBuilderOptions {
     }
 
     public async setupConfig(): Promise<void> {
-        await ConfigReader.readConfigJS({ paths: [path.join(this.dir, 'reciple.mjs')] }).catch(() => null);
+        await ConfigReader.createConfigJS(path.join(this.dir, 'reciple.mjs'));
     }
 
     public async setupAddons(): Promise<void> {
