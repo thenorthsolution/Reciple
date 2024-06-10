@@ -44,7 +44,7 @@ export class TemplateBuilder implements TemplateBuilderOptions {
         this.spinner = ora({
             text: '',
             color: 'cyan',
-            spinner: 'bouncingBar'
+            spinner: 'dots'
         });
 
         if (!await existsAsync(this.dir)) await mkdir(this.dir, { recursive: true });
