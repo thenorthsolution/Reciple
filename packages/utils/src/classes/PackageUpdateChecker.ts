@@ -1,4 +1,4 @@
-import { AbbreviatedMetadata, FullMetadata, Options } from '../types/types.js';
+import { AbbreviatedMetadata, FullMetadata, Options } from 'package-json';
 import { PackageUpdateType } from '../constants.js';
 import packageJson from 'package-json';
 import { satisfies, SemVer } from 'semver';

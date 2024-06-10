@@ -1,15 +1,13 @@
 #!/usr/bin/env node
 
-import { confirm, intro, isCancel, multiselect, outro, password, select, text } from '@clack/prompts';
 import { packageJson, packageManagers, templatesFolder } from './utils/constants.js';
-import { cancelPrompts, create, getTemplates, isDirEmpty } from './utils/helpers.js';
-import { PackageManager, resolvePackageManager } from '@reciple/utils';
-import availableAddons from './utils/addons.js';
-import { existsSync, statSync } from 'node:fs';
+import { getTemplates } from './utils/helpers.js';
 import { CliOptions } from './utils/types.js';
+import { Setup } from './classes/Setup.js';
 import { kleur } from 'fallout-utility';
+import { outro } from '@clack/prompts';
 import { Command } from 'commander';
-import path from 'node:path';
+import { TemplateBuilder } from './classes/TemplateBuilder.js';
 
 const command = new Command()
     .name(packageJson.name!)
@@ -28,105 +26,32 @@ command.parse(process.argv);
 const options = command.opts<CliOptions>();
 const templates = await getTemplates(templatesFolder);
 
-let dir: string|null = command.args[0] ?? null;
-let typescript: boolean|null = options.typescript !== 'null' ? options.typescript : null;
-let packageManager: PackageManager|null = options.packageManager !== 'null' ? options.packageManager : null;
-let token: string|null = options.token ?? null;
-let addons: string[]|false = Array.isArray(options.addons) ? options.addons : false;
-let setup: boolean = false;
+const setup = new Setup({
+    dir: command.args[0] || undefined,
+    isTypescript: (options.typescript !== 'null' ? options.typescript : '') || undefined,
+    packageManager: (options.packageManager !== 'null' ? options.packageManager : '') || undefined,
+    token: options.token || undefined,
+    addons: Array.isArray(options.addons) ? options.addons : undefined
+});
 
-if (dir === null || typescript === null || packageManager === null) {
-    setup = true;
-    intro(kleur.cyan().bold(`${packageJson.name} v${packageJson.version}`));
+await setup.prompt(options.force || false);
+
+const template = templates.find(p => p.language === (setup.isTypescript ? 'Typescript' : 'Javascript'));
+if (!template) {
+    setup.cancelPrompts(`Template not found`);
+    process.exit(1);
 }
 
-if (dir === null) {
-    const newDir = await text({
-        message: `Enter project directory`,
-        placeholder: `Leave empty to use current directory`,
-        defaultValue: process.cwd(),
-        validate: value => {
-            const dir = path.resolve(value);
-
-            if (!existsSync(dir)) return;
-            if (!statSync(dir).isDirectory()) return 'Invalid folder directory';
-        }
-    });
-
-    if (isCancel(newDir)) cancelPrompts();
-    dir = newDir;
+if (setup.packageManager && !packageManagers.some(p => p.value === setup.packageManager)) {
+    setup.cancelPrompts(`Invalid package manager`);
+    process.exit(1);
 }
 
-dir = path.resolve(dir);
+if (setup.isDone) outro(`Setup Done! Creating from ${kleur.cyan().bold(template.name)} template`);
 
-if (!options.force && !(await isDirEmpty(dir))) {
-    const override = await confirm({
-        message: `Directory is not empty! Would you like to override its existing files?`,
-        initialValue: false,
-        active: `Yes`,
-        inactive: `No`
-    });
+const templateBuilder = new TemplateBuilder({
+    setup: setup.toJSON(),
+    template
+});
 
-    if (isCancel(override) || override === false) cancelPrompts();
-}
-
-if (typescript === null) {
-    const isTypescript = await confirm({
-        message: `Would you like to use typescript?`,
-        initialValue: false,
-        active: `Yes`,
-        inactive: `No`
-    });
-
-    if (isCancel(isTypescript)) cancelPrompts();
-    typescript = isTypescript;
-}
-
-if (addons && !addons.length) {
-    const selectedAddons = await multiselect<{ label?: string; hint?: string; value: string; }[], string>({
-        message: `Select a addons from Reciple ${kleur.gray('(Press space to select, and enter to submit)')}`,
-        options: Object.keys(availableAddons).map(a => ({
-            label: a,
-            value: a
-        })),
-        required: false
-    });
-
-    if (isCancel(selectedAddons)) cancelPrompts();
-    addons = selectedAddons;
-}
-
-if (packageManager === null) {
-    const resolvedPackageManager = resolvePackageManager();
-    let firstPackageManagerIndex = packageManagers.findIndex(p => resolvedPackageManager && resolvedPackageManager === p.value);
-        firstPackageManagerIndex = firstPackageManagerIndex === -1 ? packageManagers.length - 1 : firstPackageManagerIndex;
-
-    const newPackageManager = await select<{ label?: string; hint?: string; value: PackageManager|'none'; }[], PackageManager|'none'>({
-        message: 'Select your preferred package manager',
-        options: [
-            packageManagers[firstPackageManagerIndex],
-            ...packageManagers.filter((p, i) => i !== firstPackageManagerIndex)
-        ]
-    });
-
-    if (isCancel(newPackageManager)) cancelPrompts();
-    packageManager = newPackageManager !== 'none' ? newPackageManager : null;
-}
-
-if (token === null) {
-    const newToken = await password({
-        message: `Enter your Discord bot token from Developers Portal`,
-        mask: '*'
-    });
-
-    if (isCancel(newToken)) cancelPrompts();
-
-    token = newToken;
-}
-
-const template = templates.find(p => p.language === (typescript ? 'Typescript' : 'Javascript'));
-if (!template) cancelPrompts({ reason: `Template not found` });
-if (packageManager && !packageManagers.some(p => p.value === packageManager)) cancelPrompts({ reason: `Invalid package manager` });
-if (setup) outro(`Setup Done! Creating from ${kleur.cyan().bold(template.name)} template`);
-
-await create(template, dir, packageManager ?? undefined, addons || [], token ?? undefined);
+await templateBuilder.build();

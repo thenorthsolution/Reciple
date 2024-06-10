@@ -1,12 +1,8 @@
-import { copyFile, mkdir, readFile, readdir, stat, writeFile } from 'node:fs/promises';
-import { packageManagerPlaceholders, packages, root } from './constants.js';
-import { PackageManager, existsAsync } from '@reciple/utils';
+import { copyFile, mkdir, readFile, readdir, stat } from 'node:fs/promises';
+import { existsAsync } from '@reciple/utils';
 import { TemplateJson, TemplateMetadata } from './types.js';
 import { kleur } from 'fallout-utility/strings';
 import { execSync } from 'node:child_process';
-import { installAddons } from './addons.js';
-import { cancel } from '@clack/prompts';
-import { exit } from 'node:process';
 import path from 'node:path';
 
 export async function getTemplates(dir: string): Promise<TemplateMetadata[]> {
@@ -40,73 +36,6 @@ export async function getTemplates(dir: string): Promise<TemplateMetadata[]> {
     }
 
     return templates;
-}
-
-export function cancelPrompts(options?: { reason?: string; code?: number; }): never {
-    cancel(options?.reason ?? 'Operation cancelled');
-    exit(options?.code ?? 1);
-}
-
-export async function createDotEnv(dir: string, defaultToken?: string): Promise<string> {
-    const file = path.resolve(path.join(dir, '.env'));
-
-    let content: string = '';
-    if (await existsAsync(file)) content = await readFile(file, 'utf-8');
-
-    if (!content.includes('TOKEN=')) {
-        content += `\n# Replace this value to your Discord bot token from https://discord.com/developers/applications\nTOKEN="${defaultToken ?? ''}"`;
-        content = content.trim();
-    }
-
-    await writeFile(file, content);
-    return content;
-}
-
-export async function create(template: TemplateMetadata, dir: string, packageManager?: PackageManager, addons?: string[], token?: string): Promise<void> {
-    if (!await existsAsync(dir)) mkdir(dir, { recursive: true });
-
-    await recursiveCopyFiles(template.path, dir, f => f.replace('dot.', '.'));
-
-    if (await existsAsync(path.join(root, 'assets'))) {
-        await recursiveCopyFiles(path.join(root, 'assets'), dir, f => f.replace('dot.', '.'));
-    }
-
-    let packageJsonData = await readFile(path.join(dir, 'package.json'), 'utf-8');
-
-    const placeholders = packageManagerPlaceholders[packageManager ?? 'npm'];
-
-    for (const pkg of (Object.keys(packages) as (keyof typeof packages)[])) {
-        packageJsonData = packageJsonData.replaceAll(`"${pkg}"`, `"${packages[pkg] ?? "*"}"`);
-    }
-
-    for (const placeholder of (Object.keys(placeholders) as (keyof typeof placeholders)[])) {
-        packageJsonData = packageJsonData.replaceAll(placeholder, placeholders[placeholder]);
-    }
-
-    await writeFile(path.join(dir, 'package.json'), packageJsonData);
-
-    if (packageManager) await runScript(placeholders['INSTALL_ALL'], dir);
-
-    await runScript(`${packageManagerPlaceholders['npm']['BIN_EXEC']} reciple@${packages['RECIPLE']?.substring(1)} "${dir}" --setup -c reciple.mjs`, dir);
-    await createDotEnv(dir, token);
-
-    if (addons?.length) await installAddons(
-        dir,
-        template.language === 'Typescript' ? 'ts' : 'js',
-        addons,
-        placeholders['INSTALL_PKG']
-    );
-
-    console.log(`${kleur.bold(kleur.green('✔') + ' Your project is ready!')}`);
-    console.log(`\nStart developing:`);
-
-    if (path.relative(process.cwd(), dir) !== '') {
-        console.log(`  • ${kleur.cyan().bold('cd ' + path.relative(process.cwd(), dir))}`);
-    }
-
-    if (!packageManager) console.log(`  • ${kleur.cyan().bold(placeholders.INSTALL_ALL)} (or ${packageManagerPlaceholders.pnpm.INSTALL_ALL}, etc)`);
-
-    console.log(`  • ${kleur.cyan().bold(`${placeholders.SCRIPT_RUN} dev`)}`);
 }
 
 export async function recursiveCopyFiles(from: string, to: string, rename?: (f: string) => string): Promise<void> {

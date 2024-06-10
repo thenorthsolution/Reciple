@@ -75,6 +75,10 @@ export const cli = {
      */
     binPath: path.join(path.dirname(fileURLToPath(import.meta.url)), '../bin.mjs'),
     /**
+     * Reciple package root directory
+     */
+    reciplePackagePath: path.join(path.dirname(fileURLToPath(import.meta.url)), '../../'),
+    /**
      * This property is used to store the path of the log file.
      */
     logPath: undefined as string|undefined

@@ -25,23 +25,28 @@ export const packageManagers: { label?: string; hint?: string; value: PackageMan
         value: 'pnpm'
     },
     {
+        label: 'bun',
+        hint: 'Uses bun as package manager',
+        value: 'bun'
+    },
+    {
         label: 'none',
         hint: 'Setup package manager later',
         value: 'none'
     }
 ];
 
-export const packages = {
-    'TYPES_NODE': packageJson.devDependencies!['@types/node'],
-    'RECIPLE_CORE': packageJson.devDependencies!['@reciple/core'],
-    'TYPESCRIPT': packageJson.devDependencies!['typescript'],
-    'RIMRAF': packageJson.devDependencies!['rimraf'],
-    'RECIPLE': packageJson.devDependencies!['reciple'],
-    'DISCORDJS': packageJson.devDependencies!['discord.js'],
-    'NODEMON': packageJson.devDependencies!['nodemon']
+export const packages: Record<string, string> = {
+    'TYPES_NODE': packageJson.devDependencies!['@types/node']!,
+    'RECIPLE_CORE': packageJson.dependencies!['@reciple/core']!,
+    'TYPESCRIPT': packageJson.devDependencies!['typescript']!,
+    'RIMRAF': packageJson.devDependencies!['rimraf']!,
+    'RECIPLE': packageJson.dependencies!['reciple']!,
+    'DISCORDJS': packageJson.dependencies!['discord.js']!,
+    'NODEMON': packageJson.devDependencies!['nodemon']!
 };
 
-export const packageManagerPlaceholders = {
+export const packageManagerPlaceholders: Record<PackageManager, Record<'SCRIPT_RUN'|'BIN_EXEC'|'INSTALL_ALL'|'INSTALL_PKG'|'UNINSTALL_PKG', string>> = {
     'npm': {
         'SCRIPT_RUN': 'npm run',
         'BIN_EXEC': 'npx',
@@ -62,6 +67,12 @@ export const packageManagerPlaceholders = {
         'INSTALL_ALL': 'yarn',
         'INSTALL_PKG': 'yarn add',
         'UNINSTALL_PKG': 'yarn remove'
+    },
+    'bun': {
+        'SCRIPT_RUN': 'bun run',
+        'BIN_EXEC': 'bunx',
+        'INSTALL_ALL': 'bun install',
+        'INSTALL_PKG': 'bun add',
+        'UNINSTALL_PKG': 'bun remove'
     }
 };
-

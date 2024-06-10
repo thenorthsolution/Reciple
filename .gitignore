@@ -139,3 +139,4 @@ docs/docs.json
 test
 .nx/cache
 .turbo
+tmp
