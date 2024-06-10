@@ -47,7 +47,7 @@ if (setup.packageManager && !packageManagers.some(p => p.value === setup.package
     process.exit(1);
 }
 
-if (setup.isDone && setup.introShown) outro(`Setup Done! Creating from ${kleur.cyan().bold(template.name)} template`);
+if (setup.introShown) outro(`Setup Done! Creating from ${kleur.cyan().bold(template.name)} template`);
 
 const templateBuilder = new TemplateBuilder({
     setup: setup.toJSON(),
