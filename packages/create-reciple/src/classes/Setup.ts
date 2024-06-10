@@ -65,7 +65,7 @@ export class Setup implements SetupOptions {
         return this;
     }
 
-    public async promptDir(dir?: string): Promise<string|null> {
+    public async promptDir(dir?: string): Promise<string> {
         if (dir) return this.dir = dir;
 
         const newDir = await text({
@@ -83,7 +83,7 @@ export class Setup implements SetupOptions {
         return isCancel(newDir) ? this.cancelPrompts() : this.dir = path.resolve(newDir);
     }
 
-    public async promptIsTypescript(isTypescript?: boolean): Promise<boolean|null> {
+    public async promptIsTypescript(isTypescript?: boolean): Promise<boolean> {
         if (typeof isTypescript === 'boolean') return this.isTypescript = isTypescript;
 
         const newIsTypescript = await confirm({
@@ -96,7 +96,7 @@ export class Setup implements SetupOptions {
         return isCancel(newIsTypescript) ? this.cancelPrompts() : this.isTypescript = newIsTypescript;
     }
 
-    public async promptAddons(addons?: string[]): Promise<string[]|null> {
+    public async promptAddons(addons?: string[]): Promise<string[]> {
         if (addons) return this.addons = addons;
 
         const newAddons = await multiselect<{ label?: string; hint?: string; value: string; }[], string>({
@@ -131,7 +131,7 @@ export class Setup implements SetupOptions {
         return this.packageManager = newPackageManager !== 'none' ? newPackageManager : null;
     }
 
-    public async promptToken(token?: string): Promise<string|null> {
+    public async promptToken(token?: string): Promise<string> {
         if (typeof token === 'string') return this.token = token;
 
         const newToken = await password({
@@ -142,9 +142,9 @@ export class Setup implements SetupOptions {
         return isCancel(newToken) ? this.cancelPrompts() : this.token = newToken;
     }
 
-    public async cancelPrompts(reason?: string): Promise<null> {
+    public async cancelPrompts(reason?: string): Promise<never> {
         cancel(reason ?? 'Operation cancelled');
-        return null;
+        process.exit(0);
     }
 
     public toJSON(): SetupOptions {
