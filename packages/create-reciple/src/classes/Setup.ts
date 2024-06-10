@@ -27,7 +27,7 @@ export class Setup implements SetupOptions {
     }
 
     constructor(options?: SetupOptions) {
-        this.dir = options?.dir;
+        this.dir = options?.dir ? path.resolve(options?.dir) : undefined;
         this.isTypescript = options?.isTypescript;
         this.packageManager = options?.packageManager;
         this.addons = options?.addons;
