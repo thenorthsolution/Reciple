@@ -9,7 +9,7 @@ import { Addon } from './Addon.js';
 import detectIndent from 'detect-indent';
 import { kleur, PackageJson } from 'fallout-utility';
 import { ConfigReader, RecipleConfig } from 'reciple';
-import ora, { Ora } from 'ora';
+import ora, { Ora, PersistOptions } from 'ora';
 
 export interface TemplateBuilderOptions {
     setup: SetupOptions;
@@ -75,6 +75,7 @@ export class TemplateBuilder implements TemplateBuilderOptions {
     public async copyTemplateFiles(): Promise<void> {
         this.setSpinnerText('Copying template files...');
         await recursiveCopyFiles(this.template.path, this.dir, f => f.replace('dot.', '.'));
+        this.persistSpinner({ symbol: kleur.bold().green('✔'), text: 'Template files copied.' });
     }
 
     public async copyAssets(): Promise<void> {
@@ -83,6 +84,8 @@ export class TemplateBuilder implements TemplateBuilderOptions {
         if (await existsAsync(path.join(root, 'assets'))) {
             await recursiveCopyFiles(path.join(root, 'assets'), this.dir, f => f.replace('dot.', '.'));
         }
+
+        this.persistSpinner({ symbol: kleur.bold().green('✔'), text: 'Copied all assets.' });
     }
 
     public async setupPackageJson(): Promise<void> {
@@ -102,11 +105,13 @@ export class TemplateBuilder implements TemplateBuilderOptions {
         }
 
         await writeFile(this.packageJsonPath, packageJson, 'utf-8');
+        this.persistSpinner({ symbol: kleur.bold().green('✔'), text: `${kleur.green('package.json')} configured.` });
     }
 
     public async setupConfig(): Promise<void> {
         this.setSpinnerText(`Configuring ${kleur.green('reciple.mjs')}...`);
         await ConfigReader.createConfigJS(path.join(this.dir, 'reciple.mjs'));
+        this.persistSpinner({ symbol: kleur.bold().green('✔'), text: `${kleur.green('reciple.mjs')} configured.` });
     }
 
     public async setupAddons(): Promise<void> {
@@ -118,15 +123,12 @@ export class TemplateBuilder implements TemplateBuilderOptions {
         let packageJsonData = await readFile(this.packageJsonPath, 'utf-8');
         let packageJson = JSON.parse(packageJsonData) as PackageJson;
         let packageJsonIndentSize = detectIndent(packageJsonData).indent || '    ';
-
-        await Promise.all(addons.map(async addon => {
-            await addon.fetch();
-            await addon.readTarball();
-        }));
-
         let done: number = 0;
 
         for (const addon of addons) {
+            await addon.fetch();
+            await addon.readTarball();
+
             const moduleContent = this.setup.isTypescript ? addon.tarballData?.initialModuleContent.ts : addon.tarballData?.initialModuleContent.js;
             if (!moduleContent) continue;
 
@@ -143,10 +145,12 @@ export class TemplateBuilder implements TemplateBuilderOptions {
 
             done++;
 
+            this.persistSpinner({ symbol: kleur.bold().green('    +'), text: `Installed addon ${kleur.cyan(addon.module + '@' + (addon.version ?? 'latest'))}` });
             this.setSpinnerText(`Installing ${kleur.cyan(addons.length + ' addons')} ${kleur.gray('('+ done +'/'+ addons.length +')')}...`);
         }
 
         await writeFile(this.packageJsonPath, JSON.stringify(packageJson, null, packageJsonIndentSize), 'utf-8');
+        this.persistSpinner({ symbol: kleur.bold().green('✔'), text: `${kleur.green('Addons installed.')}` });
     }
 
     public async setupEnv(): Promise<void> {
@@ -171,5 +175,10 @@ export class TemplateBuilder implements TemplateBuilderOptions {
         if (!this.spinner) return;
 
         this.spinner.text = text;
+    }
+
+    public persistSpinner(options: PersistOptions): void {
+        if (!this.spinner) return;
+        this.spinner = this.spinner.stopAndPersist(options);
     }
 }
