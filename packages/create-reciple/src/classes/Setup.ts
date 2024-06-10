@@ -80,7 +80,7 @@ export class Setup implements SetupOptions {
             }
         });
 
-        return isCancel(newDir) ? this.cancelPrompts() : this.dir = newDir;
+        return isCancel(newDir) ? this.cancelPrompts() : this.dir = path.resolve(newDir);
     }
 
     public async promptIsTypescript(isTypescript?: boolean): Promise<boolean|null> {

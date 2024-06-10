@@ -7,7 +7,7 @@ import path from 'path';
 import { packageManagerPlaceholders, packages, root } from '../utils/constants.js';
 import { Addon } from './Addon.js';
 import detectIndent from 'detect-indent';
-import { kleur } from 'fallout-utility/strings';
+import { kleur, PackageJson } from 'fallout-utility';
 import { ConfigReader, RecipleConfig } from 'reciple';
 
 export interface TemplateBuilderOptions {
@@ -96,8 +96,8 @@ export class TemplateBuilder implements TemplateBuilderOptions {
         await Promise.all(addons.map(async a => a.fetch()));
 
         let packageJsonData = await readFile(this.packageJsonPath, 'utf-8');
-        let packageJson = JSON.parse(packageJsonData);
-        let packageJsonIndentSize = detectIndent(packageJson).indent || '    ';
+        let packageJson = JSON.parse(packageJsonData) as PackageJson;
+        let packageJsonIndentSize = detectIndent(packageJsonData).indent || '    ';
 
         for (const addon of addons) {
             const moduleContent = this.setup.isTypescript ? addon.tarballData?.initialModuleContent.ts : addon.tarballData?.initialModuleContent.js;
