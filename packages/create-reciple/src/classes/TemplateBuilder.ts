@@ -94,13 +94,14 @@ export class TemplateBuilder implements TemplateBuilderOptions {
         const addons = (this.setup.addons ?? []).map(a => new Addon({ module: a, version: Addon.DEFAULT_ADDON_VERSIONS[a as keyof typeof Addon.DEFAULT_ADDON_VERSIONS] || undefined }));
         if (!addons.length) return;
 
-        await Promise.all(addons.map(async a => a.fetch()));
-
         let packageJsonData = await readFile(this.packageJsonPath, 'utf-8');
         let packageJson = JSON.parse(packageJsonData) as PackageJson;
         let packageJsonIndentSize = detectIndent(packageJsonData).indent || '    ';
 
         for (const addon of addons) {
+            await addon.fetch();
+            await addon.readTarball();
+
             const moduleContent = this.setup.isTypescript ? addon.tarballData?.initialModuleContent.ts : addon.tarballData?.initialModuleContent.js;
             if (!moduleContent) continue;
 
