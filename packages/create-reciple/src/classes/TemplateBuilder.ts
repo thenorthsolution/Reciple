@@ -167,10 +167,9 @@ export class TemplateBuilder implements TemplateBuilderOptions {
         await runScript(this.packageManagerPlaceholders.INSTALL_ALL, this.dir);
     }
 
-    public setSpinnerText(text: string, render: boolean = true): void {
+    public setSpinnerText(text: string): void {
         if (!this.spinner) return;
 
         this.spinner.text = text;
-        if (render) this.spinner.render();
     }
 }
