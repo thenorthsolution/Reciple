@@ -3,7 +3,7 @@
   "description": "Reciple core implementations",
   "homepage": "https://reciple.js.org/docs/client",
   "license": "GPL-3.0",
-  "version": "9.0.2",
+  "version": "9.0.3",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "type": "module",
@@ -34,7 +34,7 @@
     "README.md"
   ],
   "dependencies": {
-    "@reciple/utils": "^9.0.1",
+    "@reciple/utils": "^9.0.2",
     "@sapphire/shapeshift": "^4.0.0",
     "fallout-utility": "^2.9.1",
     "lodash.defaultsdeep": "^4.6.1",
