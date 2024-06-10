@@ -145,7 +145,7 @@ export class TemplateBuilder implements TemplateBuilderOptions {
 
             done++;
 
-            this.persistSpinner({ symbol: kleur.bold().green('    +'), text: `Installed addon ${kleur.cyan(addon.module + '@' + (addon.version ?? 'latest'))}` });
+            this.persistSpinner({ symbol: kleur.bold().green('  +'), text: `Installed addon ${kleur.cyan(addon.module + '@' + (addon.version ?? 'latest'))}` });
             this.setSpinnerText(`Installing ${kleur.cyan(addons.length + ' addons')} ${kleur.gray('('+ done +'/'+ addons.length +')')}...`);
         }
 
@@ -179,6 +179,13 @@ export class TemplateBuilder implements TemplateBuilderOptions {
 
     public persistSpinner(options: PersistOptions): void {
         if (!this.spinner) return;
+
+        const spinner = this.spinner.spinner;
+        const color = this.spinner.color;
+
         this.spinner = this.spinner.stopAndPersist(options);
+        this.spinner.spinner = spinner;
+        this.spinner.color = color;
+        this.spinner.start();
     }
 }
