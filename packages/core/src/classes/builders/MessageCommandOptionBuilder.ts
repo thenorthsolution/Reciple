@@ -1,10 +1,33 @@
 import { MessageCommandOptionValidators } from '../validators/MessageCommandOptionValidators.js';
 import { Awaitable, isJSONEncodable, JSONEncodable, Message } from 'discord.js';
 import { RecipleClient } from '../structures/RecipleClient.js';
+import { MessageCommandBuilder } from './MessageCommandBuilder.js';
+import { CommandData } from '../../types/structures.js';
 
-export interface MessageCommandOptionBuilderResolveValueOptions {
+export interface MessageCommandOptionBuilderResolveValueOptions<T extends any = any> {
+    /**
+     * The value of the given option
+     */
     value: string;
+    /**
+     * The parser data when parsing this command.
+     */
+    parserData: CommandData;
+    /**
+     * The option builder used to build this option.
+     */
+    option: MessageCommandOptionBuilder<T>;
+    /**
+     * The command builder used to build this command.
+     */
+    command: MessageCommandBuilder;
+    /**
+     * The message that triggered this command.
+     */
     message: Message;
+    /**
+     * The client instance
+     */
     client: RecipleClient<true>;
 }
 
@@ -26,22 +49,22 @@ export interface MessageCommandOptionBuilderData<T extends any = any> {
      * The function that validates the option value.
      * @param options The option value and message.
      */
-    validate?: (options: MessageCommandOptionBuilderResolveValueOptions) => Awaitable<boolean|string|Error>;
+    validate?: (options: MessageCommandOptionBuilderResolveValueOptions<T>) => Awaitable<boolean|string|Error>;
     /**
      * Resolves the option value.
      * @param options The option value and message.
      */
-    resolve_value?: (options: MessageCommandOptionBuilderResolveValueOptions) => Awaitable<T>;
+    resolve_value?: (options: MessageCommandOptionBuilderResolveValueOptions<T>) => Awaitable<T>;
 }
 
 export class MessageCommandOptionBuilder<T extends any = any> implements MessageCommandOptionBuilderData<T> {
     public name: string = '';
     public description: string = '';
     public required?: boolean = false;
-    public validate?: MessageCommandOptionBuilderData['validate'];
-    public resolve_value?: MessageCommandOptionBuilderData['resolve_value'];
+    public validate?: MessageCommandOptionBuilderData<T>['validate'];
+    public resolve_value?: MessageCommandOptionBuilderData<T>['resolve_value'];
 
-    constructor(data?: Partial<MessageCommandOptionBuilderData>) {
+    constructor(data?: Partial<MessageCommandOptionBuilderData<T>>) {
         if (data?.name) this.setName(data.name);
         if (data?.description) this.setDescription(data.description);
         if (data?.required) this.setRequired(data.required);

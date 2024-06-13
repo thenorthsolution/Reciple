@@ -235,11 +235,10 @@ export class MessageCommandBuilder extends BaseCommandBuilder implements Message
             builder,
             parserData,
             options: await MessageCommandOptionManager.parseOptions({
-                client,
                 command: builder,
-                args: parserData.args,
-                rawArgs: parserData.rawArgs,
-                message
+                message,
+                parserData,
+                client
             })
         };
 

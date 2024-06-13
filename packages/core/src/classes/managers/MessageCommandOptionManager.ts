@@ -4,6 +4,7 @@ import { RecipleClient } from '../structures/RecipleClient.js';
 import { RecipleError } from '../structures/RecipleError.js';
 import { Collection, Message } from 'discord.js';
 import { DataManager } from './DataManager.js';
+import { CommandData } from '../../types/structures.js';
 
 export interface MessageCommandOptionManagerOptions {
     /**
@@ -19,27 +20,24 @@ export interface MessageCommandOptionManagerOptions {
      */
     message: Message;
     /**
-     * The array of args of this option manager.
+     * The parser data when parsing this command.
      */
-    args: string[];
-    /**
-     * The raw args of this option manager.
-     */
-    rawArgs: string;
+    parserData: CommandData;
 }
 
 export interface MessageCommandOptionManagerParseOptionsData extends Omit<MessageCommandOptionParseOptionValueOptions, 'option'|'value'> {
     command: MessageCommandBuilder;
-    args: string[];
-    rawArgs: string;
+    parserData: CommandData;
 }
 
 export class MessageCommandOptionManager extends DataManager<MessageCommandOptionValue> implements MessageCommandOptionManagerOptions {
     readonly command: MessageCommandBuilder;
     readonly client: RecipleClient<true>;
     readonly message: Message;
-    readonly args: string[];
-    readonly rawArgs: string;
+    readonly parserData: CommandData;
+
+    get args() { return this.parserData.args; }
+    get rawArgs() { return this.parserData.rawArgs; }
 
     protected constructor(data: MessageCommandOptionManagerOptions) {
         super();
@@ -47,8 +45,7 @@ export class MessageCommandOptionManager extends DataManager<MessageCommandOptio
         this.command = data.command;
         this.client = data.client;
         this.message = data.message;
-        this.args = data.args;
-        this.rawArgs = data.rawArgs;
+        this.parserData = data.parserData;
     }
 
     get hasMissingOptions() {
@@ -57,6 +54,10 @@ export class MessageCommandOptionManager extends DataManager<MessageCommandOptio
 
     get hasInvalidOptions() {
         return this.cache.some(o => o.invalid);
+    }
+
+    get hasValidationErrors() {
+        return this.cache.some(o => o.error);
     }
 
     public getMissingOptions(): Collection<string, MessageCommandOptionValue> {
@@ -112,6 +113,8 @@ export class MessageCommandOptionManager extends DataManager<MessageCommandOptio
             this._cache.set(option.name, await MessageCommandOptionValue.parseOptionValue({
                 client: this.client,
                 message: this.message,
+                command: this.command,
+                parserData: this.parserData,
                 value: arg,
                 option
             }));
@@ -123,8 +126,7 @@ export class MessageCommandOptionManager extends DataManager<MessageCommandOptio
             command: options.command,
             client: options.client,
             message: options.message,
-            args: options.args,
-            rawArgs: options.rawArgs
+            parserData: options.parserData
         });
 
         await manager._parseOptions();

@@ -1,4 +1,6 @@
-import { MessageCommandOptionBuilder } from '../builders/MessageCommandOptionBuilder.js';
+import { CommandData } from '../../types/structures.js';
+import { MessageCommandBuilder } from '../builders/MessageCommandBuilder.js';
+import { MessageCommandOptionBuilder, MessageCommandOptionBuilderResolveValueOptions } from '../builders/MessageCommandOptionBuilder.js';
 import { RecipleClient } from './RecipleClient.js';
 import { Message } from 'discord.js';
 
@@ -29,11 +31,13 @@ export interface MessageCommandOptionValueData<T extends any = any> {
     error?: string|Error;
 }
 
-export interface MessageCommandOptionParseOptionValueOptions<T extends any = any> {
-    option: MessageCommandOptionBuilder<T>;
-    message: Message;
-    client: RecipleClient<true>;
+export interface MessageCommandOptionParseOptionValueOptions<T extends any = any> extends Omit<MessageCommandOptionBuilderResolveValueOptions<T>, 'value'> {
     value?: string|null;
+}
+
+export interface MessageCommandOptionValueOptions<T extends any = any> extends MessageCommandOptionValueData<T>, Pick<MessageCommandOptionParseOptionValueOptions, 'parserData'|'command'> {
+    client: RecipleClient<true>;
+    message: Message;
 }
 
 export class MessageCommandOptionValue<T extends any = any> implements MessageCommandOptionValueData {
@@ -44,17 +48,22 @@ export class MessageCommandOptionValue<T extends any = any> implements MessageCo
     readonly invalid: boolean;
     readonly message: Message;
     readonly error?: Error;
+
+    readonly parserData: CommandData;
+    readonly command: MessageCommandBuilder;
     readonly client: RecipleClient<true>;
 
-    protected constructor(options: MessageCommandOptionValueData<T> & { client: RecipleClient<true>; message: Message; }) {
+    protected constructor(options: MessageCommandOptionValueOptions<T>) {
         this.name = options.name;
         this.option = options.option;
         this.value = options.value;
         this.missing = options.missing;
         this.invalid = options.invalid;
         this.message = options.message;
-        this.client = options.client;
         this.error = typeof options.error === 'string' ? new Error(options.error) : options.error;
+        this.parserData = options.parserData;
+        this.command = options.command;
+        this.client = options.client;
     }
 
     /**
@@ -65,7 +74,14 @@ export class MessageCommandOptionValue<T extends any = any> implements MessageCo
     public async resolveValue(required?: true): Promise<T>;
     public async resolveValue(required: boolean = false): Promise<T|null> {
         if (this.value === null) return null;
-        return this.option.resolve_value ? Promise.resolve(this.option.resolve_value({ value: this.value, message: this.message, client: this.client })) : null;
+        return this.option.resolve_value ? Promise.resolve(this.option.resolve_value({
+            value: this.value,
+            option: this.option,
+            parserData: this.parserData,
+            command: this.command,
+            message: this.message,
+            client: this.client,
+        })) : null;
     }
 
     public toJSON(): MessageCommandOptionValueData {
@@ -82,8 +98,15 @@ export class MessageCommandOptionValue<T extends any = any> implements MessageCo
         const missing = !!options.option.required && typeof options.value !== 'string';
         const validateData = !missing
             ? options.option.validate && options.value
-                ? await Promise.resolve(options.option.validate({ value: options.value, message: options.message, client: options.client }))
-                : false
+                ? await Promise.resolve(options.option.validate({
+                    value: options.value,
+                    option: options.option,
+                    parserData: options.parserData,
+                    command: options.command,
+                    message: options.message,
+                    client: options.client,
+                }))
+                : true
             : false;
 
         return new MessageCommandOptionValue({
@@ -92,11 +115,13 @@ export class MessageCommandOptionValue<T extends any = any> implements MessageCo
             value: options.value ?? null,
             missing,
             invalid: validateData !== true,
-            client: options.client,
             message: options.message,
             error: typeof validateData !== 'boolean'
                 ? typeof validateData === 'string' ? new Error(validateData) : validateData
-                : undefined
+                : undefined,
+            parserData: options.parserData,
+            command: options.command,
+            client: options.client,
         });
     }
 }
