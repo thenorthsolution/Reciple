@@ -27,7 +27,9 @@ export class Mentions {
      * Resolves the role ID from a role mention or API role object.
      * @param role The role mention or API role object.
      */
-    public static getRoleId(role: RoleResolvable|APIRole|Exclude<RoleMention, '@everyone'>): string|null {
+    public static getRoleId(role: RoleResolvable|APIRole|RoleMention): string|null {
+        if (role === '@everyone') return role;
+
         const id = typeof role === 'string'
             ? role.match(FormattingPatterns.Role)?.[1] ?? null
             : role.id;
@@ -75,12 +77,14 @@ export class Mentions {
      * @param role The role mention or API role object.
      * @param options The options for fetching the role.
      */
-    public static async fetchRole(role: RoleResolvable|APIRole|Exclude<RoleMention, '@everyone'>, options: MentionFetchOptions & { guild: GuildResolvable; }): Promise<Role|null> {
+    public static async fetchRole(role: RoleResolvable|APIRole|RoleMention, options: MentionFetchOptions & { guild: GuildResolvable; }): Promise<Role|null> {
         const id = this.getRoleId(role);
         if (!id) throw new Error(`Invalid role resolvable: ${id}`);
 
         const guild = await options.client.guilds.fetch({ guild: options.guild, force: options.force });
-        return guild.roles.fetch(id, { force: options.force });
+        return id === '@everyone'
+            ? guild.roles.everyone
+            : guild.roles.fetch(id, { force: options.force });
     }
 
     /**
