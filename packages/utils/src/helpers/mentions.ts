@@ -12,6 +12,7 @@ export interface FetchMentionOrIdOptions {
 /**
  * Get user id from mention or user object
  * @param user User resolvable
+ * @deprecated Use `Mentions#getUserId` instead.
  */
 export function getMentionId(user: UserResolvable|APIUser|APIMessage|`<@${string}>`): string|null {
     const id = typeof user === 'string'
@@ -25,6 +26,7 @@ export function getMentionId(user: UserResolvable|APIUser|APIMessage|`<@${string
 
 /**
  * Fetch user object of a user id or object
+ * @deprecated Use `Mentions#fetchUser` instead.
  */
 export async function fetchMentionOrId(options: Omit<FetchMentionOrIdOptions, 'guild'>): Promise<User>;
 export async function fetchMentionOrId(options: FetchMentionOrIdOptions): Promise<GuildMember>;
