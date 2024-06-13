@@ -1,0 +1,46 @@
+{
+  "name": "@reciple/option-resolvers",
+  "description": "A library of built-in message command option resolvers and validators",
+  "homepage": "https://reciple.js.org/docs/option-resolvers",
+  "license": "GPL-3.0",
+  "version": "9.0.0",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "type": "module",
+  "keywords": [
+    "reciple",
+    "discord.js",
+    "handler",
+    "resolver"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/thenorthsolution/Reciple",
+    "directory": "packages/option-resolvers"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "clean": "rimraf ./dist",
+    "build": "npm run clean && tsc",
+    "docs": "node ../docgen/dist/bin.js -i ./src/index.ts -o ./docs/docs.json"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "dependencies": {
+    "@sapphire/shapeshift": "^4.0.0"
+  },
+  "devDependencies": {
+    "discord.js": "^14.5.3"
+  },
+  "peerDependencies": {
+    "@reciple/core": "^9 || ^9.0.0-dev",
+    "discord.js": "^14.15.0"
+  }
+}
