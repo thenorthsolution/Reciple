@@ -28,4 +28,4 @@
 
 ## About
 
-`@reciple/option-resolvers` is a library of built-in message command option resolvers and validators.
+`@reciple/option-resolvers` is a library of built-in message command utilities for Reciple.

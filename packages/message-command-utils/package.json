@@ -1,6 +1,6 @@
 {
-  "name": "@reciple/option-resolvers",
-  "description": "A library of built-in message command option resolvers and validators",
+  "name": "@reciple/message-command-utils",
+  "description": "A library of built-in message command utilities for Reciple",
   "homepage": "https://reciple.js.org/docs/option-resolvers",
   "license": "GPL-3.0",
   "version": "9.0.0",
