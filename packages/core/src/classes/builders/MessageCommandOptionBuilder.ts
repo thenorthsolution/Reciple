@@ -122,7 +122,7 @@ export class MessageCommandOptionBuilder<T extends any = any> implements Message
         return this;
     }
 
-    public toJSON(): MessageCommandOptionBuilderData {
+    public toJSON(): MessageCommandOptionBuilderData<T> {
         return {
             name: this.name,
             description: this.description,

@@ -91,10 +91,10 @@ export default {
             .setName('int')
             .setDescription('Testing')
             .addOption(new MessageCommandIntegerOptionBuilder()
-                .setMaxValue(10)
-                .setMinValue(0)
                 .setName('int')
                 .setDescription('The int to resolve')
+                .setMaxValue(10)
+                .setMinValue(0)
             )
             .setExecute(async ({ message, options }) => {
                 const boolean = await options.getOptionValue('boolean', { resolveValue: true });
@@ -109,10 +109,10 @@ export default {
             .setName('number')
             .setDescription('Testing')
             .addOption(new MessageCommandNumberOptionBuilder()
-                .setMaxValue(10)
-                .setMinValue(0)
                 .setName('number')
                 .setDescription('The number to resolve')
+                .setMaxValue(10)
+                .setMinValue(0)
             )
             .setExecute(async ({ message, options }) => {
                 const number = await options.getOptionValue('number', { resolveValue: true });
