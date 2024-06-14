@@ -45,5 +45,9 @@
   "peerDependencies": {
     "@reciple/core": "^9 || ^9.0.0-dev",
     "discord.js": "^14.15.0"
-  }
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "gitHead": "88c2b7a5d61ca5707db84435871c11d50259d056"
 }

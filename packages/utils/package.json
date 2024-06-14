@@ -48,5 +48,6 @@
   "devDependencies": {
     "@types/semver": "^7.5.8",
     "discord.js": "^14.15.3"
-  }
+  },
+  "gitHead": "88c2b7a5d61ca5707db84435871c11d50259d056"
 }
