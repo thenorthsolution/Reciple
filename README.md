@@ -4,7 +4,7 @@
 </h1>
 
 <h3 align="center">
-    <a href="https://discord.gg/thenorthsolution">
+    <a href="https://discord.gg/2gyckrwK7b">
         <img src="https://img.shields.io/discord/1032785824686817291?color=5865F2&logo=discord&logoColor=white">
     </a>
     <a href="https://npmjs.org/package/reciple">
@@ -18,8 +18,8 @@
     </a>
     <br>
     <div style="padding-top: 1rem">
-        <a href="https://discord.gg/thenorthsolution">
-            <img src="http://invidget.switchblade.xyz/thenorthsolution">
+        <a href="https://discord.gg/2gyckrwK7b">
+            <img src="http://invidget.switchblade.xyz/2gyckrwK7b">
         </a>
     </div>
 </h3>
