@@ -1,4 +1,4 @@
-import { MessageCommandOptionBuilder, MessageCommandOptionBuilderData, MessageCommandOptionBuilderResolveValueOptions, MessageCommandOptionValidators } from '@reciple/core';
+import { MessageCommandOptionBuilder, MessageCommandOptionBuilderData, MessageCommandOptionBuilderResolveValueOptions, MessageCommandOptionManager, MessageCommandOptionValidators } from '@reciple/core';
 
 export abstract class BaseMessageCommandOptionBuilder<T extends any = any> extends (MessageCommandOptionBuilder as (new <T extends any>(options?: MessageCommandOptionBuilderData<T>) => Omit<MessageCommandOptionBuilder<T>, 'setName'|'setDescription'|'setRequired'|'setResolveValue'|'setValidate'>))<T> {
     constructor(data?: MessageCommandOptionBuilderData<T>) {
@@ -37,4 +37,14 @@ export abstract class BaseMessageCommandOptionBuilder<T extends any = any> exten
 
     public abstract readonly resolve_value?: ((options: MessageCommandOptionBuilderResolveValueOptions<T>) => any) | undefined;
     public abstract readonly validate?: ((options: MessageCommandOptionBuilderResolveValueOptions<T>) => any) | undefined;
+
+    public static async resolveOption(name: string, options: MessageCommandOptionManager, required?: boolean): Promise<any|null> {
+        switch (required) {
+            case true:
+                return options.getOptionValue(name, { resolveValue: true, required: true });
+            case false:
+            case undefined:
+                return options.getOptionValue(name, { resolveValue: true, required: false });
+        }
+    }
 }

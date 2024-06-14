@@ -1,4 +1,4 @@
-import { MessageCommandOptionBuilderData, MessageCommandOptionBuilderResolveValueOptions } from '@reciple/core';
+import { MessageCommandOptionBuilderData, MessageCommandOptionBuilderResolveValueOptions, MessageCommandOptionManager } from '@reciple/core';
 import { Mentions } from '@reciple/utils';
 import { Role } from 'discord.js';
 import { BaseMessageCommandOptionBuilder } from '../structures/BaseMessageCommandOptionBuilder.js';
@@ -32,5 +32,9 @@ export class MessageCommandRoleOptionBuilder extends BaseMessageCommandOptionBui
         const role = await Mentions.fetchRole(options.value, { client: options.client, guild: options.message.guild }).catch(() => null);
         if (!role) return new Error(`Role ${options.value} not found`);
         return true;
+    }
+
+    public static async resolveOption(name: string, options: MessageCommandOptionManager, required?: boolean): Promise<Role|null> {
+        return super.resolveOption(name, options, required);
     }
 }

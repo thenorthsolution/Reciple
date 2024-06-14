@@ -1,4 +1,4 @@
-import { MessageCommandOptionBuilderData, MessageCommandOptionBuilderResolveValueOptions } from '@reciple/core';
+import { MessageCommandOptionBuilderData, MessageCommandOptionBuilderResolveValueOptions, MessageCommandOptionManager } from '@reciple/core';
 import { Mentions } from '@reciple/utils';
 import { User } from 'discord.js';
 import { BaseMessageCommandOptionBuilder } from '../structures/BaseMessageCommandOptionBuilder.js';
@@ -33,5 +33,12 @@ export class MessageCommandUserOptionBuilder extends BaseMessageCommandOptionBui
 
         if (!this.allow_bots && user.bot) return new Error(`User ${options.value} is a bot`);
         return true;
+    }
+
+    public static async resolveOption(name: string, options: MessageCommandOptionManager, required?: false): Promise<User|null>;
+    public static async resolveOption(name: string, options: MessageCommandOptionManager, required?: true): Promise<User>
+    public static async resolveOption(name: string, options: MessageCommandOptionManager, required?: boolean): Promise<User|null>;
+    public static async resolveOption(name: string, options: MessageCommandOptionManager, required?: boolean): Promise<User|null> {
+        return super.resolveOption(name, options, required);
     }
 }

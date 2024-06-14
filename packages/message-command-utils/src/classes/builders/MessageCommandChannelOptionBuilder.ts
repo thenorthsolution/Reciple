@@ -1,4 +1,4 @@
-import { MessageCommandOptionBuilderData, MessageCommandOptionBuilderResolveValueOptions } from '@reciple/core';
+import { MessageCommandOptionBuilderData, MessageCommandOptionBuilderResolveValueOptions, MessageCommandOptionManager } from '@reciple/core';
 import { Mentions } from '@reciple/utils';
 import { Channel, ChannelType, normalizeArray, RestOrArray } from 'discord.js';
 import { BaseMessageCommandOptionBuilder } from '../structures/BaseMessageCommandOptionBuilder.js';
@@ -50,5 +50,9 @@ export class MessageCommandChannelOptionBuilder extends BaseMessageCommandOption
         }
 
         return true;
+    }
+
+    public static async resolveOption(name: string, options: MessageCommandOptionManager, required?: boolean): Promise<Channel|null> {
+        return super.resolveOption(name, options, required);
     }
 }

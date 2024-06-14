@@ -1,4 +1,4 @@
-import { MessageCommandOptionBuilderData, MessageCommandOptionBuilderResolveValueOptions } from '@reciple/core';
+import { MessageCommandOptionBuilderData, MessageCommandOptionBuilderResolveValueOptions, MessageCommandOptionManager } from '@reciple/core';
 import { BaseMessageCommandOptionBuilder } from '../structures/BaseMessageCommandOptionBuilder.js';
 
 export interface MessageCommandNumberOptionBuilderData extends MessageCommandOptionBuilderData<number> {
@@ -38,5 +38,12 @@ export class MessageCommandNumberOptionBuilder extends BaseMessageCommandOptionB
         if (this.min_value && value < this.min_value) return new Error(`Value for option ${options.option.name} is less than the minimum value of ${this.min_value}`);
 
         return true;
+    }
+
+    public static async resolveOption(name: string, options: MessageCommandOptionManager, required?: false): Promise<number|null>;
+    public static async resolveOption(name: string, options: MessageCommandOptionManager, required?: true): Promise<number>
+    public static async resolveOption(name: string, options: MessageCommandOptionManager, required?: boolean): Promise<number|null>;
+    public static async resolveOption(name: string, options: MessageCommandOptionManager, required?: boolean): Promise<number|null> {
+        return super.resolveOption(name, options, required);
     }
 }
