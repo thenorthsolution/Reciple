@@ -1,13 +1,13 @@
-import { MessageCommandOptionBuilder, MessageCommandOptionBuilderData, MessageCommandOptionBuilderResolveValueOptions } from '@reciple/core';
-import { MessageCommandOptionBuilderWithoutValidateResolve } from '../types/types.js';
+import { MessageCommandOptionBuilderData, MessageCommandOptionBuilderResolveValueOptions } from '@reciple/core';
 import { Mentions } from '@reciple/utils';
-import { Constructable, Role } from 'discord.js';
+import { Role } from 'discord.js';
+import { BaseMessageCommandOptionBuilder } from '../structures/BaseMessageCommandOptionBuilder.js';
 
 export interface MessageCommandRoleOptionBuilderData extends MessageCommandOptionBuilderData<Role|null> {
     allow_everyone?: boolean;
 }
 
-export class MessageCommandRoleOptionBuilder extends (MessageCommandOptionBuilder<Role|null> as Constructable<MessageCommandOptionBuilderWithoutValidateResolve<Role|null>>) implements MessageCommandRoleOptionBuilderData {
+export class MessageCommandRoleOptionBuilder extends BaseMessageCommandOptionBuilder<Role|null> implements MessageCommandRoleOptionBuilderData {
     public allow_everyone?: boolean = false;
 
     constructor(data?: MessageCommandRoleOptionBuilderData) {

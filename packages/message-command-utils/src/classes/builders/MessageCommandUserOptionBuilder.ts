@@ -1,13 +1,13 @@
-import { MessageCommandOptionBuilder, MessageCommandOptionBuilderData, MessageCommandOptionBuilderResolveValueOptions } from '@reciple/core';
-import { MessageCommandOptionBuilderWithoutValidateResolve } from '../types/types.js';
+import { MessageCommandOptionBuilderData, MessageCommandOptionBuilderResolveValueOptions } from '@reciple/core';
 import { Mentions } from '@reciple/utils';
-import { Constructable, User } from 'discord.js';
+import { User } from 'discord.js';
+import { BaseMessageCommandOptionBuilder } from '../structures/BaseMessageCommandOptionBuilder.js';
 
 export interface MessageCommandUserOptionBuilderData extends MessageCommandOptionBuilderData<User> {
     allow_bots?: boolean;
 }
 
-export class MessageCommandUserOptionBuilder extends (MessageCommandOptionBuilder<User> as Constructable<MessageCommandOptionBuilderWithoutValidateResolve<User>>) implements MessageCommandUserOptionBuilderData {
+export class MessageCommandUserOptionBuilder extends BaseMessageCommandOptionBuilder<User> implements MessageCommandUserOptionBuilderData {
     public allow_bots?: boolean = true;
 
     constructor(data?: MessageCommandUserOptionBuilderData) {

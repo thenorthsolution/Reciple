@@ -1,13 +1,12 @@
-import { MessageCommandOptionBuilder, MessageCommandOptionBuilderData, MessageCommandOptionBuilderResolveValueOptions } from '@reciple/core';
-import { Constructable } from 'discord.js';
-import { MessageCommandOptionBuilderWithoutValidateResolve } from '../types/types.js';
+import { MessageCommandOptionBuilderData, MessageCommandOptionBuilderResolveValueOptions } from '@reciple/core';
+import { BaseMessageCommandOptionBuilder } from '../structures/BaseMessageCommandOptionBuilder.js';
 
 export interface MessageCommandIntegerOptionBuilderData extends MessageCommandOptionBuilderData<number> {
     max_value?: number|null;
     min_value?: number|null;
 }
 
-export class MessageCommandIntegerOptionBuilder extends (MessageCommandOptionBuilder<number> as Constructable<MessageCommandOptionBuilderWithoutValidateResolve<number>>) implements MessageCommandIntegerOptionBuilderData {
+export class MessageCommandIntegerOptionBuilder extends BaseMessageCommandOptionBuilder<number> implements MessageCommandIntegerOptionBuilderData {
     public max_value?: number|null = null;
     public min_value?: number|null = null;
 

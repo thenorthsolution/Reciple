@@ -1,14 +1,14 @@
-import { MessageCommandOptionBuilder, MessageCommandOptionBuilderData, MessageCommandOptionBuilderResolveValueOptions } from '@reciple/core';
-import { MessageCommandOptionBuilderWithoutValidateResolve } from '../types/types.js';
+import { MessageCommandOptionBuilderData, MessageCommandOptionBuilderResolveValueOptions } from '@reciple/core';
 import { Mentions } from '@reciple/utils';
-import { Channel, ChannelType, Constructable } from 'discord.js';
+import { Channel, ChannelType } from 'discord.js';
+import { BaseMessageCommandOptionBuilder } from '../structures/BaseMessageCommandOptionBuilder.js';
 
 export interface MessageCommandChannelOptionBuilderData extends MessageCommandOptionBuilderData<Channel|null> {
     channel_types?: ChannelType[]|null;
     allow_outside_channels?: boolean;
 }
 
-export class MessageCommandChannelOptionBuilder extends (MessageCommandOptionBuilder<Channel|null> as Constructable<MessageCommandOptionBuilderWithoutValidateResolve<Channel|null>>) implements MessageCommandChannelOptionBuilderData {
+export class MessageCommandChannelOptionBuilder extends BaseMessageCommandOptionBuilder<Channel|null> implements MessageCommandChannelOptionBuilderData {
     public channel_types?: ChannelType[]|null = null;
     public allow_outside_channels?: boolean = false;
 

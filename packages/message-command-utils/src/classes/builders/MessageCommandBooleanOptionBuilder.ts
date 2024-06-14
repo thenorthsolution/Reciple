@@ -1,11 +1,10 @@
-import { MessageCommandOptionBuilder, MessageCommandOptionBuilderData, MessageCommandOptionBuilderResolveValueOptions } from '@reciple/core';
-import { Constructable } from 'discord.js';
-import { MessageCommandOptionBuilderWithoutValidateResolve } from '../types/types.js';
+import { MessageCommandOptionBuilderData, MessageCommandOptionBuilderResolveValueOptions } from '@reciple/core';
 import { boolean, isBooleanable } from 'boolean';
+import { BaseMessageCommandOptionBuilder } from '../structures/BaseMessageCommandOptionBuilder.js';
 
 export interface MessageCommandBooleanOptionBuilderData extends MessageCommandOptionBuilderData<boolean> {}
 
-export class MessageCommandBooleanOptionBuilder extends (MessageCommandOptionBuilder<boolean> as Constructable<MessageCommandOptionBuilderWithoutValidateResolve<boolean>>) implements MessageCommandBooleanOptionBuilderData {
+export class MessageCommandBooleanOptionBuilder extends BaseMessageCommandOptionBuilder<boolean> implements MessageCommandBooleanOptionBuilderData {
     constructor(data?: MessageCommandBooleanOptionBuilderData) {
         super(data);
     }
