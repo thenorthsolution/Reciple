@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@reciple/core": "file:../packages/core",
+    "@reciple/message-command-utils": "file:../packages/message-command-utils",
     "discord.js": "^14.15.2",
     "reciple": "file:../packages/reciple"
   },

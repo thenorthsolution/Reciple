@@ -3,6 +3,7 @@ import { CooldownPrecondition, CommandPermissionsPrecondition } from 'reciple';
 import { IntentsBitField } from 'discord.js';
 import MyPrecondition from './modules/Preconditions/MyPrecondition.js';
 import HandleError from './modules/Halts/HandleError.js';
+import MessageCommandArguments from './modules/Halts/MessageCommandArguments.js';
 
 /**
  * @type {import('reciple').RecipleConfig}
@@ -75,10 +76,11 @@ export const config = {
     preconditions: [
         new CooldownPrecondition(),
         new CommandPermissionsPrecondition(),
-        MyPrecondition
+        MyPrecondition,
     ],
     commandHalts: [
-        HandleError
+        HandleError,
+        MessageCommandArguments
     ],
     cooldownSweeperOptions: {
         timer: 1000 * 60 * 60

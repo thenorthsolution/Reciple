@@ -1,4 +1,5 @@
 export * from './classes/ImageBase64Resolver.js';
+export * from './classes/Mentions.js';
 export * from './classes/MessageURLData.js';
 export * from './classes/PackageUpdateChecker.js';
 
