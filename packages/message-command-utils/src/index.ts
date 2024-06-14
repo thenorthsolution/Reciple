@@ -5,5 +5,3 @@ export * from './classes/builders/MessageCommandNumberOptionBuilder.js';
 export * from './classes/builders/MessageCommandRoleOptionBuilder.js';
 export * from './classes/builders/MessageCommandUserOptionBuilder.js';
 export * from './classes/structures/BaseMessageCommandOptionBuilder.js';
-
-export * from './types/types.js';
