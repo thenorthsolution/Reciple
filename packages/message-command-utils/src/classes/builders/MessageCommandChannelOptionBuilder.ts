@@ -1,6 +1,6 @@
 import { MessageCommandOptionBuilderData, MessageCommandOptionBuilderResolveValueOptions } from '@reciple/core';
 import { Mentions } from '@reciple/utils';
-import { Channel, ChannelType } from 'discord.js';
+import { Channel, ChannelType, normalizeArray, RestOrArray } from 'discord.js';
 import { BaseMessageCommandOptionBuilder } from '../structures/BaseMessageCommandOptionBuilder.js';
 
 export interface MessageCommandChannelOptionBuilderData extends MessageCommandOptionBuilderData<Channel|null> {
@@ -9,15 +9,22 @@ export interface MessageCommandChannelOptionBuilderData extends MessageCommandOp
 }
 
 export class MessageCommandChannelOptionBuilder extends BaseMessageCommandOptionBuilder<Channel|null> implements MessageCommandChannelOptionBuilderData {
-    public channel_types?: ChannelType[]|null = null;
+    public channel_types: ChannelType[] = [];
     public allow_outside_channels?: boolean = false;
 
     constructor(data?: MessageCommandChannelOptionBuilderData) {
         super(data);
+        if (data?.channel_types) this.setChannelTypes(data.channel_types);
+        if (typeof data?.allow_outside_channels === 'boolean') this.setAllowOutsideChannels(data.allow_outside_channels);
     }
 
-    public setChannelTypes(channel_types?: ChannelType[]|null): this {
-        this.channel_types = channel_types;
+    public setChannelTypes(...channel_types: RestOrArray<ChannelType>): this {
+        this.channel_types = normalizeArray(channel_types);
+        return this;
+    }
+
+    public addChannelTypes(...channel_types: RestOrArray<ChannelType>): this {
+        this.channel_types.push(...normalizeArray(channel_types));
         return this;
     }
 
