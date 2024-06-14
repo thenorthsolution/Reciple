@@ -1,6 +1,6 @@
 // @ts-check
 import { MessageCommandBuilder } from 'reciple';
-import { MessageCommandBooleanOptionBuilder, MessageCommandChannelOptionBuilder, MessageCommandIntegerOptionBuilder, MessageCommandNumberOptionBuilder, MessageCommandRoleOptionBuilder, MessageCommandUserOptionBuilder } from '@reciple/message-command-utils';
+import { MessageCommandBooleanOptionBuilder, MessageCommandChannelOptionBuilder, MessageCommandIntegerOptionBuilder, MessageCommandMessageOptionBuilder, MessageCommandNumberOptionBuilder, MessageCommandRoleOptionBuilder, MessageCommandUserOptionBuilder } from '@reciple/message-command-utils';
 import { ChannelType } from 'discord.js';
 
 /**
@@ -108,7 +108,25 @@ export default {
                         parse: []
                     }
                 });
-            })
+            }),
+        new MessageCommandBuilder()
+            .setName('message')
+            .setDescription('Testing')
+            .addOption(new MessageCommandMessageOptionBuilder()
+                .setName('message')
+                .setDescription('The message to resolve')
+                .setAllowBotMessages(false)
+                .setAllowOutsideMessages(false)
+            )
+            .setExecute(async ({ message, options }) => {
+                const msg = await MessageCommandMessageOptionBuilder.resolveOption('message', options);
+                await message.reply({
+                    content: `Resolved ${msg?.url}`,
+                    allowedMentions: {
+                        parse: []
+                    }
+                });
+            }),
     ],
     onStart: () => true
 };

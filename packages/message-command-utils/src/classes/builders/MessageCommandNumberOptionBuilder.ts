@@ -2,13 +2,13 @@ import { MessageCommandOptionBuilderData, MessageCommandOptionBuilderResolveValu
 import { BaseMessageCommandOptionBuilder } from '../structures/BaseMessageCommandOptionBuilder.js';
 
 export interface MessageCommandNumberOptionBuilderData extends MessageCommandOptionBuilderData<number> {
-    max_value?: number|null;
-    min_value?: number|null;
+    max_value?: number;
+    min_value?: number;
 }
 
 export class MessageCommandNumberOptionBuilder extends BaseMessageCommandOptionBuilder<number> implements MessageCommandNumberOptionBuilderData {
-    public max_value?: number|null = null;
-    public min_value?: number|null = null;
+    public max_value?: number;
+    public min_value?: number;
 
     constructor(data?: MessageCommandNumberOptionBuilderData) {
         super(data);
@@ -17,12 +17,12 @@ export class MessageCommandNumberOptionBuilder extends BaseMessageCommandOptionB
         if (typeof data?.min_value === 'number') this.setMinValue(data.min_value);
     }
 
-    public setMaxValue(maxValue?: number|null): this {
+    public setMaxValue(maxValue?: number): this {
         this.max_value = maxValue;
         return this;
     }
 
-    public setMinValue(minValue?: number|null): this {
+    public setMinValue(minValue?: number): this {
         this.min_value = minValue;
         return this;
     }

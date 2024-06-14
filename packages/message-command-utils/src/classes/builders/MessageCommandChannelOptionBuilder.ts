@@ -4,7 +4,7 @@ import { Channel, ChannelType, normalizeArray, RestOrArray } from 'discord.js';
 import { BaseMessageCommandOptionBuilder } from '../structures/BaseMessageCommandOptionBuilder.js';
 
 export interface MessageCommandChannelOptionBuilderData extends MessageCommandOptionBuilderData<Channel|null> {
-    channel_types?: ChannelType[]|null;
+    channel_types?: ChannelType[];
     allow_outside_channels?: boolean;
 }
 
