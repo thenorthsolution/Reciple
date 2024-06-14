@@ -49,7 +49,7 @@ jobs:
       max-parallel: 1
       fail-fast: false
       matrix:
-        package: ['core', 'reciple', 'utils', 'docgen', 'create-reciple']
+        package: ['core', 'reciple', 'message-command-utils', 'utils', 'docgen', 'create-reciple']
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
