@@ -1,6 +1,7 @@
 // @ts-check
 import { MessageCommandBuilder } from 'reciple';
 import { MessageCommandBooleanOptionBuilder, MessageCommandChannelOptionBuilder, MessageCommandIntegerOptionBuilder, MessageCommandNumberOptionBuilder, MessageCommandRoleOptionBuilder, MessageCommandUserOptionBuilder } from '@reciple/message-command-utils';
+import { ChannelType } from 'discord.js';
 
 /**
  * @type {import('reciple').RecipleModuleData}
@@ -45,22 +46,7 @@ export default {
             .addOption(new MessageCommandChannelOptionBuilder()
                 .setName('channel')
                 .setDescription('The channel to fetch')
-            )
-            .setExecute(async ({ message, options }) => {
-                const channel = await options.getOptionValue('channel', { resolveValue: true });
-                await message.reply({
-                    content: `Fetched ${channel}`,
-                    allowedMentions: {
-                        parse: []
-                    }
-                });
-            }),
-        new MessageCommandBuilder()
-            .setName('channel')
-            .setDescription('Testing')
-            .addOption(new MessageCommandChannelOptionBuilder()
-                .setName('channel')
-                .setDescription('The channel to fetch')
+                .setChannelTypes([ChannelType.GuildText])
             )
             .setExecute(async ({ message, options }) => {
                 const channel = await options.getOptionValue('channel', { resolveValue: true });
