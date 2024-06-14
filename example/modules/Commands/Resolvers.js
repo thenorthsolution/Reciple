@@ -16,7 +16,7 @@ export default {
                 .setDescription('The user to fetch')
             )
             .setExecute(async ({ message, options }) => {
-                const user = await options.getOptionValue('user', { resolveValue: true });
+                const user = await MessageCommandUserOptionBuilder.resolveOption('user', options);
                 await message.reply({
                     content: `Fetched ${user}`,
                     allowedMentions: {
@@ -32,7 +32,7 @@ export default {
                 .setDescription('The role to fetch')
             )
             .setExecute(async ({ message, options }) => {
-                const role = await options.getOptionValue('role', { resolveValue: true });
+                const role = await MessageCommandRoleOptionBuilder.resolveOption('role', options);
                 await message.reply({
                     content: `Fetched ${role}`,
                     allowedMentions: {
@@ -49,7 +49,7 @@ export default {
                 .setChannelTypes([ChannelType.GuildText])
             )
             .setExecute(async ({ message, options }) => {
-                const channel = await options.getOptionValue('channel', { resolveValue: true });
+                const channel = await MessageCommandChannelOptionBuilder.resolveOption('channel', options);
                 await message.reply({
                     content: `Fetched ${channel}`,
                     allowedMentions: {
@@ -65,7 +65,7 @@ export default {
                 .setDescription('The boolean to resolve')
             )
             .setExecute(async ({ message, options }) => {
-                const boolean = await options.getOptionValue('boolean', { resolveValue: true });
+                const boolean = await MessageCommandBooleanOptionBuilder.resolveOption('boolean', options);
                 await message.reply({
                     content: `Resolved ${boolean}`,
                     allowedMentions: {
@@ -83,7 +83,7 @@ export default {
                 .setMinValue(0)
             )
             .setExecute(async ({ message, options }) => {
-                const boolean = await options.getOptionValue('boolean', { resolveValue: true });
+                const boolean = await MessageCommandIntegerOptionBuilder.resolveOption('int', options);
                 await message.reply({
                     content: `Resolved ${boolean}`,
                     allowedMentions: {
@@ -101,7 +101,7 @@ export default {
                 .setMinValue(0)
             )
             .setExecute(async ({ message, options }) => {
-                const number = await options.getOptionValue('number', { resolveValue: true });
+                const number = await MessageCommandNumberOptionBuilder.resolveOption('number', options);
                 await message.reply({
                     content: `Resolved ${number}`,
                     allowedMentions: {
