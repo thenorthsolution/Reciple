@@ -106,7 +106,7 @@ export class MessageCommandOptionBuilder<T extends any = any> implements Message
      * Sets the function that validates the option value.
      * @param validate Function that validates the option value.
      */
-    public setValidate(validate: MessageCommandOptionBuilderData['validate']|null): this {
+    public setValidate(validate: MessageCommandOptionBuilderData<T>['validate']|null): this {
         MessageCommandOptionValidators.isValidValidate(validate);
         this.validate = validate ?? undefined;
         return this;
@@ -116,7 +116,7 @@ export class MessageCommandOptionBuilder<T extends any = any> implements Message
      * Sets the function that resolves the option value.
      * @param resolveValue Function that resolves the option value.
      */
-    public setResolveValue(resolveValue: MessageCommandOptionBuilderData['resolve_value']|null): this {
+    public setResolveValue(resolveValue: MessageCommandOptionBuilderData<T>['resolve_value']|null): this {
         MessageCommandOptionValidators.isValidResolveValue(resolveValue);
         this.resolve_value = resolveValue ?? undefined;
         return this;
