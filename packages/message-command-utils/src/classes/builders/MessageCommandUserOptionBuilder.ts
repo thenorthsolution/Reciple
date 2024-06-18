@@ -16,6 +16,12 @@ export class MessageCommandUserOptionBuilder extends BaseMessageCommandOptionBui
         if (typeof data?.allow_bots === 'boolean') this.setAllowBots(data.allow_bots);
     }
 
+    /**
+     * Sets the value of `allow_bots` property and returns the current instance.
+     *
+     * @param {boolean} [allowBots] - The new value for `allow_bots`. If not provided, it will be set to `undefined`.
+     * @return {this} The current instance of the class.
+     */
     public setAllowBots(allowBots?: boolean): this {
         this.allow_bots = allowBots;
         return this;
@@ -38,6 +44,14 @@ export class MessageCommandUserOptionBuilder extends BaseMessageCommandOptionBui
     public static async resolveOption(name: string, options: MessageCommandOptionManager, required?: false): Promise<User|null>;
     public static async resolveOption(name: string, options: MessageCommandOptionManager, required?: true): Promise<User>
     public static async resolveOption(name: string, options: MessageCommandOptionManager, required?: boolean): Promise<User|null>;
+    /**
+     * Asynchronously resolves a user option from the given manager.
+     *
+     * @param {string} name - The name of the option to resolve.
+     * @param {MessageCommandOptionManager} options - The option manager to resolve from.
+     * @param {boolean} [required=false] - Whether the option is required or not.
+     * @return {Promise<User|null>} - A promise that resolves to the resolved user value, or null if the option is not present and not required.
+     */
     public static async resolveOption(name: string, options: MessageCommandOptionManager, required?: boolean): Promise<User|null> {
         return super.resolveOption(name, options, required);
     }

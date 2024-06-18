@@ -16,11 +16,23 @@ export class MessageCommandMessageOptionBuilder extends BaseMessageCommandOption
         super(data);
     }
 
+    /**
+     * Sets the value of allow_outside_messages to the provided boolean value.
+     *
+     * @param {boolean} allowOutsideMessages - The boolean value to set. If not provided, the value will be undefined.
+     * @return {this} - The updated instance of the class.
+     */
     public setAllowOutsideMessages(allowOutsideMessages?: boolean) {
         this.allow_outside_messages = allowOutsideMessages;
         return this;
     }
 
+    /**
+     * Sets the value of allow_bot_messages to the provided boolean value.
+     *
+     * @param {boolean} allowBotMessages - The boolean value to set. If not provided, the value will be undefined.
+     * @return {this} - The updated instance of the class.
+     */
     public setAllowBotMessages(allowBotMessages?: boolean) {
         this.allow_bot_messages = allowBotMessages;
         return this;
@@ -41,6 +53,12 @@ export class MessageCommandMessageOptionBuilder extends BaseMessageCommandOption
         return true;
     };
 
+    /**
+     * Fetches a message from the given options.
+     *
+     * @param {MessageCommandOptionBuilderResolveValueOptions} options - The options containing the value to fetch.
+     * @return {Promise<Message|null>} A promise that resolves to the fetched message or null if not found.
+     */
     protected static async fetchMessageFromOptions(options: MessageCommandOptionBuilderResolveValueOptions): Promise<Message|null> {
         let message: Message|null = null;
 
@@ -57,6 +75,14 @@ export class MessageCommandMessageOptionBuilder extends BaseMessageCommandOption
     public static async resolveOption(name: string, options: MessageCommandOptionManager, required?: false): Promise<Message|null>;
     public static async resolveOption(name: string, options: MessageCommandOptionManager, required?: true): Promise<Message>
     public static async resolveOption(name: string, options: MessageCommandOptionManager, required?: boolean): Promise<Message|null>;
+    /**
+     * Resolves a message option from the given options object.
+     *
+     * @param {string} name - The name of the option to resolve.
+     * @param {MessageCommandOptionManager} options - The options object containing the option.
+     * @param {boolean} [required] - Whether the option is required or not.
+     * @return {Promise<Message|null>} - A promise that resolves to the resolved message or null if the option is not present and not required.
+     */
     public static async resolveOption(name: string, options: MessageCommandOptionManager, required?: boolean): Promise<Message|null> {
         return super.resolveOption(name, options, required);
     }

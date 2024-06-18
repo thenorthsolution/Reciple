@@ -21,6 +21,14 @@ export class MessageCommandBooleanOptionBuilder extends BaseMessageCommandOption
     public static async resolveOption(name: string, options: MessageCommandOptionManager, required?: false): Promise<boolean|null>;
     public static async resolveOption(name: string, options: MessageCommandOptionManager, required?: true): Promise<boolean>
     public static async resolveOption(name: string, options: MessageCommandOptionManager, required?: boolean): Promise<boolean|null>;
+    /**
+     * Asynchronously resolves a boolean option from the given manager.
+     *
+     * @param {string} name - The name of the option to resolve.
+     * @param {MessageCommandOptionManager} options - The option manager to resolve from.
+     * @param {boolean} [required=false] - Whether the option is required or not.
+     * @return {Promise<boolean|null>} - A promise that resolves to the resolved boolean value, or null if the option is not present and not required.
+     */
     public static async resolveOption(name: string, options: MessageCommandOptionManager, required?: boolean): Promise<boolean|null> {
         return super.resolveOption(name, options, required);
     }

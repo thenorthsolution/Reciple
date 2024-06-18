@@ -1,6 +1,11 @@
 import { MessageCommandOptionBuilder, MessageCommandOptionBuilderData, MessageCommandOptionBuilderResolveValueOptions, MessageCommandOptionManager, MessageCommandOptionValidators } from '@reciple/core';
 
 export abstract class BaseMessageCommandOptionBuilder<T extends any = any> extends (MessageCommandOptionBuilder as (new <T extends any>(options?: MessageCommandOptionBuilderData<T>) => Omit<MessageCommandOptionBuilder<T>, 'setName'|'setDescription'|'setRequired'|'setResolveValue'|'setValidate'>))<T> {
+    /**
+     * Initializes a new instance of the MessageCommandBooleanOptionBuilder class.
+     *
+     * @param {MessageCommandBooleanOptionBuilderData<T>} [data] - Optional data to initialize the builder with.
+     */
     constructor(data?: MessageCommandOptionBuilderData<T>) {
         super(data);
     }

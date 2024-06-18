@@ -15,6 +15,12 @@ export class MessageCommandRoleOptionBuilder extends BaseMessageCommandOptionBui
         if (typeof data?.allow_everyone === 'boolean') this.setAllowEveryone(data.allow_everyone);
     }
 
+    /**
+     * Sets the value of `allow_everyone` to the provided `allowEveryone` parameter and returns the current instance.
+     *
+     * @param {boolean} allowEveryone - The value to set `allow_everyone` to. If not provided, `allow_everyone` will be set to `undefined`.
+     * @return {this} The current instance of the class.
+     */
     public setAllowEveryone(allowEveryone?: boolean): this {
         this.allow_everyone = allowEveryone;
         return this;
@@ -34,6 +40,14 @@ export class MessageCommandRoleOptionBuilder extends BaseMessageCommandOptionBui
         return true;
     }
 
+    /**
+     * Asynchronously resolves a role option from the given option manager.
+     *
+     * @param {string} name - The name of the option to resolve.
+     * @param {MessageCommandOptionManager} options - The option manager to resolve from.
+     * @param {boolean} [required=false] - Whether the option is required or not.
+     * @return {Promise<Role|null>} - A promise that resolves to the resolved role value, or null if the option is not present and not required.
+     */
     public static async resolveOption(name: string, options: MessageCommandOptionManager, required?: boolean): Promise<Role|null> {
         return super.resolveOption(name, options, required);
     }
