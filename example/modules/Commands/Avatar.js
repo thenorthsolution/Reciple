@@ -21,5 +21,8 @@ export default {
                 });
             })
     ],
-    onStart: () => true
+    onStart: () => {
+        reciple.logger?.log(`This is amazing`);
+        return true;
+    }
 }

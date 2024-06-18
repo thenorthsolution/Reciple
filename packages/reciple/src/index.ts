@@ -9,3 +9,7 @@ export { config as loadEnv } from 'dotenv';
 export declare class RecipleClient<Ready extends boolean = boolean> extends Client<Ready> {
     readonly config: RecipleConfig;
 }
+
+declare global {
+    var reciple: RecipleClient;
+}

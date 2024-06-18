@@ -70,6 +70,7 @@ if (config.version && !semver.satisfies(cliVersion, config.version)) {
 logger?.info(`Starting Reciple client v${buildVersion} - ${new Date()}`);
 
 const client = new RecipleClient(config);
+global.reciple = client;
 
 client.setLogger(logger);
 
