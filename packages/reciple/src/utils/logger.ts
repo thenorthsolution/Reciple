@@ -4,6 +4,15 @@ import { type RecipleClient } from '../index.js';
 import { cli } from './cli.js';
 import path from 'node:path';
 
+/**
+ * Formats a log message with optional prefix, colored messages, and thread information.
+ *
+ * @param {string} message - The log message to format.
+ * @param {Logger} logger - The logger instance used to get the logger name.
+ * @param {PartialDeep<Exclude<RecipleConfig['logger'], Logger|undefined>> & { shards?: boolean; }} config - The logger configuration.
+ * @param {LoggerLevel} level - The log level.
+ * @return {string} The formatted log message.
+ */
 export function formatLogMessage(message: string, logger: Logger, config: PartialDeep<Exclude<RecipleConfig['logger'], Logger|undefined>> & { shards?: boolean; }, level: LoggerLevel): string {
     const color = (msg: string) => {
         if (!config.coloredMessages || level === LoggerLevel.INFO) return msg;
@@ -30,6 +39,12 @@ export function formatLogMessage(message: string, logger: Logger, config: Partia
             ) + ` ${message}`;
 }
 
+/**
+ * Creates a logger with the specified configuration.
+ *
+ * @param {Omit<PartialDeep<Exclude<RecipleConfig['logger'], Logger|undefined>>, 'enabled'> & { shards?: boolean; }} config - The configuration for the logger.
+ * @return {Promise<Logger>} The created logger instance.
+ */
 export async function createLogger(config?: Omit<PartialDeep<Exclude<RecipleConfig['logger'], Logger|undefined>>, 'enabled'> & { shards?: boolean; }): Promise<Logger> {
     const logger = new Logger({
         enableDebugmode: (cli.options.debugmode || config?.debugmode) ?? null,
@@ -55,6 +70,12 @@ export async function createLogger(config?: Omit<PartialDeep<Exclude<RecipleConf
     return logger;
 }
 
+/**
+ * Adds event listeners to the client for various module events and reciple events.
+ *
+ * @param {RecipleClient} client - The client to add the event listeners to.
+ * @return {void} This function does not return anything.
+ */
 export function addEventListenersToClient(client: RecipleClient): void {
     client.on('recipleDebug', debug => client.logger?.debug(debug));
 

@@ -36,10 +36,20 @@ export interface RecipleConfigJS {
 export class ConfigReader {
     public static defaultConfigFile = path.join(path.dirname(fileURLToPath(import.meta.url)), '../../static/config.mjs');
 
+    /**
+     * Reads the default configuration data, processes it, and returns the resulting configuration string.
+     *
+     * @return {Promise<string>} The default configuration data as a string.
+     */
     public static async readDefaultConfig(): Promise<RecipleConfigJS> {
         return recursiveDefaults<RecipleConfigJS>(await import(this.defaultConfigFile))!;
     }
 
+    /**
+     * Reads the default configuration data, processes it, and returns the resulting configuration string.
+     *
+     * @return {Promise<string>} The default configuration data as a string.
+     */
     public static async getDefaultConfigData(): Promise<string> {
         let defaultConfig = (await readFile(this.defaultConfigFile, 'utf-8')).replaceAll('\r\n', '\n');
 
@@ -51,6 +61,15 @@ export class ConfigReader {
 
     public static async readConfigJS(config: string|{ paths: string[]; default?: string; }, createIfNotExists?: true): Promise<RecipleConfigJS>;
     public static async readConfigJS(config: string|{ paths: string[]; default?: string; }, createIfNotExists?: false): Promise<RecipleConfigJS|null>;
+    /**
+     * Reads a JavaScript configuration file and returns its contents as a `RecipleConfigJS` object.
+     * If the file does not exist, it can optionally create the file and return a default configuration.
+     *
+     * @param {string|{ paths: string[]; default?: string; }} config - The path to the configuration file or an object specifying multiple paths and a default path.
+     * @param {boolean} [createIfNotExists=true] - Whether to create the configuration file if it does not exist.
+     * @return {Promise<RecipleConfigJS|null>} A promise that resolves to the contents of the configuration file as a `RecipleConfigJS` object, or `null` if the file does not exist and `createIfNotExists` is `false`.
+     * @throws {RecipleError} If the configuration file does not contain valid data.
+     */
     public static async readConfigJS(config: string|{ paths: string[]; default?: string; }, createIfNotExists: boolean = true): Promise<RecipleConfigJS|null> {
         if (typeof config !== 'string') {
             let data: RecipleConfigJS|null = null;
@@ -78,6 +97,12 @@ export class ConfigReader {
         return data;
     }
 
+    /**
+     * Creates a configuration file if it doesn't exist and returns the file path.
+     *
+     * @param {string} file - The path to the configuration file.
+     * @return {Promise<string>} The path of the created or existing configuration file.
+     */
     public static async createConfigJS(file: string): Promise<string> {
         if (await existsAsync(file)) return file;
 

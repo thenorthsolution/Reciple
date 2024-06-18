@@ -46,6 +46,11 @@ export class PackageUpdateChecker extends StrictTypedEmitter<PackageUpdateChecke
     public packages: Collection<string, string> = new Collection();
     public interval?: NodeJS.Timeout;
 
+    /**
+     * Initializes a new instance of the PackageUpdateChecker class.
+     *
+     * @param {PackageUpdateCheckerOptions} options - The options for initializing the class.
+     */
     constructor(options: PackageUpdateCheckerOptions) {
         super();
 
@@ -56,6 +61,12 @@ export class PackageUpdateChecker extends StrictTypedEmitter<PackageUpdateChecke
         if (options.updatecheckIntervalMs) this.startCheckInterval(options.updatecheckIntervalMs);
     }
 
+    /**
+     * Sets up an interval to check for available updates.
+     *
+     * @param {number} ms - The interval time in milliseconds
+     * @return {void} 
+     */
     public startCheckInterval(ms?: number): void {
         if (this.interval) {
             clearInterval(this.interval);
@@ -65,10 +76,20 @@ export class PackageUpdateChecker extends StrictTypedEmitter<PackageUpdateChecke
         if (ms) this.interval = setInterval(() => this.checkForAvailableUpdates(), ms).unref();
     }
 
+    /**
+     * Stops the interval for checking for available updates.
+     *
+     * @return {void} 
+     */
     public stopCheckInterval(): void {
         this.startCheckInterval(0);
     }
 
+    /**
+     * Asynchronously checks for available updates for each package in the `packages` collection.
+     * 
+     * @return {Promise<PackageUpdateCheckerUpdateData[]>} A promise that resolves to an array of `PackageUpdateCheckerUpdateData` objects representing the available updates for each package.
+     */
     public async checkForAvailableUpdates(): Promise<PackageUpdateCheckerUpdateData[]> {
         const packageUpdates: PackageUpdateCheckerUpdateData[] = [];
 
@@ -87,6 +108,15 @@ export class PackageUpdateChecker extends StrictTypedEmitter<PackageUpdateChecke
         return packageUpdates;
     }
 
+    /**
+     * Asynchronously checks the latest available version of a package that satisfies the given version constraint.
+     *
+     * @param {string} pkg - The name of the package to check for updates.
+     * @param {string} version - The current version of the package.
+     * @param {boolean} [allowMajor=false] - Whether to allow major version updates.
+     * @return {Promise<PackageUpdateCheckerUpdateData>} A promise that resolves to an object containing information about the latest update, including the package name, data, current version, updated version, latest version, and update type.
+     * @throws {Error} If no version of the package satisfies the given version constraint.
+     */
     public static async checkLatestUpdate(pkg: string, version: string, allowMajor: boolean = false): Promise<PackageUpdateCheckerUpdateData> {
         const currentSemver = new SemVer(version);
 
@@ -117,6 +147,13 @@ export class PackageUpdateChecker extends StrictTypedEmitter<PackageUpdateChecke
 
     public static async fetchPackageData<T extends AbbreviatedMetadata = AbbreviatedMetadata>(pkg: string, options?: Options): Promise<T>;
     public static async fetchPackageData<T extends FullMetadata = FullMetadata>(pkg: string, options?: FullMetadata): Promise<T>;
+    /**
+     * Asynchronously fetches package data for the given package name.
+     *
+     * @param {string} pkg - The name of the package to fetch data for.
+     * @param {FullMetadata|Options} [options] - Optional options for fetching package data.
+     * @return {Promise<T>} A promise that resolves to the fetched package data.
+     */
     public static async fetchPackageData<T extends FullMetadata|AbbreviatedMetadata = FullMetadata|AbbreviatedMetadata>(pkg: string, options?: FullMetadata|Options): Promise<T> {
         return packageJson(pkg, { ...options, allVersions: true }) as Promise<T>;
     }

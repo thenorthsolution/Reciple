@@ -5,6 +5,13 @@ import { existsAsync } from '@reciple/utils';
 import micromatch from 'micromatch';
 import path from 'node:path';
 
+/**
+ * Recursively finds modules in specified directories based on the given configuration.
+ *
+ * @param {RecipleConfig['modules']} config - The configuration object containing directories and filters.
+ * @param {((filename: string) => Awaitable<boolean>)?} filter - An optional function to filter files.
+ * @return {Promise<string[]>} A promise that resolves to an array of module file paths.
+ */
 export async function findModules(config: RecipleConfig['modules'], filter?: (filename: string) => Awaitable<boolean>): Promise<string[]> {
     const modules: string[] = [];
     const { globby, isDynamicPattern } = await import('globby');
