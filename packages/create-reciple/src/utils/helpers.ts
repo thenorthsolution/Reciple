@@ -5,6 +5,12 @@ import { kleur } from 'fallout-utility/strings';
 import { execSync } from 'node:child_process';
 import path from 'node:path';
 
+/**
+ * Retrieves and returns template metadata from the specified directory.
+ *
+ * @param {string} dir - The directory path to retrieve templates from.
+ * @return {Promise<TemplateMetadata[]>} An array of template metadata objects.
+ */
 export async function getTemplates(dir: string): Promise<TemplateMetadata[]> {
     if (!await existsAsync(dir)) {
         await mkdir(dir, { recursive: true });
@@ -38,6 +44,14 @@ export async function getTemplates(dir: string): Promise<TemplateMetadata[]> {
     return templates;
 }
 
+/**
+ * Recursively copies files from one directory to another.
+ *
+ * @param {string} from - The source directory path.
+ * @param {string} to - The destination directory path.
+ * @param {(f: string) => string} [rename] - An optional function to rename files during the copy process.
+ * @return {Promise<void>} A promise that resolves when the copy is complete.
+ */
 export async function recursiveCopyFiles(from: string, to: string, rename?: (f: string) => string): Promise<void> {
     if ((await stat(from)).isDirectory()) {
         const contents = await readdir(from);
@@ -55,7 +69,14 @@ export async function recursiveCopyFiles(from: string, to: string, rename?: (f: 
     await copyFile(from, to);
 }
 
-export async function runScript(command: string, cwd?: string) {
+/**
+ * Executes a shell command and logs the command before running it. If the command fails, the process exits with a status code of 1.
+ *
+ * @param {string} command - The shell command to execute.
+ * @param {string} [cwd] - The current working directory in which to execute the command. Defaults to the current working directory.
+ * @return {Promise<void>} A promise that resolves when the command has completed.
+ */
+export async function runScript(command: string, cwd?: string): Promise<void> {
     console.log(kleur.gray(kleur.bold('$') + ' ' + command));
     try {
         execSync(`${command}`, { cwd, env: { ...process.env, FORCE_COLOR: '1' }, stdio: ['inherit', 'inherit', 'inherit'] });
@@ -64,6 +85,12 @@ export async function runScript(command: string, cwd?: string) {
     }
 }
 
+/**
+ * Checks if a directory is empty by filtering out hidden files.
+ *
+ * @param {string} dir - The directory path to check.
+ * @return {Promise<boolean>} True if the directory is empty, false otherwise.
+ */
 export async function isDirEmpty(dir: string): Promise<boolean> {
     if (!await existsAsync(dir)) return true;
 

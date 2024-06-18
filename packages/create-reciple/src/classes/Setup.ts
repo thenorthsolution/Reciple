@@ -36,6 +36,12 @@ export class Setup implements SetupOptions {
         this.token = options?.token;
     }
 
+    /**
+     * Prompts the user for input to set up the necessary parameters for creating a reciple.
+     *
+     * @param {boolean} force - Whether to force override existing files in the directory.
+     * @return {Promise<this>} A promise that resolves to the current instance of the Setup class.
+     */
     public async prompt(force: boolean = false): Promise<this> {
         if (this.isDone) return this;
 
@@ -145,11 +151,22 @@ export class Setup implements SetupOptions {
         return isCancel(newToken) ? this.cancelPrompts() : this.token = newToken;
     }
 
+    /**
+     * Cancels the prompts and exits the process with the given reason.
+     *
+     * @param {string} [reason] - The reason for cancelling the prompts.
+     * @return {Promise<never>} - A promise that never resolves.
+     */
     public async cancelPrompts(reason?: string): Promise<never> {
         cancel(reason ?? 'Operation cancelled');
         process.exit(0);
     }
 
+    /**
+     * Returns a SetupOptions object with the current setup details.
+     *
+     * @return {SetupOptions} The setup options object.
+     */
     public toJSON(): SetupOptions {
         return {
             dir: this.dir,

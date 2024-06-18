@@ -52,6 +52,12 @@ export class Addon implements AddonOptions {
         this.registry = options?.registry ?? Addon.NPM_REGISTRY;
     }
 
+    /**
+     * Asynchronously fetches package metadata and downloads the tarball for the specified module.
+     * If the metadata is already available, it will be used instead of fetching it again.
+     *
+     * @return {Promise<AbbreviatedVersion>} The fetched package metadata.
+     */
     public async fetch(): Promise<AbbreviatedVersion> {
         this.metadata ??= await fetchPackage(this.module, { version: this.version, registry: this.registry });
         await this.downloadTarball();
@@ -60,6 +66,12 @@ export class Addon implements AddonOptions {
         return this.metadata;
     }
 
+    /**
+     * Reads the tarball and extracts the necessary data from it.
+     *
+     * @return {Promise<AddonReadTarballData>} The data extracted from the tarball.
+     * @throws {Error} If the tarball is not downloaded or if the temporary directory does not exist.
+     */
     public async readTarball(): Promise<AddonReadTarballData> {
         if (!this.tarball || !this.tmpDir) throw new Error('Tarball not downloaded');
         if (this.tarballData) return this.tarballData;
@@ -86,6 +98,13 @@ export class Addon implements AddonOptions {
         };
     }
 
+    /**
+     * Downloads the tarball from the specified tarballURL if it hasn't been downloaded already.
+     * Verifies the tarball's shasum against the stored tarballShasum.
+     *
+     * @return {Promise<Buffer|undefined>} The downloaded tarball as a Buffer, or undefined if the tarballURL is falsy or the tarball already exists.
+     * @throws {Error} If the tarball cannot be downloaded or if the shasum does not match.
+     */
     protected async downloadTarball(): Promise<Buffer|undefined> {
         if (!this.tarballURL) return;
         if (this.tarball) return this.tarball;
@@ -101,6 +120,12 @@ export class Addon implements AddonOptions {
         return this.tarball = buffer;
     }
 
+    /**
+     * Verifies the tarball's shasum against the stored tarballShasum.
+     *
+     * @param {Buffer} buffer - The tarball buffer to be verified.
+     * @return {Promise<boolean>} A promise that resolves to a boolean indicating whether the shasum matches or not.
+     */
     protected async verifyTarball(buffer: Buffer): Promise<boolean> {
         const i = createHash('sha1');
         i.update(buffer);
