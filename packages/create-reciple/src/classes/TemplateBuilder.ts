@@ -8,8 +8,9 @@ import { packageManagerPlaceholders, packages, root } from '../utils/constants.j
 import { Addon } from './Addon.js';
 import detectIndent from 'detect-indent';
 import { kleur, PackageJson } from 'fallout-utility';
-import { ConfigReader, RecipleConfig } from 'reciple';
+import { RecipleConfig } from 'reciple';
 import ora, { Ora, PersistOptions } from 'ora';
+import { Config } from './Config.js';
 
 export interface TemplateBuilderOptions {
     setup: SetupOptions;
@@ -154,7 +155,22 @@ export class TemplateBuilder implements TemplateBuilderOptions {
      */
     public async setupConfig(): Promise<void> {
         this.setSpinnerText(`Configuring ${kleur.green('reciple.mjs')}...`);
-        await ConfigReader.createConfigJS(path.join(this.dir, 'reciple.mjs'));
+
+        await (new Config({ dir: this.dir })).setup({
+            halts: [
+                {
+                    class: 'CommandErrorHalt',
+                    from: './modules/halts/CommandErrorHalt.js',
+                }
+            ],
+            preconditions: [
+                {
+                    class: 'ExamplePrecondition',
+                    from: './modules/preconditions/ExamplePrecondition.js',
+                }
+            ]
+        });
+
         this.persistSpinner({ symbol: kleur.bold().green('✔'), text: `${kleur.green('reciple.mjs')} configured.` });
     }
 
@@ -185,7 +201,7 @@ export class TemplateBuilder implements TemplateBuilderOptions {
             const moduleContent = this.setup.isTypescript ? addon.tarballData?.initialModuleContent.ts : addon.tarballData?.initialModuleContent.js;
             if (!moduleContent) continue;
 
-            const modulesFolder = path.join(this.dir, this.setup.isTypescript ? 'src' : 'modules');
+            const modulesFolder = path.join(this.dir, this.setup.isTypescript ? 'src' : 'modules', 'addons');
             await mkdir(modulesFolder, { recursive: true });
 
             const modulePath = path.join(modulesFolder, `${addon.module}.${this.setup.isTypescript ? 'ts' : 'js'}`);
