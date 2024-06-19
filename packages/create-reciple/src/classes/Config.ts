@@ -24,7 +24,7 @@ export class Config {
         this.dir = options.dir ?? process.cwd();
     }
 
-    public async setup(options?: Partial<Record<'halts'|'preconditions', { class: string; from: string; }[]>>): Promise<this> {
+    public async setup(options?: Partial<Record<'halts'|'preconditions', { class: string; notDefault?: boolean; from: string; }[]>>): Promise<this> {
         await this.readContent();
 
         if (options?.preconditions?.length) this.addPreconditions(options.preconditions);
@@ -34,17 +34,17 @@ export class Config {
         return this;
     }
 
-    public addPreconditions(preconditions: { class: string; from: string; }[]): void {
+    public addPreconditions(preconditions: { class: string; notDefault?: boolean; from: string; }[]): void {
         this.content = this.content.replaceAll(`new CommandPermissionsPrecondition()`, `new CommandPermissionsPrecondition(),\n${this.indent.repeat(2)}${preconditions.map(precondition => `new ${precondition.class}(),`).join('\n' + this.indent.repeat(2))}`);
         for (const precondition of preconditions) {
-            this.addImport(precondition.class, precondition.from);
+            this.addImport(precondition.notDefault !== true ? [precondition.class] : precondition.class, precondition.from);
         }
     }
 
-    public addHalts(halts: { class: string; from: string; }[]): void {
+    public addHalts(halts: { class: string; notDefault?: boolean; from: string; }[]): void {
         this.content = this.content.replaceAll(`commandHalts: []`, `commandHalts: [\n${this.indent.repeat(2)}${halts.map(halt => `new ${halt.class}(),`).join('\n' + this.indent.repeat(2))}\n${this.indent}]`);
         for (const halt of halts) {
-            this.addImport(halt.class, halt.from);
+            this.addImport(halt.notDefault !== true ? [halt.class] : halt.class, halt.from);
         }
     }
 
