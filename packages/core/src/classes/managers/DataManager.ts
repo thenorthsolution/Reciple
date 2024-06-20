@@ -1,6 +1,5 @@
 import { ReadonlyCollection } from '@discordjs/collection';
-import { randomBytes } from 'node:crypto';
-import { Collection } from 'discord.js';
+import { Collection, SnowflakeGenerateOptions, SnowflakeUtil } from 'discord.js';
 
 export abstract class DataManager<T> {
     protected _cache: Collection<string, T> = new Collection();
@@ -9,7 +8,7 @@ export abstract class DataManager<T> {
 
     constructor() {}
 
-    public static generateId(): string {
-        return randomBytes(8).toString('hex');
+    public static generateId(options?: SnowflakeGenerateOptions): string {
+        return SnowflakeUtil.generate(options).toString();
     }
 }
