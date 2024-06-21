@@ -3,13 +3,13 @@ import { AnyCommandBuilder, AnyCommandExecuteData, AnyCommandHaltTriggerData, An
 import { CommandPrecondition, CommandPreconditionResolvable, CommandPreconditionResultData } from '../structures/CommandPrecondition.js';
 import { AnySlashCommandBuilder, SlashCommandBuilder, SlashCommandExecuteData } from '../builders/SlashCommandBuilder.js';
 import { ContextMenuCommandBuilder, ContextMenuCommandExecuteData } from '../builders/ContextMenuCommandBuilder.js';
+import { CommandHalt, CommandHaltResolvable, CommandHaltResultData } from '../structures/CommandHalt.js';
 import { MessageCommandBuilder, MessageCommandExecuteData } from '../builders/MessageCommandBuilder.js';
 import { RecipleClient } from '../structures/RecipleClient.js';
 import { CommandHaltReason, CommandType } from '../../types/constants.js';
+import { RecipleError } from '../structures/RecipleError.js';
 import { Utils } from '../structures/Utils.js';
 import defaultsDeep from 'lodash.defaultsdeep';
-import { CommandHalt, CommandHaltResolvable, CommandHaltResultData } from '../structures/CommandHalt.js';
-import { RecipleError } from '../structures/RecipleError.js';
 
 export interface CommandManagerRegisterCommandsOptions extends Omit<Exclude<RecipleClientConfig['applicationCommandRegister'], undefined>, 'enabled'> {
     contextMenuCommands?: Partial<RecipleClientInteractionBasedCommandConfigOptions> & {

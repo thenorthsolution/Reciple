@@ -20,19 +20,19 @@ export interface CommandPreconditionData {
      * @param execute Execute data for the command.
      * @param precondition The precondition that is being executed.
      */
-    contextMenuCommandExecute?: (execute: ContextMenuCommandExecuteData, precondition: CommandPrecondition) => Awaitable<CommandPreconditionResultResolvable<ContextMenuCommandExecuteData>>;
+    contextMenuCommandExecute?(execute: ContextMenuCommandExecuteData, precondition: CommandPrecondition): Awaitable<CommandPreconditionResultResolvable<ContextMenuCommandExecuteData>>;
     /**
      * The execute function for message commands.
      * @param execute Execute data for the command.
      * @param precondition The precondition that is being executed.
      */
-    messageCommandExecute?: (execute: MessageCommandExecuteData, precondition: CommandPrecondition) => Awaitable<CommandPreconditionResultResolvable<MessageCommandExecuteData>>;
+    messageCommandExecute?(execute: MessageCommandExecuteData, precondition: CommandPrecondition): Awaitable<CommandPreconditionResultResolvable<MessageCommandExecuteData>>;
     /**
      * The execute function for slash commands.
      * @param execute Execute data for the command.
      * @param precondition The precondition that is being executed.
      */
-    slashCommandExecute?: (execute: SlashCommandExecuteData, precondition: CommandPrecondition) => Awaitable<CommandPreconditionResultResolvable<SlashCommandExecuteData>>;
+    slashCommandExecute?(execute: SlashCommandExecuteData, precondition: CommandPrecondition): Awaitable<CommandPreconditionResultResolvable<SlashCommandExecuteData>>;
 }
 
 export type CommandPreconditionResultResolvable<T extends AnyCommandExecuteData = AnyCommandExecuteData, D extends any = any> = boolean|string|Omit<CommandPreconditionResultData<T, D>, 'executeData'|'precondition'>;

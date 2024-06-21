@@ -1,11 +1,11 @@
 import { ApplicationCommandType, Awaitable, ContextMenuCommandInteraction, ContextMenuCommandType, ContextMenuCommandBuilder as DiscordJsContextMenuCommandBuilder, JSONEncodable, PermissionsBitField, PermissionResolvable, RestOrArray, RESTPostAPIContextMenuApplicationCommandsJSONBody, SlashCommandAssertions, isJSONEncodable } from 'discord.js';
+import { CommandHalt, CommandHaltData, CommandHaltResolvable } from '../structures/CommandHalt.js';
 import { BaseCommandBuilder, BaseCommandBuilderData } from './BaseCommandBuilder.js';
 import { CommandHaltReason, CommandType } from '../../types/constants.js';
-import { RecipleClient } from '../structures/RecipleClient.js';
 import { CommandHaltTriggerData } from '../../types/structures.js';
+import { RecipleClient } from '../structures/RecipleClient.js';
 import { CooldownData } from '../structures/Cooldown.js';
 import { Mixin } from 'ts-mixer';
-import { CommandHalt, CommandHaltResolvable, CommandHaltResultResolvable } from '../structures/CommandHalt.js';
 
 export interface ContextMenuCommandExecuteData {
     type: CommandType.ContextMenuCommand;
@@ -17,7 +17,7 @@ export interface ContextMenuCommandExecuteData {
 export type ContextMenuCommandHaltTriggerData = CommandHaltTriggerData<CommandType.ContextMenuCommand>;
 
 export type ContextMenuCommandExecuteFunction = (executeData: ContextMenuCommandExecuteData) => Awaitable<void>;
-export type ContextMenuCommandHaltFunction = (haltData: ContextMenuCommandHaltTriggerData) => Awaitable<CommandHaltResultResolvable<CommandType.ContextMenuCommand>>;
+export type ContextMenuCommandHaltFunction = CommandHaltData['contextMenuCommandHalt'];
 
 export interface ContextMenuCommandBuilderData extends BaseCommandBuilderData, Omit<RESTPostAPIContextMenuApplicationCommandsJSONBody, 'options'|'description'|'description_localizations'|'type'> {
     command_type: CommandType.ContextMenuCommand;

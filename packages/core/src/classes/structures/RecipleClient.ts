@@ -1,11 +1,11 @@
-import { AnyCommandExecuteData, RecipleClientConfig } from '../../types/structures.js';
 import { ApplicationCommand, Awaitable, Client, ClientEvents, Collection } from 'discord.js';
-import { version } from '../../types/constants.js';
+import { AnyCommandExecuteData, RecipleClientConfig } from '../../types/structures.js';
 import { CommandPreconditionResultData } from './CommandPrecondition.js';
 import { CooldownManager } from '../managers/CooldownManager.js';
 import { CommandManager } from '../managers/CommandManager.js';
 import { ModuleManager } from '../managers/ModuleManager.js';
 import { CommandHaltResultData } from './CommandHalt.js';
+import { version } from '../../types/constants.js';
 import { Logger } from 'fallout-utility/Logger';
 import { If } from 'fallout-utility/types';
 

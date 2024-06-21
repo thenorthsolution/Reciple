@@ -1,11 +1,11 @@
 import { Awaitable, ChatInputCommandInteraction, JSONEncodable, SlashCommandBuilder as DiscordJsSlashCommandBuilder, RESTPostAPIChatInputApplicationCommandsJSONBody, ApplicationCommandType, SharedSlashCommandOptions, ApplicationCommandOptionType, SlashCommandStringOption, SlashCommandIntegerOption, SlashCommandBooleanOption, SlashCommandUserOption, SlashCommandChannelOption, ApplicationCommandOptionAllowedChannelTypes, SlashCommandRoleOption, SlashCommandMentionableOption, SlashCommandNumberOption, SlashCommandAttachmentOption, SlashCommandSubcommandBuilder, SlashCommandSubcommandGroupBuilder, isJSONEncodable, PermissionsBitField, PermissionResolvable, RestOrArray } from 'discord.js';
 import { AnyNonSubcommandSlashCommandOptionBuilder, AnySlashCommandOptionBuilder, AnySlashCommandOptionData, CommandHaltTriggerData } from '../../types/structures.js';
+import { CommandHalt, CommandHaltData, CommandHaltResolvable } from '../structures/CommandHalt.js';
 import { BaseCommandBuilder, BaseCommandBuilderData } from './BaseCommandBuilder.js';
 import { CommandHaltReason, CommandType } from '../../types/constants.js';
 import { RecipleClient } from '../structures/RecipleClient.js';
 import { CooldownData } from '../structures/Cooldown.js';
 import { Mixin } from 'ts-mixer';
-import { CommandHalt, CommandHaltResolvable, CommandHaltResultResolvable } from '../structures/CommandHalt.js';
 
 export interface SlashCommandExecuteData {
     type: CommandType.SlashCommand;
@@ -17,7 +17,7 @@ export interface SlashCommandExecuteData {
 export type SlashCommandHaltTriggerData = CommandHaltTriggerData<CommandType.SlashCommand>;
 
 export type SlashCommandExecuteFunction = (executeData: SlashCommandExecuteData) => Awaitable<void>;
-export type SlashCommandHaltFunction = (haltData: SlashCommandHaltTriggerData) => Awaitable<CommandHaltResultResolvable<CommandType.SlashCommand>>;
+export type SlashCommandHaltFunction = CommandHaltData['slashCommandHalt'];
 
 export interface SlashCommandBuilderData extends BaseCommandBuilderData, Omit<RESTPostAPIChatInputApplicationCommandsJSONBody, 'type'> {
     command_type: CommandType.SlashCommand;

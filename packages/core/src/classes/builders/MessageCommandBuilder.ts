@@ -1,16 +1,16 @@
 import { MessageCommandOptionBuilder, MessageCommandOptionResolvable } from './MessageCommandOptionBuilder.js';
 import { Awaitable, JSONEncodable, RestOrArray, Message, normalizeArray, isJSONEncodable } from 'discord.js';
+import { CommandHalt, CommandHaltData, CommandHaltResolvable } from '../structures/CommandHalt.js';
 import { MessageCommandOptionValidators } from '../validators/MessageCommandOptionValidators.js';
 import { MessageCommandOptionManager } from '../managers/MessageCommandOptionManager.js';
 import { MessageCommandValidators } from '../validators/MessageCommandValidators.js';
 import { BaseCommandBuilder, BaseCommandBuilderData } from './BaseCommandBuilder.js';
-import { CommandHaltReason, CommandType } from '../../types/constants.js';
 import { CommandData, CommandHaltTriggerData } from '../../types/structures.js';
+import { CommandHaltReason, CommandType } from '../../types/constants.js';
 import { RecipleClient } from '../structures/RecipleClient.js';
 import { RecipleError } from '../structures/RecipleError.js';
 import { CooldownData } from '../structures/Cooldown.js';
 import { getCommand } from 'fallout-utility/commands';
-import { CommandHalt, CommandHaltResolvable, CommandHaltResultResolvable } from '../structures/CommandHalt.js';
 
 export interface MessageCommandExecuteData {
     type: CommandType.MessageCommand;
@@ -24,7 +24,7 @@ export interface MessageCommandExecuteData {
 export type MessageCommandHaltTriggerData = CommandHaltTriggerData<CommandType.MessageCommand>;
 
 export type MessageCommandExecuteFunction = (executeData: MessageCommandExecuteData) => Awaitable<void>;
-export type MessageCommandHaltFunction = (haltData: MessageCommandHaltTriggerData) => Awaitable<CommandHaltResultResolvable<CommandType.MessageCommand>>;
+export type MessageCommandHaltFunction = CommandHaltData['messageCommandHalt'];
 
 export interface MessageCommandBuilderData extends BaseCommandBuilderData {
     command_type: CommandType.MessageCommand;

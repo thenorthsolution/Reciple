@@ -1,9 +1,9 @@
-import { isJSONEncodable, JSONEncodable } from 'discord.js';
-import { CommandType } from '../../types/constants.js';
+import { ContextMenuCommandHaltTriggerData } from '../builders/ContextMenuCommandBuilder.js';
+import { MessageCommandHaltTriggerData } from '../builders/MessageCommandBuilder.js';
+import { SlashCommandHaltTriggerData } from '../builders/SlashCommandBuilder.js';
+import { Awaitable, isJSONEncodable, JSONEncodable } from 'discord.js';
 import { AnyCommandHaltTriggerData } from '../../types/structures.js';
-import { ContextMenuCommandHaltFunction, ContextMenuCommandHaltTriggerData } from '../builders/ContextMenuCommandBuilder.js';
-import { MessageCommandHaltFunction, MessageCommandHaltTriggerData } from '../builders/MessageCommandBuilder.js';
-import { SlashCommandHaltFunction, SlashCommandHaltTriggerData } from '../builders/SlashCommandBuilder.js';
+import { CommandType } from '../../types/constants.js';
 
 export interface CommandHaltData {
     /**
@@ -18,15 +18,15 @@ export interface CommandHaltData {
     /**
      * The function that will be called when a context menu command halt is triggered.
      */
-    contextMenuCommandHalt?: ContextMenuCommandHaltFunction;
+    contextMenuCommandHalt?(haltData: ContextMenuCommandHaltTriggerData): Awaitable<CommandHaltResultResolvable<CommandType.ContextMenuCommand>>;
     /**
      * The function that will be called when a message command halt is triggered.
      */
-    messageCommandHalt?: MessageCommandHaltFunction;
+    messageCommandHalt?(haltData: MessageCommandHaltTriggerData): Awaitable<CommandHaltResultResolvable<CommandType.MessageCommand>>;
     /**
      * The function that will be called when a slash command halt is triggered.
      */
-    slashCommandHalt?: SlashCommandHaltFunction;
+    slashCommandHalt?(haltData: SlashCommandHaltTriggerData): Awaitable<CommandHaltResultResolvable<CommandType.SlashCommand>>;
 }
 
 export type CommandHaltResultResolvable<T extends CommandType = CommandType, D extends any = any> = null|undefined|boolean|string|Omit<CommandHaltResultData<T, D>, 'halt'|'triggerData'>
@@ -62,9 +62,9 @@ export interface CommandHaltResultData<T extends CommandType = CommandType, D ex
 
 export class CommandHalt implements CommandHaltData {
     public readonly id: string;
-    public readonly contextMenuCommandHalt?: ContextMenuCommandHaltFunction;
-    public readonly messageCommandHalt?: MessageCommandHaltFunction;
-    public readonly slashCommandHalt?: SlashCommandHaltFunction;
+    public readonly contextMenuCommandHalt?: CommandHaltData['contextMenuCommandHalt'];
+    public readonly messageCommandHalt?: CommandHaltData['messageCommandHalt'];
+    public readonly slashCommandHalt?: CommandHaltData['slashCommandHalt'];
 
     public disabled: boolean;
 

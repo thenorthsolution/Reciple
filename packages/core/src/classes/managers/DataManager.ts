@@ -1,5 +1,5 @@
-import { ReadonlyCollection } from '@discordjs/collection';
 import { Collection, SnowflakeGenerateOptions, SnowflakeUtil } from 'discord.js';
+import { ReadonlyCollection } from '@discordjs/collection';
 
 export abstract class DataManager<T> {
     protected _cache: Collection<string, T> = new Collection();
