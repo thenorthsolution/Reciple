@@ -1,7 +1,7 @@
 import { MessageCommandOptionBuilderData, MessageCommandOptionBuilderResolveValueOptions, MessageCommandOptionManager } from '@reciple/core';
-import { Mentions } from '@reciple/utils';
-import { Channel, ChannelType, normalizeArray, RestOrArray } from 'discord.js';
 import { BaseMessageCommandOptionBuilder } from '../structures/BaseMessageCommandOptionBuilder.js';
+import { Channel, ChannelType, normalizeArray, RestOrArray } from 'discord.js';
+import { Mentions } from '@reciple/utils';
 
 export interface MessageCommandChannelOptionBuilderData extends MessageCommandOptionBuilderData<Channel|null> {
     channel_types?: ChannelType[];

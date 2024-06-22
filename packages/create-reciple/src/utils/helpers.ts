@@ -1,8 +1,8 @@
 import { copyFile, mkdir, readFile, readdir, stat } from 'node:fs/promises';
-import { existsAsync } from '@reciple/utils';
 import { TemplateJson, TemplateMetadata } from './types.js';
 import { kleur } from 'fallout-utility/strings';
 import { execSync } from 'node:child_process';
+import { existsAsync } from '@reciple/utils';
 import path from 'node:path';
 
 /**

@@ -1,8 +1,8 @@
-import { existsAsync } from '@reciple/utils';
-import { readFile, writeFile } from 'fs/promises';
-import path from 'path';
-import { ConfigReader } from 'reciple';
+import { readFile, writeFile } from 'node:fs/promises';
 import detectIndentSize from 'detect-indent';
+import { existsAsync } from '@reciple/utils';
+import { ConfigReader } from 'reciple';
+import path from 'node:path';
 
 export interface ConfigOptions {
     dir?: string;

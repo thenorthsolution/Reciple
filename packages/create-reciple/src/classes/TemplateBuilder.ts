@@ -1,16 +1,16 @@
-import { existsAsync } from '@reciple/utils';
-import { TemplateMetadata } from '../utils/types.js';
-import { SetupOptions } from './Setup.js';
-import { mkdir, readFile, writeFile } from 'fs/promises';
-import { recursiveCopyFiles, runScript } from '../utils/helpers.js';
-import path from 'path';
 import { packageManagerPlaceholders, packages, root } from '../utils/constants.js';
-import { Addon } from './Addon.js';
-import detectIndent from 'detect-indent';
+import { recursiveCopyFiles, runScript } from '../utils/helpers.js';
+import { mkdir, readFile, writeFile } from 'fs/promises';
+import { TemplateMetadata } from '../utils/types.js';
 import { kleur, PackageJson } from 'fallout-utility';
-import { RecipleConfig } from 'reciple';
 import ora, { Ora, PersistOptions } from 'ora';
+import { existsAsync } from '@reciple/utils';
+import { SetupOptions } from './Setup.js';
+import detectIndent from 'detect-indent';
+import { RecipleConfig } from 'reciple';
 import { Config } from './Config.js';
+import { Addon } from './Addon.js';
+import path from 'node:path';
 
 export interface TemplateBuilderOptions {
     setup: SetupOptions;

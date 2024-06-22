@@ -1,11 +1,11 @@
 import { cancel, confirm, intro, isCancel, multiselect, password, select, text } from '@clack/prompts';
 import { PackageManager, resolvePackageManager } from '@reciple/utils';
-import { kleur } from 'fallout-utility/strings';
-import { existsSync, statSync } from 'fs';
-import path from 'path';
-import { Addon } from './Addon.js';
 import { packageJson, packageManagers } from '../utils/constants.js';
 import { isDirEmpty } from '../utils/helpers.js';
+import { kleur } from 'fallout-utility/strings';
+import { existsSync, statSync } from 'node:fs';
+import { Addon } from './Addon.js';
+import path from 'node:path';
 
 export interface SetupOptions {
     dir?: string;

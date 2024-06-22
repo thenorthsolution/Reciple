@@ -1,10 +1,10 @@
 #!/usr/bin/env node
+import { dirname, join, resolve } from 'node:path';
+import { existsAsync } from '@reciple/utils';
 import { readFile } from 'node:fs/promises';
+import { fileURLToPath } from 'node:url';
 import { DocsParser } from './index.js';
 import { Command } from 'commander';
-import { dirname, join, resolve } from 'node:path';
-import { fileURLToPath } from 'node:url';
-import { existsAsync } from '@reciple/utils';
 
 interface Options {
     input: string[];

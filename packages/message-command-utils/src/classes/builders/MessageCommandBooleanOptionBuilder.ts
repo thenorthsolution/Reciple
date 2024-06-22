@@ -1,6 +1,6 @@
 import { MessageCommandOptionBuilderData, MessageCommandOptionBuilderResolveValueOptions, MessageCommandOptionManager } from '@reciple/core';
-import { boolean, isBooleanable } from 'boolean';
 import { BaseMessageCommandOptionBuilder } from '../structures/BaseMessageCommandOptionBuilder.js';
+import { boolean, isBooleanable } from 'boolean';
 
 export interface MessageCommandBooleanOptionBuilderData extends MessageCommandOptionBuilderData<boolean> {}
 

@@ -1,11 +1,11 @@
 import fetchPackage, { AbbreviatedVersion } from 'package-json';
 import { PackageJson } from 'fallout-utility';
-import { tgz } from 'compressing';
-import { createHash } from 'crypto';
-import path from 'path';
-import { fileURLToPath } from 'url';
-import { readFile } from 'fs/promises';
 import { existsAsync } from '@reciple/utils';
+import { readFile } from 'node:fs/promises';
+import { fileURLToPath } from 'node:url';
+import { createHash } from 'node:crypto';
+import { tgz } from 'compressing';
+import path from 'node:path';
 
 export interface AddonOptions {
     module: string;

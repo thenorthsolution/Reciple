@@ -1,11 +1,11 @@
 import { isMainThread, parentPort, threadId } from 'node:worker_threads';
+import { PackageUpdateChecker } from '@reciple/utils';
 import { buildVersion } from '@reciple/core';
 import { fileURLToPath } from 'node:url';
 import { readFileSync } from 'node:fs';
 import { Command } from 'commander';
-import path from 'node:path';
-import { PackageUpdateChecker } from '@reciple/utils';
 import { coerce } from 'semver';
+import path from 'node:path';
 
 const { version, description } = JSON.parse(readFileSync(path.join(path.dirname(fileURLToPath(import.meta.url)), '../../package.json'), 'utf-8'));
 const originalCwd = process.cwd();
