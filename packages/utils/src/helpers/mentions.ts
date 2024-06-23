@@ -1,5 +1,5 @@
 import type { Client, GuildMember, GuildResolvable, User, UserResolvable } from 'discord.js';
-import { FormattingPatterns, APIUser, APIMessage } from 'discord-api-types/v10';
+import { FormattingPatterns, type APIUser, type APIMessage } from 'discord-api-types/v10';
 import { isValidSnowflake } from './validators.js';
 
 export interface FetchMentionOrIdOptions {

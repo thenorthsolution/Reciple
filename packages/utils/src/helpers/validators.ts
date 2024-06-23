@@ -1,4 +1,4 @@
-import { Snowflake } from 'discord-api-types/globals';
+import type { Snowflake } from 'discord-api-types/globals';
 
 /**
  * Check if string is a valid Discord snowflake

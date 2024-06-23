@@ -1,5 +1,5 @@
-import { AnyCommandBuilder, AnyCommandBuilderData } from '../../types/structures.js';
-import { BaseCommandBuilderData } from '../builders/BaseCommandBuilder.js';
+import type { AnyCommandBuilder, AnyCommandBuilderData } from '../../types/structures.js';
+import type { BaseCommandBuilderData } from '../builders/BaseCommandBuilder.js';
 import { buildVersion } from '../../types/constants.js';
 import { stripVTControlCharacters } from 'node:util';
 import { kleur } from 'fallout-utility/strings';

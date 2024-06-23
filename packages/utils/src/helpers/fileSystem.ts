@@ -1,5 +1,5 @@
 import { lstat, stat } from 'node:fs/promises';
-import { PathLike } from 'node:fs';
+import type { PathLike } from 'node:fs';
 
 /**
  * 

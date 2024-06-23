@@ -1,4 +1,4 @@
-import { BaseFetchOptions, Client, DMChannel, Guild, GuildTextBasedChannel, If, Message, PartialDMChannel, PartialGroupDMChannel, TextBasedChannel } from 'discord.js';
+import type { Guild, TextBasedChannel, Message, If, GuildTextBasedChannel, PartialGroupDMChannel, DMChannel, PartialDMChannel, Client, BaseFetchOptions } from 'discord.js';
 
 /**
  * Message URL parse data

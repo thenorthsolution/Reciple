@@ -1,8 +1,8 @@
-import { ContextMenuCommandExecuteData } from '../builders/ContextMenuCommandBuilder.js';
-import { MessageCommandExecuteData } from '../builders/MessageCommandBuilder.js';
-import { SlashCommandExecuteData } from '../builders/SlashCommandBuilder.js';
-import { Awaitable, isJSONEncodable, JSONEncodable } from 'discord.js';
-import { AnyCommandExecuteData } from '../../types/structures.js';
+import type { ContextMenuCommandExecuteData } from '../builders/ContextMenuCommandBuilder.js';
+import type { MessageCommandExecuteData } from '../builders/MessageCommandBuilder.js';
+import type { SlashCommandExecuteData } from '../builders/SlashCommandBuilder.js';
+import { isJSONEncodable, type Awaitable, type JSONEncodable } from 'discord.js';
+import type { AnyCommandExecuteData } from '../../types/structures.js';
 import { CommandType } from '../../types/constants.js';
 
 export interface CommandPreconditionData {

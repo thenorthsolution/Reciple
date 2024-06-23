@@ -1,7 +1,7 @@
-import { ContextMenuCommandBuilder, ContextMenuCommandResolvable } from '../builders/ContextMenuCommandBuilder.js';
-import { MessageCommandBuilder, MessageCommandResolvable } from '../builders/MessageCommandBuilder.js';
-import { SlashCommandBuilder, SlashCommandResolvable } from '../builders/SlashCommandBuilder.js';
-import { AnyCommandBuilder, AnyCommandResolvable } from '../../types/structures.js';
+import { ContextMenuCommandBuilder, type ContextMenuCommandResolvable } from '../builders/ContextMenuCommandBuilder.js';
+import { MessageCommandBuilder, type MessageCommandResolvable } from '../builders/MessageCommandBuilder.js';
+import { SlashCommandBuilder, type SlashCommandResolvable } from '../builders/SlashCommandBuilder.js';
+import type { AnyCommandBuilder, AnyCommandResolvable } from '../../types/structures.js';
 import { CommandType } from '../../types/constants.js';
 import { isJSONEncodable } from 'discord.js';
 

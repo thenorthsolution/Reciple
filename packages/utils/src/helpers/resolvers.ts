@@ -1,5 +1,5 @@
-import { RestOrArray, normalizeArray } from 'fallout-utility';
-import { DotenvConfigOptions, config } from 'dotenv';
+import { type RestOrArray, normalizeArray } from 'fallout-utility';
+import { type DotenvConfigOptions, config } from 'dotenv';
 
 /**
  * Resolve env from string

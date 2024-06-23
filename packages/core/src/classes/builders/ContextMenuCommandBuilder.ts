@@ -1,10 +1,10 @@
-import { ApplicationCommandType, Awaitable, ContextMenuCommandInteraction, ContextMenuCommandType, ContextMenuCommandBuilder as DiscordJsContextMenuCommandBuilder, JSONEncodable, PermissionsBitField, PermissionResolvable, RestOrArray, RESTPostAPIContextMenuApplicationCommandsJSONBody, SlashCommandAssertions, isJSONEncodable } from 'discord.js';
-import { CommandHalt, CommandHaltData, CommandHaltResolvable } from '../structures/CommandHalt.js';
-import { BaseCommandBuilder, BaseCommandBuilderData } from './BaseCommandBuilder.js';
+import { ApplicationCommandType, type Awaitable, type ContextMenuCommandInteraction, type ContextMenuCommandType, ContextMenuCommandBuilder as DiscordJsContextMenuCommandBuilder, isJSONEncodable, type JSONEncodable, PermissionsBitField, type PermissionResolvable, type RestOrArray, type RESTPostAPIContextMenuApplicationCommandsJSONBody, SlashCommandAssertions } from 'discord.js';
+import type { CommandHalt, CommandHaltData, CommandHaltResolvable } from '../structures/CommandHalt.js';
+import { BaseCommandBuilder, type BaseCommandBuilderData } from './BaseCommandBuilder.js';
 import { CommandHaltReason, CommandType } from '../../types/constants.js';
-import { CommandHaltTriggerData } from '../../types/structures.js';
-import { RecipleClient } from '../structures/RecipleClient.js';
-import { CooldownData } from '../structures/Cooldown.js';
+import type { CommandHaltTriggerData } from '../../types/structures.js';
+import type { RecipleClient } from '../structures/RecipleClient.js';
+import type { CooldownData } from '../structures/Cooldown.js';
 import { Mixin } from 'ts-mixer';
 
 export interface ContextMenuCommandExecuteData {

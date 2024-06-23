@@ -1,6 +1,6 @@
-import { MessageCommandOptionBuilder, MessageCommandOptionBuilderResolveValueOptions } from '../builders/MessageCommandOptionBuilder.js';
+import type { MessageCommandOptionBuilder, MessageCommandOptionBuilderResolveValueOptions } from '../builders/MessageCommandOptionBuilder.js';
 import { MessageCommandBuilder } from '../builders/MessageCommandBuilder.js';
-import { CommandData } from '../../types/structures.js';
+import type { CommandData } from '../../types/structures.js';
 import { RecipleClient } from './RecipleClient.js';
 import { Message } from 'discord.js';
 

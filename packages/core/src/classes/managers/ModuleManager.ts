@@ -1,9 +1,9 @@
 import { RecipleModuleDataValidators } from '../validators/RecipleModuleDataValidators.js';
-import { Awaitable, Collection, Constructable, isJSONEncodable } from 'discord.js';
-import { RecipleModule, RecipleModuleData } from '../structures/RecipleModule.js';
+import { isJSONEncodable, type Awaitable, type Collection, type Constructable } from 'discord.js';
+import { RecipleModule, type RecipleModuleData } from '../structures/RecipleModule.js';
 import { StrictTypedEmitter } from 'fallout-utility/StrictTypedEmitter';
-import { RecursiveDefault, recursiveDefaults } from '@reciple/utils';
-import { AnyCommandResolvable } from '../../types/structures.js';
+import { recursiveDefaults, type RecursiveDefault } from '@reciple/utils';
+import type { AnyCommandResolvable } from '../../types/structures.js';
 import { RecipleClient } from '../structures/RecipleClient.js';
 import { RecipleError } from '../structures/RecipleError.js';
 import { CommandType } from '../../types/constants.js';

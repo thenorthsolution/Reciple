@@ -1,8 +1,8 @@
-import { ContextMenuCommandHaltTriggerData } from '../builders/ContextMenuCommandBuilder.js';
-import { MessageCommandHaltTriggerData } from '../builders/MessageCommandBuilder.js';
-import { SlashCommandHaltTriggerData } from '../builders/SlashCommandBuilder.js';
-import { Awaitable, isJSONEncodable, JSONEncodable } from 'discord.js';
-import { AnyCommandHaltTriggerData } from '../../types/structures.js';
+import type { ContextMenuCommandHaltTriggerData } from '../builders/ContextMenuCommandBuilder.js';
+import type { MessageCommandHaltTriggerData } from '../builders/MessageCommandBuilder.js';
+import type { SlashCommandHaltTriggerData } from '../builders/SlashCommandBuilder.js';
+import { isJSONEncodable, type Awaitable, type JSONEncodable } from 'discord.js';
+import type { AnyCommandHaltTriggerData } from '../../types/structures.js';
 import { CommandType } from '../../types/constants.js';
 
 export interface CommandHaltData {

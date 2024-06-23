@@ -2,7 +2,7 @@
 
 import { ContextMenuCommandBuilder, Logger, MessageCommandBuilder, SlashCommandBuilder, buildVersion } from '@reciple/core';
 import { createLogger, addEventListenersToClient } from './utils/logger.js';
-import { ProcessInformation, RecipleClient, findModules } from './index.js';
+import { type ProcessInformation, RecipleClient, findModules } from './index.js';
 import { command, cli, cliVersion, updateChecker } from './utils/cli.js';
 import { setTimeout as setTimeoutAsync } from 'node:timers/promises';
 import { existsAsync, resolveEnvProtocol } from '@reciple/utils';

@@ -1,5 +1,5 @@
-import { Cooldown, CooldownData } from '../structures/Cooldown.js';
-import { RecipleClient } from '../structures/RecipleClient.js';
+import { Cooldown, type CooldownData } from '../structures/Cooldown.js';
+import type { RecipleClient } from '../structures/RecipleClient.js';
 import { DataManager } from './DataManager.js';
 
 export interface CooldownSweeperOptions {

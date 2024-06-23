@@ -1,4 +1,4 @@
-import { MessageCommandResolvable } from '@reciple/core';
+import type { MessageCommandResolvable } from '@reciple/core';
 import { isJSONEncodable } from 'discord.js';
 
 export interface CreateMessageCommandUsageOptions {

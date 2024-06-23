@@ -1,13 +1,13 @@
-import { Awaitable, ClientOptions, Collection, Guild, Message, SlashCommandAttachmentOption, SlashCommandBooleanOption, SlashCommandChannelOption, SlashCommandIntegerOption, SlashCommandMentionableOption, SlashCommandNumberOption, SlashCommandRoleOption, SlashCommandStringOption, SlashCommandSubcommandBuilder, SlashCommandSubcommandGroupBuilder, SlashCommandUserOption } from 'discord.js';
-import { ContextMenuCommandBuilder, ContextMenuCommandBuilderData, ContextMenuCommandExecuteData, ContextMenuCommandExecuteFunction, ContextMenuCommandHaltTriggerData, ContextMenuCommandHaltFunction, ContextMenuCommandResolvable } from '../classes/builders/ContextMenuCommandBuilder.js';
-import { MessageCommandBuilder, MessageCommandBuilderData, MessageCommandExecuteData, MessageCommandExecuteFunction, MessageCommandExecuteOptions, MessageCommandHaltTriggerData, MessageCommandHaltFunction, MessageCommandResolvable } from '../classes/builders/MessageCommandBuilder.js';
-import { AnySlashCommandBuilder, SlashCommandBuilderData, SlashCommandExecuteData, SlashCommandExecuteFunction, SlashCommandHaltTriggerData, SlashCommandHaltFunction, SlashCommandResolvable } from '../classes/builders/SlashCommandBuilder.js';
-import { CommandPreconditionResolvable, CommandPreconditionResultData } from '../classes/structures/CommandPrecondition.js';
-import { MessageCommandOptionValue } from '../classes/structures/MessageCommandOptionValue.js';
-import { CooldownSweeperOptions } from '../classes/managers/CooldownManager.js';
-import { CommandHaltReason, CommandType } from './constants.js';
-import { Cooldown } from '../classes/structures/Cooldown.js';
-import { CommandHaltResolvable, CommandHaltResultData } from '../classes/structures/CommandHalt.js';
+import type { Awaitable, ClientOptions, Collection, Guild, Message, SlashCommandAttachmentOption, SlashCommandBooleanOption, SlashCommandChannelOption, SlashCommandIntegerOption, SlashCommandMentionableOption, SlashCommandNumberOption, SlashCommandRoleOption, SlashCommandStringOption, SlashCommandSubcommandBuilder, SlashCommandSubcommandGroupBuilder, SlashCommandUserOption } from 'discord.js';
+import type { ContextMenuCommandBuilder, ContextMenuCommandBuilderData, ContextMenuCommandExecuteData, ContextMenuCommandExecuteFunction, ContextMenuCommandHaltTriggerData, ContextMenuCommandHaltFunction, ContextMenuCommandResolvable } from '../classes/builders/ContextMenuCommandBuilder.js';
+import type { MessageCommandBuilder, MessageCommandBuilderData, MessageCommandExecuteData, MessageCommandExecuteFunction, MessageCommandExecuteOptions, MessageCommandHaltTriggerData, MessageCommandHaltFunction, MessageCommandResolvable } from '../classes/builders/MessageCommandBuilder.js';
+import type { AnySlashCommandBuilder, SlashCommandBuilderData, SlashCommandExecuteData, SlashCommandExecuteFunction, SlashCommandHaltTriggerData, SlashCommandHaltFunction, SlashCommandResolvable } from '../classes/builders/SlashCommandBuilder.js';
+import type { CommandPreconditionResolvable, CommandPreconditionResultData } from '../classes/structures/CommandPrecondition.js';
+import type { CommandHaltResolvable, CommandHaltResultData } from '../classes/structures/CommandHalt.js';
+import type { MessageCommandOptionValue } from '../classes/structures/MessageCommandOptionValue.js';
+import type { CooldownSweeperOptions } from '../classes/managers/CooldownManager.js';
+import type { CommandHaltReason, CommandType } from './constants.js';
+import type { Cooldown } from '../classes/structures/Cooldown.js';
 
 // Config
 export interface RecipleClientConfig {
