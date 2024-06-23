@@ -26,7 +26,8 @@
   },
   "scripts": {
     "clean": "rimraf ./dist",
-    "build": "npm run clean && tsc",
+    "build": "tsup",
+    "check": "tsc --noEmit",
     "docs": "node ../docgen/dist/bin.js -i ./src/index.ts -o ./docs/docs.json"
   },
   "files": [

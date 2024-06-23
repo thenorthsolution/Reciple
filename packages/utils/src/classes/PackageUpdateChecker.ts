@@ -1,4 +1,4 @@
-import { AbbreviatedMetadata, FullMetadata, Options } from 'package-json';
+import type { AbbreviatedMetadata, FullMetadata, Options } from 'package-json';
 import { PackageUpdateType } from '../constants.js';
 import packageJson from 'package-json';
 import { satisfies, SemVer } from 'semver';
@@ -159,4 +159,4 @@ export class PackageUpdateChecker extends StrictTypedEmitter<PackageUpdateChecke
     }
 }
 
-export { AbbreviatedMetadata, FullMetadata };
+export type { AbbreviatedMetadata, FullMetadata };
