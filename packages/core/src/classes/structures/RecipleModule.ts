@@ -1,8 +1,8 @@
-import { AnyCommandBuilder, AnyCommandResolvable } from '../../types/structures.js';
+import type { AnyCommandBuilder, AnyCommandResolvable } from '../../types/structures.js';
 import { RecipleModuleStatus } from '../../types/constants.js';
 import { ModuleManager } from '../managers/ModuleManager.js';
-import { RestOrArray, normalizeArray } from 'discord.js';
-import { RecipleClient } from './RecipleClient.js';
+import { type RestOrArray, normalizeArray } from 'discord.js';
+import type { RecipleClient } from './RecipleClient.js';
 import { RecipleError } from './RecipleError.js';
 import { kleur } from 'fallout-utility/strings';
 import { Utils } from './Utils.js';

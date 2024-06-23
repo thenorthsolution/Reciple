@@ -1,6 +1,6 @@
-import { CommandPreconditionResolvable } from '../structures/CommandPrecondition.js';
-import { BaseCommandBuilderData } from '../builders/BaseCommandBuilder.js';
-import { RestOrArray, normalizeArray } from 'discord.js';
+import type { CommandPreconditionResolvable } from '../structures/CommandPrecondition.js';
+import type { BaseCommandBuilderData } from '../builders/BaseCommandBuilder.js';
+import { type RestOrArray, normalizeArray } from 'discord.js';
 import { CommandType } from '../../types/constants.js';
 import { Validators } from './Validators.js';
 

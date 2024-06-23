@@ -26,7 +26,8 @@
   },
   "scripts": {
     "clean": "rimraf ./dist",
-    "build": "npm run clean && tsc",
+    "build": "tsup",
+    "check": "tsc --noEmit",
     "docs": "node ../docgen/dist/bin.js -i ./src/index.ts -o ./docs/docs.json"
   },
   "files": [
@@ -39,7 +40,7 @@
   },
   "dependencies": {
     "@discordjs/collection": "^2.1.0",
-    "discord-api-types": "^0.37.87",
+    "discord-api-types": "^0.37.90",
     "dotenv": "^16.4.5",
     "fallout-utility": "^2.9.1",
     "package-json": "^10.0.0",

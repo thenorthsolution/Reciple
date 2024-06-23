@@ -1,5 +1,5 @@
 import { RecipleClient as Client } from '@reciple/core';
-import { RecipleConfig } from './classes/Config.js';
+import type { RecipleConfig } from './classes/Config.js';
 
 export * from '@reciple/core';
 export * from './exports.js';

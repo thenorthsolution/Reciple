@@ -1,5 +1,5 @@
 import { BaseCommandValidators } from './BaseCommandValidators.js';
-import { RecipleModuleData } from '../structures/RecipleModule.js';
+import type { RecipleModuleData } from '../structures/RecipleModule.js';
 import { Validators } from './Validators.js';
 
 export class RecipleModuleDataValidators extends Validators {

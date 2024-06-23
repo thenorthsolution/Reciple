@@ -1,4 +1,4 @@
-import { APIChannel, APIMessage, APIRole, APIUser, Channel, ChannelMention, ChannelResolvable, Client, FormattingPatterns, GuildMember, GuildResolvable, Role, RoleMention, RoleResolvable, User, UserMention, UserResolvable } from 'discord.js';
+import { type Channel, type Client, type UserResolvable, type APIUser, type APIMessage, type UserMention, FormattingPatterns, type RoleResolvable, type APIRole, type RoleMention, type ChannelResolvable, type APIChannel, type ChannelMention, type User, type GuildResolvable, type GuildMember, type Role } from 'discord.js';
 import { isValidSnowflake } from '../helpers/validators.js';
 
 export interface MentionFetchOptions {

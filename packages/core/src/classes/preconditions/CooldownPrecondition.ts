@@ -1,6 +1,6 @@
-import { CommandPrecondition, CommandPreconditionData } from '../structures/CommandPrecondition.js';
-import { AnyCommandExecuteData } from '../../types/structures.js';
-import { CooldownData } from '../structures/Cooldown.js';
+import { CommandPrecondition, type CommandPreconditionData } from '../structures/CommandPrecondition.js';
+import type { AnyCommandExecuteData } from '../../types/structures.js';
+import type { CooldownData } from '../structures/Cooldown.js';
 import { CommandType } from '../../types/constants.js';
 
 export class CooldownPrecondition extends CommandPrecondition {

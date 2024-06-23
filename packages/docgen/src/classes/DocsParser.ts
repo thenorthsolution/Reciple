@@ -1,5 +1,5 @@
-import { Application, JSONOutput, OptionsReader, ProjectReflection, TSConfigReader } from 'typedoc';
-import { Docs, DocsParserCustomPagesData } from '../types/docs.js';
+import { Application, TSConfigReader, type JSONOutput, type OptionsReader, type ProjectReflection } from 'typedoc';
+import type { Docs, DocsParserCustomPagesData } from '../types/docs.js';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import type { ProjectParser } from 'typedoc-json-parser';
 import { dirname, join, resolve } from 'node:path';

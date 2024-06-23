@@ -1,10 +1,10 @@
-import { Awaitable, ChatInputCommandInteraction, JSONEncodable, SlashCommandBuilder as DiscordJsSlashCommandBuilder, RESTPostAPIChatInputApplicationCommandsJSONBody, ApplicationCommandType, SharedSlashCommandOptions, ApplicationCommandOptionType, SlashCommandStringOption, SlashCommandIntegerOption, SlashCommandBooleanOption, SlashCommandUserOption, SlashCommandChannelOption, ApplicationCommandOptionAllowedChannelTypes, SlashCommandRoleOption, SlashCommandMentionableOption, SlashCommandNumberOption, SlashCommandAttachmentOption, SlashCommandSubcommandBuilder, SlashCommandSubcommandGroupBuilder, isJSONEncodable, PermissionsBitField, PermissionResolvable, RestOrArray } from 'discord.js';
-import { AnyNonSubcommandSlashCommandOptionBuilder, AnySlashCommandOptionBuilder, AnySlashCommandOptionData, CommandHaltTriggerData } from '../../types/structures.js';
-import { CommandHalt, CommandHaltData, CommandHaltResolvable } from '../structures/CommandHalt.js';
-import { BaseCommandBuilder, BaseCommandBuilderData } from './BaseCommandBuilder.js';
+import { ApplicationCommandOptionType, ApplicationCommandType, SlashCommandBuilder as DiscordJsSlashCommandBuilder, isJSONEncodable, PermissionsBitField, SlashCommandAttachmentOption, SlashCommandIntegerOption, SlashCommandStringOption, type Awaitable, type ChatInputCommandInteraction, type JSONEncodable, type RESTPostAPIChatInputApplicationCommandsJSONBody, SharedSlashCommandOptions, SlashCommandBooleanOption, SlashCommandChannelOption, SlashCommandMentionableOption, SlashCommandNumberOption, SlashCommandRoleOption, SlashCommandSubcommandBuilder, SlashCommandSubcommandGroupBuilder, SlashCommandUserOption, type ApplicationCommandOptionAllowedChannelTypes, type PermissionResolvable, type RestOrArray } from 'discord.js';
+import type { AnyNonSubcommandSlashCommandOptionBuilder, AnySlashCommandOptionBuilder, AnySlashCommandOptionData, CommandHaltTriggerData } from '../../types/structures.js';
+import type { CommandHalt, CommandHaltData, CommandHaltResolvable } from '../structures/CommandHalt.js';
+import { BaseCommandBuilder, type BaseCommandBuilderData } from './BaseCommandBuilder.js';
 import { CommandHaltReason, CommandType } from '../../types/constants.js';
-import { RecipleClient } from '../structures/RecipleClient.js';
-import { CooldownData } from '../structures/Cooldown.js';
+import type { RecipleClient } from '../structures/RecipleClient.js';
+import type { CooldownData } from '../structures/Cooldown.js';
 import { Mixin } from 'ts-mixer';
 
 export interface SlashCommandExecuteData {

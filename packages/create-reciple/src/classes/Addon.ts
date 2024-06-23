@@ -1,5 +1,5 @@
-import fetchPackage, { AbbreviatedVersion } from 'package-json';
-import { PackageJson } from 'fallout-utility';
+import fetchPackage, { type AbbreviatedVersion } from 'package-json';
+import type { PackageJson } from 'fallout-utility';
 import { existsAsync } from '@reciple/utils';
 import { readFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';

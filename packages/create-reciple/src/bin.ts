@@ -2,7 +2,7 @@
 
 import { packageJson, packageManagers, templatesFolder } from './utils/constants.js';
 import { getTemplates } from './utils/helpers.js';
-import { CliOptions } from './utils/types.js';
+import type { CliOptions } from './utils/types.js';
 import { Setup } from './classes/Setup.js';
 import { kleur } from 'fallout-utility';
 import { outro } from '@clack/prompts';

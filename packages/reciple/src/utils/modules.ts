@@ -1,6 +1,6 @@
+import type { RecipleConfig } from '../classes/Config.js';
 import { lstat, mkdir, readdir } from 'node:fs/promises';
-import { RecipleConfig } from '../classes/Config.js';
-import { Awaitable } from 'fallout-utility/types';
+import type { Awaitable } from 'fallout-utility/types';
 import { existsAsync } from '@reciple/utils';
 import micromatch from 'micromatch';
 import path from 'node:path';

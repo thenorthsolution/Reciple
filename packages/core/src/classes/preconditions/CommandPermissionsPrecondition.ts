@@ -1,10 +1,10 @@
-import { CommandPrecondition, CommandPreconditionData, CommandPreconditionResultData } from '../structures/CommandPrecondition.js';
-import { Guild, GuildBasedChannel, GuildMemberResolvable, Message, PermissionResolvable, PermissionsBitField } from 'discord.js';
+import { CommandPrecondition, type CommandPreconditionData, type CommandPreconditionResultData } from '../structures/CommandPrecondition.js';
+import { Guild, Message, PermissionsBitField, type GuildBasedChannel, type GuildMemberResolvable, type PermissionResolvable } from 'discord.js';
 import { CommandPermissionsPreconditionResultDataType, CommandType } from '../../types/constants.js';
-import { ContextMenuCommandExecuteData } from '../builders/ContextMenuCommandBuilder.js';
-import { MessageCommandExecuteData } from '../builders/MessageCommandBuilder.js';
-import { SlashCommandExecuteData } from '../builders/SlashCommandBuilder.js';
-import { AnyCommandExecuteData } from '../../types/structures.js';
+import type { ContextMenuCommandExecuteData } from '../builders/ContextMenuCommandBuilder.js';
+import type { MessageCommandExecuteData } from '../builders/MessageCommandBuilder.js';
+import type { SlashCommandExecuteData } from '../builders/SlashCommandBuilder.js';
+import type { AnyCommandExecuteData } from '../../types/structures.js';
 
 export class CommandPermissionsPrecondition extends CommandPrecondition {
     public static id: string = 'org.reciple.js.cmdpermissions';

@@ -1,5 +1,5 @@
 import { MessageCommandOptionValidators } from './MessageCommandOptionValidators.js';
-import { MessageCommandBuilderData } from '../builders/MessageCommandBuilder.js';
+import type { MessageCommandBuilderData } from '../builders/MessageCommandBuilder.js';
 import { BaseCommandValidators } from './BaseCommandValidators.js';
 
 export class MessageCommandValidators extends BaseCommandValidators {

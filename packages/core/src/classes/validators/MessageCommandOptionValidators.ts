@@ -1,4 +1,4 @@
-import { MessageCommandOptionBuilderData, MessageCommandOptionResolvable } from '../builders/MessageCommandOptionBuilder.js';
+import type { MessageCommandOptionBuilderData, MessageCommandOptionResolvable } from '../builders/MessageCommandOptionBuilder.js';
 import { BaseCommandValidators } from './BaseCommandValidators.js';
 import { isJSONEncodable } from 'discord.js';
 

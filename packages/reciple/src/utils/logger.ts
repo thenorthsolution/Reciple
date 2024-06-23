@@ -1,5 +1,5 @@
-import { Logger, LoggerLevel, PartialDeep, kleur } from 'fallout-utility';
-import { RecipleConfig } from '../classes/Config.js';
+import { Logger, LoggerLevel, kleur, type PartialDeep } from 'fallout-utility';
+import type { RecipleConfig } from '../classes/Config.js';
 import { type RecipleClient } from '../index.js';
 import { cli } from './cli.js';
 import path from 'node:path';

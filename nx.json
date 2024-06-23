@@ -9,7 +9,10 @@
         "{projectRoot}/dist"
       ],
       "inputs": [
-        "{projectRoot}/src/**/*"
+        "{projectRoot}/src/**/*",
+        "{projectRoot}/*.json",
+        "{projectRoot}/tsup.config.ts",
+        "{workspaceRoot}/tsup.config.ts"
       ],
       "cache": true
     },

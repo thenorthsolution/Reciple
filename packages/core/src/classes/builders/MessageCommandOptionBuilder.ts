@@ -1,8 +1,8 @@
 import { MessageCommandOptionValidators } from '../validators/MessageCommandOptionValidators.js';
-import { Awaitable, isJSONEncodable, JSONEncodable, Message } from 'discord.js';
-import { MessageCommandBuilder } from './MessageCommandBuilder.js';
-import { RecipleClient } from '../structures/RecipleClient.js';
-import { CommandData } from '../../types/structures.js';
+import { isJSONEncodable, type Awaitable, type JSONEncodable, type Message } from 'discord.js';
+import type { MessageCommandBuilder } from './MessageCommandBuilder.js';
+import type { RecipleClient } from '../structures/RecipleClient.js';
+import type { CommandData } from '../../types/structures.js';
 
 export interface MessageCommandOptionBuilderResolveValueOptions<T extends any = any> {
     /**

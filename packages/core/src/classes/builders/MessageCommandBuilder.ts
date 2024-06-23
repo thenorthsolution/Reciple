@@ -1,15 +1,15 @@
-import { MessageCommandOptionBuilder, MessageCommandOptionResolvable } from './MessageCommandOptionBuilder.js';
-import { Awaitable, JSONEncodable, RestOrArray, Message, normalizeArray, isJSONEncodable } from 'discord.js';
-import { CommandHalt, CommandHaltData, CommandHaltResolvable } from '../structures/CommandHalt.js';
+import { MessageCommandOptionBuilder, type MessageCommandOptionResolvable } from './MessageCommandOptionBuilder.js';
+import { isJSONEncodable, type Awaitable, type JSONEncodable, type RestOrArray, type Message, normalizeArray } from 'discord.js';
+import type { CommandHalt, CommandHaltData, CommandHaltResolvable } from '../structures/CommandHalt.js';
 import { MessageCommandOptionValidators } from '../validators/MessageCommandOptionValidators.js';
 import { MessageCommandOptionManager } from '../managers/MessageCommandOptionManager.js';
 import { MessageCommandValidators } from '../validators/MessageCommandValidators.js';
-import { BaseCommandBuilder, BaseCommandBuilderData } from './BaseCommandBuilder.js';
-import { CommandData, CommandHaltTriggerData } from '../../types/structures.js';
+import { BaseCommandBuilder, type BaseCommandBuilderData } from './BaseCommandBuilder.js';
+import type { CommandData, CommandHaltTriggerData } from '../../types/structures.js';
 import { CommandHaltReason, CommandType } from '../../types/constants.js';
-import { RecipleClient } from '../structures/RecipleClient.js';
+import type { RecipleClient } from '../structures/RecipleClient.js';
 import { RecipleError } from '../structures/RecipleError.js';
-import { CooldownData } from '../structures/Cooldown.js';
+import type { CooldownData } from '../structures/Cooldown.js';
 import { getCommand } from 'fallout-utility/commands';
 
 export interface MessageCommandExecuteData {

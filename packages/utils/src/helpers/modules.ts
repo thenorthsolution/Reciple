@@ -1,5 +1,5 @@
 import { existsAsync } from '../helpers/fileSystem.js';
-import { PackageJson } from 'fallout-utility';
+import type { PackageJson } from 'fallout-utility';
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 
