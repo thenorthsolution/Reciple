@@ -30,7 +30,8 @@
     "clean": "rimraf ./dist",
     "build": "npm run clean && tsc",
     "check": "tsc --noEmit",
-    "docs": "node ./dist/bin.js -i ./src/index.ts -o ./docs/docs.json"
+    "docs": "node ./dist/bin.js -i ./src/index.ts -o ./docs/docs.json",
+    "prepack": "npm run build"
   },
   "files": [
     "dist",

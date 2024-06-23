@@ -28,7 +28,8 @@
     "clean": "rimraf ./dist",
     "build": "tsup",
     "check": "tsc --noEmit",
-    "docs": "node ../docgen/dist/bin.js -i ./src/index.ts -o ./docs/docs.json"
+    "docs": "node ../docgen/dist/bin.js -i ./src/index.ts -o ./docs/docs.json",
+    "prepack": "npm run build"
   },
   "files": [
     "dist",
