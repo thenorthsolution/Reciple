@@ -1,13 +1,13 @@
 import { packageManagerPlaceholders, packages, root } from '../utils/constants.js';
 import { recursiveCopyFiles, runScript } from '../utils/helpers.js';
 import { mkdir, readFile, writeFile } from 'fs/promises';
-import { TemplateMetadata } from '../utils/types.js';
-import { kleur, PackageJson } from 'fallout-utility';
-import ora, { Ora, PersistOptions } from 'ora';
+import type { TemplateMetadata } from '../utils/types.js';
+import { kleur, type PackageJson } from 'fallout-utility';
+import ora, { type Ora, type PersistOptions } from 'ora';
 import { existsAsync } from '@reciple/utils';
-import { SetupOptions } from './Setup.js';
+import { type SetupOptions } from './Setup.js';
 import detectIndent from 'detect-indent';
-import { RecipleConfig } from 'reciple';
+import { type RecipleConfig } from 'reciple';
 import { Config } from './Config.js';
 import { Addon } from './Addon.js';
 import path from 'node:path';

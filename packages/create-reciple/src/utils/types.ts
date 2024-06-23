@@ -1,4 +1,4 @@
-import { PackageManager } from '@reciple/utils';
+import type { PackageManager } from '@reciple/utils';
 
 export interface CliOptions {
     force: boolean;

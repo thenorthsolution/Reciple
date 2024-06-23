@@ -1,5 +1,5 @@
-import { PackageJson } from 'fallout-utility/types';
-import { PackageManager } from '@reciple/utils';
+import type { PackageJson } from 'fallout-utility/types';
+import type { PackageManager } from '@reciple/utils';
 import { readFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';

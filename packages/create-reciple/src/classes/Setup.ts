@@ -1,5 +1,5 @@
 import { cancel, confirm, intro, isCancel, multiselect, password, select, text } from '@clack/prompts';
-import { PackageManager, resolvePackageManager } from '@reciple/utils';
+import { type PackageManager, resolvePackageManager } from '@reciple/utils';
 import { packageJson, packageManagers } from '../utils/constants.js';
 import { isDirEmpty } from '../utils/helpers.js';
 import { kleur } from 'fallout-utility/strings';
