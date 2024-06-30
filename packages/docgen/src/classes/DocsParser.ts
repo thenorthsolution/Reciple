@@ -54,7 +54,8 @@ export class DocsParser {
         this._parser = this._data && new ProjectParser({
             ...this.options,
             data: this._data,
-            readme: this.options.readme ? await readFile(this.options.readme, 'utf-8') : undefined
+            readme: this.options.readme ? await readFile(this.options.readme, 'utf-8') : undefined,
+            dependencies: {}
         });
 
         const customFile = this.options.custom ? resolve(this.options.custom) : null;
