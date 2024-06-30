@@ -14,12 +14,14 @@
     "test": "npm run start -w example",
     "publish-dev": "lerna run build && lerna publish prerelease",
     "publish-latest": "lerna run build && lerna publish",
-    "docs": "rimraf -g ./packages/*/docs/docs.json && lerna run docs"
+    "docs": "rimraf -g ./packages/*/docs/docs.json && lerna run docs",
+    "postinstall": "patch-package"
   },
   "devDependencies": {
     "@types/node": "^20.14.9",
     "esbuild-plugin-version-injector": "^1.2.1",
     "lerna": "^8.1.5",
+    "patch-package": "^8.0.0",
     "rimraf": "^5.0.7",
     "tsup": "^8.1.0",
     "typescript": "^5.5.2"
