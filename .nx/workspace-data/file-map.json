@@ -12,7 +12,167 @@
   "pathMappings": {},
   "nxJsonPlugins": [],
   "fileMap": {
+    "nonProjectFiles": [
+      {
+        "file": "nx.json",
+        "hash": "13006353794521463276"
+      },
+      {
+        "file": ".github/ISSUE_TEMPLATE/config.yml",
+        "hash": "12602436136658621167"
+      },
+      {
+        "file": ".gitignore",
+        "hash": "4749034900791218979"
+      },
+      {
+        "file": "README.md",
+        "hash": "3170463615983700697"
+      },
+      {
+        "file": ".github/ISSUE_TEMPLATE/02-feature-request.yml",
+        "hash": "5503921169562115383"
+      },
+      {
+        "file": "assets/reciple-art.png",
+        "hash": "7752083585708340721"
+      },
+      {
+        "file": "assets/reciple-contained.svg",
+        "hash": "5689042976541535244"
+      },
+      {
+        "file": "assets/reciple.png",
+        "hash": "14720170347524385251"
+      },
+      {
+        "file": "lerna.json",
+        "hash": "1249957122816534756"
+      },
+      {
+        "file": ".github/workflows/documentation.yml",
+        "hash": "1103313482563273814"
+      },
+      {
+        "file": "LICENSE",
+        "hash": "10753169468508496347"
+      },
+      {
+        "file": "assets/reciple-contained.png",
+        "hash": "2245463613378730346"
+      },
+      {
+        "file": ".github/ISSUE_TEMPLATE/01-bug-report.yml",
+        "hash": "14107545794581624924"
+      },
+      {
+        "file": ".github/workflows/dependency-review.yml",
+        "hash": "17494318050380568428"
+      },
+      {
+        "file": "assets/Reciple.ai",
+        "hash": "456864303075134831"
+      },
+      {
+        "file": "tsup.config.ts",
+        "hash": "12363584894532128046"
+      },
+      {
+        "file": ".github/workflows/codeql.yml",
+        "hash": "68930355070716458"
+      },
+      {
+        "file": "assets/reciple.svg",
+        "hash": "8762686097073225805"
+      },
+      {
+        "file": ".gitattributes",
+        "hash": "1572551857504561111"
+      },
+      {
+        "file": ".github/workflows/gh-release.yml",
+        "hash": "13144186913961931346"
+      },
+      {
+        "file": "package.json",
+        "hash": "2780028425949893489"
+      },
+      {
+        "file": "package-lock.json",
+        "hash": "10036212270382034136"
+      },
+      {
+        "file": ".editorconfig",
+        "hash": "12466662945100702312"
+      }
+    ],
     "projectFileMap": {
+      "@reciple/message-command-utils": [
+        {
+          "file": "packages/message-command-utils/README.md",
+          "hash": "7088227466661190224"
+        },
+        {
+          "file": "packages/message-command-utils/package.json",
+          "hash": "16247671202237644277",
+          "deps": [
+            "@reciple/core",
+            "npm:discord.js",
+            "@reciple/utils",
+            "npm:@sapphire/shapeshift@4.0.0",
+            "npm:boolean",
+            "npm:fallout-utility"
+          ]
+        },
+        {
+          "file": "packages/message-command-utils/src/classes/builders/MessageCommandBooleanOptionBuilder.ts",
+          "hash": "9258851419289220810"
+        },
+        {
+          "file": "packages/message-command-utils/src/classes/builders/MessageCommandChannelOptionBuilder.ts",
+          "hash": "13324560728814732965"
+        },
+        {
+          "file": "packages/message-command-utils/src/classes/builders/MessageCommandIntegerOptionBuilder.ts",
+          "hash": "1504604060795817920"
+        },
+        {
+          "file": "packages/message-command-utils/src/classes/builders/MessageCommandMessageOptionBuilder.ts",
+          "hash": "1655454417549989070"
+        },
+        {
+          "file": "packages/message-command-utils/src/classes/builders/MessageCommandNumberOptionBuilder.ts",
+          "hash": "1971967011742273861"
+        },
+        {
+          "file": "packages/message-command-utils/src/classes/builders/MessageCommandRoleOptionBuilder.ts",
+          "hash": "4067768175092663469"
+        },
+        {
+          "file": "packages/message-command-utils/src/classes/builders/MessageCommandUserOptionBuilder.ts",
+          "hash": "15453069608689928427"
+        },
+        {
+          "file": "packages/message-command-utils/src/classes/structures/BaseMessageCommandOptionBuilder.ts",
+          "hash": "6132343447423793683"
+        },
+        {
+          "file": "packages/message-command-utils/src/helpers/createMessageCommandUsage.ts",
+          "hash": "15292186476762185578"
+        },
+        {
+          "file": "packages/message-command-utils/src/index.ts",
+          "hash": "9908975215041943416"
+        },
+        {
+          "file": "packages/message-command-utils/tsconfig.json",
+          "hash": "16358615407862099167"
+        },
+        {
+          "file": "packages/message-command-utils/tsup.config.ts",
+          "hash": "15279059678339625669"
+        }
+      ],
       "create-reciple": [
         {
           "file": "packages/create-reciple/README.md",
@@ -285,128 +445,68 @@
           "hash": "15279059678339625669"
         }
       ],
-      "@reciple/message-command-utils": [
+      "reciple": [
         {
-          "file": "packages/message-command-utils/README.md",
-          "hash": "7088227466661190224"
+          "file": "packages/reciple/README.md",
+          "hash": "12831642326435356291"
         },
         {
-          "file": "packages/message-command-utils/package.json",
-          "hash": "16247671202237644277",
+          "file": "packages/reciple/package.json",
+          "hash": "3979688279858460988",
           "deps": [
             "@reciple/core",
             "npm:discord.js",
+            "npm:@types/micromatch",
+            "npm:@types/semver",
             "@reciple/utils",
-            "npm:@sapphire/shapeshift@4.0.0",
-            "npm:boolean",
-            "npm:fallout-utility"
+            "npm:commander",
+            "npm:dotenv@16.4.5",
+            "npm:fallout-utility",
+            "npm:globby",
+            "npm:micromatch",
+            "npm:prompts",
+            "npm:semver"
           ]
         },
         {
-          "file": "packages/message-command-utils/src/classes/builders/MessageCommandBooleanOptionBuilder.ts",
-          "hash": "9258851419289220810"
+          "file": "packages/reciple/src/bin.ts",
+          "hash": "12906496241919250678"
         },
         {
-          "file": "packages/message-command-utils/src/classes/builders/MessageCommandChannelOptionBuilder.ts",
-          "hash": "13324560728814732965"
+          "file": "packages/reciple/src/classes/Config.ts",
+          "hash": "5540200264792437523"
         },
         {
-          "file": "packages/message-command-utils/src/classes/builders/MessageCommandIntegerOptionBuilder.ts",
-          "hash": "1504604060795817920"
+          "file": "packages/reciple/src/exports.ts",
+          "hash": "6659356378211135951"
         },
         {
-          "file": "packages/message-command-utils/src/classes/builders/MessageCommandMessageOptionBuilder.ts",
-          "hash": "1655454417549989070"
+          "file": "packages/reciple/src/index.ts",
+          "hash": "6580673781652700441"
         },
         {
-          "file": "packages/message-command-utils/src/classes/builders/MessageCommandNumberOptionBuilder.ts",
-          "hash": "1971967011742273861"
+          "file": "packages/reciple/src/utils/cli.ts",
+          "hash": "12730128570580214839"
         },
         {
-          "file": "packages/message-command-utils/src/classes/builders/MessageCommandRoleOptionBuilder.ts",
-          "hash": "4067768175092663469"
+          "file": "packages/reciple/src/utils/logger.ts",
+          "hash": "1981212222679015838"
         },
         {
-          "file": "packages/message-command-utils/src/classes/builders/MessageCommandUserOptionBuilder.ts",
-          "hash": "15453069608689928427"
+          "file": "packages/reciple/src/utils/modules.ts",
+          "hash": "7357491492047563211"
         },
         {
-          "file": "packages/message-command-utils/src/classes/structures/BaseMessageCommandOptionBuilder.ts",
-          "hash": "6132343447423793683"
+          "file": "packages/reciple/static/config.d.mts",
+          "hash": "10589441778856361657"
         },
         {
-          "file": "packages/message-command-utils/src/helpers/createMessageCommandUsage.ts",
-          "hash": "15292186476762185578"
+          "file": "packages/reciple/static/config.mjs",
+          "hash": "796155640987573053"
         },
         {
-          "file": "packages/message-command-utils/src/index.ts",
-          "hash": "9908975215041943416"
-        },
-        {
-          "file": "packages/message-command-utils/tsconfig.json",
+          "file": "packages/reciple/tsconfig.json",
           "hash": "16358615407862099167"
-        },
-        {
-          "file": "packages/message-command-utils/tsup.config.ts",
-          "hash": "15279059678339625669"
-        }
-      ],
-      "example": [
-        {
-          "file": "example/.env.example",
-          "hash": "14674906507601532664"
-        },
-        {
-          "file": "example/modules/Commands/Avatar.js",
-          "hash": "5953175695628823505"
-        },
-        {
-          "file": "example/modules/Commands/Ping.js",
-          "hash": "18423627513941414402"
-        },
-        {
-          "file": "example/modules/Commands/Resolvers.js",
-          "hash": "8081943364221837520"
-        },
-        {
-          "file": "example/modules/Commands/Say.js",
-          "hash": "4261542085558293263"
-        },
-        {
-          "file": "example/modules/Examples/CustomLogger.js",
-          "hash": "6152995772176245293"
-        },
-        {
-          "file": "example/modules/Halts/HandleError.js",
-          "hash": "10442695729636250738"
-        },
-        {
-          "file": "example/modules/Halts/MessageCommandArguments.js",
-          "hash": "17734121125100977104"
-        },
-        {
-          "file": "example/modules/Preconditions/MyPrecondition.js",
-          "hash": "8094911103512727695"
-        },
-        {
-          "file": "example/package.json",
-          "hash": "11047116165922651708",
-          "deps": [
-            "npm:@types/node",
-            "npm:nodemon",
-            "@reciple/core",
-            "@reciple/message-command-utils",
-            "npm:discord.js",
-            "reciple"
-          ]
-        },
-        {
-          "file": "example/reciple.mjs",
-          "hash": "17050881295279639195"
-        },
-        {
-          "file": "example/shards.js",
-          "hash": "18443884233150548551"
         }
       ],
       "@reciple/docgen": [
@@ -522,70 +622,6 @@
           "hash": "15279059678339625669"
         }
       ],
-      "reciple": [
-        {
-          "file": "packages/reciple/README.md",
-          "hash": "12831642326435356291"
-        },
-        {
-          "file": "packages/reciple/package.json",
-          "hash": "3979688279858460988",
-          "deps": [
-            "@reciple/core",
-            "npm:discord.js",
-            "npm:@types/micromatch",
-            "npm:@types/semver",
-            "@reciple/utils",
-            "npm:commander",
-            "npm:dotenv@16.4.5",
-            "npm:fallout-utility",
-            "npm:globby",
-            "npm:micromatch",
-            "npm:prompts",
-            "npm:semver"
-          ]
-        },
-        {
-          "file": "packages/reciple/src/bin.ts",
-          "hash": "12906496241919250678"
-        },
-        {
-          "file": "packages/reciple/src/classes/Config.ts",
-          "hash": "5540200264792437523"
-        },
-        {
-          "file": "packages/reciple/src/exports.ts",
-          "hash": "6659356378211135951"
-        },
-        {
-          "file": "packages/reciple/src/index.ts",
-          "hash": "6580673781652700441"
-        },
-        {
-          "file": "packages/reciple/src/utils/cli.ts",
-          "hash": "12730128570580214839"
-        },
-        {
-          "file": "packages/reciple/src/utils/logger.ts",
-          "hash": "1981212222679015838"
-        },
-        {
-          "file": "packages/reciple/src/utils/modules.ts",
-          "hash": "7357491492047563211"
-        },
-        {
-          "file": "packages/reciple/static/config.d.mts",
-          "hash": "10589441778856361657"
-        },
-        {
-          "file": "packages/reciple/static/config.mjs",
-          "hash": "796155640987573053"
-        },
-        {
-          "file": "packages/reciple/tsconfig.json",
-          "hash": "16358615407862099167"
-        }
-      ],
       "@reciple/actions": [
         {
           "file": "packages/actions/README.md",
@@ -610,101 +646,65 @@
           "file": "packages/actions/src/formatTag/index.js",
           "hash": "17913204430029035781"
         }
+      ],
+      "example": [
+        {
+          "file": "example/.env.example",
+          "hash": "14674906507601532664"
+        },
+        {
+          "file": "example/modules/Commands/Avatar.js",
+          "hash": "5953175695628823505"
+        },
+        {
+          "file": "example/modules/Commands/Ping.js",
+          "hash": "18423627513941414402"
+        },
+        {
+          "file": "example/modules/Commands/Resolvers.js",
+          "hash": "8081943364221837520"
+        },
+        {
+          "file": "example/modules/Commands/Say.js",
+          "hash": "4261542085558293263"
+        },
+        {
+          "file": "example/modules/Examples/CustomLogger.js",
+          "hash": "6152995772176245293"
+        },
+        {
+          "file": "example/modules/Halts/HandleError.js",
+          "hash": "10442695729636250738"
+        },
+        {
+          "file": "example/modules/Halts/MessageCommandArguments.js",
+          "hash": "17734121125100977104"
+        },
+        {
+          "file": "example/modules/Preconditions/MyPrecondition.js",
+          "hash": "8094911103512727695"
+        },
+        {
+          "file": "example/package.json",
+          "hash": "11047116165922651708",
+          "deps": [
+            "npm:@types/node",
+            "npm:nodemon",
+            "@reciple/core",
+            "@reciple/message-command-utils",
+            "npm:discord.js",
+            "reciple"
+          ]
+        },
+        {
+          "file": "example/reciple.mjs",
+          "hash": "17050881295279639195"
+        },
+        {
+          "file": "example/shards.js",
+          "hash": "18443884233150548551"
+        }
       ]
-    },
-    "nonProjectFiles": [
-      {
-        "file": ".editorconfig",
-        "hash": "12466662945100702312"
-      },
-      {
-        "file": ".gitattributes",
-        "hash": "1572551857504561111"
-      },
-      {
-        "file": ".github/ISSUE_TEMPLATE/01-bug-report.yml",
-        "hash": "14107545794581624924"
-      },
-      {
-        "file": ".github/ISSUE_TEMPLATE/02-feature-request.yml",
-        "hash": "5503921169562115383"
-      },
-      {
-        "file": ".github/ISSUE_TEMPLATE/config.yml",
-        "hash": "12602436136658621167"
-      },
-      {
-        "file": ".github/workflows/codeql.yml",
-        "hash": "68930355070716458"
-      },
-      {
-        "file": ".github/workflows/dependency-review.yml",
-        "hash": "17494318050380568428"
-      },
-      {
-        "file": ".github/workflows/documentation.yml",
-        "hash": "1103313482563273814"
-      },
-      {
-        "file": ".github/workflows/gh-release.yml",
-        "hash": "13144186913961931346"
-      },
-      {
-        "file": ".gitignore",
-        "hash": "4749034900791218979"
-      },
-      {
-        "file": "LICENSE",
-        "hash": "10753169468508496347"
-      },
-      {
-        "file": "README.md",
-        "hash": "3170463615983700697"
-      },
-      {
-        "file": "assets/Reciple.ai",
-        "hash": "456864303075134831"
-      },
-      {
-        "file": "assets/reciple-art.png",
-        "hash": "7752083585708340721"
-      },
-      {
-        "file": "assets/reciple-contained.png",
-        "hash": "2245463613378730346"
-      },
-      {
-        "file": "assets/reciple-contained.svg",
-        "hash": "5689042976541535244"
-      },
-      {
-        "file": "assets/reciple.png",
-        "hash": "14720170347524385251"
-      },
-      {
-        "file": "assets/reciple.svg",
-        "hash": "8762686097073225805"
-      },
-      {
-        "file": "lerna.json",
-        "hash": "1249957122816534756"
-      },
-      {
-        "file": "nx.json",
-        "hash": "13006353794521463276"
-      },
-      {
-        "file": "package-lock.json",
-        "hash": "10036212270382034136"
-      },
-      {
-        "file": "package.json",
-        "hash": "2780028425949893489"
-      },
-      {
-        "file": "tsup.config.ts",
-        "hash": "12363584894532128046"
-      }
-    ]
+    }
   }
 }
