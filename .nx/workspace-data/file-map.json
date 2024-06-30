@@ -14,6 +14,30 @@
   "fileMap": {
     "nonProjectFiles": [
       {
+        "file": ".editorconfig",
+        "hash": "12466662945100702312"
+      },
+      {
+        "file": "LICENSE",
+        "hash": "10753169468508496347"
+      },
+      {
+        "file": "assets/reciple-contained.svg",
+        "hash": "5689042976541535244"
+      },
+      {
+        "file": ".gitattributes",
+        "hash": "1572551857504561111"
+      },
+      {
+        "file": ".github/workflows/codeql.yml",
+        "hash": "68930355070716458"
+      },
+      {
+        "file": ".github/ISSUE_TEMPLATE/01-bug-report.yml",
+        "hash": "14107545794581624924"
+      },
+      {
         "file": "nx.json",
         "hash": "13006353794521463276"
       },
@@ -22,52 +46,36 @@
         "hash": "12602436136658621167"
       },
       {
-        "file": ".gitignore",
-        "hash": "4749034900791218979"
-      },
-      {
-        "file": "README.md",
-        "hash": "3170463615983700697"
-      },
-      {
-        "file": ".github/ISSUE_TEMPLATE/02-feature-request.yml",
-        "hash": "5503921169562115383"
-      },
-      {
-        "file": "assets/reciple-art.png",
-        "hash": "7752083585708340721"
-      },
-      {
-        "file": "assets/reciple-contained.svg",
-        "hash": "5689042976541535244"
-      },
-      {
-        "file": "assets/reciple.png",
-        "hash": "14720170347524385251"
-      },
-      {
-        "file": "lerna.json",
-        "hash": "1249957122816534756"
+        "file": ".github/workflows/dependency-review.yml",
+        "hash": "17494318050380568428"
       },
       {
         "file": ".github/workflows/documentation.yml",
         "hash": "1103313482563273814"
       },
       {
-        "file": "LICENSE",
-        "hash": "10753169468508496347"
+        "file": ".github/ISSUE_TEMPLATE/02-feature-request.yml",
+        "hash": "5503921169562115383"
       },
       {
         "file": "assets/reciple-contained.png",
         "hash": "2245463613378730346"
       },
       {
-        "file": ".github/ISSUE_TEMPLATE/01-bug-report.yml",
-        "hash": "14107545794581624924"
+        "file": "README.md",
+        "hash": "3170463615983700697"
       },
       {
-        "file": ".github/workflows/dependency-review.yml",
-        "hash": "17494318050380568428"
+        "file": "package.json",
+        "hash": "2780028425949893489"
+      },
+      {
+        "file": "assets/reciple.svg",
+        "hash": "8762686097073225805"
+      },
+      {
+        "file": ".gitignore",
+        "hash": "4749034900791218979"
       },
       {
         "file": "assets/Reciple.ai",
@@ -78,32 +86,24 @@
         "hash": "12363584894532128046"
       },
       {
-        "file": ".github/workflows/codeql.yml",
-        "hash": "68930355070716458"
-      },
-      {
-        "file": "assets/reciple.svg",
-        "hash": "8762686097073225805"
-      },
-      {
-        "file": ".gitattributes",
-        "hash": "1572551857504561111"
-      },
-      {
         "file": ".github/workflows/gh-release.yml",
         "hash": "13144186913961931346"
-      },
-      {
-        "file": "package.json",
-        "hash": "2780028425949893489"
       },
       {
         "file": "package-lock.json",
         "hash": "10036212270382034136"
       },
       {
-        "file": ".editorconfig",
-        "hash": "12466662945100702312"
+        "file": "assets/reciple-art.png",
+        "hash": "7752083585708340721"
+      },
+      {
+        "file": "assets/reciple.png",
+        "hash": "14720170347524385251"
+      },
+      {
+        "file": "lerna.json",
+        "hash": "1249957122816534756"
       }
     ],
     "projectFileMap": {

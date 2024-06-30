@@ -137,6 +137,6 @@ docs/docs.json
 
 # files
 test
-.nx/cache
+.nx
 .turbo
 tmp
