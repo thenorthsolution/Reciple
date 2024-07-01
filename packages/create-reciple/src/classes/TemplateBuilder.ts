@@ -160,13 +160,13 @@ export class TemplateBuilder implements TemplateBuilderOptions {
             halts: [
                 {
                     class: 'CommandErrorHalt',
-                    from: './modules/halts/CommandErrorHalt.js',
+                    from: './src/halts/CommandErrorHalt.js',
                 }
             ],
             preconditions: [
                 {
                     class: 'ExamplePrecondition',
-                    from: './modules/preconditions/ExamplePrecondition.js',
+                    from: './src/preconditions/ExamplePrecondition.js',
                 }
             ]
         });
