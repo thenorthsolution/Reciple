@@ -79,7 +79,11 @@ export class TemplateBuilder implements TemplateBuilderOptions {
 
         this.spinner.succeed('Template build successful.');
 
-        if (this.setup.packageManager) await this.installDependencies();
+        if (this.setup.packageManager) {
+            await this.installDependencies();
+
+            if (this.setup.isTypescript) await runScript(`${this.packageManagerPlaceholders.SCRIPT_RUN} build`, this.dir);
+        }
 
         console.log(`${kleur.bold(kleur.green('✔') + ' Your project is ready!')}`);
         console.log(`\nStart developing:`);
