@@ -35,6 +35,7 @@ const readme = resolve(options.readme);
 const parser = new DocsParser({
     files: options.input,
     custom: options.custom,
+    dependencies: {},
     readme: await existsAsync(readme) ? readme : undefined
 });
 
