@@ -13,12 +13,13 @@ interface Options {
     pretty: boolean;
     readme: string;
     root: string;
+    dependency?: string[];
 }
 
-const packageJson = JSON.parse(await readFile(join(dirname(fileURLToPath(import.meta.url)), '../package.json'), 'utf-8'));
+const { version } = JSON.parse(await readFile(join(dirname(fileURLToPath(import.meta.url)), '../package.json'), 'utf-8'));
 
 const cli = new Command()
-    .version(packageJson.version)
+    .version(version)
     .name('reciple-docgen')
     .option('-i, --input <string...>', 'Source files to parse docs in')
 	.option('-c, --custom [string]', 'Custom docs pages file to use')
@@ -35,7 +36,6 @@ const readme = resolve(options.readme);
 const parser = new DocsParser({
     files: options.input,
     custom: options.custom,
-    dependencies: {},
     readme: await existsAsync(readme) ? readme : undefined
 });
 
