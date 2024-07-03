@@ -35,7 +35,10 @@ export class Config {
     }
 
     public addPreconditions(preconditions: { class: string; notDefault?: boolean; from: string; }[]): void {
+        preconditions = preconditions.filter(precondition => !this.content.includes(`new ${precondition.class}()`));
+
         this.content = this.content.replaceAll(`new CommandPermissionsPrecondition()`, `new CommandPermissionsPrecondition(),\n${this.indent.repeat(2)}${preconditions.map(precondition => `new ${precondition.class}(),`).join('\n' + this.indent.repeat(2))}`);
+
         for (const precondition of preconditions) {
             this.addImport(precondition.notDefault !== true ? [precondition.class] : precondition.class, precondition.from);
         }
