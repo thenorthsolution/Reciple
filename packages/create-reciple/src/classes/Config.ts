@@ -42,14 +42,20 @@ export class Config {
     }
 
     public addHalts(halts: { class: string; notDefault?: boolean; from: string; }[]): void {
+        halts = halts.filter(halt => !this.content.includes(`new ${halt.class}()`));
+
         this.content = this.content.replaceAll(`commandHalts: []`, `commandHalts: [\n${this.indent.repeat(2)}${halts.map(halt => `new ${halt.class}(),`).join('\n' + this.indent.repeat(2))}\n${this.indent}]`);
+
         for (const halt of halts) {
             this.addImport(halt.notDefault !== true ? [halt.class] : halt.class, halt.from);
         }
     }
 
     public addImport(imports: string|string[], from: string): void {
-        this.content = this.content.replace(`import { IntentsBitField } from 'discord.js';`, `import { IntentsBitField } from 'discord.js';\nimport ${typeof imports === 'string' ? imports : ('{ ' + imports.join(', ') + ' }')} from '${from}';`);
+        const importString = `import ${typeof imports === 'string' ? imports : ('{ ' + imports.join(', ') + ' }')} from '${from}';`;
+        if (this.content.includes(importString)) return;
+
+        this.content = this.content.replace(`import { IntentsBitField } from 'discord.js';`, `import { IntentsBitField } from 'discord.js';\n${importString}`);
     }
 
     public async readContent(): Promise<string> {
