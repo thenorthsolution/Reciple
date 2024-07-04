@@ -94,7 +94,11 @@ export class TemplateBuilder implements TemplateBuilderOptions {
 
         if (!this.setup.packageManager) console.log(`  • ${kleur.cyan().bold(this.packageManagerPlaceholders.INSTALL_ALL)} (or ${packageManagerPlaceholders.pnpm.INSTALL_ALL}, etc)`);
 
-        console.log(`  • ${kleur.cyan().bold(`${this.packageManagerPlaceholders.SCRIPT_RUN} dev`)}`);
+        console.log(`  • ${kleur.cyan().bold(`${this.packageManagerPlaceholders.SCRIPT_RUN} dev`)} ${kleur.gray('(Development)')}`);
+        console.log(`  • ${kleur.cyan().bold(`${this.packageManagerPlaceholders.SCRIPT_RUN} start`)} ${kleur.gray('(Production)')}`);
+        console.log(kleur.green(`\nAll done! Make sure to read through the Reciple guide and docs to help you get started.`));
+        console.log(`  • ${kleur.gray().bold(`Guide:`)} ${kleur.cyan('https://reciple.js.org/guide')}`);
+        console.log(`  • ${kleur.gray().bold(`Docs:`)} ${kleur.cyan('https://reciple.js.org/docs')}`);
     }
 
     /**
