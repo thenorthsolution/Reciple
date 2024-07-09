@@ -3,7 +3,6 @@
   "description": "Utilities used by reciple modules",
   "license": "GPL-3.0",
   "version": "9.2.1",
-  "main": "./dist/index.js",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "type": "module",
@@ -18,9 +17,10 @@
   },
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js",
-      "require": "./dist/index.js"
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      }
     },
     "./tsconfig.json": "./assets/tsconfig.json"
   },
@@ -44,6 +44,7 @@
     "discord-api-types": "^0.37.91",
     "dotenv": "^16.4.5",
     "fallout-utility": "^2.9.1",
+    "file-type": "^19.1.0",
     "package-json": "^10.0.0",
     "semver": "^7.6.2"
   },

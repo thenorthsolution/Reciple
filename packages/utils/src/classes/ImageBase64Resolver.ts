@@ -1,7 +1,9 @@
 import type { Base64Resolvable, BufferResolvable, ResolvedFile } from 'discord.js';
-import { readFile, stat } from 'node:fs/promises';
-import path from 'node:path';
+import { resolveFileData } from '../helpers/fileSystem.js';
 
+/**
+ * @deprecated Use `Base64Resolvabler`
+ */
 export class ImageBase64 {
     private constructor() {}
 
@@ -30,21 +32,6 @@ export class ImageBase64 {
      * @param resource Source
      */
     public async resolveFile(resource: BufferResolvable): Promise<ResolvedFile> {
-        if (Buffer.isBuffer(resource)) return { data: resource };
-
-        if (typeof resource === 'string') {
-            if (/^https?:\/\//.test(resource)) {
-                const res = await fetch(resource);
-                return { data: Buffer.from(await res.arrayBuffer()), contentType: res.headers.get('content-type') ?? undefined };
-            }
-
-            const file = path.resolve(resource);
-            const stats = await stat(file);
-
-            if (!stats.isFile()) throw new Error('File not found', { cause: file });
-            return { data: await readFile(file) };
-        }
-
-        throw new Error('Unknown file');
+        return resolveFileData(resource);
     }
 }

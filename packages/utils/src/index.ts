@@ -1,3 +1,4 @@
+export * from './classes/Base64URLResolver.js';
 export * from './classes/ImageBase64Resolver.js';
 export * from './classes/Mentions.js';
 export * from './classes/MessageURLData.js';
