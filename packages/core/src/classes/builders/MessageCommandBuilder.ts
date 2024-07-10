@@ -279,7 +279,7 @@ export class MessageCommandBuilder extends BaseCommandBuilder implements Message
                     commandType: builder.command_type,
                     reason: CommandHaltReason.InvalidArguments,
                     executeData,
-                    invalidOptions: executeData.options.getInvalidOptions()
+                    invalidOptions: executeData.options.invalidOptions
                 });
                 return null;
             }
@@ -289,7 +289,7 @@ export class MessageCommandBuilder extends BaseCommandBuilder implements Message
                     commandType: builder.command_type,
                     reason: CommandHaltReason.MissingArguments,
                     executeData,
-                    missingOptions: executeData.options.getMissingOptions()
+                    missingOptions: executeData.options.missingOptions
                 });
                 return null;
             }

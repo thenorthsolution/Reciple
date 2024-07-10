@@ -14,15 +14,15 @@ export class MessageCommandArguments {
      */
     async messageCommandHalt(data) {
         if (data.reason !== CommandHaltReason.InvalidArguments && data.reason !== CommandHaltReason.MissingArguments) return;
-        console.log(data.executeData.options.getInvalidOptions());
-        console.log(data.executeData.options.getMissingOptions());
+        console.log(data.executeData.options.invalidOptions);
+        console.log(data.executeData.options.missingOptions);
 
         switch (data.reason) {
             case CommandHaltReason.InvalidArguments:
-                await data.executeData.message.reply(`## Invalid arguments\n${data.executeData.options.getInvalidOptions().map(o => `- ${inlineCode(o.name)} ${o.error?.message ?? 'Invalid value'}`).join('\n')}`);
+                await data.executeData.message.reply(`## Invalid arguments\n${data.executeData.options.invalidOptions.map(o => `- ${inlineCode(o.name)} ${o.error?.message ?? 'Invalid value'}`).join('\n')}`);
                 break;
             case CommandHaltReason.MissingArguments:
-                await data.executeData.message.reply(`## Missing arguments\n${data.executeData.options.getMissingOptions().map(o => `- ${inlineCode(o.name)}`).join('\n')}`);
+                await data.executeData.message.reply(`## Missing arguments\n${data.executeData.options.missingOptions.map(o => `- ${inlineCode(o.name)}`).join('\n')}`);
                 break;
         }
 
