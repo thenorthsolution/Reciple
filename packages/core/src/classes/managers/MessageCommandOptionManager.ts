@@ -60,14 +60,41 @@ export class MessageCommandOptionManager extends DataManager<MessageCommandOptio
         return this.cache.some(o => o.error);
     }
 
+    get missingOptions() {
+        return this.cache.filter(o => o.missing);
+    }
+
+    get invalidOptions() {
+        return this.cache.filter(o => o.invalid);
+    }
+
+    /**
+     * Retrieves the missing options from the cache.
+     *
+     * @return {Collection<string, MessageCommandOptionValue>} The missing options from the cache.
+     * @deprecated
+     */
     public getMissingOptions(): Collection<string, MessageCommandOptionValue> {
         return this.cache.filter(o => o.missing);
     }
 
+    /**
+     * Retrieves the invalid options from the cache.
+     *
+     * @return {Collection<string, MessageCommandOptionValue>} The invalid options from the cache.
+     * @deprecated
+     */
     public getInvalidOptions(): Collection<string, MessageCommandOptionValue> {
         return this.cache.filter(o => o.invalid);
     }
 
+    /**
+     * Retrieves the value of a message command option.
+     *
+     * @param {string} name - The name of the option.
+     * @param {boolean} required - Whether the option is required or not.
+     * @return {MessageCommandOptionValue<V>|null} The value of the message command option.
+     */
     public getOption<V extends any = any>(name: string, required?: false): MessageCommandOptionValue<V>;
     public getOption<V extends any = any>(name: string, required?: true): MessageCommandOptionValue<V>;
     public getOption<V extends any = any>(name: string, required: boolean = false): MessageCommandOptionValue<V>|null {

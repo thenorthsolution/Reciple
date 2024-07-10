@@ -1,6 +1,6 @@
 import { CooldownManager } from '../managers/CooldownManager.js';
 import { CommandType } from '../../types/constants.js';
-import type { TextBasedChannel } from 'discord.js';
+import { type JSONEncodable, type TextBasedChannel } from 'discord.js';
 
 export interface CooldownData {
     /**
@@ -85,3 +85,5 @@ export class Cooldown implements CooldownData {
         };
     }
 }
+
+export type CooldownResolvable = CooldownData|JSONEncodable<CooldownData>;

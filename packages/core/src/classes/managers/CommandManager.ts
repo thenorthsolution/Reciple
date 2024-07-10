@@ -33,11 +33,21 @@ export class CommandManager {
         return this.contextMenuCommands.size + this.messageCommands.size + this.slashCommands.size;
     }
 
-    public getApplicationCommands(): (ContextMenuCommandBuilder|AnySlashCommandBuilder)[] {
+    get applicationCommands() {
         return [
             ...this.contextMenuCommands.values(),
             ...this.slashCommands.values()
         ];
+    }
+
+    /**
+     * Retrieves all application commands.
+     *
+     * @return {(ContextMenuCommandBuilder|AnySlashCommandBuilder)[]} The application commands
+     * @deprecated Use `.applicationCommands` property instead
+     */
+    public getApplicationCommands(): (ContextMenuCommandBuilder|AnySlashCommandBuilder)[] {
+        return this.applicationCommands;
     }
 
     /**
@@ -144,14 +154,21 @@ export class CommandManager {
     }
 
     public get(command: string, type: CommandType.ContextMenuCommand): ContextMenuCommandBuilder|undefined;
-    public get(command: string, type: CommandType.MessageCommand): MessageCommandBuilder|undefined;
+    public get(command: string, type: CommandType.MessageCommand, findWithAliases?: boolean): MessageCommandBuilder|undefined;
     public get(command: string, type: CommandType.SlashCommand): AnySlashCommandBuilder|undefined;
-    public get(command: string, type: CommandType): AnyCommandBuilder|undefined {
+    public get(command: string, type: CommandType, findWithAliases: boolean = true): AnyCommandBuilder|undefined {
         switch (type) {
             case CommandType.ContextMenuCommand:
                 return this.contextMenuCommands.get(command);
             case CommandType.MessageCommand:
-                return (this.messageCommands.get(command) ?? this.messageCommands.find(c => c.aliases?.some(a => a == command?.toLowerCase())));
+                return (
+                    this.messageCommands.get(command)
+                    ?? (
+                        findWithAliases
+                            ? this.messageCommands.find(c => c.aliases?.some(a => a == command?.toLowerCase()))
+                            : undefined
+                        )
+                );
             case CommandType.SlashCommand:
                 return this.slashCommands.get(command);
         }

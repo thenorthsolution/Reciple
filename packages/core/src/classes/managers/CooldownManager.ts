@@ -1,4 +1,5 @@
-import { Cooldown, type CooldownData } from '../structures/Cooldown.js';
+import { isJSONEncodable } from 'discord.js';
+import { Cooldown, type CooldownData, type CooldownResolvable } from '../structures/Cooldown.js';
 import type { RecipleClient } from '../structures/RecipleClient.js';
 import { DataManager } from './DataManager.js';
 
@@ -15,16 +16,29 @@ export class CooldownManager extends DataManager<Cooldown> {
         super();
     }
 
-    public create(data: CooldownData): Cooldown {
-        const isExists = this.findCooldown(data);
+    /**
+     * Creates a new Cooldown object based on the provided data.
+     *
+     * @param {CooldownResolvable} data - The data to create the Cooldown from.
+     * @return {Cooldown} The newly created Cooldown object.
+     */
+    public create(data: CooldownResolvable): Cooldown {
+        const cooldownData = isJSONEncodable(data) ? data.toJSON() : data;
+        const isExists = this.findCooldown(cooldownData);
         if (isExists) return isExists;
 
-        const cooldown = new Cooldown(data, this);
+        const cooldown = new Cooldown(cooldownData, this);
         this._cache.set(cooldown.id, cooldown);
 
         return cooldown;
     }
 
+    /**
+     * A description of the entire function.
+     *
+     * @param {string|Partial<Omit<CooldownData, 'endsAt'>>} dataResolvable - The data to find the Cooldown based on.
+     * @return {Cooldown|undefined} The found Cooldown object or undefined if not found.
+     */
     public findCooldown(userId: string): Cooldown|undefined;
     public findCooldown(data: Partial<Omit<CooldownData, 'endsAt'>>): Cooldown|undefined;
     public findCooldown(dataResolvable: string|Partial<Omit<CooldownData, 'endsAt'>>): Cooldown|undefined {
@@ -46,17 +60,29 @@ export class CooldownManager extends DataManager<Cooldown> {
         });
     }
 
-    public clean(): void {
-        this._cache.sweep(c => c.isEnded());
+    /**
+     * Sweeps the cache based on the provided options.
+     *
+     * @param {Partial<CooldownSweeperOptions>} options - The options for sweeping the cache.
+     * @return {void} 
+     */
+    public clean(options?: Partial<CooldownSweeperOptions>): void {
+        this._cache.sweep(c =>
+            c.isEnded() ||
+            !!(options?.maxAgeMs && (Date.now() - c.createdAt.getTime()) >= options.maxAgeMs) ||
+            !!(options?.filter && options.filter(c))
+        );
     }
 
+    /**
+     * Sets up a cooldown sweeper based on the provided options.
+     *
+     * @param {CooldownSweeperOptions} options - The options for the cooldown sweeper.
+     * @return {NodeJS.Timeout} The NodeJS Timeout object representing the interval.
+     */
     public setCooldownSweeper(options: CooldownSweeperOptions): NodeJS.Timeout {
         if (this._sweeper) clearInterval(this._sweeper);
-
-        return this._sweeper = setInterval(
-            () => this._cache.sweep(c => c.isEnded() || (!options?.maxAgeMs || (Date.now() - c.createdAt.getTime()) >= options.maxAgeMs) || (!options.filter || options.filter(c))),
-            options.timer
-        ).unref();
+        return this._sweeper = setInterval(() => this.clean(options), options.timer).unref();
     }
 
     public toJSON(): CooldownData[] {
