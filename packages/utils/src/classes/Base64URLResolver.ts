@@ -2,7 +2,7 @@ import type { Base64Resolvable, BufferResolvable } from 'discord.js';
 import { resolveFileData } from '../helpers/fileSystem.js';
 import { fileTypeFromBuffer } from 'file-type';
 
-export class Base64Resolvabler {
+export class Base64Resolver {
     private constructor() {}
 
     /**
