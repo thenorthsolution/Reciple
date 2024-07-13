@@ -4,6 +4,7 @@
   "compilerOptions": {
     "rootDir": "./src",
     "outDir": "./dist",
+    "emitDecoratorMetadata": true,
     "declaration": true
   }
 }
