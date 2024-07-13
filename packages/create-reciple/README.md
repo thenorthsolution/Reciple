@@ -39,8 +39,6 @@ pnpm create reciple@latest
 ```
 
 ## Templates
-- Javascript (CommonJS)
 - Javascript (ES Modules)
-- Typescript (CommonJS)
 - Typescript (ES Modules)
 
