@@ -1,8 +1,8 @@
+import { type RecipleClientEvents } from '@reciple/core';
 import { Collection, GatewayDispatchEvents, type RestEvents } from 'discord.js';
-import type { RecipleClientEvents } from '../classes/structures/RecipleClient.js';
-import { recipleModuleMetadataSymbol } from '../types/constants.js';
+import type { RecipleModuleDecoratorMetadata } from './module.js';
 import type { TypedMethodDecorator } from '../types/structures.js';
-import { type RecipleModuleDecoratorMetadata } from './module.js';
+import { recipleModuleMetadataSymbol } from '../types/constants.js';
 
 export interface RecipleModuleEventDecoratorMap {
     ws: Record<GatewayDispatchEvents, [data: any, shardId: number]>;

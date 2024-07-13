@@ -1,8 +1,6 @@
+import { type AnyCommandResolvable, type RecipleClientEvents, type RecipleModuleData, type RecipleModuleStartData, type RecipleModuleLoadData, type RecipleModuleUnloadData } from '@reciple/core';
 import type { Collection, GatewayDispatchEvents, RestEvents } from 'discord.js';
-import type { RecipleClientEvents } from '../classes/structures/RecipleClient.js';
-import type { RecipleModuleData, RecipleModuleLoadData, RecipleModuleStartData, RecipleModuleUnloadData } from '../classes/structures/RecipleModule.js';
 import { recipleModuleMetadataSymbol } from '../types/constants.js';
-import type { AnyCommandResolvable } from '../types/structures.js';
 
 export interface RecipleModuleDecoratorMetadata {
     commands?: AnyCommandResolvable[];

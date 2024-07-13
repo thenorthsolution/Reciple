@@ -1,0 +1,49 @@
+{
+  "name": "@reciple/decorators",
+  "description": "Typescript decorators for Reciple",
+  "homepage": "https://reciple.js.org/docs/decorators",
+  "license": "GPL-3.0",
+  "version": "9.0.0",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "type": "module",
+  "keywords": [
+    "reciple",
+    "discord.js",
+    "decorators",
+    "typescript"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/thenorthsolution/Reciple",
+    "directory": "packages/decorators"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "clean": "rimraf ./dist",
+    "build": "tsup",
+    "check": "tsc --noEmit",
+    "docs": "node ../docgen/dist/bin.js -i ./src/index.ts -o ./docs/docs.json",
+    "prepack": "npm run build"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "devDependencies": {
+    "@reciple/core": "^9.3.1",
+    "discord.js": "^14.15.3"
+  },
+  "peerDependencies": {
+    "@reciple/core": "^9 || ^9.0.0-dev",
+    "discord.js": "^14.15.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

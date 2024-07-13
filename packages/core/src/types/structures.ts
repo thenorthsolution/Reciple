@@ -9,9 +9,6 @@ import type { CooldownSweeperOptions } from '../classes/managers/CooldownManager
 import type { CommandHaltReason, CommandType } from './constants.js';
 import type { Cooldown } from '../classes/structures/Cooldown.js';
 
-// Decorators
-export type TypedMethodDecorator<T> = (target: Object, propertyKey: string | symbol, descriptor: TypedPropertyDescriptor<T>) => TypedPropertyDescriptor<T> | void;
-
 // Config
 export interface RecipleClientConfig {
     token: string;

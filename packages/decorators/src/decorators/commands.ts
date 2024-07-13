@@ -1,8 +1,6 @@
-import { ContextMenuCommandBuilder, type ContextMenuCommandBuilderData, type ContextMenuCommandExecuteFunction, type ContextMenuCommandResolvable } from '../classes/builders/ContextMenuCommandBuilder.js';
-import { MessageCommandBuilder, type MessageCommandBuilderData, type MessageCommandExecuteFunction, type MessageCommandResolvable } from '../classes/builders/MessageCommandBuilder.js';
-import { SlashCommandBuilder, type AnySlashCommandBuilder, type SlashCommandBuilderData, type SlashCommandExecuteFunction, type SlashCommandResolvable } from '../classes/builders/SlashCommandBuilder.js';
+import { ContextMenuCommandBuilder, type ContextMenuCommandExecuteFunction, type ContextMenuCommandBuilderData, type ContextMenuCommandResolvable, type MessageCommandExecuteFunction, MessageCommandBuilder, type MessageCommandBuilderData, type MessageCommandResolvable, type SlashCommandExecuteFunction, type AnySlashCommandBuilder, type SlashCommandBuilderData, type SlashCommandResolvable, SlashCommandBuilder } from '@reciple/core';
 import { recipleModuleMetadataSymbol } from '../types/constants.js';
-import { type RecipleModuleDecoratorMetadata } from './module.js';
+import type { RecipleModuleDecoratorMetadata } from './module.js';
 
 export function setContextMenuCommand<T extends ContextMenuCommandExecuteFunction>(data: Omit<ContextMenuCommandBuilder, 'execute'|'setExecute'>|Omit<ContextMenuCommandBuilderData, 'execute'|'command_type'>) {
     return function(target: { constructor: { prototype: { [recipleModuleMetadataSymbol]?: RecipleModuleDecoratorMetadata; }; }; }, propertyKey: string|symbol, descriptor?: TypedPropertyDescriptor<T>) {
