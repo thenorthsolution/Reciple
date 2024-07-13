@@ -25,7 +25,7 @@ export function setRecipleModule(versions?: string|string[]) {
 }
 
 export function setRecipleModuleStart() {
-    return function<T extends RecipleModuleData['onStart']>(target: Object, propertyKey: string|symbol, descriptor: TypedPropertyDescriptor<T>) {
+    return function<T extends RecipleModuleData['onStart']>(target: unknown, propertyKey: string|symbol, descriptor: TypedPropertyDescriptor<T>) {
         if (!descriptor) throw new Error(`@setRecipleModuleStart must be used on a method`);
         if (propertyKey !== 'onStart') throw new Error(`@setRecipleModuleStart must be used on the onStart method`);
 
