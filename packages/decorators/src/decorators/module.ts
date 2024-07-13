@@ -2,6 +2,15 @@ import { type RecipleModuleData, type RecipleModuleStartData, type RecipleModule
 import { recipleModuleMetadataSymbol } from '../types/constants.js';
 import type { RecipleModuleDecoratorMetadata } from '../types/structures.js';
 
+/**
+ * Sets a module decorator. Module metadata is stored in the prototype of the class with the symbol `recipleModuleMetadataSymbol`.
+ * 
+ * ```ts
+ * ＠setRecipleModule('')
+ * class MyModule implements RecipleModuleData {
+ * }
+ * @param versions The supported reciple client versions of this module
+ */
 export function setRecipleModule(versions?: string|string[]) {
     return function(target: any) {
         target.prototype[recipleModuleMetadataSymbol] = {
@@ -18,6 +27,19 @@ export function setRecipleModule(versions?: string|string[]) {
     }
 }
 
+/**
+ * Sets the start function of the module. This decorator must be used on the `onStart` method. The commands and versions will be added to the module when the module is started.
+ * 
+ * ```ts
+ * ＠setRecipleModule()
+ * class MyModule implements RecipleModuleData {
+ *     ＠setRecipleModuleStart()
+ *     async onStart() {
+ *         return true;
+ *     }
+ * }
+ * ```
+ */
 export function setRecipleModuleStart() {
     return function<T extends RecipleModuleData['onStart']>(target: unknown, propertyKey: string|symbol, descriptor: TypedPropertyDescriptor<T>) {
         if (!descriptor) throw new Error(`@setRecipleModuleStart must be used on a method`);
@@ -48,6 +70,22 @@ export function setRecipleModuleStart() {
     }
 }
 
+/**
+ * Sets the load function of the module. This decorator must be used on the `onLoad` method. The events listeners will be added to its event emitter when the module is loaded.
+ * 
+ * ```ts
+ * ＠setRecipleModule()
+ * class MyModule implements RecipleModuleData {
+ *     ＠setRecipleModuleStart()
+ *     async onStart() {
+ *         return true;
+ *     }
+ * 
+ *     ＠setRecipleModuleLoad()
+ *     async onLoad() {}
+ * }
+ * ```
+ */
 export function setRecipleModuleLoad() {
     return function<T extends Exclude<RecipleModuleData['onLoad'], undefined>>(target: unknown, propertyKey: string|symbol, descriptor: TypedPropertyDescriptor<T>) {
         if (!descriptor) throw new Error(`@setRecipleModuleLoad must be used on a method`);
@@ -95,6 +133,25 @@ export function setRecipleModuleLoad() {
     }
 }
 
+/**
+ * Sets the unload function of the module. This decorator must be used on the `onUnload` method. The events listeners will be removed from its event emitter when the module is unloaded.
+ * 
+ * ```ts
+ * ＠setRecipleModule()
+ * class MyModule implements RecipleModuleData {
+ *     ＠setRecipleModuleStart()
+ *     async onStart() {
+ *         return true;
+ *     }
+ * 
+ *     ＠setRecipleModuleLoad()
+ *     async onLoad() {}
+ * 
+ *     ＠setRecipleModuleUnload()
+ *     async onUnload() {}
+ * }
+ * ```
+ */
 export function setRecipleModuleUnload() {
     return function<T extends Exclude<RecipleModuleData['onUnload'], undefined>>(target: unknown, propertyKey: string|symbol, descriptor: TypedPropertyDescriptor<T>) {
         if (!descriptor) throw new Error(`@setRecipleModuleUnload must be used on a method`);
