@@ -22,9 +22,9 @@ export function setClientEvent<E extends string|symbol, A extends any[]>(event: 
     }
 }
 
-export function setWsEvent<E extends keyof GatewayDispatchEvents, A extends [data: any, shardId: number]>(event: E, once?: boolean): TypedMethodDecorator<(...args: A) => any>;
-export function setWsEvent<E extends string|symbol, A extends any[]>(event: E, once?: boolean): TypedMethodDecorator<(...args: A) => any>;
-export function setWsEvent<E extends string|symbol, A extends any[]>(event: E, once?: boolean): TypedMethodDecorator<(...args: A) => any> {
+export function setWebsocketEvent<E extends keyof GatewayDispatchEvents, A extends [data: any, shardId: number]>(event: E, once?: boolean): TypedMethodDecorator<(...args: A) => any>;
+export function setWebsocketEvent<E extends string|symbol, A extends any[]>(event: E, once?: boolean): TypedMethodDecorator<(...args: A) => any>;
+export function setWebsocketEvent<E extends string|symbol, A extends any[]>(event: E, once?: boolean): TypedMethodDecorator<(...args: A) => any> {
     return function(target: { constructor: { prototype: { [recipleModuleMetadataSymbol]?: RecipleModuleDecoratorMetadata; }; }; }, propertyKey: string|symbol, descriptor: TypedPropertyDescriptor<(...args: A) => any>) {
         if (!descriptor) throw new Error(`@setWsEvent must be used on a method`);
 
