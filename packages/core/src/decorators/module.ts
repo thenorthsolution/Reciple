@@ -87,7 +87,7 @@ export function setRecipleModuleLoad() {
                             if (typeof listener === 'function') continue listenerLoop;
 
                             const index = listeners.indexOf(listener);
-                            const listenerFunction = (...args: any[]) => (this[listener.key as never] as Function).call(this, ...args);
+                            const listenerFunction = (...args: any[]) => (this[listener.key as never] as (...args: any[]) => any).call(this, ...args);
 
                             if (listener.once !== true) {
                                 eventEmitter.on(event, listenerFunction);
