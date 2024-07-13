@@ -1,7 +1,6 @@
 import { type RecipleClientEvents } from '@reciple/core';
 import { Collection, GatewayDispatchEvents, type RestEvents } from 'discord.js';
-import type { RecipleModuleDecoratorMetadata } from './module.js';
-import type { TypedMethodDecorator } from '../types/structures.js';
+import type { RecipleModuleDecoratorMetadata, TypedMethodDecorator } from '../types/structures.js';
 import { recipleModuleMetadataSymbol } from '../types/constants.js';
 
 export interface RecipleModuleEventDecoratorMap {

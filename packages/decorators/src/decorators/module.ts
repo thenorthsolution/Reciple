@@ -1,16 +1,6 @@
-import { type AnyCommandResolvable, type RecipleClientEvents, type RecipleModuleData, type RecipleModuleStartData, type RecipleModuleLoadData, type RecipleModuleUnloadData } from '@reciple/core';
-import type { Collection, GatewayDispatchEvents, RestEvents } from 'discord.js';
+import { type RecipleModuleData, type RecipleModuleStartData, type RecipleModuleLoadData, type RecipleModuleUnloadData } from '@reciple/core';
 import { recipleModuleMetadataSymbol } from '../types/constants.js';
-
-export interface RecipleModuleDecoratorMetadata {
-    commands?: AnyCommandResolvable[];
-    versions?: string|string[];
-    events?: {
-        client?: Collection<keyof RecipleClientEvents, ({ key: string|symbol; once: boolean; }|(() => any))[]>;
-        ws?: Collection<keyof GatewayDispatchEvents, ({ key: string|symbol; once: boolean; }|(() => any))[]>;
-        rest?: Collection<keyof RestEvents, ({ key: string|symbol; once: boolean; }|(() => any))[]>;
-    };
-}
+import type { RecipleModuleDecoratorMetadata } from '../types/structures.js';
 
 export function setRecipleModule(versions?: string|string[]) {
     return function(target: any) {
