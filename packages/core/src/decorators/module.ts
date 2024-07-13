@@ -12,7 +12,7 @@ export function setRecipleModule(versions?: string|string[]) {
     return function(target: any) {
         target.prototype[recipleModuleMetadataSymbol] = {
             commands: [],
-            ...target[recipleModuleMetadataSymbol],
+            ...target.prototype[recipleModuleMetadataSymbol],
             versions,
         } satisfies RecipleModuleDecoratorMetadata;
 
@@ -32,9 +32,9 @@ export function setRecipleModuleStart() {
         const originalValue = descriptor.value;
 
         descriptor.value = async function(this: RecipleModuleData & { [recipleModuleMetadataSymbol]?: RecipleModuleDecoratorMetadata; }, ...args: [data: RecipleModuleStartData]) {
-            const metadata = this[recipleModuleMetadataSymbol] ?? { commands: [], versions: [] };
+            const metadata = this[recipleModuleMetadataSymbol];
 
-            if (metadata.commands) {
+            if (metadata?.commands) {
                 this.commands ??= [];
 
                 for (const command of metadata.commands) {
@@ -42,7 +42,7 @@ export function setRecipleModuleStart() {
                 }
             }
 
-            if (metadata.versions) {
+            if (metadata?.versions) {
                 this.versions ??= [];
 
                 if (typeof this.versions === 'string') this.versions = [this.versions];
