@@ -40,6 +40,7 @@ export const packageManagers: { label?: string; hint?: string; value: PackageMan
 export const packages: Record<string, string> = {
     'TYPES_NODE': packageJson.devDependencies!['@types/node']!,
     'RECIPLE_CORE': packageJson.dependencies!['@reciple/core']!,
+    'RECIPLE_DECORATORS': packageJson.dependencies!['@reciple/decorators']!,
     'TYPESCRIPT': packageJson.devDependencies!['typescript']!,
     'RIMRAF': packageJson.devDependencies!['rimraf']!,
     'RECIPLE': packageJson.dependencies!['reciple']!,

@@ -38,6 +38,7 @@
   "dependencies": {
     "@clack/prompts": "^0.7.0",
     "@reciple/core": "^9.3.1",
+    "@reciple/decorators": "^9.0.0",
     "@reciple/utils": "^9.3.1",
     "commander": "^12.1.0",
     "compressing": "^1.10.1",
