@@ -5,7 +5,7 @@ import type { RecipleModuleDecoratorMetadata } from '../types/structures.js';
 /**
  * Sets a context menu command decorator.
  * 
- * ```
+ * ```ts
  * ＠setRecipleModule()
  * class MyModule implements RecipleModuleData {
  *     ＠setRecipleModuleStart()
@@ -15,7 +15,7 @@ import type { RecipleModuleDecoratorMetadata } from '../types/structures.js';
  *
  *     ＠setContextMenuCommand({ name: 'Test', type: 'Message' })
  *     async handleContextMenuExecute(data: ContextMenuCommandExecuteData) {
- *         await data.interaction('Test');
+ *         await data.interaction.reply('Test');
  *     }
  * }
  * ```
@@ -55,7 +55,7 @@ export function setContextMenuCommand<T extends ContextMenuCommandExecuteFunctio
  *
  *     ＠setMessageCommand({ name: 'test', description: 'test command', aliases: ['t'] })
  *     async handleMessageCommandExecute(data: MessageCommandExecuteData) {
- *         await data.message('Test');
+ *         await data.message.reply('Test');
  *     }
  * }
  * ```
@@ -84,7 +84,7 @@ export function setMessageCommand<T extends MessageCommandExecuteFunction>(data:
 /**
  * Sets a slash command decorator.
  * 
- * ```
+ * ```ts
  * ＠setRecipleModule()
  * class MyModule implements RecipleModuleData {
  *     ＠setRecipleModuleStart()
@@ -94,7 +94,7 @@ export function setMessageCommand<T extends MessageCommandExecuteFunction>(data:
  *
  *     ＠setSlashCommand({ name: 'Test', description: 'Test command' })
  *     async handleSlashCommandExecute(data: SlashCommandExecuteData) {
- *         await data.interaction('Test');
+ *         await data.interaction.reply('Test');
  *     }
  * }
  * ```

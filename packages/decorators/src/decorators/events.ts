@@ -8,6 +8,32 @@ export interface RecipleModuleEventDecoratorMap {
     rest: RestEvents;
 }
 
+/**
+ * Sets a client event
+ * 
+ * ```ts
+ * ＠setRecipleModule()
+ * class MyModule implements RecipleModuleData {
+ *     ＠setRecipleModuleStart()
+ *     async onStart() {
+ *         return true;
+ *     }
+ * 
+ *     ＠setRecipleModuleLoad()
+ *     async onLoad() {}
+ * 
+ *     ＠setRecipleModuleUnload()
+ *     async onUnload() {}
+ *
+ *     ＠setClientEvent('messageCreate')
+ *     async handleMessageEvent(message: Message) {
+ *         await message.reply('Test');
+ *     }
+ * }
+ * ```
+ * @param event The event name
+ * @param once True if the event should only be triggered once
+ */
 export function setClientEvent<E extends keyof RecipleClientEvents, A extends RecipleClientEvents[E]>(event: E, once?: boolean): TypedMethodDecorator<(...args: A) => any>;
 export function setClientEvent<E extends string|symbol, A extends any[]>(event: E, once?: boolean): TypedMethodDecorator<(...args: A) => any>;
 export function setClientEvent<E extends string|symbol, A extends any[]>(event: E, once?: boolean): TypedMethodDecorator<(...args: A) => any> {
@@ -21,6 +47,32 @@ export function setClientEvent<E extends string|symbol, A extends any[]>(event: 
     }
 }
 
+/**
+ * Sets a websocket event
+ * 
+ * ```ts
+ * ＠setRecipleModule()
+ * class MyModule implements RecipleModuleData {
+ *     ＠setRecipleModuleStart()
+ *     async onStart() {
+ *         return true;
+ *     }
+ * 
+ *     ＠setRecipleModuleLoad()
+ *     async onLoad() {}
+ * 
+ *     ＠setRecipleModuleUnload()
+ *     async onUnload() {}
+ *
+ *     ＠setWebsocketEvent(GatewayDispatchEvents.MessageCreate)
+ *     async handleWebsocketEvent(data: any) {
+ *         console.log(data);
+ *     }
+ * }
+ * ```
+ * @param event The event name
+ * @param once True if the event should only be triggered once
+ */
 export function setWebsocketEvent<E extends keyof GatewayDispatchEvents, A extends [data: any, shardId: number]>(event: E, once?: boolean): TypedMethodDecorator<(...args: A) => any>;
 export function setWebsocketEvent<E extends string|symbol, A extends any[]>(event: E, once?: boolean): TypedMethodDecorator<(...args: A) => any>;
 export function setWebsocketEvent<E extends string|symbol, A extends any[]>(event: E, once?: boolean): TypedMethodDecorator<(...args: A) => any> {
@@ -34,6 +86,32 @@ export function setWebsocketEvent<E extends string|symbol, A extends any[]>(even
     }
 }
 
+/**
+ * Sets a REST event
+ * 
+ * ```ts
+ * ＠setRecipleModule()
+ * class MyModule implements RecipleModuleData {
+ *     ＠setRecipleModuleStart()
+ *     async onStart() {
+ *         return true;
+ *     }
+ * 
+ *     ＠setRecipleModuleLoad()
+ *     async onLoad() {}
+ * 
+ *     ＠setRecipleModuleUnload()
+ *     async onUnload() {}
+ *
+ *     ＠setRESTEvent('restDebug')
+ *     async handleRESTEvent(info: string) {
+ *         console.log(info);
+ *     }
+ * }
+ * ```
+ * @param event The event name
+ * @param once True if the event should only be triggered once
+ */
 export function setRESTEvent<E extends keyof RestEvents, A extends RestEvents[E]>(event: E, once?: boolean): TypedMethodDecorator<(...args: A) => any>;
 export function setRESTEvent<E extends string|symbol, A extends any[]>(event: E, once?: boolean): TypedMethodDecorator<(...args: A) => any>;
 export function setRESTEvent<E extends string|symbol, A extends any[]>(event: E, once?: boolean): TypedMethodDecorator<(...args: A) => any> {
