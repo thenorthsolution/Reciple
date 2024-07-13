@@ -33,3 +33,6 @@ export * from './types/constants.js';
 export * from './types/structures.js';
 
 export { Logger } from 'fallout-utility/Logger';
+
+export * from './decorators/commands.js';
+export * from './decorators/module.js';
