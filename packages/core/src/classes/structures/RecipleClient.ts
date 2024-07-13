@@ -9,13 +9,14 @@ import { version } from '../../types/constants.js';
 import type { Logger } from 'fallout-utility/Logger';
 import type { If } from 'fallout-utility/types';
 
-export interface RecipleClientEvents extends ClientEvents {
+export interface RecipleClientEvents extends Omit<ClientEvents, 'ready'> {
     recipleCommandExecute: [executeData: AnyCommandExecuteData];
     recipleCommandHalt: [haltData: CommandHaltResultData];
     recipleCommandPrecondition: [executeData: CommandPreconditionResultData];
     recipleRegisterApplicationCommands: [commands: Collection<string, ApplicationCommand>, guildId?: string];
     recipleError: [error: Error];
     recipleDebug: [message: string];
+    ready: [client: RecipleClient<boolean>];
 }
 
 export interface RecipleClient<Ready extends boolean = boolean> extends Client<Ready> {
