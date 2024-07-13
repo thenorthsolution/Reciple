@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@reciple/core": "RECIPLE_CORE",
+    "@reciple/decorators": "RECIPLE_DECORATORS",
     "discord.js": "DISCORDJS",
     "reciple": "RECIPLE"
   },

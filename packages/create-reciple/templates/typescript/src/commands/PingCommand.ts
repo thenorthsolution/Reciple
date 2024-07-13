@@ -1,29 +1,13 @@
-import { AnyCommandExecuteData, AnyCommandResolvable, CommandType, ContextMenuCommandBuilder, MessageCommandBuilder, RecipleModuleData, SlashCommandBuilder } from "reciple";
+import { setContextMenuCommand, setMessageCommand, setRecipleModule, setRecipleModuleLoad, setRecipleModuleStart, setRecipleModuleUnload, setSlashCommand } from '@reciple/decorators';
+import { ApplicationCommandType } from 'discord.js';
+import { AnyCommandExecuteData, CommandType, RecipleModuleData } from "reciple";
 
+@setRecipleModule()
 export class PingCommand implements RecipleModuleData {
-    /**
-     * The module commands.
-     */
-    public commands: AnyCommandResolvable[] = [
-        new SlashCommandBuilder()
-            .setName('ping')
-            .setDescription('Replies with pong!')
-            .setExecute(data => this.handleCommandExecute(data)),
-
-        new ContextMenuCommandBuilder()
-            .setName('ping')
-            .setType('Message')
-            .setExecute(data => this.handleCommandExecute(data)),
-
-        new MessageCommandBuilder()
-            .setName('ping')
-            .setDescription('Replies with pong!')
-            .setExecute(data => this.handleCommandExecute(data))
-    ];
-
     /**
      * Executed when module is started (Bot is not logged in).
      */
+    @setRecipleModuleStart()
     async onStart(): Promise<boolean> {
         return true;
     }
@@ -31,16 +15,21 @@ export class PingCommand implements RecipleModuleData {
     /**
      * Executes when the module is loaded (Bot is logged in).
      */
+    @setRecipleModuleLoad()
     async onLoad(): Promise<void> {}
 
     /**
      * Executes when the module is unloaded (Bot is pre log out).
      */
+    @setRecipleModuleUnload()
     async onUnload(): Promise<void> {}
 
     /**
-     * Called by the command builder when a command is executed.
+     * Sets the commands
      */
+    @setContextMenuCommand({ name: 'ping', type: ApplicationCommandType.Message })
+    @setMessageCommand({ name: 'ping', description: 'Replies with pong!' })
+    @setSlashCommand({ name: 'ping', description: 'Replies with pong!' })
     async handleCommandExecute(data: AnyCommandExecuteData): Promise<void> {
         switch (data.type) {
             case CommandType.ContextMenuCommand:

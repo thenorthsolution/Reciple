@@ -1,15 +1,13 @@
+import { setClientEvent, setRecipleModule, setRecipleModuleLoad, setRecipleModuleStart, setRecipleModuleUnload } from '@reciple/decorators';
 import { GuildMember } from "discord.js";
-import { RecipleModuleData, RecipleModuleLoadData, RecipleModuleUnloadData } from 'reciple';
+import { RecipleModuleData } from 'reciple';
 
+@setRecipleModule()
 export class WelcomeEvent implements RecipleModuleData {
-    constructor() {
-        // Make sure `handleWelcomeEvent` is bound to `this`
-        this.handleWelcomeEvent = this.handleWelcomeEvent.bind(this);
-    }
-
     /**
      * Executed when module is started (Bot is not logged in).
      */
+    @setRecipleModuleStart()
     async onStart(): Promise<boolean> {
         return true;
     }
@@ -17,22 +15,19 @@ export class WelcomeEvent implements RecipleModuleData {
     /**
      * Executes when the module is loaded (Bot is logged in).
      */
-    async onLoad({ client }: RecipleModuleLoadData): Promise<void> {
-        // Add the listener to the client
-        client.on('guildMemberAdd', this.handleWelcomeEvent);
-    }
+    @setRecipleModuleLoad()
+    async onLoad(): Promise<void> {}
 
     /**
      * Executes when the module is unloaded (Bot is pre log out).
      */
-    async onUnload({ client }: RecipleModuleUnloadData): Promise<void> {
-        // Properly remove the listener from the client
-        client.removeListener('guildMemberAdd', this.handleWelcomeEvent);
-    }
+    @setRecipleModuleUnload()
+    async onUnload(): Promise<void> {}
 
     /**
      * Called when a user joins the server.
      */
+    @setClientEvent('guildMemberAdd')
     async handleWelcomeEvent(member: GuildMember): Promise<void> {
         await member.send(`Welcome to **${member.guild.name}** server!`)
             .catch(() => null);
