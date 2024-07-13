@@ -18,6 +18,7 @@
     "postinstall": "patch-package"
   },
   "devDependencies": {
+    "@swc/core": "^1.6.13",
     "@types/node": "^20.14.9",
     "esbuild-plugin-version-injector": "^1.2.1",
     "lerna": "^8.1.5",
