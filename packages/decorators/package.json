@@ -36,7 +36,7 @@
     "README.md"
   ],
   "devDependencies": {
-    "@reciple/core": "^9.3.1",
+    "@reciple/core": "^9.3.2",
     "discord.js": "^14.15.3"
   },
   "peerDependencies": {
