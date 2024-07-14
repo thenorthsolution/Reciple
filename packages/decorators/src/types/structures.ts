@@ -1,4 +1,4 @@
-import type { AnyCommandResolvable, RecipleClientEvents } from '@reciple/core';
+import type { AnyCommandBuilder, RecipleClientEvents } from '@reciple/core';
 import type { Collection, GatewayDispatchEvents, RestEvents } from 'discord.js';
 
 export type TypedMethodDecorator<T> = (target: Object, propertyKey: string | symbol, descriptor: TypedPropertyDescriptor<T>) => TypedPropertyDescriptor<T> | void;
@@ -6,7 +6,7 @@ export type TypedMethodDecorator<T> = (target: Object, propertyKey: string | sym
 export interface RecipleModuleDecoratorMetadata {
     id?: string;
     name?: string;
-    commands?: AnyCommandResolvable[];
+    commands?: AnyCommandBuilder[];
     versions?: string|string[];
     events?: {
         client?: Collection<keyof RecipleClientEvents, ({ key: string|symbol; once: boolean; }|(() => any))[]>;

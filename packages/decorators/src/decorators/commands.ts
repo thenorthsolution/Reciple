@@ -29,7 +29,7 @@ export function setContextMenuCommand<T extends ContextMenuCommandExecuteFunctio
         const value = descriptor?.value;
         const builder = ContextMenuCommandBuilder.resolve(data as ContextMenuCommandResolvable);
 
-        builder.setExecute(data => value!(data));
+        if (value) builder.setExecute(value);
 
         if (!target.constructor.prototype[recipleModuleMetadataSymbol]) target.constructor.prototype[recipleModuleMetadataSymbol] = {
             commands: [],
@@ -69,7 +69,7 @@ export function setMessageCommand<T extends MessageCommandExecuteFunction>(data:
         const value = descriptor?.value;
         const builder = MessageCommandBuilder.resolve(data as MessageCommandResolvable);
 
-        builder.setExecute(data => value!(data));
+        if (value) builder.setExecute(value);
 
         if (!target.constructor.prototype[recipleModuleMetadataSymbol]) target.constructor.prototype[recipleModuleMetadataSymbol] = {
             commands: [],
@@ -108,7 +108,7 @@ export function setSlashCommand<T extends SlashCommandExecuteFunction>(data: Omi
         const value = descriptor?.value;
         const builder = SlashCommandBuilder.resolve(data as SlashCommandResolvable);
 
-        builder.setExecute(data => value!(data));
+        if (value) builder.setExecute(value);
 
         if (!target.constructor.prototype[recipleModuleMetadataSymbol]) target.constructor.prototype[recipleModuleMetadataSymbol] = {
             commands: [],
