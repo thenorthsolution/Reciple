@@ -6,24 +6,40 @@ import type { RecipleModuleDecoratorMetadata } from '../types/structures.js';
  * Sets a module decorator. Module metadata is stored in the prototype of the class with the symbol `recipleModuleMetadataSymbol`.
  * 
  * ```ts
- * ＠setRecipleModule('')
+ * ＠setRecipleModule()
  * class MyModule implements RecipleModuleData {
+ *     async onStart(){
+ *         return true;
+ *     }
  * }
- * @param versions The supported reciple client versions of this module
+ * ```
  */
-export function setRecipleModule(versions?: string|string[]) {
+export function setRecipleModule(versions?: string|string[]): ClassDecorator
+export function setRecipleModule(options?: Partial<Pick<RecipleModuleData, 'versions'|'id'|'name'>>): ClassDecorator
+export function setRecipleModule(data?: string|string[]|Partial<Pick<RecipleModuleData, 'versions'|'id'|'name'>>): ClassDecorator {
     return function(target: any) {
+        data = typeof data === 'string'
+            ? { versions: [data] }
+            : Array.isArray(data)
+                ? { versions: data }
+                : data ?? {};
+
         target.prototype[recipleModuleMetadataSymbol] = {
+            id: data.id,
+            name: data.name,
+            versions: data.versions,
             commands: [],
             ...target.prototype[recipleModuleMetadataSymbol],
-            versions,
         } satisfies RecipleModuleDecoratorMetadata;
 
-        if (!versions) return;
+        if (data.versions && data.versions.length) {
+            target.prototype.versions ??= [];
+            if (typeof target.prototype.versions === 'string') target.prototype.versions = [target.prototype.versions];
+            target.prototype.versions.push(...data.versions);
+        }
 
-        target.prototype.versions ??= [];
-        if (typeof target.prototype.versions === 'string') target.prototype.versions = [target.prototype.versions];
-        target.prototype.versions.push(...(typeof versions === 'string' ? [versions] : versions));
+        if (data.id) target.prototype.id ??= data.id;
+        if (data.name) target.prototype.name ??= data.name;
     }
 }
 

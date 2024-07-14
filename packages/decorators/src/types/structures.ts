@@ -4,6 +4,8 @@ import type { Collection, GatewayDispatchEvents, RestEvents } from 'discord.js';
 export type TypedMethodDecorator<T> = (target: Object, propertyKey: string | symbol, descriptor: TypedPropertyDescriptor<T>) => TypedPropertyDescriptor<T> | void;
 
 export interface RecipleModuleDecoratorMetadata {
+    id?: string;
+    name?: string;
     commands?: AnyCommandResolvable[];
     versions?: string|string[];
     events?: {
