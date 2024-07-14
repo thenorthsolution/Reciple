@@ -1,12 +1,7 @@
-import { type RecipleClientEvents } from '@reciple/core';
+import { type ModuleManagerEvents, type RecipleClientEvents } from '@reciple/core';
 import { Collection, GatewayDispatchEvents, type RestEvents } from 'discord.js';
-import type { RecipleModuleDecoratorMetadata, TypedMethodDecorator } from '../types/structures.js';
+import type { ProcessEventMap, RecipleModuleDecoratorMetadata, TypedMethodDecorator } from '../types/structures.js';
 import { recipleModuleMetadataSymbol } from '../types/constants.js';
-
-export interface RecipleModuleEventDecoratorMap {
-    ws: Record<GatewayDispatchEvents, [data: any, shardId: number]>;
-    rest: RestEvents;
-}
 
 /**
  * Sets a client event
@@ -65,7 +60,7 @@ export function setClientEvent<E extends string|symbol, A extends any[]>(event: 
  *     async onUnload() {}
  *
  *     ＠setWebsocketEvent(GatewayDispatchEvents.MessageCreate)
- *     async handleWebsocketEvent(data: any) {
+ *     async handleWebsocketEvent(data: any, shardId: number) {
  *         console.log(data);
  *     }
  * }
@@ -125,10 +120,88 @@ export function setRESTEvent<E extends string|symbol, A extends any[]>(event: E,
     }
 }
 
+/**
+ * Sets a ModuleManager event
+ * 
+ * ```ts
+ * ＠setRecipleModule()
+ * class MyModule implements RecipleModuleData {
+ *     ＠setRecipleModuleStart()
+ *     async onStart() {
+ *         return true;
+ *     }
+ * 
+ *     ＠setRecipleModuleLoad()
+ *     async onLoad() {}
+ * 
+ *     ＠setRecipleModuleUnload()
+ *     async onUnload() {}
+ *
+ *     ＠setModuleManagerEvent('resolveModuleFileError')
+ *     async handleRESTEvent(file: string, error: Error) {
+ *         console.log(file, error);
+ *     }
+ * }
+ * ```
+ * @param event The event name
+ * @param once True if the event should only be triggered once
+ */
+export function setModuleManagerEvent<E extends keyof ModuleManagerEvents, A extends ModuleManagerEvents[E]>(event: E, once?: boolean): TypedMethodDecorator<(...args: A) => any>;
+export function setModuleManagerEvent<E extends string|symbol, A extends any[]>(event: E, once?: boolean): TypedMethodDecorator<(...args: A) => any>;
+export function setModuleManagerEvent<E extends string|symbol, A extends any[]>(event: E, once?: boolean): TypedMethodDecorator<(...args: A) => any> {
+    return function(target: { constructor: { prototype: { [recipleModuleMetadataSymbol]?: RecipleModuleDecoratorMetadata; }; }; }, propertyKey: string|symbol, descriptor: TypedPropertyDescriptor<(...args: A) => any>) {
+        if (!descriptor) throw new Error(`@setModuleManagerEvent must be used on a method`);
+
+        const emitter = 'moduleManager' as const;
+        const metadata = target.constructor.prototype[recipleModuleMetadataSymbol] ??= {};
+
+        target.constructor.prototype[recipleModuleMetadataSymbol] = setEventMetadata(metadata, propertyKey, emitter, event, once);
+    }
+}
+
+/**
+ * Sets a ModuleManager event
+ * 
+ * ```ts
+ * ＠setRecipleModule()
+ * class MyModule implements RecipleModuleData {
+ *     ＠setRecipleModuleStart()
+ *     async onStart() {
+ *         return true;
+ *     }
+ * 
+ *     ＠setRecipleModuleLoad()
+ *     async onLoad() {}
+ * 
+ *     ＠setRecipleModuleUnload()
+ *     async onUnload() {}
+ *
+ *     ＠setProcessEvent('uncaughtException')
+ *     async handleRESTEvent(error: Error, origin: string) {
+ *         console.log(error);
+ *     }
+ * }
+ * ```
+ * @param event The event name
+ * @param once True if the event should only be triggered once
+ */
+export function setProcessEvent<E extends keyof ProcessEventMap, A extends ProcessEventMap[E]>(event: E, once?: boolean): TypedMethodDecorator<(...args: A) => any>;
+export function setProcessEvent<E extends string|symbol, A extends any[]>(event: E, once?: boolean): TypedMethodDecorator<(...args: A) => any>;
+export function setProcessEvent<E extends string|symbol, A extends any[]>(event: E, once?: boolean): TypedMethodDecorator<(...args: A) => any> {
+    return function(target: { constructor: { prototype: { [recipleModuleMetadataSymbol]?: RecipleModuleDecoratorMetadata; }; }; }, propertyKey: string|symbol, descriptor: TypedPropertyDescriptor<(...args: A) => any>) {
+        if (!descriptor) throw new Error(`@setProcessEvent must be used on a method`);
+
+        const emitter = 'process' as const;
+        const metadata = target.constructor.prototype[recipleModuleMetadataSymbol] ??= {};
+
+        target.constructor.prototype[recipleModuleMetadataSymbol] = setEventMetadata(metadata, propertyKey, emitter, event, once);
+    }
+}
+
 function setEventMetadata(
     metadata: RecipleModuleDecoratorMetadata,
     key: string|symbol,
-    emitter: 'client'|'ws'|'rest',
+    emitter: keyof Exclude<RecipleModuleDecoratorMetadata['events'], undefined>,
     event: string|symbol,
     once?: boolean
 ): RecipleModuleDecoratorMetadata {
