@@ -71,7 +71,7 @@ export function setRecipleModuleStart() {
 
                 for (const command of metadata.commands) {
                     const originalExecute = command.execute as (data: unknown) => void;
-                    if (originalExecute) command.setExecute((...args: any[]) => originalExecute.call(this, args));
+                    if (originalExecute) command.setExecute((args: any) => originalExecute.call(this, args));
 
                     this.commands.push(command);
                 }
