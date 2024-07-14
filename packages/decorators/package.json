@@ -3,7 +3,7 @@
   "description": "Typescript decorators for Reciple",
   "homepage": "https://reciple.js.org/docs/decorators",
   "license": "GPL-3.0",
-  "version": "9.1.0",
+  "version": "9.1.1",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "type": "module",

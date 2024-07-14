@@ -2,7 +2,7 @@
   "name": "create-reciple",
   "description": "A Reciple Discord bot project builder",
   "license": "GPL-3.0",
-  "version": "9.6.1",
+  "version": "9.6.2",
   "type": "module",
   "types": "./dist/index.d.ts",
   "module": "./dist/index.js",
@@ -38,7 +38,7 @@
   "dependencies": {
     "@clack/prompts": "^0.7.0",
     "@reciple/core": "^9.4.0",
-    "@reciple/decorators": "^9.1.0",
+    "@reciple/decorators": "^9.1.1",
     "@reciple/utils": "^9.3.1",
     "commander": "^12.1.0",
     "compressing": "^1.10.1",
