@@ -7,6 +7,7 @@ import { RecipleError } from './RecipleError.js';
 import { kleur } from 'fallout-utility/strings';
 import { Utils } from './Utils.js';
 import semver from 'semver';
+import path from 'node:path';
 
 export interface RecipleModuleData {
     /**
@@ -71,9 +72,10 @@ export class RecipleModule<Data extends RecipleModuleData = RecipleModuleData> {
     readonly file?: string;
 
     public status: RecipleModuleStatus = RecipleModuleStatus.Unloaded;
+    private root?: string;
 
     get name(): string|undefined { return this.data.name; }
-    get displayName(): string { return this.name ?? this.file ?? this.id; }
+    get displayName(): string { return this.name ?? (this.file && this.root ? path.relative(this.root, this.file) : this.file) ?? this.id; }
     get versions(): string[] { return normalizeArray([this.data.versions ?? 'latest'] as RestOrArray<string>); }
     get commands(): AnyCommandBuilder[] { return this.data.commands?.map(c => Utils.resolveCommandBuilder(c)) ?? []; }
     get supported(): boolean { return this.versions.some(v => v === "latest" || semver.satisfies(this.client.version, v)); }
@@ -141,5 +143,9 @@ export class RecipleModule<Data extends RecipleModuleData = RecipleModuleData> {
             file: this.file,
             status: this.status
         };
+    }
+
+    public static getModuleRoot(module: RecipleModule): string|null {
+        return module.root ?? null;
     }
 }

@@ -1,6 +1,7 @@
 import { Logger, LoggerLevel, kleur, type PartialDeep } from 'fallout-utility';
 import type { RecipleConfig } from '../classes/Config.js';
 import { type RecipleClient } from '../index.js';
+import { RecipleModule } from '@reciple/core';
 import { cli } from './cli.js';
 import path from 'node:path';
 
@@ -81,7 +82,11 @@ export function addEventListenersToClient(client: RecipleClient): void {
 
     client.modules.on('resolveModuleFileError', (file, error) => client.logger?.err(`Failed to resolve module ${kleur.yellow(quoteString(file))}:`, error));
 
-    client.modules.on('preStartModule', (m) => client.logger?.debug(`Starting module ${kleur.cyan(quoteString(m.displayName))}`));
+    client.modules.on('preStartModule', (m) => {
+        if (!RecipleModule.getModuleRoot(m)) Reflect.set(m, 'root', cli.cwd);
+        client.logger?.debug(`Starting module ${kleur.cyan(quoteString(m.displayName))}`);
+    });
+
     client.modules.on('postStartModule', (m) => client.logger?.log(`Started module ${kleur.cyan(quoteString(m.displayName))}`));
     client.modules.on('startModuleError', (m, err) => client.logger?.error(`Failed to start module ${kleur.yellow(quoteString(m.displayName))}:`, err));
 
