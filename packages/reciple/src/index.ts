@@ -1,4 +1,4 @@
-import { RecipleClient as Client } from '@reciple/core';
+import { RecipleClient as Client, type Logger } from '@reciple/core';
 import type { RecipleConfig } from './classes/Config.js';
 
 export * from '@reciple/core';
@@ -12,4 +12,6 @@ export declare class RecipleClient<Ready extends boolean = boolean> extends Clie
 
 declare global {
     var reciple: RecipleClient;
+    var logger: Logger|undefined;
+    var cli: typeof import('./utils/cli.js')['cli'];
 }

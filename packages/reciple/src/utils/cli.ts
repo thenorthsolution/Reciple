@@ -84,6 +84,8 @@ export const cli = {
     logPath: undefined as string|undefined
 };
 
+global.cli = cli;
+
 export const cliVersion = `${coerce(version)}`;
 export const cliBuildVersion = version;
 export const updateChecker = new PackageUpdateChecker({

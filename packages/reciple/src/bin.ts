@@ -44,6 +44,8 @@ const logger = config.logger instanceof Logger
         ? await createLogger(config.logger)
         : null;
 
+global.logger = logger ?? undefined;
+
 if (cli.options.setup) process.exit(0);
 if (cli.shardmode) config.applicationCommandRegister = { ...config.applicationCommandRegister, enabled: false };
 if (cli.options.token) config.token = resolveEnvProtocol(cli.options.token) ?? config.token;
