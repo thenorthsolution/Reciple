@@ -50,11 +50,11 @@ export class BaseCommandValidators extends Validators {
     }
 
     public static isValidRequiredBotPermissions(permissions: unknown): asserts permissions is BaseCommandBuilderData['required_bot_permissions'] {
-        BaseCommandValidators.required_bot_permissions.setValidationEnabled(BaseCommandValidators.isValidationEnabled).parse(permissions);
+        BaseCommandValidators.required_bot_permissions.nullable().setValidationEnabled(BaseCommandValidators.isValidationEnabled).parse(permissions);
     }
 
     public static isValidRequiredMemberPermissions(permissions: unknown): asserts permissions is BaseCommandBuilderData['required_member_permissions'] {
-        BaseCommandValidators.required_member_permissions.setValidationEnabled(BaseCommandValidators.isValidationEnabled).parse(permissions);
+        BaseCommandValidators.required_member_permissions.nullable().setValidationEnabled(BaseCommandValidators.isValidationEnabled).parse(permissions);
     }
 
     public static isValidPreconditions(preconditions: unknown): asserts preconditions is BaseCommandBuilderData['preconditions'] {

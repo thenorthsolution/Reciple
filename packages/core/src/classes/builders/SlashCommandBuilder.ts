@@ -89,11 +89,11 @@ export class SlashCommandBuilder extends Mixin(DiscordJsSlashCommandBuilder, Bas
     }
 
     public setDefaultMemberPermissions(permissions?: string|number|bigint|null): this {
-        return super.setRequiredMemberPermissions(permissions ? BigInt(permissions) : null);
+        return super.setRequiredMemberPermissions(permissions !== undefined && permissions !== null ? BigInt(permissions) : null);
     }
 
     public setRequiredMemberPermissions(permissions: PermissionResolvable|null): this {
-        const bigint = permissions ? PermissionsBitField.resolve(permissions) : null;
+        const bigint = permissions !== null ? PermissionsBitField.resolve(permissions) : null;
 
         this.required_member_permissions = bigint ?? undefined;
         Reflect.set(this, 'default_member_permissions', String(bigint));

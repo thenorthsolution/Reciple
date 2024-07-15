@@ -1,4 +1,4 @@
-import { BitField, PermissionFlagsBits, PermissionsBitField, isValidationEnabled } from 'discord.js';
+import { PermissionFlagsBits, PermissionsBitField, isValidationEnabled } from 'discord.js';
 import { Shapes, s } from '@sapphire/shapeshift';
 
 export class Validators {
@@ -20,7 +20,7 @@ export class Validators {
     public static permissionStringPredicate = Validators.s.enum<keyof typeof PermissionFlagsBits>(Object.keys(PermissionFlagsBits) as (keyof typeof PermissionFlagsBits)[]);
     public static permissionResolvable = Validators.s.union([
         Validators.s.instance(PermissionsBitField),
-        Validators.s.instance(BitField),
+        Validators.s.string(),
         Validators.permissionStringPredicate.array(),
         Validators.permissionStringPredicate,
         Validators.s.bigint(),
