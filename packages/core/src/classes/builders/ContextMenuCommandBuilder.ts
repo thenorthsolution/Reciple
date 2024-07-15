@@ -69,7 +69,7 @@ export class ContextMenuCommandBuilder extends Mixin(DiscordJsContextMenuCommand
     }
 
     public setDefaultMemberPermissions(permissions?: string|number|bigint|null): this {
-        return super.setRequiredMemberPermissions(permissions !== undefined && permissions !== null ? BigInt(permissions) : null);
+        return super.setRequiredMemberPermissions(typeof permissions === 'string' || typeof permissions === 'number' ? BigInt(permissions) : permissions ?? null);
     }
 
     public setRequiredMemberPermissions(permissions: PermissionResolvable|null): this {
