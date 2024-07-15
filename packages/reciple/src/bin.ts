@@ -88,7 +88,7 @@ const modules = await client.modules.resolveModuleFiles({
 const startedModules = await client.modules.startModules();
 const failedToStartModules = modules.length - startedModules.length;
 
-if (failedToStartModules > 0) logger?.error(`Failed to start (${failedToStartModules}) modules.`);
+if (failedToStartModules > 0) logger?.warn(`Failed to load (${failedToStartModules}) modules.`);
 
 client.once('ready', async () => {
     if (!client.isReady()) return;
@@ -101,7 +101,7 @@ client.once('ready', async () => {
     const loadedModules = await client.modules.loadModules({ cacheCommands: true });
     const failedToLoadModules = startedModules.length - loadedModules.length;
 
-    if (failedToLoadModules > 0) logger?.debug(`Failed to load (${failedToLoadModules}) modules.`);
+    if (failedToLoadModules > 0) logger?.warn(`Failed to load (${failedToLoadModules}) modules.`);
 
     let stopping = false;
 
