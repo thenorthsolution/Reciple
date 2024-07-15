@@ -30,10 +30,10 @@ export class Addon implements AddonOptions {
     static readonly PNPM_REGISTRY = Addon.NPM_REGISTRY;
     static readonly BUN_REGISTRY = Addon.NPM_REGISTRY;
     static readonly DEFAULT_ADDON_VERSIONS = {
-        'reciple-interaction-events': '^3',
-        'reciple-anticrash': '^3',
-        'reciple-dev-commands': '^3',
-        'reciple-registry-cache': '^3',
+        'reciple-interaction-events': '^4',
+        'reciple-anticrash': '^4',
+        'reciple-dev-commands': '^4',
+        'reciple-registry-cache': '^4',
     };
 
     public module: string;
