@@ -10,9 +10,9 @@ command.name('').description('The options below are passed to reciple cli shards
 
 process.chdir(cli.cwd);
 
-loadEnv({ path: cli.options.env });
+loadEnv({ path: cli.flags.env });
 
-const config = (await ConfigReader.readConfigJS(cli.options.config ?? 'reciple.mjs')).config;
+const config = (await ConfigReader.readConfigJS(cli.flags.config ?? 'reciple.mjs')).config;
 const logsFolder = process.env.LOGS_FOLDER ?? path.join(process.cwd(), ((typeof config.logger?.logToFile !== 'function' ? config.logger?.logToFile.logsFolder : null) ?? 'logs'));
 
 const logger = await (await createLogger({

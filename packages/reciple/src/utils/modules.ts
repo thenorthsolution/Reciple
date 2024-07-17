@@ -52,3 +52,5 @@ export async function findModules(config: RecipleConfig['modules'], filter?: (fi
 
     return modules;
 }
+
+export const moduleFilesFilter = (file: string) => file.endsWith('.js') || file.endsWith('.cjs') || file.endsWith('.mjs');

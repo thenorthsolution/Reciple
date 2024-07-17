@@ -2,41 +2,28 @@
 
 import { ContextMenuCommandBuilder, Logger, MessageCommandBuilder, SlashCommandBuilder, buildVersion } from '@reciple/core';
 import { createLogger, addEventListenersToClient } from './utils/logger.js';
-import { type ProcessInformation, RecipleClient, findModules } from './index.js';
-import { command, cli, cliVersion, updateChecker } from './utils/cli.js';
+import { RecipleClient, findModules, moduleFilesFilter } from './index.js';
+import { cli, cliVersion, updateChecker } from './utils/cli.js';
 import { setTimeout as setTimeoutAsync } from 'node:timers/promises';
-import { existsAsync, resolveEnvProtocol } from '@reciple/utils';
-import { parentPort, threadId } from 'node:worker_threads';
+import { existsAsync } from '@reciple/utils';
+import { parentPort } from 'node:worker_threads';
 import { ConfigReader } from './classes/Config.js';
 import { config as loadEnv } from 'dotenv';
 import { mkdir } from 'node:fs/promises';
 import { kleur } from 'fallout-utility';
 import path from 'node:path';
 import semver from 'semver';
+import { CLI } from './classes/CLI.js';
 
-command.parse();
+await cli.parse();
 
 if (!await existsAsync(cli.cwd)) await mkdir(cli.cwd, { recursive: true });
 
-if (cli.cwd !== cli.nodeCwd || parentPort === null) {
-    process.chdir(cli.cwd);
-    cli.isCwdUpdated = true;
-}
+if ((cli.cwd !== cli.processCwd && !cli.isCwdUpdated) || parentPort === null) process.chdir(cli.cwd);
 
-loadEnv({ path: cli.options.env });
+loadEnv({ path: cli.flags.env });
 
-let configPaths = [path.resolve('./reciple.mjs'), path.resolve('./reciple.js')];
-
-const configPath = path.resolve(cli.options.config ?? 'reciple.mjs');
-const isCustomPath = !configPaths.includes(configPath) || !!cli.options.config;
-
-if (!isCustomPath) {
-    configPaths = configPaths.filter(p => p !== configPath);
-    configPaths.unshift(configPath);
-} else {
-    configPaths = [configPath];
-}
-
+const configPaths = ConfigReader.resolveConfigPaths(path.resolve(cli.flags.config ?? 'reciple.mjs'))
 const config = await ConfigReader.readConfigJS({ paths: configPaths }).then(c => c.config);
 const logger = config.logger instanceof Logger
     ? config.logger
@@ -46,30 +33,25 @@ const logger = config.logger instanceof Logger
 
 global.logger = logger ?? undefined;
 
-if (cli.options.setup) process.exit(0);
+if (cli.flags.setup) process.exit(0);
 if (cli.shardmode) config.applicationCommandRegister = { ...config.applicationCommandRegister, enabled: false };
-if (cli.options.token) config.token = resolveEnvProtocol(cli.options.token) ?? config.token;
+
+config.token = cli.token ?? config.token;
 
 const processErrorHandler = (err: any) => logger?.error(err);
 
 process.once('uncaughtException', processErrorHandler);
 process.once('unhandledRejection', processErrorHandler);
-
 process.on('warning', warn => logger?.warn(warn));
 
-if (cli.shardmode) {
-    const message: ProcessInformation = { type: 'ProcessInfo', pid: process.pid, threadId, log: cli.logPath };
-
-    if (parentPort) parentPort.postMessage(message);
-    if (process.send) process.send(message);
-}
+if (cli.shardmode) await cli.sendShardProcessInfo();
 
 if (config.version && !semver.satisfies(cliVersion, config.version)) {
     logger?.error(`Your config version doesn't support Reciple CLI v${cliVersion}`);
     process.exit(1);
 }
 
-logger?.info(`Starting Reciple client v${buildVersion} - ${new Date()}`);
+logger?.info(`Starting Reciple client v${buildVersion} - ${new Date().toISOString()}`);
 
 const client = new RecipleClient(config);
 global.reciple = client;
@@ -78,10 +60,8 @@ client.setLogger(logger);
 
 addEventListenersToClient(client);
 
-const moduleFilesFilter = (file: string) => file.endsWith('.js') || file.endsWith('.cjs') || file.endsWith('.mjs');
-
 const modules = await client.modules.resolveModuleFiles({
-    files: await findModules(config.modules, (f) => moduleFilesFilter(f)),
+    files: await findModules(config.modules, moduleFilesFilter),
     disableVersionCheck: config.modules?.disableModuleVersionCheck
 });
 
@@ -125,14 +105,7 @@ client.once('ready', async () => {
 
     process.stdin.resume();
 
-    process.once('SIGHUP', unloadModulesAndStopProcess);
-    process.once('SIGINT', unloadModulesAndStopProcess);
-    process.once('SIGQUIT', unloadModulesAndStopProcess);
-    process.once('SIGABRT',unloadModulesAndStopProcess);
-    process.once('SIGALRM', unloadModulesAndStopProcess);
-    process.once('SIGTERM', unloadModulesAndStopProcess);
-    process.once('SIGBREAK', unloadModulesAndStopProcess);
-    process.once('SIGUSR2', unloadModulesAndStopProcess);
+    CLI.addExitListener(unloadModulesAndStopProcess);
 
     client.on('interactionCreate', interaction => {
         if (interaction.isContextMenuCommand()) {

@@ -113,4 +113,19 @@ export class ConfigReader {
 
         return file;
     }
+
+    public static resolveConfigPaths(configPath: string): string[] {
+        let configPaths = [path.resolve('./reciple.mjs'), path.resolve('./reciple.js')];
+
+        const isCustomPath = !configPaths.includes(configPath) || !!cli.flags.config;
+
+        if (!isCustomPath) {
+            configPaths = configPaths.filter(p => p !== configPath);
+            configPaths.unshift(configPath);
+        } else {
+            configPaths = [configPath];
+        }
+
+        return configPaths;
+    }
 }
