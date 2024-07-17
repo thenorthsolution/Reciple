@@ -54,7 +54,9 @@ export interface RecipleModuleLoadData {
     module: RecipleModule;
 }
 
-export interface RecipleModuleUnloadData extends RecipleModuleLoadData {
+export interface RecipleModuleUnloadData {
+    client: RecipleClient;
+    module: RecipleModule;
     reason?: string;
 }
 
