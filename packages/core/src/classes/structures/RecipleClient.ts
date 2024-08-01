@@ -6,8 +6,8 @@ import { CommandManager } from '../managers/CommandManager.js';
 import { ModuleManager } from '../managers/ModuleManager.js';
 import type { CommandHaltResultData } from './CommandHalt.js';
 import { version } from '../../types/constants.js';
-import type { Logger } from 'fallout-utility/Logger';
 import type { If } from 'fallout-utility/types';
+import type { Logger } from 'prtyprnt';
 
 export interface RecipleClientEvents extends Omit<ClientEvents, 'ready'> {
     recipleCommandExecute: [executeData: AnyCommandExecuteData];

@@ -32,4 +32,15 @@ export * from './classes/validators/Validators.js';
 export * from './types/constants.js';
 export * from './types/structures.js';
 
-export { Logger } from 'fallout-utility/Logger';
+export {
+    BaseFormatter,
+    Formatter,
+    type FormatterFormatOptions,
+    LogLevel,
+    Logger,
+    type LoggerEvents,
+    type LoggerOptions,
+    LoggerWriteStreamMode,
+    type LoggerWriteStreamOptions,
+    Utils as LoggerUtils
+} from 'prtyprnt';
