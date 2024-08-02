@@ -6,8 +6,8 @@ import { ChannelType } from 'discord.js';
 /**
  * @type {import('reciple').RecipleModuleData}
  */
-export default {
-    commands: [
+export class Resolvers {
+    commands = [
         new MessageCommandBuilder()
             .setName('user')
             .setDescription('Testing')
@@ -127,6 +127,11 @@ export default {
                     }
                 });
             }),
-    ],
-    onStart: () => true
-};
+    ];
+
+    onStart() {
+        return true;
+    }
+}
+
+export default new Resolvers();

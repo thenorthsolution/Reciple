@@ -4,8 +4,8 @@ import { ContextMenuCommandBuilder } from "reciple";
 /**
  * @type {import("reciple").RecipleModuleData}
  */
-export default {
-    commands: [
+export class Avatar {
+    commands = [
         new ContextMenuCommandBuilder()
             .setName('Avatar')
             .setType('User')
@@ -20,9 +20,11 @@ export default {
                     content: member?.displayAvatarURL() ?? interaction.user.displayAvatarURL()
                 });
             })
-    ],
-    onStart: () => {
-        reciple.logger?.log(`This is amazing`);
+    ];
+
+    onStart() {
         return true;
     }
 }
+
+export default new Avatar();
