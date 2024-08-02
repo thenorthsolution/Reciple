@@ -16,9 +16,7 @@ export class CustomLogger {
      * @param {import("reciple").RecipleModuleStartData} param0 
      */
     onStart({ client }) {
-        this.logger = client.logger?.clone({ label: 'My Logger' });
-        this.logger?.warn(`SHARD MODE: ${cli.shardMode} ${cli.shardLogsFolder}`);
-        this.logger?.warn(process.env.SHARDS, process.env.SHARDING_MANAGER);
+        this.logger = logger?.clone({ label: 'My Logger' });
         return true;
     }
 
@@ -26,7 +24,6 @@ export class CustomLogger {
      * @param {import("reciple").RecipleModuleLoadData} param0 
      */
     onLoad({ client }) {
-        this.logger?.info(client.logger?.label, logger.label);
         this.logger?.log(`A log message`);           // Logger#info is synonymous to Logger#log
         this.logger?.warn(`A warning message`);   // Logger#warn is synonymous to Logger#warning
         this.logger?.error(`An error message`);      // Logger#err is synonymous to Logger#error
