@@ -14,7 +14,7 @@ export interface CLIShardFlags extends CLIStartFlags {}
 
 export default (command: Command, cli: CLI) => command
     .command('shard')
-    .description('Starts in shard mode')
+    .description('Starts in sharding mode')
     .option('-t, --token <DiscordToken>', 'Set your Discord Bot token')
     .option('-c, --config <file>', 'Set the config file path', 'reciple.mjs')
     .action(async () => {
