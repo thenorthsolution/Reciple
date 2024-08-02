@@ -50,23 +50,21 @@ After that configure the template you want to use. [Learn More](https://reciple.
 ## CLI usage
 
 ```yml
-Usage: reciple [options] [cwd]
+Usage: reciple [options] [command]
 
 Reciple is a Discord.js bot framework
 
-Arguments:
-  cwd                  Change the current working directory
-
 Options:
-  -v, --version        output the version number
-  -t, --token <token>  Replace used bot token
-  -c, --config <dir>   Set path to a config file
-  -D, --debugmode      Enable debug mode
-  -y, --yes            Agree to all Reciple confirmation prompts
-  --env <file>         .env file location
-  --shardmode          Modifies some functionalities to support sharding
-  --setup              Create required config without starting the bot
-  -h, --help           display help for command
+  -v, --version    output the version number
+  --env <file>     Set .env file path (default: [".env"])
+  --debug          Enable debug mode (default: false)
+  --cwd <dir>      Set current working directory (default: "./")
+  -h, --help       display help for command
+
+Commands:
+  shard [options]  Starts in sharding mode
+  start [options]  Starts the bot
+  help [command]   display help for command
 ```
 
 ## Message Commands
