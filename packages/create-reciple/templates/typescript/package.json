@@ -4,11 +4,9 @@
   "private": true,
   "scripts": {
     "build": "rimraf ./modules && tsc",
-    "start": "reciple -c reciple.mjs",
-    "start:shard": "reciple shard -c reciple.mjs",
-    "build:start": "SCRIPT_RUN build && reciple -c reciple.mjs",
-    "build:start:shard": "SCRIPT_RUN build && reciple shard -c reciple.mjs",
-    "dev": "nodemon --ext ts,mts,json --ignore ./modules --exec \"SCRIPT_RUN build && reciple -c reciple.mjs\" --signal SIGHUP"
+    "start": "reciple start -c reciple.mjs",
+    "build:start": "SCRIPT_RUN build && reciple start -c reciple.mjs",
+    "dev": "nodemon --ext ts,mts,json --ignore ./modules --exec \"SCRIPT_RUN build && reciple start -c reciple.mjs\" --signal SIGHUP"
   },
   "dependencies": {
     "@reciple/core": "RECIPLE_CORE",

@@ -3,9 +3,8 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "start": "reciple -c reciple.mjs",
-    "start:shard": "reciple shard -c reciple.mjs",
-    "dev": "nodemon --ext js,mjs,json --exec \"reciple -c reciple.mjs\" --signal SIGHUP"
+    "start": "reciple start -c reciple.mjs",
+    "dev": "nodemon --ext js,mjs,json --exec \"reciple start -c reciple.mjs\" --signal SIGHUP"
   },
   "dependencies": {
     "@reciple/core": "RECIPLE_CORE",
