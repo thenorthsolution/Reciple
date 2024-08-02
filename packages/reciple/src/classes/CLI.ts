@@ -1,7 +1,7 @@
 import { buildVersion, type Logger } from '@reciple/core';
 import { existsAsync, PackageUpdateChecker, recursiveDefaults, type PackageUpdateCheckerOptions } from '@reciple/utils';
 import type { Command, OptionValues } from 'commander';
-import { type Awaitable, type PackageJson, kleur } from 'fallout-utility';
+import { type Awaitable, type PackageJson, isDebugging, kleur } from 'fallout-utility';
 import { mkdir, readdir, stat } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -112,7 +112,7 @@ export class CLI implements CLIOptions {
             .description(this.description)
             .version(`reciple: ${this.version}\n@reciple/client: ${buildVersion}`, '-v, --version')
             .option('--env <file>', 'Set .env file path', (v, p) => p.concat(v), [path.join(this.cwd, '.env')])
-            .option('--debug', 'Enable debug mode', false)
+            .option('--debug', 'Enable debug mode', isDebugging())
             .allowUnknownOption(true);
 
         if (this.threadId === null) this.commander.option('--cwd <dir>', 'Set current working directory', this.processCwd)
