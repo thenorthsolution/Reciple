@@ -93,5 +93,5 @@ export const config = {
  * @type {import('discord.js').ShardingManagerOptions}
  */
 export const sharding = {
-    mode: 'worker'
+    mode: 'process'
 };
