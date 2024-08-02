@@ -4,8 +4,13 @@ import path from 'node:path';
 import { Command } from 'commander';
 import { Logger } from '@reciple/core';
 import { isDebugging } from 'fallout-utility';
+import { coerce } from 'semver';
+import { PackageUpdateChecker } from '@reciple/utils';
 
 const packageJSON = JSON.parse(await readFile(path.join(CLI.root, './package.json'), 'utf-8'));
+
+export const cliBuildVersion = packageJSON.version;
+export const cliVersion = String(coerce(packageJSON.version));
 
 export const logger = new Logger({
     debugmode: {
@@ -22,5 +27,8 @@ export const cli = new CLI({
     processCwd: process.cwd(),
     logger: logger.clone({
         label: 'CLI'
+    }),
+    updateChecker: new PackageUpdateChecker({
+        packages: []
     })
-})
+});

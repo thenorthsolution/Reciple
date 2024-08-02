@@ -40,7 +40,7 @@ export {
     Logger,
     type LoggerEvents,
     type LoggerOptions,
-    LoggerWriteStreamMode,
+    FileWriteStreamMode,
     type LoggerWriteStreamOptions,
     Utils as LoggerUtils
 } from 'prtyprnt';

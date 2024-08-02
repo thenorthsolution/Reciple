@@ -1,7 +1,7 @@
 import { buildVersion, type Logger } from '@reciple/core';
-import { existsAsync, recursiveDefaults } from '@reciple/utils';
+import { existsAsync, PackageUpdateChecker, recursiveDefaults, type PackageUpdateCheckerOptions } from '@reciple/utils';
 import type { Command, OptionValues } from 'commander';
-import type { Awaitable, PackageJson } from 'fallout-utility';
+import { type Awaitable, type PackageJson, kleur } from 'fallout-utility';
 import { mkdir, readdir, stat } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -16,17 +16,36 @@ export interface CLIOptions {
     commander: Command;
     binPath: string;
     logger?: Logger;
+    updateChecker?: PackageUpdateCheckerOptions|PackageUpdateChecker;
 }
 
 export class CLI implements CLIOptions {
     public static root = path.join(path.dirname(fileURLToPath(import.meta.url)), '../../');
     public static commandsDir = path.join(CLI.root, './dist/commands');
 
+    static get shardMode() {
+        return !!process.env.SHARDMODE;
+    }
+
+    static get shardLogsFolder() {
+        return CLI.shardMode ? process.env.SHARD_LOGS_FOLDER : null;
+    }
+
+    static get shardDeployCommands() {
+        return CLI.shardMode ? !!process.env.SHARD_DEPLOY_COMMANDS : null;
+    }
+
+    static get threadId() {
+        return (!isMainThread && parentPort !== undefined ? threadId : undefined) ?? null;
+    }
+
     public packageJSON: PackageJson;
     public processCwd: string;
     public commander: Command;
     public binPath: string;
     public logger?: Logger;
+
+    public updateChecker?: PackageUpdateChecker;
 
     get name() {
         return this.packageJSON.name ?? 'reciple';
@@ -56,12 +75,24 @@ export class CLI implements CLIOptions {
             : this.processCwd;
     }
 
-    get threadId() {
-        return (!isMainThread && parentPort !== undefined ? threadId : undefined) ?? null;
-    }
-
     get isCwdUpdated() {
         return process.cwd() !== this.processCwd;
+    }
+
+    get threadId() {
+        return CLI.threadId;
+    }
+
+    get shardMode() {
+        return CLI.shardMode;
+    }
+
+    get shardLogsFolder() {
+        return CLI.shardLogsFolder;
+    }
+
+    get shardDeployCommands() {
+        return CLI.shardDeployCommands;
     }
 
     constructor(options: CLIOptions) {
@@ -69,6 +100,11 @@ export class CLI implements CLIOptions {
         this.processCwd = options.processCwd ?? process.cwd();
         this.commander = options.commander;
         this.binPath = options.binPath;
+        this.logger = options.logger;
+
+        if (options.updateChecker) {
+            this.updateChecker = options.updateChecker instanceof PackageUpdateChecker ? options.updateChecker : new PackageUpdateChecker(options.updateChecker);
+        }
 
         this.commander
             .name(this.name)
@@ -83,7 +119,6 @@ export class CLI implements CLIOptions {
 
     public async parse(): Promise<this> {
         await this.registerSubcommands();
-        await this.commander.parseAsync();
 
         if (!await existsAsync(this.cwd)) await mkdir(this.cwd, { recursive: true });
         if ((cli.cwd !== cli.processCwd && !cli.isCwdUpdated) || this.threadId === null) process.chdir(cli.cwd);
@@ -96,9 +131,18 @@ export class CLI implements CLIOptions {
             this.logger.debugmode.printMessage ??= true;
         }
 
+        this.logger?.debug(`Reciple CLI flags:`, flags);
+
         if (flags.env.length) {
+            this.logger?.debug(`Loading environment variables from:\n    ${kleur.cyan(flags.env.join('\n    '))}`);
             loadEnv({ path: flags.env });
         }
+
+        this.updateChecker?.on('updateAvailable', data => this.logger?.warn(`An update is available for ${kleur.cyan(data.package)}: ${kleur.red(data.currentVersion)} ${kleur.gray('->')} ${kleur.green().bold(data.updatedVersion)}`));
+        this.updateChecker?.on('updateError', (pkg, error) => this.logger?.debug(`An error occured while checking for updates for ${pkg}:`, error));
+        this.updateChecker?.startCheckInterval(1000 * 60 * 60);
+
+        await this.commander.parseAsync();
 
         return this;
     }
@@ -139,38 +183,5 @@ export class CLI implements CLIOptions {
         if (!name) return this.commander;
 
         return this.commander.commands.find(c => c.name() === name);
-    }
-
-    public static addExitListener(listener: (signal: NodeJS.Signals) => any, once?: boolean): void {
-        if (!once) {
-            process.on('SIGHUP', listener);
-            process.on('SIGINT', listener);
-            process.on('SIGQUIT', listener);
-            process.on('SIGABRT', listener);
-            process.on('SIGALRM', listener);
-            process.on('SIGTERM', listener);
-            process.on('SIGBREAK', listener);
-            process.on('SIGUSR2', listener);
-        } else {
-            process.once('SIGHUP', listener);
-            process.once('SIGINT', listener);
-            process.once('SIGQUIT', listener);
-            process.once('SIGABRT', listener);
-            process.once('SIGALRM', listener);
-            process.once('SIGTERM', listener);
-            process.once('SIGBREAK', listener);
-            process.once('SIGUSR2', listener);
-        }
-    }
-
-    public static removeExitListener(listener: (signal: NodeJS.Signals) => any): void {
-        process.removeListener('SIGHUP', listener);
-        process.removeListener('SIGINT', listener);
-        process.removeListener('SIGQUIT', listener);
-        process.removeListener('SIGABRT', listener);
-        process.removeListener('SIGALRM', listener);
-        process.removeListener('SIGTERM', listener);
-        process.removeListener('SIGBREAK', listener);
-        process.removeListener('SIGUSR2', listener);
     }
 }
