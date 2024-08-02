@@ -1,5 +1,5 @@
 diff --git a/node_modules/discord.js/src/sharding/Shard.js b/node_modules/discord.js/src/sharding/Shard.js
-index f833309..231689b 100644
+index f833309..1aebad0 100644
 --- a/node_modules/discord.js/src/sharding/Shard.js
 +++ b/node_modules/discord.js/src/sharding/Shard.js
 @@ -26,7 +26,7 @@ class Shard extends EventEmitter {
@@ -7,7 +7,7 @@ index f833309..231689b 100644
          break;
        case 'worker':
 -        Worker = require('node:worker_threads').Worker;
-+        Worker = new require('node:worker_threads').Worker();
++        Worker = new require('node:worker_threads').Worker;
          break;
      }
  
