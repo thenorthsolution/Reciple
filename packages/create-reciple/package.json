@@ -46,14 +46,14 @@
     "discord.js": "^14.15.3",
     "fallout-utility": "^2.9.1",
     "ora": "^8.0.1",
-    "package-json": "^10.0.0",
+    "package-json": "^10.0.1",
     "reciple": "^9.4.1"
   },
   "devDependencies": {
-    "@types/node": "^20.14.9",
+    "@types/node": "^22.0.2",
     "nodemon": "^3.1.4",
-    "rimraf": "^5.0.7",
-    "typescript": "^5.5.3"
+    "rimraf": "^6.0.1",
+    "typescript": "^5.5.4"
   },
   "gitHead": "88c2b7a5d61ca5707db84435871c11d50259d056"
 }

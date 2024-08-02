@@ -51,7 +51,7 @@
     "micromatch": "^4.0.7",
     "prompts": "^2.4.2",
     "prtyprnt": "^1.0.2",
-    "semver": "^7.6.2"
+    "semver": "^7.6.3"
   },
   "devDependencies": {
     "@reciple/core": "^9.4.1",
