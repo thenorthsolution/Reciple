@@ -88,3 +88,10 @@ export const config = {
     checkForUpdates: false,
     version: `^9.0.0`
 };
+
+/**
+ * @type {import('discord.js').ShardingManagerOptions}
+ */
+export const sharding = {
+    mode: 'worker'
+};
