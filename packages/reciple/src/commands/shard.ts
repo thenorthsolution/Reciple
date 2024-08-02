@@ -33,7 +33,12 @@ export default (command: Command, cli: CLI) => command
         process.once('unhandledRejection', processErrorLogger);
 
         const flags = cli.getFlags<CLIStartFlags>('start', true)!;
-        const { config, sharding: shardingConfig } = await Config.readConfigFile({ path: flags.config, createIfNotExists: true });
+        const { config, sharding: shardingConfig } = await Config.readConfigFile({ path: flags.config, createIfNotExists: false }).then(data => data ?? ({ config: null, sharding: null }));
+
+        if (!config && !shardingConfig) {
+            logger?.error('No config file found');
+            process.exit(1);
+        }
 
         let logFile: string|null = null;
         let logsFolder: string|null = null;
