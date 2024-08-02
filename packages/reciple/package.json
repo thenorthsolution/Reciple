@@ -43,13 +43,15 @@
   ],
   "dependencies": {
     "@reciple/utils": "^9.3.1",
+    "ansi-regex": "^6.0.1",
     "commander": "^12.1.0",
     "dotenv": "^16.4.5",
     "fallout-utility": "^2.9.1",
     "globby": "^14.0.2",
     "micromatch": "^4.0.7",
     "prompts": "^2.4.2",
-    "semver": "^7.6.2"
+    "prtyprnt": "^1.1.0",
+    "semver": "^7.6.3"
   },
   "devDependencies": {
     "@reciple/core": "^9.4.1",

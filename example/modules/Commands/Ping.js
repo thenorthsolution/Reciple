@@ -4,8 +4,8 @@ import { MessageCommandBuilder } from 'reciple';
 /**
  * @type {import('reciple').RecipleModuleData}
  */
-export default {
-    commands: [
+export class Ping {
+    commands = [
         new MessageCommandBuilder()
             .setName('ping')
             .setDescription('Get bot pong')
@@ -16,6 +16,11 @@ export default {
 
                 await message.reply(`🏓 ${reply.createdAt.getTime() - Date.now()}ms`);
             })
-    ],
-    onStart: () => true
-};
+    ];
+
+    onStart() {
+        return true;
+    }
+}
+
+export default new Ping();

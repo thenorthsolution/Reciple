@@ -1,8 +1,14 @@
-import { RecipleClient as Client, type Logger } from '@reciple/core';
-import type { RecipleConfig } from './classes/Config.js';
+import type { Logger } from 'prtyprnt';
+import type { CLI } from './classes/CLI.js';
+import { cli, logger } from './types/constants.js';
+import { RecipleClient as Client } from '@reciple/core';
+import type { RecipleConfig } from './types/structures.js';
 
 export * from '@reciple/core';
 export * from './exports.js';
+
+global.cli = cli;
+global.logger = logger;
 
 export { config as loadEnv } from 'dotenv';
 
@@ -11,7 +17,7 @@ export declare class RecipleClient<Ready extends boolean = boolean> extends Clie
 }
 
 declare global {
+    var cli: CLI;
+    var logger: Logger;
     var reciple: RecipleClient;
-    var logger: Logger|undefined;
-    var cli: typeof import('./utils/cli.js')['cli'];
 }

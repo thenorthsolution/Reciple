@@ -5,8 +5,8 @@ import { SlashCommandBuilder } from 'reciple';
 /**
  * @type {import('reciple').RecipleModuleData}
  */
-export default {
-    commands: [
+export class Say {
+    commands = [
         new SlashCommandBuilder()
             .setName('say')
             .setDescription('Send something as the bot')
@@ -28,6 +28,11 @@ export default {
                 await channel?.send(message);
                 await interaction.editReply('Message sent!');
             })
-    ],
-    onStart: () => true
-};
+    ];
+
+    onStart() {
+        return true;
+    }
+}
+
+export default new Say();

@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node ../packages/reciple/dist/bin.js -c ./reciple.mjs",
-    "shard": "node shards.js -c reciple.mjs",
+    "shard": "node  ../packages/reciple/dist/bin.js --debug shard -c reciple.mjs",
     "dev": "nodemon --ext js,mjs,cjs,json --exec \"node ../packages/reciple/dist/bin.js -c reciple.mjs\" --signal SIGHUP"
   },
   "dependencies": {
@@ -14,7 +14,7 @@
     "reciple": "file:../packages/reciple"
   },
   "devDependencies": {
-    "@types/node": "^20.14.9",
+    "@types/node": "^22.0.3",
     "nodemon": "^3.1.4"
   }
 }

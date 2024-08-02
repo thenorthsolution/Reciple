@@ -1,7 +1,7 @@
 import { readFile, writeFile } from 'node:fs/promises';
 import detectIndentSize from 'detect-indent';
 import { existsAsync } from '@reciple/utils';
-import { ConfigReader } from 'reciple';
+import { Config as ConfigReader } from 'reciple';
 import path from 'node:path';
 
 export interface ConfigOptions {
@@ -66,7 +66,7 @@ export class Config {
     }
 
     public async writeContent(): Promise<string> {
-        await ConfigReader.createConfigJS(this.filePath);
+        await ConfigReader.createConfigFile(this.filePath);
         return this.readContent();
     }
 

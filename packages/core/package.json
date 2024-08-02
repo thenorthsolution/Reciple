@@ -40,7 +40,8 @@
     "@sapphire/shapeshift": "^4.0.0",
     "fallout-utility": "^2.9.1",
     "lodash.defaultsdeep": "^4.6.1",
-    "semver": "^7.6.2",
+    "prtyprnt": "^1.1.0",
+    "semver": "^7.6.3",
     "ts-mixer": "^6.0.4"
   },
   "devDependencies": {

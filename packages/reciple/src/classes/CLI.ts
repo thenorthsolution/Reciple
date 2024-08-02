@@ -1,43 +1,59 @@
-import { buildVersion } from '@reciple/core';
-import { resolveEnvProtocol } from '@reciple/utils';
-import { Command } from 'commander';
-import type { PackageJson } from 'fallout-utility';
-import path from 'path';
-import { isMainThread, parentPort, threadId } from 'worker_threads';
-import type { ProcessInformation } from '../exports.js';
+import { buildVersion, type Logger } from '@reciple/core';
+import { existsAsync, PackageUpdateChecker, recursiveDefaults, type PackageUpdateCheckerOptions } from '@reciple/utils';
+import type { Command, OptionValues } from 'commander';
+import { type Awaitable, type PackageJson, isDebugging, kleur } from 'fallout-utility';
+import { mkdir, readdir, stat } from 'node:fs/promises';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import type { CLIDefaultFlags, ProcessInformation } from '../types/structures.js';
+import { isMainThread, parentPort, threadId } from 'node:worker_threads';
+import { cli } from '../types/constants.js';
+import { config as loadEnv } from 'dotenv';
 
 export interface CLIOptions {
     packageJSON: PackageJson;
+    processCwd?: string;
+    commander: Command;
     binPath: string;
-    logPath?: string;
-    cwd?: string;
+    logger?: Logger;
+    updateChecker?: PackageUpdateCheckerOptions|PackageUpdateChecker;
 }
 
-export interface CLIFlags {
-    version?: string;
-    token?: string;
-    config?: string;
-    debugmode?: boolean;
-    yes?: boolean;
-    env?: string;
-    shardmode?: boolean;
-    setup?: boolean;
-    [k: string]: any;
-}
+export class CLI implements CLIOptions {
+    public static root = path.join(path.dirname(fileURLToPath(import.meta.url)), '../../');
+    public static commandsDir = path.join(CLI.root, './dist/commands');
 
-export class CLI {
+    static get shardMode() {
+        return !!process.env.SHARDS && !!process.env.SHARD_COUNT;
+    }
+
+    static get shardLogsFolder() {
+        return CLI.shardMode ? process.env.SHARDS_LOGS_FOLDER : null;
+    }
+
+    static get shardDeployCommands() {
+        return CLI.shardMode ? !!process.env.SHARDS_DEPLOY_COMMANDS : null;
+    }
+
+    static get threadId() {
+        return (!isMainThread && parentPort !== undefined ? threadId : undefined) ?? null;
+    }
+
     public packageJSON: PackageJson;
     public processCwd: string;
     public commander: Command;
     public binPath: string;
+    public logger?: Logger;
     public logPath?: string;
 
+    public updateChecker?: PackageUpdateChecker;
+
     get name() {
-        return this.packageJSON.name!;
+        return this.packageJSON.name ?? 'reciple';
     }
 
     get description() {
-        return this.packageJSON.description!;
+        return this.packageJSON.description ?? '';
     }
 
     get version() {
@@ -49,110 +65,151 @@ export class CLI {
     }
 
     get flags() {
-        return this.commander.opts<CLIFlags>();
-    }
-
-    /**
-     * @deprecated Use `.flags` instead
-     */
-    get options() {
-        return this.flags;
+        return this.commander.opts<CLIDefaultFlags>();
     }
 
     get cwd() {
-        return this.args[0]
-            ? path.isAbsolute(this.args[0]) ? this.args[0] : path.join(this.processCwd, this.args[0])
-            : process.cwd();
-    }
+        const cwd = this.getFlags().cwd;
 
-    get shardmode() {
-        return !!(this.options.shardmode ?? process.env.SHARDMODE);
-    }
-
-    get threadId() {
-        return !isMainThread && parentPort !== undefined ? threadId : undefined;
+        return cwd
+            ? path.isAbsolute(cwd) ? cwd : path.join(this.processCwd, cwd)
+            : this.processCwd;
     }
 
     get isCwdUpdated() {
         return process.cwd() !== this.processCwd;
     }
 
-    /**
-     * @deprecated Use `.processCwd` instead
-     */
-    get nodeCwd() {
-        return this.processCwd;
+    get threadId() {
+        return CLI.threadId;
     }
 
-    get token() {
-        return (this.flags.token && resolveEnvProtocol(this.flags.token)) || null;
+    get shardMode() {
+        return CLI.shardMode;
+    }
+
+    get shardLogsFolder() {
+        return CLI.shardLogsFolder;
+    }
+
+    get shardDeployCommands() {
+        return CLI.shardDeployCommands;
     }
 
     constructor(options: CLIOptions) {
         this.packageJSON = options.packageJSON;
-        this.processCwd = options.cwd ?? process.cwd();
-        this.commander = new Command();
+        this.processCwd = options.processCwd ?? process.cwd();
+        this.commander = options.commander;
         this.binPath = options.binPath;
-        this.logPath = options.logPath;
+        this.logger = options.logger;
+
+        if (options.updateChecker) {
+            this.updateChecker = options.updateChecker instanceof PackageUpdateChecker ? options.updateChecker : new PackageUpdateChecker(options.updateChecker);
+        }
 
         this.commander
             .name(this.name)
             .description(this.description)
             .version(`reciple: ${this.version}\n@reciple/client: ${buildVersion}`, '-v, --version')
-            .argument('[cwd]', 'Change the current working directory')
-            .option('-t, --token <token>', 'Replace used bot token')
-            .option('-c, --config <dir>', 'Set path to a config file')
-            .option('-D, --debugmode', 'Enable debug mode')
-            .option('-y, --yes', 'Agree to all Reciple confirmation prompts')
-            .option('--env <file>', '.env file location')
-            .option('--shardmode', 'Modifies some functionalities to support sharding')
-            .option('--setup', 'Create required config without starting the bot')
+            .option('--env <file>', 'Set .env file path', (v, p) => p.concat(v), [path.join(this.cwd, '.env')])
+            .option('--debug', 'Enable debug mode', isDebugging())
             .allowUnknownOption(true);
+
+        if (this.threadId === null) this.commander.option('--cwd <dir>', 'Set current working directory', this.processCwd)
     }
 
     public async parse(): Promise<this> {
+        await this.registerSubcommands();
+
+        if (!await existsAsync(this.cwd)) await mkdir(this.cwd, { recursive: true });
+        if ((cli.cwd !== cli.processCwd && !cli.isCwdUpdated) || this.threadId === null) process.chdir(cli.cwd);
+
+        const flags = this.getFlags();
+
+        if (flags.debug && this.logger) {
+            this.logger.debugmode ??= {};
+            this.logger.debugmode.enabled ??= flags.debug;
+            this.logger.debugmode.printMessage ??= true;
+        }
+
+        this.logger?.debug(`Reciple CLI flags:`, flags);
+
+        if (flags.env.length) {
+            this.logger?.debug(`Loading environment variables from:\n    ${kleur.cyan(flags.env.join('\n    '))}`);
+            loadEnv({ path: flags.env });
+        }
+
+        this.updateChecker?.on('updateAvailable', data => this.logger?.warn(`An update is available for ${kleur.cyan(data.package)}: ${kleur.red(data.currentVersion)} ${kleur.gray('->')} ${kleur.green().bold(data.updatedVersion)}`));
+        this.updateChecker?.on('updateError', (pkg, error) => this.logger?.debug(`An error occured while checking for updates for ${pkg}:`, error));
+        this.updateChecker?.startCheckInterval(1000 * 60 * 60);
+
         await this.commander.parseAsync();
 
         return this;
     }
 
-    public async sendShardProcessInfo(): Promise<void> {
+    public async registerSubcommands(dir: string = CLI.commandsDir): Promise<Command> {
+        const statData = await stat(dir).catch(() => null);
+        if (!statData) return this.commander;
+
+        const files = (await readdir(dir))
+            .map(f => path.join(dir, f))
+            .filter(f => f.endsWith('.js'));
+
+        for (const file of files) {
+            const command = recursiveDefaults<(command: Command, cli: CLI) => Awaitable<void>>(await import(path.isAbsolute(file) ? `file://${file}` : file));
+            if (!command || typeof command !== 'function') continue;
+
+            await Promise.resolve(command(this.commander, this)).catch(() => null);
+        }
+
+        return this.commander;
+    }
+
+    public getFlags<Flags extends OptionValues = OptionValues>(command: Command|string, mergeDefault?: false): Flags|undefined;
+    public getFlags<Flags extends OptionValues = OptionValues>(command: Command|string, mergeDefault: true): Flags & CLIDefaultFlags|undefined;
+    public getFlags(command?: undefined): CLIDefaultFlags;
+    public getFlags(command?: Command|string, mergeDefault: boolean = false): OptionValues|undefined {
+        if (!command) return this.flags;
+
+        command = typeof command === 'string' ? this.commander.commands.find(c => c.name() === command) : command;
+        const flags = command?.opts();
+
+        return mergeDefault ? { ...this.flags, ...flags } : flags;
+    }
+
+    public getCommand(name: string): Command|undefined;
+    public getCommand(name?: undefined): Command;
+    public getCommand(name?: string): Command|undefined {
+        if (!name) return this.commander;
+
+        return this.commander.commands.find(c => c.name() === name);
+    }
+
+    public async sendProcessInfo(): Promise<void> {
         const message: ProcessInformation = { type: 'ProcessInfo', pid: process.pid, threadId, log: cli.logPath };
 
         if (parentPort) parentPort.postMessage(message);
         if (process.send) process.send(message);
     }
 
-    public static addExitListener(listener: (signal: NodeJS.Signals) => any, once?: boolean): void {
-        if (!once) {
-            process.on('SIGHUP', listener);
-            process.on('SIGINT', listener);
-            process.on('SIGQUIT', listener);
-            process.on('SIGABRT', listener);
-            process.on('SIGALRM', listener);
-            process.on('SIGTERM', listener);
-            process.on('SIGBREAK', listener);
-            process.on('SIGUSR2', listener);
-        } else {
-            process.once('SIGHUP', listener);
-            process.once('SIGINT', listener);
-            process.once('SIGQUIT', listener);
-            process.once('SIGABRT', listener);
-            process.once('SIGALRM', listener);
-            process.once('SIGTERM', listener);
-            process.once('SIGBREAK', listener);
-            process.once('SIGUSR2', listener);
-        }
-    }
+    public static stringifyFlags(flags: OptionValues, command: Command): string[] {
+        let arr: string[] = [];
 
-    public static removeExitListener(listener: (signal: NodeJS.Signals) => any): void {
-        process.removeListener('SIGHUP', listener);
-        process.removeListener('SIGINT', listener);
-        process.removeListener('SIGQUIT', listener);
-        process.removeListener('SIGABRT', listener);
-        process.removeListener('SIGALRM', listener);
-        process.removeListener('SIGTERM', listener);
-        process.removeListener('SIGBREAK', listener);
-        process.removeListener('SIGUSR2', listener);
+        for (const [key, value] of Object.entries(flags)) {
+            const option = command.options.find(o => o.name() === key || o.attributeName() === key);
+            if (!option) continue;
+
+            const flag = option.long ?? option.short ?? `--${option.name()}`;
+
+            if (!option.flags.endsWith('>') && !option.flags.endsWith(']') && typeof value === 'boolean') {
+                if (value) arr.push(flag);
+                continue;
+            }
+
+            arr.push(flag, String(value));
+        }
+
+        return arr;
     }
 }

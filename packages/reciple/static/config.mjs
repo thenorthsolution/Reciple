@@ -77,3 +77,10 @@ export const config = {
     checkForUpdates: true,
     version: `^${cliVersion}`
 };
+
+/**
+ * @satisfies {import('reciple').RecipleConfigJS['sharding']}
+ */
+export const sharding = {
+    mode: 'process'
+}
