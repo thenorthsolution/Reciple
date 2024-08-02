@@ -1,3 +1,29 @@
+diff --git a/node_modules/discord.js/src/sharding/Shard.js b/node_modules/discord.js/src/sharding/Shard.js
+index f833309..231689b 100644
+--- a/node_modules/discord.js/src/sharding/Shard.js
++++ b/node_modules/discord.js/src/sharding/Shard.js
+@@ -26,7 +26,7 @@ class Shard extends EventEmitter {
+         childProcess = require('node:child_process');
+         break;
+       case 'worker':
+-        Worker = require('node:worker_threads').Worker;
++        Worker = new require('node:worker_threads').Worker();
+         break;
+     }
+ 
+@@ -136,7 +136,11 @@ class Shard extends EventEmitter {
+           .on('exit', this._exitListener);
+         break;
+       case 'worker':
+-        this.worker = new Worker(path.resolve(this.manager.file), { workerData: this.env })
++        this.worker = new Worker(path.resolve(this.manager.file), {
++            workerData: this.env,
++            argv: this.args,
++            execArgv: this.execArgv
++          })
+           .on('message', this._handleMessage.bind(this))
+           .on('exit', this._exitListener);
+         break;
 diff --git a/node_modules/discord.js/typings/index.d.mts b/node_modules/discord.js/typings/index.d.mts
 index 8605883..3af1ccc 100644
 --- a/node_modules/discord.js/typings/index.d.mts
