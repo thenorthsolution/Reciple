@@ -60,7 +60,9 @@ export default (command: Command, cli: CLI) => command
         logger?.info(`Starting Reciple client v${buildVersion} - ${new Date().toISOString()}`);
 
         const client = new RecipleClient(config);
+
         global.reciple = client;
+        if (logger) global.logger = logger;
 
         client.setLogger(logger);
 
