@@ -21,6 +21,7 @@ export default (command: Command, cli: CLI) => command
     .description('Starts the bot')
     .option('-t, --token <DiscordToken>', 'Set your Discord Bot token')
     .option('-c, --config <file>', 'Set the config file path', 'reciple.mjs')
+    .allowUnknownOption(true)
     .action(async () => {
         let logger: Logger|null = cli.logger ?? null;
 
@@ -39,16 +40,14 @@ export default (command: Command, cli: CLI) => command
         logger = config.logger instanceof Logger
             ? config.logger
             : config.logger?.enabled
-                ? cli.logger?.clone(await Config.createLoggerOptions(config, { ...cli.logger.toJSON(), label: 'Reciple' })) || null
+                ? cli.logger?.clone(await Config.createLoggerOptions(config, { ...cli.logger.toJSON(), label: 'Reciple' }, cli)) || null
                 : null;
-
-        if (logger?.writeStream && cli.logger && !cli.logger?.writeStream) {
-            cli.logger.writeStream = logger.writeStream;
-        }
 
         if (!cli.shardDeployCommands) {
             config.applicationCommandRegister = { ...config.applicationCommandRegister, enabled: false };
         }
+
+        if (cli.shardMode) await cli.sendProcessInfo();
 
         config.token = flags.token ? resolveEnvProtocol(flags.token) ?? '' : config.token;
 

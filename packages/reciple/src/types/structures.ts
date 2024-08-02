@@ -29,3 +29,10 @@ export interface RecipleConfig extends RecipleClientConfig {
     checkForUpdates?: boolean;
     version?: string;
 }
+
+export interface ProcessInformation {
+    type: 'ProcessInfo';
+    pid: number;
+    threadId: number;
+    log?: string;
+}

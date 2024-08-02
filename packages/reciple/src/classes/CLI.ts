@@ -5,7 +5,7 @@ import { type Awaitable, type PackageJson, kleur } from 'fallout-utility';
 import { mkdir, readdir, stat } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import type { CLIDefaultFlags } from '../types/structures.js';
+import type { CLIDefaultFlags, ProcessInformation } from '../types/structures.js';
 import { isMainThread, parentPort, threadId } from 'node:worker_threads';
 import { cli } from '../types/constants.js';
 import { config as loadEnv } from 'dotenv';
@@ -24,15 +24,15 @@ export class CLI implements CLIOptions {
     public static commandsDir = path.join(CLI.root, './dist/commands');
 
     static get shardMode() {
-        return !!process.env.SHARDMODE;
+        return !!process.env.SHARDS && !!process.env.SHARD_COUNT;
     }
 
     static get shardLogsFolder() {
-        return CLI.shardMode ? process.env.SHARD_LOGS_FOLDER : null;
+        return CLI.shardMode ? process.env.SHARDS_LOGS_FOLDER : null;
     }
 
     static get shardDeployCommands() {
-        return CLI.shardMode ? !!process.env.SHARD_DEPLOY_COMMANDS : null;
+        return CLI.shardMode ? !!process.env.SHARDS_DEPLOY_COMMANDS : null;
     }
 
     static get threadId() {
@@ -44,6 +44,7 @@ export class CLI implements CLIOptions {
     public commander: Command;
     public binPath: string;
     public logger?: Logger;
+    public logPath?: string;
 
     public updateChecker?: PackageUpdateChecker;
 
@@ -183,5 +184,32 @@ export class CLI implements CLIOptions {
         if (!name) return this.commander;
 
         return this.commander.commands.find(c => c.name() === name);
+    }
+
+    public async sendProcessInfo(): Promise<void> {
+        const message: ProcessInformation = { type: 'ProcessInfo', pid: process.pid, threadId, log: cli.logPath };
+
+        if (parentPort) parentPort.postMessage(message);
+        if (process.send) process.send(message);
+    }
+
+    public static stringifyFlags(flags: OptionValues, command: Command): string[] {
+        let arr: string[] = [];
+
+        for (const [key, value] of Object.entries(flags)) {
+            const option = command.options.find(o => o.name() === key || o.attributeName() === key);
+            if (!option) continue;
+
+            const flag = option.long ?? option.short ?? `--${option.name()}`;
+
+            if (!option.flags.endsWith('>') && !option.flags.endsWith(']') && typeof value === 'boolean') {
+                if (value) arr.push(flag);
+                continue;
+            }
+
+            arr.push(flag, String(value));
+        }
+
+        return arr;
     }
 }

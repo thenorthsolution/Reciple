@@ -6,9 +6,11 @@ import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { cliVersion } from '../types/constants.js';
 import { FileWriteStreamMode, Logger, RecipleError, type LoggerOptions } from '@reciple/core';
 import { kleur } from 'fallout-utility';
+import type { ShardingManagerOptions } from 'discord.js';
 
 export interface RecipleConfigJS {
     config: RecipleConfig;
+    sharding?: Omit<ShardingManagerOptions, 'shardArgs'|'token'|'execArgv'>;
 }
 
 export interface ConfigReadOptions {
@@ -62,7 +64,7 @@ export class Config {
         return file;
     }
 
-    public static async createLoggerOptions(config: RecipleConfig, options?: Partial<LoggerOptions>): Promise<LoggerOptions> {
+    public static async createLoggerOptions(config: RecipleConfig, options?: Partial<LoggerOptions>, cli?: CLI): Promise<LoggerOptions> {
         const loggerConfig: Exclude<RecipleConfig['logger'], Logger> = !(config.logger instanceof Logger) ? config.logger : undefined;
 
         let file: string|undefined = loggerConfig?.logToFile.enabled && loggerConfig?.logToFile.logsFolder && loggerConfig?.logToFile.file
@@ -70,10 +72,12 @@ export class Config {
             : undefined;
 
         if (CLI.shardMode && loggerConfig?.logToFile.enabled) {
-            const folder = loggerConfig?.logToFile.logsFolder ?? CLI.shardLogsFolder;
+            const folder = CLI.shardLogsFolder ??loggerConfig?.logToFile.logsFolder;
 
-            file = path.join(folder, `${(CLI.threadId !== undefined ? (CLI.threadId + '-') : '') + process.pid}.log`);
+            file = path.join(folder, `${(process.env.SHARDS ? process.env.SHARDS + '-' : '') + (CLI.threadId !== null ? (CLI.threadId + '-') : '') + process.pid}.log`);
         }
+
+        if (cli && file) cli.logPath = file;
 
         const data: LoggerOptions =  {
             ...options,
@@ -90,7 +94,8 @@ export class Config {
                     mode: FileWriteStreamMode.Rename,
                     path: file
                 })
-                : undefined
+                : undefined,
+            label: (cli?.shardMode ? `Shards ${process.env.SHARDS ?? CLI.threadId}` : null) || options?.label
         };
 
         logger.debug(`Created logger options:`, data);
