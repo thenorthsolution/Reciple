@@ -6,6 +6,7 @@ import { Config, EventHandlers } from '../exports.js';
 import { watch, type FSWatcher } from 'chokidar';
 import { fork, type ChildProcess } from 'node:child_process';
 import { kleur } from 'fallout-utility';
+import micromatch from 'micromatch';
 
 export interface CLIDevFlags extends CLIStartFlags {
     watch?: string[];
@@ -42,6 +43,7 @@ export default (command: Command, cli: CLI) => command
         let watcher: FSWatcher|null = null;
         let childProcess: ChildProcess|null = null;
         let throttle: NodeJS.Timeout|null = null;
+        let hardRefreshTargets: string[] = ['package.json', '.env*', 'tsconfig.json', 'reciple.*js'];
 
         await createWatcher();
 
@@ -50,6 +52,11 @@ export default (command: Command, cli: CLI) => command
                 watcher.removeAllListeners();
                 watcher.close();
                 watcher = null;
+            }
+
+            if (throttle) {
+                clearTimeout(throttle);
+                throttle = null;
             }
 
             logger?.debug(`Starting chokidar watcher...`);
@@ -67,15 +74,22 @@ export default (command: Command, cli: CLI) => command
             throttle = setTimeout(() => createChildProcess(), 0);
 
             watcher.on('all', (event, target, stats) => {
-                logger?.debug(`Chokidar event: ${event}`);
-                logger?.debug(`    target: ${target}`);
+                logger?.debug(`Chokidar event: ${kleur.cyan(event)}; target: ${kleur.green().dim(target)}`);
 
                 if (throttle) {
                     clearTimeout(throttle);
                     throttle = null;
                 }
 
-                throttle = setTimeout(() => createChildProcess(), 1000);
+                throttle = setTimeout(async () => {
+                    if (target && micromatch([target], hardRefreshTargets).length > 0) {
+                        logger?.debug(`Hard refreshing...`);
+                        await createWatcher();
+                        return;
+                    }
+
+                    await createChildProcess();
+                }, 1000);
             });
         }
 
