@@ -137,7 +137,7 @@ export default (command: Command, cli: CLI) => command
                         logger?.log(`${kleur.cyan('$')} ${kleur.gray(script)}`);
                         CLI.run(script, {
                             cwd: cli.cwd,
-                            stdio: 'inherit',
+                            stdio: ['ignore', 'inherit', 'inherit'],
                             env: process.env
                         });
 
