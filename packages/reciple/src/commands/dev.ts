@@ -7,6 +7,7 @@ import { watch, type FSWatcher } from 'chokidar';
 import { fork, type ChildProcess } from 'node:child_process';
 import { kleur } from 'fallout-utility';
 import micromatch from 'micromatch';
+import path from 'node:path';
 
 export interface CLIDevFlags extends CLIStartFlags {
     watch?: string[];
@@ -36,14 +37,15 @@ export default (command: Command, cli: CLI) => command
         const recipleFlags = CLI.stringifyFlags(cli.getFlags(), cli.getCommand(), ['cwd']);
         const processFlags = [...startFlags, ...recipleFlags];
 
-        const flags = cli.getFlags<CLIDevFlags>('dev')!;
+        const flags = cli.getFlags<CLIDevFlags>('dev', true)!;
+        const configFile = path.parse(flags.config ?? 'reciple.mjs').base;
 
         let defaultConfig = (await Config.getDefaultConfigData()).devmode;
         let config = await Config.readConfigFile({ path: flags.config, createIfNotExists: false }).then(config => config?.devmode);
         let watcher: FSWatcher|null = null;
         let childProcess: ChildProcess|null = null;
         let throttle: NodeJS.Timeout|null = null;
-        let hardRefreshTargets: string[] = ['package.json', '.env*', 'tsconfig.json', 'reciple.*js'];
+        let hardRefreshTargets: string[] = ['package.json', '.env*', 'tsconfig.json', 'reciple.*js', configFile];
 
         await createWatcher();
 
@@ -82,7 +84,7 @@ export default (command: Command, cli: CLI) => command
                 }
 
                 throttle = setTimeout(async () => {
-                    if (target && micromatch([target], hardRefreshTargets).length > 0) {
+                    if (target && micromatch([target], hardRefreshTargets).length) {
                         logger?.debug(`Hard refreshing...`);
                         await createWatcher();
                         return;
