@@ -114,9 +114,8 @@ export class ModuleLoader {
 
         const signalString = signal === 'SIGINT' ? 'keyboard interrupt' : signal === 'SIGTERM' ? 'terminate' : String(signal);
 
-        client.logger?.warn(`Process exited: ${kleur.yellow(signalString)}`);
-
         await sleep(10);
+        client.logger?.warn(`Process exited: ${kleur.yellow(signalString)}`);
         client.logger?.closeFileWriteStream();
 
         process.exit(0);

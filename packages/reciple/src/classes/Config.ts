@@ -11,13 +11,6 @@ import type { ShardingManagerOptions } from 'discord.js';
 export interface RecipleConfigJS {
     config: RecipleConfig;
     sharding?: Omit<ShardingManagerOptions, 'shardArgs'|'token'|'execArgv'>;
-    devmode?: {
-        watch?: string[];
-        ignore?: string[];
-        exec?: string[];
-        noStart?: boolean;
-        killSignal?: NodeJS.Signals;
-    }
 }
 
 export interface ConfigReadOptions {

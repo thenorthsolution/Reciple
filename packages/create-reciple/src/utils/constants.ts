@@ -44,6 +44,7 @@ export const packages: Record<string, string> = {
     'TYPESCRIPT': packageJson.devDependencies!['typescript']!,
     'RIMRAF': packageJson.devDependencies!['rimraf']!,
     'RECIPLE': packageJson.dependencies!['reciple']!,
+    'NODEMON': packageJson.devDependencies!['nodemon']!,
     'DISCORDJS': packageJson.dependencies!['discord.js']!
 };
 

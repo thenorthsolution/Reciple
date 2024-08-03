@@ -50,6 +50,7 @@
     "fallout-utility": "^2.9.1",
     "globby": "^14.0.2",
     "micromatch": "^4.0.7",
+    "nodemon": "^3.1.4",
     "prompts": "^2.4.2",
     "prtyprnt": "^1.1.0",
     "semver": "^7.6.3"

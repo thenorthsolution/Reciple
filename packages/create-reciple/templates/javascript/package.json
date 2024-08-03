@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "reciple start -c reciple.mjs",
-    "dev": "reciple dev -c reciple.mjs"
+    "dev": "nodemon --config nodemon.json"
   },
   "dependencies": {
     "@reciple/core": "RECIPLE_CORE",
@@ -12,6 +12,7 @@
     "reciple": "RECIPLE"
   },
   "devDependencies": {
-    "@types/node": "TYPES_NODE"
+    "@types/node": "TYPES_NODE",
+    "nodemon": "NODEMON"
   }
 }

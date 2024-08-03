@@ -32,7 +32,6 @@ export class Config {
 
         if (options?.preconditions?.length) this.addPreconditions(options.preconditions);
         if (options?.halts?.length) this.addHalts(options.halts);
-        if (this.isTypeScript) await this.setTypescriptConfig();
 
         await this.saveContent();
         return this;
@@ -63,11 +62,6 @@ export class Config {
         if (this.content.includes(importString)) return;
 
         this.content = this.content.replace(`import { IntentsBitField } from 'discord.js';`, `import { IntentsBitField } from 'discord.js';\n${importString}`);
-    }
-
-    public setTypescriptConfig(): void {
-        this.content = this.content.replace(`watch: ['modules/**/*'`, `watch: ['src/**/*'`);
-        this.content = this.content.replace(`exec: []`, `exec: ['rimraf ./modules', 'tsc']`);
     }
 
     public async readContent(): Promise<string> {

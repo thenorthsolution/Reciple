@@ -1,0 +1,12 @@
+{
+  "$schema": "https://raw.githubusercontent.com/SchemaStore/schemastore/master/src/schemas/json/nodemon.json",
+  "restartable": "r",
+  "ext": "ts,mts,mjs,json",
+  "signal": "SIGHUP",
+  "ignore": [
+    ".git",
+    "node_modules/**",
+    "modules"
+  ],
+  "exec": "rimraf ./modules && tsc && reciple start"
+}
