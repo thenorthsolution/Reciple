@@ -49,7 +49,7 @@ export default (command: Command, cli: CLI) => command
                 ? cli.logger?.clone(await Config.createLoggerOptions(config, { ...cli.logger.toJSON(), label: 'Reciple' }, cli)) || null
                 : null;
 
-        logger?.log(`Starting ${kleur.cyan('reciple@' + cliBuildVersion + ' @reciple/client@' + buildVersion)} in ${flags.production ? 'production' : 'development'} mode - ${kleur.dim(new Date().toISOString())}`);
+        logger?.log(`Starting ${kleur.green('reciple@' + kleur.dim(cliBuildVersion) + ' @reciple/client@' + kleur.dim(buildVersion))} - ${kleur.dim(new Date().toISOString())}`);
 
         if (!cli.shardDeployCommands) {
             config.applicationCommandRegister = { ...config.applicationCommandRegister, enabled: false };

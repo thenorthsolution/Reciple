@@ -13,5 +13,5 @@ export default (command: Command, cli: CLI) => command
     .action(async () => {
         const flags = cli.getFlags<CLIInitFlags>('init')!;
 
-        await Config.readConfigFile({ path: flags.config, createIfNotExists: true }).then(config => config?.config);
+        await Config.readConfigFile({ path: flags.config, createIfNotExists: true });
     });

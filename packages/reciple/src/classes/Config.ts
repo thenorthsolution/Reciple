@@ -40,9 +40,10 @@ export class Config {
     public static async readConfigFile(options: ConfigReadOptions & { createIfNotExists?: true }): Promise<RecipleConfigJS>;
     public static async readConfigFile(options: ConfigReadOptions): Promise<RecipleConfigJS|null> {
         const file = path.resolve(options.path);
-        const isFile = path.isAbsolute(options.path) || await existsAsync(file) || ['reciple.js', 'reciple.mjs'].includes(options.path);
+        const fileExists = await existsAsync(file);
+        const isFile = path.isAbsolute(options.path) || fileExists || options.path.startsWith('.') || ['reciple.js', 'reciple.mjs'].includes(options.path);
 
-        if (isFile && !await existsAsync(file)) {
+        if (isFile && !fileExists) {
             if (!options.createIfNotExists) return null;
             await Config.createConfigFile(file);
         }

@@ -96,6 +96,10 @@ export class CLI implements CLIOptions {
         return CLI.shardDeployCommands;
     }
 
+    get nodeEnv() {
+        return process.env.NODE_ENV;
+    }
+
     constructor(options: CLIOptions) {
         this.packageJSON = options.packageJSON;
         this.processCwd = options.processCwd ?? process.cwd();
@@ -124,7 +128,6 @@ export class CLI implements CLIOptions {
         await this.registerSubcommands();
 
         if (!await existsAsync(this.cwd)) await mkdir(this.cwd, { recursive: true });
-        if ((cli.cwd !== cli.processCwd && !cli.isCwdUpdated) || this.threadId === null) process.chdir(cli.cwd);
 
         const flags = this.getFlags();
 
@@ -222,5 +225,6 @@ export class CLI implements CLIOptions {
 
         if (flags.debug) process.env.NODE_ENV = 'development';
         if (flags.production) process.env.NODE_ENV = 'production';
+        if ((cli.cwd !== cli.processCwd && !cli.isCwdUpdated) || this.threadId === null) process.chdir(cli.cwd);
     }
 }
