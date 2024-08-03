@@ -6,10 +6,12 @@ import path from 'node:path';
 
 export interface ConfigOptions {
     dir?: string;
+    isTypeScript?: boolean;
 }
 
 export class Config {
     public dir: string;
+    public isTypeScript: boolean = false;
     public content: string = '';
 
     get filePath() {
@@ -20,8 +22,9 @@ export class Config {
         return detectIndentSize(this.content).indent ?? '    ';
     }
 
-    constructor(options: ConfigOptions) {
-        this.dir = options.dir ?? process.cwd();
+    constructor(options?: ConfigOptions) {
+        this.dir = options?.dir ?? process.cwd();
+        this.isTypeScript = options?.isTypeScript ?? false;
     }
 
     public async setup(options?: Partial<Record<'halts'|'preconditions', { class: string; notDefault?: boolean; from: string; }[]>>): Promise<this> {
@@ -29,6 +32,7 @@ export class Config {
 
         if (options?.preconditions?.length) this.addPreconditions(options.preconditions);
         if (options?.halts?.length) this.addHalts(options.halts);
+        if (this.isTypeScript) await this.setTypescriptConfig();
 
         await this.saveContent();
         return this;

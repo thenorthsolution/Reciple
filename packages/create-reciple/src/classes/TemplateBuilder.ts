@@ -164,7 +164,10 @@ export class TemplateBuilder implements TemplateBuilderOptions {
     public async setupConfig(): Promise<void> {
         this.setSpinnerText(`Configuring ${kleur.green('reciple.mjs')}...`);
 
-        await (new Config({ dir: this.dir })).setup({
+        await (new Config({
+            dir: this.dir,
+            isTypeScript: this.template.language === 'Typescript'
+        })).setup({
             halts: [
                 {
                     class: 'CommandErrorHalt',
