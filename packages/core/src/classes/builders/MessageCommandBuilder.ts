@@ -11,6 +11,7 @@ import type { RecipleClient } from '../structures/RecipleClient.js';
 import { RecipleError } from '../structures/RecipleError.js';
 import type { CooldownData } from '../structures/Cooldown.js';
 import { getCommand } from 'fallout-utility/commands';
+import { parseArgs } from 'util';
 
 export interface MessageCommandExecuteData {
     type: CommandType.MessageCommand;
@@ -222,8 +223,26 @@ export class MessageCommandBuilder extends BaseCommandBuilder implements Message
 
         const prefix = typeof client.config.commands?.messageCommand?.prefix === 'function' ? await Promise.resolve(client.config.commands.messageCommand.prefix({ client, message, guild: message.guild, command })) : client.config.commands?.messageCommand?.prefix;
         const separator = typeof client.config.commands?.messageCommand?.commandArgumentSeparator === 'function' ? await Promise.resolve(client.config.commands.messageCommand.commandArgumentSeparator({ client, message, guild: message.guild, command })) : client.config.commands?.messageCommand?.commandArgumentSeparator;
-        const parserData = getCommand(message.content, prefix, separator);
-        if (!parserData || !parserData.name) return null;
+        const commandData = getCommand(message.content, prefix, separator);
+        if (!commandData || !commandData.name) return null;
+
+        const { positionals: args, values: flags } = parseArgs({
+            args: commandData.args,
+            allowPositionals: true,
+            strict: false
+        });
+
+        const parserData = {
+            ...commandData as CommandData & { name: string; },
+            args,
+            flags: Object
+                .entries(flags)
+                .filter(([key, value]) => value !== undefined)
+                .map(([key, value]) => ({
+                    name: key,
+                    value: Array.isArray(value) ? value : [value] as (string|boolean)[]
+                }))
+        };
 
         const builder = command ? this.resolve(command) : client.commands.get(parserData.name, CommandType.MessageCommand);
         if (!builder) return null;

@@ -109,6 +109,7 @@ export interface CommandPreconditionResultHaltTriggerData<T extends CommandType>
 export interface CommandData {
     name?: string;
     prefix?: string;
+    flags: { name: string; value: (string|boolean)[]; }[];
     args: string[];
     raw: string;
     rawArgs: string;
