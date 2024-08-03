@@ -9,6 +9,7 @@ import type { CLIDefaultFlags, ProcessInformation } from '../types/structures.js
 import { isMainThread, parentPort, threadId } from 'node:worker_threads';
 import { cli } from '../types/constants.js';
 import { config as loadEnv } from 'dotenv';
+import { execSync, type ExecSyncOptions } from 'node:child_process';
 
 export interface CLIOptions {
     packageJSON: PackageJson;
@@ -198,12 +199,29 @@ export class CLI implements CLIOptions {
         if (process.send) process.send(message);
     }
 
-    public static stringifyFlags(flags: OptionValues, command: Command): string[] {
+    protected preActionHandler(command: Command, action: Command): void {
+        this.logger?.debug(`Running command: ${kleur.cyan(command.name())} ${kleur.gray(kleur.bold(action.name()))}`);
+
+        const flags = this.getFlags();
+
+        if (flags.debug) process.env.NODE_ENV = 'development';
+        if (flags.production) process.env.NODE_ENV = 'production';
+        if ((cli.cwd !== cli.processCwd && !cli.isCwdUpdated) || this.threadId === null) process.chdir(cli.cwd);
+
+        if (flags.debug && this.logger) {
+            this.logger.debugmode = {
+                ...this.logger?.debugmode,
+                enabled: true
+            }
+        }
+    }
+
+    public static stringifyFlags(flags: OptionValues, command: Command, ignored: string[] = []): string[] {
         let arr: string[] = [];
 
         for (const [key, value] of Object.entries(flags)) {
             const option = command.options.find(o => o.name() === key || o.attributeName() === key);
-            if (!option) continue;
+            if (!option || ignored.includes(key)) continue;
 
             const flag = option.long ?? option.short ?? `--${option.name()}`;
 
@@ -218,13 +236,12 @@ export class CLI implements CLIOptions {
         return arr;
     }
 
-    protected preActionHandler(command: Command, action: Command): void {
-        this.logger?.debug(`Running command: ${kleur.cyan(command.name())} ${kleur.gray(kleur.bold(action.name()))}`);
+    public static run(script: string, options?: ExecSyncOptions): string {
+        return execSync(script, options).toString('utf-8');
+    }
 
-        const flags = this.getFlags();
-
-        if (flags.debug) process.env.NODE_ENV = 'development';
-        if (flags.production) process.env.NODE_ENV = 'production';
-        if ((cli.cwd !== cli.processCwd && !cli.isCwdUpdated) || this.threadId === null) process.chdir(cli.cwd);
+    public static clearConsole(): void {
+        process.stdout.write("\u001b[3J\u001b[2J\u001b[1J");
+        console.clear();
     }
 }
