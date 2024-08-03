@@ -5,7 +5,7 @@
   "scripts": {
     "start": "node ../packages/reciple/dist/bin.js -c ./reciple.mjs",
     "shard": "node ../packages/reciple/dist/bin.js --debug shard -c reciple.mjs",
-    "dev": "node ../packages/reciple/dist/bin.js --debug dev -c reciple.mjs"
+    "dev": "nodemon"
   },
   "dependencies": {
     "@reciple/core": "file:../packages/core",
@@ -14,7 +14,6 @@
     "reciple": "file:../packages/reciple"
   },
   "devDependencies": {
-    "@types/node": "^22.0.3",
-    "nodemon": "^3.1.4"
+    "@types/node": "^22.0.3"
   }
 }

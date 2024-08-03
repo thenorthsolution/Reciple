@@ -1,7 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/SchemaStore/schemastore/master/src/schemas/json/nodemon.json",
   "restartable": "r",
-  "ext": "ts,mts,mjs,json",
+  "ext": "ts,mts,mjs,json,env",
   "signal": "SIGHUP",
   "ignore": [
     ".git",
