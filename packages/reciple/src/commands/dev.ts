@@ -8,6 +8,7 @@ import { fork, type ChildProcess } from 'node:child_process';
 import { kleur } from 'fallout-utility';
 import micromatch from 'micromatch';
 import path from 'node:path';
+import { config as loadEnv } from 'dotenv';
 
 export interface CLIDevFlags extends CLIStartFlags {
     watch?: string[];
@@ -84,8 +85,13 @@ export default (command: Command, cli: CLI) => command
                 }
 
                 throttle = setTimeout(async () => {
-                    if (target && micromatch([target], hardRefreshTargets).length) {
+                    const hardRefreshHits = target && micromatch([target], hardRefreshTargets) || [];
+
+                    if (hardRefreshHits.length) {
+                        logger?.debug(`Hard refresh hits: ${hardRefreshHits.join(', ')}`);
                         logger?.debug(`Hard refreshing...`);
+
+                        loadEnv({ path: flags.env });
                         await createWatcher();
                         return;
                     }
