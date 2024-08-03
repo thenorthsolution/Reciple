@@ -89,7 +89,7 @@ export const sharding = {
  * @satisfies {import('reciple').RecipleConfigJS['devmode']}
  */
 export const devmode = {
-    watch: ['modules/**/*', 'src/**/*', './*.json', 'reciple.*js', '.env*'],
+    watch: ['modules/**/*', '*.json', 'reciple.*js', '.env*'],
     ignore: ['node_modules/**/*', '.git/**/*', 'logs/**/*'],
     exec: [],
     noStart: false,
