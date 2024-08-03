@@ -1,12 +1,17 @@
 {
   "$schema": "https://raw.githubusercontent.com/SchemaStore/schemastore/master/src/schemas/json/nodemon.json",
   "restartable": "r",
-  "ext": "ts,mts,mjs,json,env",
+  "ext": "ts,mts,mjs,json",
   "signal": "SIGHUP",
   "ignore": [
     ".git",
     "node_modules/**",
     "modules"
+  ],
+  "watch": [
+    "src",
+    "reciple.mjs",
+    ".env"
   ],
   "exec": "rimraf ./modules && tsc && reciple start"
 }

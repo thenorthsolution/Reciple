@@ -1,11 +1,16 @@
 {
   "$schema": "https://raw.githubusercontent.com/SchemaStore/schemastore/master/src/schemas/json/nodemon.json",
   "restartable": "r",
-  "ext": "js,mjs,json,env",
+  "ext": "js,mjs,json",
   "signal": "SIGHUP",
   "ignore": [
     ".git",
     "node_modules/**"
+  ],
+  "watch": [
+    "src",
+    "reciple.mjs",
+    ".env"
   ],
   "exec": "reciple start"
 }
