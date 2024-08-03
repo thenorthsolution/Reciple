@@ -102,7 +102,7 @@ export default (command: Command, cli: CLI) => command
         }
 
         async function killChildProcess(): Promise<void> {
-            if (!childProcess) return;
+            if (!childProcess || childProcess.killed) return;
 
             const pid = childProcess.pid;
 

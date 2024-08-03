@@ -236,8 +236,8 @@ export class CLI implements CLIOptions {
         return arr;
     }
 
-    public static run(script: string, options?: ExecSyncOptions): string {
-        return execSync(script, options).toString('utf-8');
+    public static run(script: string, options?: ExecSyncOptions) {
+        return execSync(script, options);
     }
 
     public static clearConsole(): void {
