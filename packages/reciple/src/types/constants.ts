@@ -14,9 +14,7 @@ export const cliVersion = String(coerce(packageJSON.version));
 
 export const logger = new Logger({
     debugmode: {
-        enabled: isDebugging(),
-        printMessage: false,
-        writeToFile: true
+        enabled: isDebugging()
     }
 });
 

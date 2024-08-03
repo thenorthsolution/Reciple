@@ -4,9 +4,9 @@ import { Config } from '../classes/Config.js';
 import { Logger } from 'prtyprnt';
 import { resolveEnvProtocol } from '@reciple/utils';
 import semver from 'semver';
-import { cliVersion } from '../types/constants.js';
-import { buildVersion } from '@reciple/core';
+import { cliBuildVersion, cliVersion } from '../types/constants.js';
 import { RecipleClient } from '../index.js';
+import { buildVersion } from '@reciple/core';
 import { EventHandlers } from '../classes/EventHandlers.js';
 import { ModuleLoader } from '../classes/ModuleLoader.js';
 import { kleur } from 'fallout-utility';
@@ -14,6 +14,7 @@ import { kleur } from 'fallout-utility';
 export interface CLIStartFlags {
     token?: string;
     config: string;
+    production?: boolean;
 }
 
 export default (command: Command, cli: CLI) => command
@@ -35,13 +36,20 @@ export default (command: Command, cli: CLI) => command
         process.on('warning', warn => logger?.warn(warn));
 
         const flags = cli.getFlags<CLIStartFlags>('start', true)!;
-        const config = await Config.readConfigFile({ path: flags.config, createIfNotExists: true }).then(config => config?.config);
+        const config = await Config.readConfigFile({ path: flags.config, createIfNotExists: false }).then(config => config?.config);
+
+        if (!config) {
+            logger?.error(`No config file found! Run ${kleur.green(`reciple init`)} to create one`);
+            process.exit(1);
+        }
 
         logger = config.logger instanceof Logger
             ? config.logger
             : config.logger?.enabled
                 ? cli.logger?.clone(await Config.createLoggerOptions(config, { ...cli.logger.toJSON(), label: 'Reciple' }, cli)) || null
                 : null;
+
+        logger?.log(`Starting ${kleur.cyan('reciple@' + cliBuildVersion + ' @reciple/client@' + buildVersion)} in ${flags.production ? 'production' : 'development'} mode - ${kleur.dim(new Date().toISOString())}`);
 
         if (!cli.shardDeployCommands) {
             config.applicationCommandRegister = { ...config.applicationCommandRegister, enabled: false };
@@ -55,8 +63,6 @@ export default (command: Command, cli: CLI) => command
             logger?.error(`Your config version doesn't support Reciple CLI v${cliVersion}`);
             process.exit(1);
         }
-
-        logger?.info(`Starting Reciple client v${buildVersion} - ${new Date().toISOString()}`);
 
         const client = new RecipleClient(config);
 

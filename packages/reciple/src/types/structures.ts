@@ -5,6 +5,7 @@ export interface CLIDefaultFlags {
     cwd: string;
     env: string[];
     debug: boolean;
+    production: boolean;
 }
 
 export interface RecipleConfig extends RecipleClientConfig {

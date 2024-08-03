@@ -113,6 +113,8 @@ export class CLI implements CLIOptions {
             .version(`reciple: ${this.version}\n@reciple/client: ${buildVersion}`, '-v, --version')
             .option('--env <file>', 'Set .env file path', (v, p) => p.concat(v), [path.join(this.cwd, '.env')])
             .option('--debug', 'Enable debug mode', isDebugging())
+            .option('--production', 'Starts in production mode', false)
+            .hook('preAction', (cmd, action) => this.preActionHandler(cmd, action))
             .allowUnknownOption(true);
 
         if (this.threadId === null) this.commander.option('--cwd <dir>', 'Set current working directory', this.processCwd)
@@ -211,5 +213,14 @@ export class CLI implements CLIOptions {
         }
 
         return arr;
+    }
+
+    protected preActionHandler(command: Command, action: Command): void {
+        this.logger?.debug(`Running command: ${kleur.cyan(command.name())} ${kleur.gray(kleur.bold(action.name()))}`);
+
+        const flags = this.getFlags();
+
+        if (flags.debug) process.env.NODE_ENV = 'development';
+        if (flags.production) process.env.NODE_ENV = 'production';
     }
 }

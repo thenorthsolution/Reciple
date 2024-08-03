@@ -36,7 +36,7 @@ export default (command: Command, cli: CLI) => command
         const { config, sharding: shardingConfig } = await Config.readConfigFile({ path: flags.config, createIfNotExists: false }).then(data => data ?? ({ config: null, sharding: null }));
 
         if (!config && !shardingConfig) {
-            logger?.error('No config file found');
+            logger?.error(`No config file found! Run ${kleur.green(`reciple init`)} to create one`);
             process.exit(1);
         }
 
