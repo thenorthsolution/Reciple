@@ -2,7 +2,7 @@
   "name": "create-reciple",
   "description": "A Reciple Discord bot project builder",
   "license": "GPL-3.0",
-  "version": "9.7.0",
+  "version": "9.7.1",
   "type": "module",
   "types": "./dist/index.d.ts",
   "module": "./dist/index.js",
@@ -47,7 +47,7 @@
     "fallout-utility": "^2.9.1",
     "ora": "^8.0.1",
     "package-json": "^10.0.1",
-    "reciple": "^9.5.0"
+    "reciple": "^9.5.1"
   },
   "devDependencies": {
     "@types/node": "^22.0.3",
