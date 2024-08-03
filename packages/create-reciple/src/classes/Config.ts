@@ -61,6 +61,11 @@ export class Config {
         this.content = this.content.replace(`import { IntentsBitField } from 'discord.js';`, `import { IntentsBitField } from 'discord.js';\n${importString}`);
     }
 
+    public setTypescriptConfig(): void {
+        this.content = this.content.replace(`watch: ['modules/**/*'`, `watch: ['src/**/*'`);
+        this.content = this.content.replace(`exec: []`, `exec: ['rimraf ./modules', 'tsc']`);
+    }
+
     public async readContent(): Promise<string> {
         return this.content = await existsAsync(this.filePath) ? await readFile(this.filePath, 'utf-8') : await this.writeContent();
     }
