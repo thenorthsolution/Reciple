@@ -11,6 +11,13 @@ import type { ShardingManagerOptions } from 'discord.js';
 export interface RecipleConfigJS {
     config: RecipleConfig;
     sharding?: Omit<ShardingManagerOptions, 'shardArgs'|'token'|'execArgv'>;
+    devmode?: {
+        watch?: string[];
+        ignore?: string[];
+        exec?: string[];
+        noStart?: boolean;
+        killSignal?: NodeJS.Signals;
+    }
 }
 
 export interface ConfigReadOptions {
@@ -24,7 +31,7 @@ export class Config {
     public static defaultConfigFile = path.join(CLI.root, './static/config.mjs');
 
     public static async getDefaultConfigData(): Promise<RecipleConfigJS> {
-        return recursiveDefaults<RecipleConfigJS>(await import(Config.defaultConfigFile))!;
+        return recursiveDefaults<RecipleConfigJS>(await import('file://' + Config.defaultConfigFile))!;
     }
 
     public static async getDefaultConfigContent(): Promise<string> {

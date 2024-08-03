@@ -21,7 +21,7 @@ export default (command: Command, cli: CLI) => command
         let logger: Logger|null = cli.logger ?? null;
 
         const startFlags = CLI.stringifyFlags(cli.getFlags<CLIStartFlags>('shard')!, cli.getCommand('shard')!);
-        const recipleFlags = CLI.stringifyFlags(cli.getFlags(), cli.getCommand());
+        const recipleFlags = CLI.stringifyFlags(cli.getFlags(), cli.getCommand(), ['cwd']);
         const processFlags = [...startFlags, ...recipleFlags];
 
         const processErrorLogger = (err: any) => {

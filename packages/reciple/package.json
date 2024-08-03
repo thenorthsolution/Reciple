@@ -44,6 +44,7 @@
   "dependencies": {
     "@reciple/utils": "^9.3.1",
     "ansi-regex": "^6.0.1",
+    "chokidar": "^3.6.0",
     "commander": "^12.1.0",
     "dotenv": "^16.4.5",
     "fallout-utility": "^2.9.1",
