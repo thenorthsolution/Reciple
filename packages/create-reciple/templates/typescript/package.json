@@ -6,7 +6,7 @@
     "build": "rimraf ./modules && tsc",
     "start": "reciple start -c reciple.mjs",
     "build:start": "SCRIPT_RUN build && reciple start -c reciple.mjs",
-    "dev": "nodemon --ext ts,mts,json --ignore ./modules --exec \"SCRIPT_RUN build && reciple start -c reciple.mjs\" --signal SIGHUP"
+    "dev": "reciple dev -c reciple.mjs"
   },
   "dependencies": {
     "@reciple/core": "RECIPLE_CORE",
@@ -16,7 +16,6 @@
   },
   "devDependencies": {
     "@types/node": "TYPES_NODE",
-    "nodemon": "NODEMON",
     "typescript": "TYPESCRIPT",
     "rimraf": "RIMRAF"
   }

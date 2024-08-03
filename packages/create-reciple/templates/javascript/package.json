@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "reciple start -c reciple.mjs",
-    "dev": "nodemon --ext js,mjs,json --exec \"reciple start -c reciple.mjs\" --signal SIGHUP"
+    "dev": "reciple dev -c reciple.mjs"
   },
   "dependencies": {
     "@reciple/core": "RECIPLE_CORE",
@@ -12,7 +12,6 @@
     "reciple": "RECIPLE"
   },
   "devDependencies": {
-    "@types/node": "TYPES_NODE",
-    "nodemon": "NODEMON"
+    "@types/node": "TYPES_NODE"
   }
 }

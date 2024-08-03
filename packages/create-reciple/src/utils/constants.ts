@@ -44,8 +44,7 @@ export const packages: Record<string, string> = {
     'TYPESCRIPT': packageJson.devDependencies!['typescript']!,
     'RIMRAF': packageJson.devDependencies!['rimraf']!,
     'RECIPLE': packageJson.dependencies!['reciple']!,
-    'DISCORDJS': packageJson.dependencies!['discord.js']!,
-    'NODEMON': packageJson.devDependencies!['nodemon']!
+    'DISCORDJS': packageJson.dependencies!['discord.js']!
 };
 
 export const packageManagerPlaceholders: Record<PackageManager, Record<'SCRIPT_RUN'|'BIN_EXEC'|'INSTALL_ALL'|'INSTALL_PKG'|'UNINSTALL_PKG', string>> = {
