@@ -2,7 +2,7 @@
   "name": "@reciple/utils",
   "description": "Utilities used by reciple modules",
   "license": "GPL-3.0",
-  "version": "9.3.1",
+  "version": "9.3.2",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "type": "module",
