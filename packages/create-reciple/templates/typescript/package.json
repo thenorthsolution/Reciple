@@ -6,7 +6,7 @@
     "build": "rimraf ./modules && tsc",
     "start": "reciple start -c reciple.mjs",
     "build:start": "SCRIPT_RUN build && reciple start -c reciple.mjs",
-    "dev": "reciple dev -c reciple.mjs"
+    "dev": "nodemon --config nodemon.json"
   },
   "dependencies": {
     "@reciple/core": "RECIPLE_CORE",
