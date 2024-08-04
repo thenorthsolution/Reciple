@@ -1,6 +1,7 @@
 // @ts-check
 import { MessageCommandBuilder } from "reciple";
 import { createMessageCommandUsage } from '@reciple/message-command-utils';
+import { codeBlock } from "discord.js";
 
 export class Message {
     commands = [
@@ -12,10 +13,24 @@ export class Message {
                 .setDescription('A flag')
                 .setValueType('string')
                 .setRequired(true)
-                .setMandatory(true)
             )
-            .setExecute(async ({ message, flags }) => {
-                await message.reply(flags.getFlagValues('flag', { required: true, type: 'string' })[0]);
+            .addFlag(flag => flag
+                .setName('boolean')
+                .setShort('b')
+                .setDescription('A boolean')
+                .setValueType('boolean')
+            )
+            .addOption(option => option
+                .setName('option')
+                .setDescription('An option')
+                .setRequired(true)
+            )
+            .setExecute(async ({ message, options, flags }) => {
+                await message.reply(codeBlock('json', JSON.stringify({
+                    flag: flags.getFlagValues('flag', { required: true, type: 'string' })[0],
+                    boolean: flags.getFlagValues('boolean', { required: false, type: 'boolean' })[0],
+                    option: options.getOptionValue('option', { required: true }),
+                }, null, 2)));
             })
     ];
 
