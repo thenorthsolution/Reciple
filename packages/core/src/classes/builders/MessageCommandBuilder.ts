@@ -299,7 +299,7 @@ export class MessageCommandBuilder extends BaseCommandBuilder implements Message
                             Object.entries({
                                 type: o.value_type ?? 'string',
                                 multiple: o.multiple,
-                                short: o.short,
+                                short: o.shortcut,
                                 default: o.multiple ? o.default_values : o.default_values?.[0],
                             })
                             .filter(([key, value]) => value !== undefined)

@@ -16,7 +16,7 @@ export class Message {
             )
             .addFlag(flag => flag
                 .setName('boolean')
-                .setShort('b')
+                .setShortcut('b')
                 .setDescription('A boolean')
                 .setValueType('boolean')
             )

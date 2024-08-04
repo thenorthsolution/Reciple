@@ -33,12 +33,13 @@ export interface MessageCommandFlagBuilderResolveValueOptions<T extends any = st
 
 export interface MessageCommandFlagBuilderData<T extends any = string|boolean> {
     name: string;
-    short?: string;
+    shortcut?: string;
     description: string;
     default_values?: string[]|boolean[];
     required?: boolean;
     multiple?: boolean;
     value_type?: 'string'|'boolean';
+
     /**
      * The function that validates the option value.
      * @param options The option value and message.
@@ -53,7 +54,7 @@ export interface MessageCommandFlagBuilderData<T extends any = string|boolean> {
 
 export class MessageCommandFlagBuilder<T extends any = string|boolean> implements MessageCommandFlagBuilderData<T> {
     public name: string = '';
-    public short?: string;
+    public shortcut?: string;
     public description: string = '';
     public default_values?: string[]|boolean[];
     public required: boolean = false;
@@ -64,7 +65,7 @@ export class MessageCommandFlagBuilder<T extends any = string|boolean> implement
 
     constructor(data?: Partial<MessageCommandFlagBuilderData<T>>) {
         if (data?.name) this.setName(data.name);
-        if (data?.short) this.setShort(data.short);
+        if (data?.shortcut) this.setShortcut(data.shortcut);
         if (data?.description) this.setDescription(data.description);
         if (data?.default_values) this.setDefaultValues(data.default_values);
         if (data?.required) this.setRequired(data.required);
@@ -80,9 +81,9 @@ export class MessageCommandFlagBuilder<T extends any = string|boolean> implement
         return this;
     }
 
-    public setShort(short: string): this {
-        MessageCommandFlagValidators.isValidShort(short);
-        this.short = short;
+    public setShortcut(shortcut: string): this {
+        MessageCommandFlagValidators.isValidShortcut(shortcut);
+        this.shortcut = shortcut;
         return this;
     }
 
@@ -132,14 +133,14 @@ export class MessageCommandFlagBuilder<T extends any = string|boolean> implement
     public toJSON(): MessageCommandFlagBuilderData<T> {
         return {
             name: this.name,
-            short: this.short,
+            shortcut: this.shortcut,
             description: this.description,
             default_values: this.default_values,
             required: this.required,
             multiple: this.multiple,
+            value_type: this.value_type,
             validate: this.validate,
             resolve_value: this.resolve_value,
-            value_type: this.value_type,
         };
     }
 

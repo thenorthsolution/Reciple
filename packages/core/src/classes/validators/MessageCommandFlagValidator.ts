@@ -9,7 +9,7 @@ export class MessageCommandFlagValidators extends BaseCommandValidators {
         .lengthLessThanOrEqual(32, { message: 'Message command flag name cannot exceed 32 characters' })
         .regex(/^[\p{Ll}\p{Lm}\p{Lo}\p{N}\p{sc=Devanagari}\p{sc=Thai}_-]+$/u, { message: 'Message command flag name can only be alphanumeric without spaces' });
 
-    public static short = MessageCommandFlagValidators.s
+    public static shortcut = MessageCommandFlagValidators.s
         .string({ message: 'Expected string as message command flag short' })
         .lengthEqual(1, { message: 'Message command flag short needs to have at least single character' })
         .optional();
@@ -59,7 +59,7 @@ export class MessageCommandFlagValidators extends BaseCommandValidators {
 
     public static MessageCommandFlagBuilderData = MessageCommandFlagValidators.s.object({
         name: MessageCommandFlagValidators.name,
-        short: MessageCommandFlagValidators.short,
+        shortcut: MessageCommandFlagValidators.shortcut,
         description: MessageCommandFlagValidators.description,
         default_values: MessageCommandFlagValidators.default_values,
         required: MessageCommandFlagValidators.required,
@@ -74,8 +74,8 @@ export class MessageCommandFlagValidators extends BaseCommandValidators {
         MessageCommandFlagValidators.name.setValidationEnabled(MessageCommandFlagValidators.isValidationEnabled).parse(name);
     }
 
-    public static isValidShort(short: unknown): asserts short is MessageCommandFlagBuilderData['short'] {
-        MessageCommandFlagValidators.short.setValidationEnabled(MessageCommandFlagValidators.isValidationEnabled).parse(short);
+    public static isValidShortcut(shortcut: unknown): asserts shortcut is MessageCommandFlagBuilderData['shortcut'] {
+        MessageCommandFlagValidators.shortcut.setValidationEnabled(MessageCommandFlagValidators.isValidationEnabled).parse(shortcut);
     }
 
     public static isValidDescription(description: unknown): asserts description is MessageCommandFlagBuilderData['description'] {
@@ -110,7 +110,7 @@ export class MessageCommandFlagValidators extends BaseCommandValidators {
         const opt = data as MessageCommandFlagBuilderData;
 
         MessageCommandFlagValidators.isValidName(opt.name);
-        MessageCommandFlagValidators.isValidShort(opt.short);
+        MessageCommandFlagValidators.isValidShortcut(opt.shortcut);
         MessageCommandFlagValidators.isValidDescription(opt.description);
         MessageCommandFlagValidators.isValidDefaultValues(opt.default_values);
         MessageCommandFlagValidators.isValidRequired(opt.required);
