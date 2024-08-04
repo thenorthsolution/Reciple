@@ -1,11 +1,11 @@
-import type { Message } from 'discord.js';
-import type { MessageCommandBuilder } from '../builders/MessageCommandBuilder.js';
 import { MessageCommandFlagValue, type MessageCommandFlagParseOptionValueOptions } from '../structures/MessageCommandFlagValue.js';
-import type { RecipleClient } from '../structures/RecipleClient.js';
-import { DataManager } from './DataManager.js';
 import type { MessageCommandOptionManagerOptions } from './MessageCommandOptionManager.js';
+import type { MessageCommandBuilder } from '../builders/MessageCommandBuilder.js';
+import type { RecipleClient } from '../structures/RecipleClient.js';
 import type { CommandData } from '../../types/structures.js';
 import { RecipleError } from '../structures/RecipleError.js';
+import { DataManager } from './DataManager.js';
+import type { Message } from 'discord.js';
 
 export interface MessageCommandFlagManagerParseOptionsData extends Omit<MessageCommandFlagParseOptionValueOptions, 'flag'|'values'> {
     command: MessageCommandBuilder;

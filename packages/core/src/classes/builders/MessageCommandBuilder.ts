@@ -1,20 +1,20 @@
-import { MessageCommandOptionBuilder, type MessageCommandOptionResolvable } from './MessageCommandOptionBuilder.js';
 import { isJSONEncodable, type Awaitable, type JSONEncodable, type RestOrArray, type Message, normalizeArray } from 'discord.js';
+import { MessageCommandOptionBuilder, type MessageCommandOptionResolvable } from './MessageCommandOptionBuilder.js';
+import { MessageCommandFlagBuilder, type MessageCommandFlagResolvable } from './MessageCommandFlagBuilder.js';
 import type { CommandHalt, CommandHaltData, CommandHaltResolvable } from '../structures/CommandHalt.js';
 import { MessageCommandOptionValidators } from '../validators/MessageCommandOptionValidators.js';
+import { MessageCommandFlagValidators } from '../validators/MessageCommandFlagValidator.js';
+import { BaseCommandBuilder, type BaseCommandBuilderData } from './BaseCommandBuilder.js';
 import { MessageCommandOptionManager } from '../managers/MessageCommandOptionManager.js';
 import { MessageCommandValidators } from '../validators/MessageCommandValidators.js';
-import { BaseCommandBuilder, type BaseCommandBuilderData } from './BaseCommandBuilder.js';
 import type { CommandData, CommandHaltTriggerData } from '../../types/structures.js';
+import { MessageCommandFlagManager } from '../managers/MessageCommandFlagManager.js';
 import { CommandHaltReason, CommandType } from '../../types/constants.js';
 import type { RecipleClient } from '../structures/RecipleClient.js';
-import { RecipleError } from '../structures/RecipleError.js';
 import type { CooldownData } from '../structures/Cooldown.js';
+import { RecipleError } from '../structures/RecipleError.js';
 import { getCommand } from 'fallout-utility/commands';
-import { parseArgs } from 'util';
-import { MessageCommandFlagBuilder, type MessageCommandFlagResolvable } from './MessageCommandFlagBuilder.js';
-import { MessageCommandFlagValidators } from '../validators/MessageCommandFlagValidator.js';
-import { MessageCommandFlagManager } from '../managers/MessageCommandFlagManager.js';
+import { parseArgs } from 'node:util';
 
 export interface MessageCommandExecuteData {
     type: CommandType.MessageCommand;

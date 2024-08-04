@@ -1,9 +1,9 @@
-import type { Message } from 'discord.js';
-import type { CommandData } from '../../types/structures.js';
-import type { MessageCommandBuilder } from '../builders/MessageCommandBuilder.js';
 import type { MessageCommandFlagBuilder, MessageCommandFlagBuilderResolveValueOptions } from '../builders/MessageCommandFlagBuilder.js';
+import type { MessageCommandBuilder } from '../builders/MessageCommandBuilder.js';
+import type { CommandData } from '../../types/structures.js';
 import type { RecipleClient } from './RecipleClient.js';
 import { RecipleError } from './RecipleError.js';
+import type { Message } from 'discord.js';
 
 export interface MessageCommandFlagValueData<T extends any = string|boolean, V extends 'string'|'boolean' = 'string'|'boolean'> {
     /**
