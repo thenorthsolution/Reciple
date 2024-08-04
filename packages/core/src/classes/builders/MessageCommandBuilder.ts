@@ -256,12 +256,15 @@ export class MessageCommandBuilder extends BaseCommandBuilder implements Message
                 builder.flags
                     .map((o) => [
                         o.name,
-                        {
-                            type: MessageCommandFlagBuilder.getFlagValuesType(o.default_values ?? []),
-                            multiple: o.multiple,
-                            short: o.short,
-                            default: o.multiple ? o.default_values as string[] : o.default_values?.[0],
-                        }
+                        Object.fromEntries(
+                            Object.entries({
+                                type: o.accept ?? 'string',
+                                multiple: o.multiple,
+                                short: o.short,
+                                default: o.multiple ? o.default_values : o.default_values?.[0],
+                            })
+                            .filter(([key, value]) => value !== undefined)
+                        ) as any
                     ])
             ),
         });
