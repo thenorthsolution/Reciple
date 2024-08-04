@@ -1,6 +1,7 @@
 import { MessageCommandOptionValidators } from './MessageCommandOptionValidators.js';
 import type { MessageCommandBuilderData } from '../builders/MessageCommandBuilder.js';
 import { BaseCommandValidators } from './BaseCommandValidators.js';
+import { MessageCommandFlagValidators } from './MessageCommandFlagValidator.js';
 
 export class MessageCommandValidators extends BaseCommandValidators {
     public static name = MessageCommandValidators.s
@@ -22,6 +23,10 @@ export class MessageCommandValidators extends BaseCommandValidators {
         .boolean({ message: 'Expected boolean for .validate_options' })
         .optional();
 
+    public static validate_flags = MessageCommandValidators.s
+        .boolean({ message: 'Expected boolean for .validate_flags' })
+        .optional();
+
     public static dm_permission = MessageCommandValidators.s
         .boolean({ message: 'Expected boolean for .dm_permission' })
         .optional();
@@ -32,6 +37,10 @@ export class MessageCommandValidators extends BaseCommandValidators {
 
     public static options = MessageCommandOptionValidators.MessageCommandOptionResolvable
         .array({ message: 'Expected an array for message command options' })
+        .optional();
+
+    public static flags = MessageCommandFlagValidators.MessageCommandFlagResolvable
+        .array({ message: 'Expected an array for message command flags' })
         .optional();
 
     public static isValidName(name: unknown): asserts name is MessageCommandBuilderData['name'] {
@@ -50,6 +59,10 @@ export class MessageCommandValidators extends BaseCommandValidators {
         MessageCommandValidators.validate_options.setValidationEnabled(MessageCommandValidators.isValidationEnabled).parse(parseOptions);
     }
 
+    public static isValidValidateFlags(parseFlags: unknown): asserts parseFlags is MessageCommandBuilderData['validate_flags'] {
+        MessageCommandValidators.validate_flags.setValidationEnabled(MessageCommandValidators.isValidationEnabled).parse(parseFlags);
+    }
+
     public static isValidDMPermission(DMPermission: unknown): asserts DMPermission is MessageCommandBuilderData['dm_permission'] {
         MessageCommandValidators.dm_permission.setValidationEnabled(MessageCommandValidators.isValidationEnabled).parse(DMPermission);
     }
@@ -60,5 +73,9 @@ export class MessageCommandValidators extends BaseCommandValidators {
 
     public static isValidOptions(options: unknown): asserts options is MessageCommandBuilderData['options'] {
         MessageCommandValidators.options.setValidationEnabled(MessageCommandValidators.isValidationEnabled).parse(options);
+    }
+
+    public static isValidFlags(flags: unknown): asserts flags is MessageCommandBuilderData['flags'] {
+        MessageCommandValidators.flags.setValidationEnabled(MessageCommandValidators.isValidationEnabled).parse(flags);
     }
 }

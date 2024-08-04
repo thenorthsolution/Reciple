@@ -8,6 +8,7 @@ import type { MessageCommandOptionValue } from '../classes/structures/MessageCom
 import type { CooldownSweeperOptions } from '../classes/managers/CooldownManager.js';
 import type { CommandHaltReason, CommandType } from './constants.js';
 import type { Cooldown } from '../classes/structures/Cooldown.js';
+import type { MessageCommandFlagValue } from '../classes/structures/MessageCommandFlagValue.js';
 
 // Config
 export interface RecipleClientConfig {
@@ -66,7 +67,10 @@ export type AnySlashCommandOptionData = AnyNonSubcommandSlashCommandOptionData|A
 export type CommandHaltTriggerData<T extends CommandType> =
     | CommandErrorHaltTriggerData<T>
     | CommandCooldownHaltTriggerData<T>
-    | (T extends CommandType.MessageCommand ? CommandInvalidArgumentsHaltTriggerData<T> | CommandMissingArgumentsHaltTriggerData<T> : never)
+    | (T extends CommandType.MessageCommand
+        ? CommandInvalidArgumentsHaltTriggerData<T> | CommandMissingArgumentsHaltTriggerData<T> | CommandInvalidFlagsHaltTriggerData<T> | CommandMissingFlagsHaltTriggerData<T>
+        : never
+    )
     | CommandPreconditionResultHaltTriggerData<T>;
 
 export interface BaseCommandHaltTriggerData<T extends CommandType> {
@@ -101,6 +105,16 @@ export interface CommandMissingArgumentsHaltTriggerData<T extends CommandType> e
     missingOptions: Collection<string, MessageCommandOptionValue>;
 }
 
+export interface CommandInvalidFlagsHaltTriggerData<T extends CommandType> extends BaseCommandHaltTriggerData<T> {
+    reason: CommandHaltReason.InvalidFlags;
+    invalidFlags: Collection<string, MessageCommandFlagValue>;
+}
+
+export interface CommandMissingFlagsHaltTriggerData<T extends CommandType> extends BaseCommandHaltTriggerData<T> {
+    reason: CommandHaltReason.MissingFlags;
+    missingFlags: Collection<string, MessageCommandFlagValue>;
+}
+
 export interface CommandPreconditionResultHaltTriggerData<T extends CommandType> extends BaseCommandHaltTriggerData<T>, Omit<CommandPreconditionResultData, 'executeData'> {
     reason: CommandHaltReason.PreconditionTrigger;
 }
@@ -109,6 +123,7 @@ export interface CommandPreconditionResultHaltTriggerData<T extends CommandType>
 export interface CommandData {
     name?: string;
     prefix?: string;
+    flags: { name: string; value: (string|boolean)[]; }[];
     args: string[];
     raw: string;
     rawArgs: string;

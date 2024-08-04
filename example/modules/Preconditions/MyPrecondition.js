@@ -1,5 +1,4 @@
 // @ts-check
-
 /**
  * @satisfies {import("reciple").CommandPreconditionData}
  */

@@ -8,7 +8,7 @@
     "node_modules/**"
   ],
   "watch": [
-    "src",
+    "modules",
     "reciple.mjs",
     ".env"
   ],

@@ -95,8 +95,8 @@ export class MessageCommandOptionManager extends DataManager<MessageCommandOptio
      * @param {boolean} required - Whether the option is required or not.
      * @return {MessageCommandOptionValue<V>|null} The value of the message command option.
      */
-    public getOption<V extends any = any>(name: string, required?: false): MessageCommandOptionValue<V>;
-    public getOption<V extends any = any>(name: string, required?: true): MessageCommandOptionValue<V>;
+    public getOption<V extends any = any>(name: string, required: true): MessageCommandOptionValue<V>;
+    public getOption<V extends any = any>(name: string, required?: boolean): MessageCommandOptionValue<V>|null;
     public getOption<V extends any = any>(name: string, required: boolean = false): MessageCommandOptionValue<V>|null {
         const option = this.cache.get(name);
         if (required && !option) throw new RecipleError(`Unable to find required message option '${name}'`);
@@ -113,11 +113,21 @@ export class MessageCommandOptionManager extends DataManager<MessageCommandOptio
      */
     public getOptionValue<V extends any = any>(name: string, options?: { required?: false; resolveValue?: false; }): string|null;
     public getOptionValue<V extends any = any>(name: string, options?: { required?: true; resolveValue?: false; }): string;
-    public getOptionValue<V extends any = any>(name: string, options?: { required?: true; resolveValue?: true; }): Promise<V>;
+    public getOptionValue<V extends any = any>(name: string, options?: { required?: boolean; resolveValue?: false; }): string|null;
     public getOptionValue<V extends any = any>(name: string, options?: { required?: false; resolveValue?: true; }): Promise<V|null>;
+    public getOptionValue<V extends any = any>(name: string, options?: { required?: true; resolveValue?: true; }): Promise<V>;
+    public getOptionValue<V extends any = any>(name: string, options?: { required?: boolean; resolveValue?: true; }): Promise<V|null>;
+    public getOptionValue<V extends any = any>(name: string, options?: { required?: boolean; resolveValue?: boolean; }): string|null|Promise<V|null>;
     public getOptionValue<V extends any = any>(name: string, options: { required?: boolean; resolveValue?: boolean; } = { required: false, resolveValue: false }): string|null|Promise<V|null> {
-        const value = this.getOption<V>(name);
-        return options.resolveValue ? Promise.resolve(value.resolveValue(options.required) ?? value.value) : value.value;
+        const value = this.getOption<V>(name, options.required);
+
+        if (options.resolveValue) {
+            if (!value) return Promise.resolve(null);
+
+            return value.resolveValue(options.required) ?? null;
+        }
+
+        return value?.value ?? null;
     }
 
     public toJSON() {

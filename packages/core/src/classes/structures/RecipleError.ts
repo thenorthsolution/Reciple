@@ -60,9 +60,25 @@ export class RecipleError extends Error {
 
     public static createCommandRequiredOptionNotFoundErrorOptions(optionName: string, value: unknown): RecipleErrorOptions {
         return {
-            message: `No value given from required option ${kleur.cyan("'" + optionName + "'")}`,
+            message: `No value given for required option ${kleur.cyan("'" + optionName + "'")}`,
             cause: { value },
             name: 'RequiredOptionNotFound'
+        };
+    }
+
+    public static createCommandRequiredFlagNotFoundErrorOptions(flagName: string, value: unknown): RecipleErrorOptions {
+        return {
+            message: `No value given for required flag ${kleur.cyan("'" + flagName + "'")}`,
+            cause: { value },
+            name: 'RequiredFlagNotFound'
+        };
+    }
+
+    public static createCommandMandatoryFlagNotFoundErrorOptions(flagName: string, value: unknown): RecipleErrorOptions {
+        return {
+            message: `No value given for mandatory flag ${kleur.cyan("'" + flagName + "'")}`,
+            cause: { value },
+            name: 'MandatoryFlagNotFound'
         };
     }
 

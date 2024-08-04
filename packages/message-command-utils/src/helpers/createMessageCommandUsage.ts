@@ -3,6 +3,16 @@ import { isJSONEncodable } from 'discord.js';
 
 export interface CreateMessageCommandUsageOptions {
     prefix?: string;
+    flags?: {
+        include?: boolean;
+        useShort?: boolean;
+        showValueType?: boolean;
+        flagBrackets?: {
+            required?: [string, string];
+            mandatory?: [string, string];
+            optional?: [string, string];
+        }
+    };
     optionBrackets?: {
         required?: [string, string];
         optional?: [string, string];
@@ -21,6 +31,20 @@ export function createMessageCommandUsage(data: MessageCommandResolvable, option
             : options?.optionBrackets?.optional ?? ['[', ']']
 
         usage += ` ${brackets[0]}${option.name}${brackets[1]}`;
+    }
+
+    if (options?.flags?.include !== false && command.flags) for (const flagData of command.flags) {
+        const flag = isJSONEncodable(flagData) ? flagData.toJSON() : flagData;
+        const brackets = flag.required
+            ? options?.flags?.flagBrackets?.required ?? ['<', '>']
+            : options?.flags?.flagBrackets?.optional ?? ['[', ']'];
+        const mandatory = options?.flags?.flagBrackets?.mandatory ?? ['', '']
+
+        let value = `${options?.flags?.useShort ? '-' + flag.short : '--' + flag.name}`;
+
+        if (options?.flags?.showValueType) value += `=${brackets[0]}${flag.value_type === 'string' ? 'string' : 'boolean'}${flag.multiple ? '...' : ''}${brackets[1]}`;
+
+        usage += ` ${mandatory[0]}${value}${mandatory[1]}`;
     }
 
     return usage;
