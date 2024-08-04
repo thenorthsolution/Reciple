@@ -13,9 +13,12 @@ export class MessageCommandArguments {
      * @param {import('reciple').MessageCommandHaltTriggerData} data 
      */
     async messageCommandHalt(data) {
-        if (data.reason !== CommandHaltReason.InvalidArguments && data.reason !== CommandHaltReason.MissingArguments) return;
-        console.log(data.executeData.options.invalidOptions);
-        console.log(data.executeData.options.missingOptions);
+        if (
+            data.reason !== CommandHaltReason.InvalidArguments &&
+            data.reason !== CommandHaltReason.MissingArguments &&
+            data.reason !== CommandHaltReason.InvalidFlags &&
+            data.reason !== CommandHaltReason.MissingFlags
+        ) return;
 
         switch (data.reason) {
             case CommandHaltReason.InvalidArguments:
@@ -23,6 +26,12 @@ export class MessageCommandArguments {
                 break;
             case CommandHaltReason.MissingArguments:
                 await data.executeData.message.reply(`## Missing arguments\n${data.executeData.options.missingOptions.map(o => `- ${inlineCode(o.name)}`).join('\n')}`);
+                break;
+            case CommandHaltReason.InvalidFlags:
+                await data.executeData.message.reply(`## Invalid flags\n${data.executeData.flags.invalidFlags.map(o => `- ${inlineCode(o.name)} ${o.error?.message ?? 'Invalid value'}`).join('\n')}`);
+                break;
+            case CommandHaltReason.MissingFlags:
+                await data.executeData.message.reply(`## Missing flags\n${data.executeData.flags.missingFlags.map(o => `- ${inlineCode(o.name)}`).join('\n')}`);
                 break;
         }
 
