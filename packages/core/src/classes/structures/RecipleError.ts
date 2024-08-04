@@ -70,7 +70,7 @@ export class RecipleError extends Error {
         return {
             message: `No value given for required flag ${kleur.cyan("'" + flagName + "'")}`,
             cause: { value },
-            name: 'RequiredOptionNotFound'
+            name: 'RequiredFlagNotFound'
         };
     }
 
@@ -78,7 +78,7 @@ export class RecipleError extends Error {
         return {
             message: `No value given for mandatory flag ${kleur.cyan("'" + flagName + "'")}`,
             cause: { value },
-            name: 'RequiredOptionNotFound'
+            name: 'MandatoryFlagNotFound'
         };
     }
 

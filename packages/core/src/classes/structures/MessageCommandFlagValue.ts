@@ -98,34 +98,32 @@ export class MessageCommandFlagValue<T extends any = string|boolean> implements 
     }
 
     public static async parseFlagValue<T extends any = string|boolean>(options: MessageCommandFlagParseOptionValueOptions<T>): Promise<MessageCommandFlagValue<T>> {
-        const missing = options.values
-            ? !!options.flag.required && !options.values?.length
+        const filteredValues = options.values?.filter(value => typeof value == options.flag.accept);
+        const missing = filteredValues
+            ? !!options.flag.required && !filteredValues?.length
             : options.flag.mandatory ?? false;
 
-        const invalidValues = options.values?.filter(value => typeof value !== options.flag.accept) ?? [];
         const validateData = !missing
-            ? !invalidValues.length
-                ? options.flag.validate && options.values?.length
-                    ? await Promise.resolve(options.flag.validate({
-                        values: options.values as string[]|boolean[],
-                        flag: options.flag,
-                        parserData: options.parserData,
-                        command: options.command,
-                        message: options.message,
-                        client: options.client,
-                    }))
-                    : true
-                : new RecipleError(`Invalid value${invalidValues.length > 1 ? 's' : ''} for flag '${options.flag.name}'`)
+            ? options.flag.validate && filteredValues?.length
+                ? await Promise.resolve(options.flag.validate({
+                    values: filteredValues as string[]|boolean[],
+                    flag: options.flag,
+                    parserData: options.parserData,
+                    command: options.command,
+                    message: options.message,
+                    client: options.client,
+                }))
+                : true
             : new RecipleError(
-                options.values
-                    ? RecipleError.createCommandRequiredFlagNotFoundErrorOptions(options.flag.name, options.values.join(', '))
+                filteredValues
+                    ? RecipleError.createCommandRequiredFlagNotFoundErrorOptions(options.flag.name, filteredValues.join(', '))
                     : RecipleError.createCommandMandatoryFlagNotFoundErrorOptions(options.flag.name, 'undefined')
             );
 
         return new MessageCommandFlagValue({
             name: options.flag.name,
             flag: options.flag,
-            values: (options.values ?? []) as string[]|boolean[],
+            values: (filteredValues ?? []) as string[]|boolean[],
             missing,
             invalid: !validateData,
             message: options.message,
