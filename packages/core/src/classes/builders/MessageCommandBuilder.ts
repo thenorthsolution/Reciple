@@ -14,6 +14,7 @@ import { getCommand } from 'fallout-utility/commands';
 import { parseArgs } from 'util';
 import { MessageCommandFlagBuilder, type MessageCommandFlagResolvable } from './MessageCommandFlagBuilder.js';
 import { MessageCommandFlagValidators } from '../validators/MessageCommandFlagValidator.js';
+import { MessageCommandFlagManager } from '../managers/MessageCommandFlagManager.js';
 
 export interface MessageCommandExecuteData {
     type: CommandType.MessageCommand;
@@ -21,6 +22,7 @@ export interface MessageCommandExecuteData {
     message: Message<boolean>;
     parserData: CommandData;
     options: MessageCommandOptionManager;
+    flags: MessageCommandFlagManager;
     builder: MessageCommandBuilder;
 }
 
@@ -283,6 +285,12 @@ export class MessageCommandBuilder extends BaseCommandBuilder implements Message
             builder,
             parserData,
             options: await MessageCommandOptionManager.parseOptions({
+                command: builder,
+                message,
+                parserData,
+                client
+            }),
+            flags: await MessageCommandFlagManager.parseFlags({
                 command: builder,
                 message,
                 parserData,

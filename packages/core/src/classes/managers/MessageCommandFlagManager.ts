@@ -1,17 +1,24 @@
 import type { Message } from 'discord.js';
 import type { MessageCommandBuilder } from '../builders/MessageCommandBuilder.js';
-import type { MessageCommandFlagValue } from '../structures/MessageCommandFlagValue.js';
+import { MessageCommandFlagValue, type MessageCommandFlagParseOptionValueOptions } from '../structures/MessageCommandFlagValue.js';
 import type { RecipleClient } from '../structures/RecipleClient.js';
 import { DataManager } from './DataManager.js';
 import type { MessageCommandOptionManagerOptions } from './MessageCommandOptionManager.js';
 import type { CommandData } from '../../types/structures.js';
 import { RecipleError } from '../structures/RecipleError.js';
 
+export interface MessageCommandFlagManagerParseOptionsData extends Omit<MessageCommandFlagParseOptionValueOptions, 'flag'|'values'> {
+    command: MessageCommandBuilder;
+    parserData: CommandData;
+}
+
 export class MessageCommandFlagManager extends DataManager<MessageCommandFlagValue> implements MessageCommandOptionManagerOptions {
     readonly command: MessageCommandBuilder;
     readonly client: RecipleClient<true>;
     readonly message: Message;
     readonly parserData: CommandData;
+
+    get rawFlags() { return this.parserData.flags; }
 
     constructor(data: MessageCommandOptionManagerOptions) {
         super();
@@ -73,5 +80,28 @@ export class MessageCommandFlagManager extends DataManager<MessageCommandFlagVal
         return options.resolveValue
             ? Promise.resolve(value?.resolveValues()).then(v => v ?? [])
             : value?.values ?? [];
+    }
+
+    private async _parseFlags(): Promise<void> {
+        if (!this.command.flags?.length || !this.client.isReady()) return;
+
+        for (const data of this.command.flags) {
+            const flag = this.rawFlags.find(f => f.name === data.name);
+            this._cache.set(data.name, await MessageCommandFlagValue.parseFlagValue({
+                client: this.client,
+                message: this.message,
+                command: this.command,
+                parserData: this.parserData,
+                values: flag?.value,
+                flag: data
+            }));
+        }
+    }
+
+    public static async parseFlags(options: MessageCommandFlagManagerParseOptionsData): Promise<MessageCommandFlagManager> {
+        const manager = new MessageCommandFlagManager(options);
+
+        await manager._parseFlags();
+        return manager;
     }
 }
