@@ -38,7 +38,7 @@ export function createMessageCommandUsage(data: MessageCommandResolvable, option
             ? options?.flags?.flagBrackets?.required ?? ['<', '>']
             : options?.flags?.flagBrackets?.optional ?? ['[', ']'];
 
-        let value = `${options?.flags?.useShort ? '-' + flag.short : '--' + flag.name}`;
+        let value = `${options?.flags?.useShort ? '-' + flag.shortcut : '--' + flag.name}`;
 
         if (options?.flags?.showValueType) value += `=${brackets[0]}${flag.value_type === 'string' ? 'string' : 'boolean'}${flag.multiple ? '...' : ''}${brackets[1]}`;
 

@@ -1,8 +1,8 @@
 import { isJSONEncodable, normalizeArray, type Awaitable, type JSONEncodable, type Message, type RestOrArray } from 'discord.js';
-import type { CommandData } from '../../types/structures.js';
+import { MessageCommandFlagValidators } from '../validators/MessageCommandFlagValidator.js';
 import type { MessageCommandBuilder } from './MessageCommandBuilder.js';
 import type { RecipleClient } from '../structures/RecipleClient.js';
-import { MessageCommandFlagValidators } from '../validators/MessageCommandFlagValidator.js';
+import type { CommandData } from '../../types/structures.js';
 
 export interface MessageCommandFlagBuilderResolveValueOptions<T extends any = string|boolean> {
     /**
@@ -32,12 +32,34 @@ export interface MessageCommandFlagBuilderResolveValueOptions<T extends any = st
 }
 
 export interface MessageCommandFlagBuilderData<T extends any = string|boolean> {
+    /**
+     * The name of the flag.
+     */
     name: string;
+    /**
+     * The shortcut of the flag.
+     */
     shortcut?: string;
+    /**
+     * The description of the flag.
+     */
     description: string;
+    /**
+     * The default values of the flag.
+     */
     default_values?: string[]|boolean[];
+    /**
+     * Whether the flag is required.
+     */
     required?: boolean;
+    /**
+     * Whether the flag can have multiple values.
+     */
     multiple?: boolean;
+    /**
+     * The value type of the flag.
+     * @default 'string'
+     */
     value_type?: 'string'|'boolean';
 
     /**
