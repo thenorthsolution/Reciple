@@ -262,7 +262,8 @@ export class MessageCommandBuilder extends BaseCommandBuilder implements Message
             validate_options: this.validate_options,
             dm_permission: this.dm_permission,
             allow_bot: this.allow_bot,
-            options: this.options,
+            options: this.options.map(b => b.toJSON()),
+            flags: this.flags.map(b => b.toJSON()),
             ...super._toJSON<CommandType.MessageCommand, MessageCommandExecuteFunction>()
         };
     }
