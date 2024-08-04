@@ -1,7 +1,7 @@
 import { MessageCommandOptionValidators } from './MessageCommandOptionValidators.js';
 import type { MessageCommandBuilderData } from '../builders/MessageCommandBuilder.js';
 import { BaseCommandValidators } from './BaseCommandValidators.js';
-import { MessageCommandFlagValidators } from './MessageCommandFlagValidator.js';
+import { MessageCommandFlagValidators } from './MessageCommandFlagValidators.js';
 
 export class MessageCommandValidators extends BaseCommandValidators {
     public static name = MessageCommandValidators.s

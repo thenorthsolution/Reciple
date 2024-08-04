@@ -1,5 +1,5 @@
 import { isJSONEncodable, normalizeArray, type Awaitable, type JSONEncodable, type Message, type RestOrArray } from 'discord.js';
-import { MessageCommandFlagValidators } from '../validators/MessageCommandFlagValidator.js';
+import { MessageCommandFlagValidators } from '../validators/MessageCommandFlagValidators.js';
 import type { MessageCommandBuilder } from './MessageCommandBuilder.js';
 import type { RecipleClient } from '../structures/RecipleClient.js';
 import type { CommandData } from '../../types/structures.js';

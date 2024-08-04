@@ -3,7 +3,7 @@ import { MessageCommandOptionBuilder, type MessageCommandOptionResolvable } from
 import { MessageCommandFlagBuilder, type MessageCommandFlagResolvable } from './MessageCommandFlagBuilder.js';
 import type { CommandHalt, CommandHaltData, CommandHaltResolvable } from '../structures/CommandHalt.js';
 import { MessageCommandOptionValidators } from '../validators/MessageCommandOptionValidators.js';
-import { MessageCommandFlagValidators } from '../validators/MessageCommandFlagValidator.js';
+import { MessageCommandFlagValidators } from '../validators/MessageCommandFlagValidators.js';
 import { BaseCommandBuilder, type BaseCommandBuilderData } from './BaseCommandBuilder.js';
 import { MessageCommandOptionManager } from '../managers/MessageCommandOptionManager.js';
 import { MessageCommandValidators } from '../validators/MessageCommandValidators.js';
