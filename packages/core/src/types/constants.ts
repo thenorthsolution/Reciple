@@ -14,7 +14,9 @@ export enum CommandHaltReason {
     Cooldown,
     InvalidArguments,
     MissingArguments,
-    PreconditionTrigger
+    PreconditionTrigger,
+    InvalidFlags,
+    MissingFlags
 }
 
 export enum RecipleModuleStatus {

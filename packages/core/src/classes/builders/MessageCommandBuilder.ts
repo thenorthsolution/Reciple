@@ -392,6 +392,28 @@ export class MessageCommandBuilder extends BaseCommandBuilder implements Message
             }
         }
 
+        if (builder.validate_flags) {
+            if (executeData.flags.hasInvalidFlags) {
+                await client.commands.executeHalts({
+                    commandType: builder.command_type,
+                    reason: CommandHaltReason.InvalidFlags,
+                    executeData,
+                    invalidFlags: executeData.flags.invalidFlags
+                });
+                return null;
+            }
+
+            if (executeData.flags.hasMissingFlags) {
+                await client.commands.executeHalts({
+                    commandType: builder.command_type,
+                    reason: CommandHaltReason.MissingFlags,
+                    executeData,
+                    missingFlags: executeData.flags.missingFlags
+                });
+                return null;
+            }
+        }
+
         return (await client.commands.executeCommandBuilderExecute(executeData)) ? executeData : null;
     }
 }
