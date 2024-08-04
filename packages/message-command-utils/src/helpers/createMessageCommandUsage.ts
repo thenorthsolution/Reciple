@@ -35,15 +35,16 @@ export function createMessageCommandUsage(data: MessageCommandResolvable, option
 
     if (options?.flags?.include !== false && command.flags) for (const flagData of command.flags) {
         const flag = isJSONEncodable(flagData) ? flagData.toJSON() : flagData;
-        const brackets = flag.mandatory
-            ? options?.flags?.flagBrackets?.mandatory ?? ['<', '>']
-            : flag.required
-                ? options?.flags?.flagBrackets?.required ?? ['<', '>']
-                : options?.flags?.flagBrackets?.optional ?? ['[', ']'];
+        const brackets = flag.required
+            ? options?.flags?.flagBrackets?.required ?? ['<', '>']
+            : options?.flags?.flagBrackets?.optional ?? ['[', ']'];
+        const mandatory = options?.flags?.flagBrackets?.mandatory ?? ['', '']
 
         let value = `${options?.flags?.useShort ? '-' + flag.short : '--' + flag.name}`;
 
         if (options?.flags?.showValueType) value += `=${brackets[0]}${flag.value_type === 'string' ? 'string' : 'boolean'}${flag.multiple ? '...' : ''}${brackets[1]}`;
+
+        usage += ` ${mandatory[0]}${value}${mandatory[1]}`;
     }
 
     return usage;
