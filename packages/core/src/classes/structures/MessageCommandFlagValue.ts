@@ -3,8 +3,9 @@ import type { CommandData } from '../../types/structures.js';
 import type { MessageCommandBuilder } from '../builders/MessageCommandBuilder.js';
 import type { MessageCommandFlagBuilder, MessageCommandFlagBuilderResolveValueOptions } from '../builders/MessageCommandFlagBuilder.js';
 import type { RecipleClient } from './RecipleClient.js';
+import { RecipleError } from './RecipleError.js';
 
-export interface MessageCommandFlagValueData<V extends string|boolean = string|boolean, T extends any = V> {
+export interface MessageCommandFlagValueData<T extends any = string|boolean> {
     /**
      * The name of the option.
      */
@@ -12,11 +13,11 @@ export interface MessageCommandFlagValueData<V extends string|boolean = string|b
     /**
      * The builder that is used to create the option.
      */
-    flag: MessageCommandFlagBuilder<V, T>;
+    flag: MessageCommandFlagBuilder<T>;
     /**
      * The raw value of the option.
      */
-    values: V[];
+    values: string[]|boolean[];
     /**
      * Whether the option is missing.
      */
@@ -31,19 +32,19 @@ export interface MessageCommandFlagValueData<V extends string|boolean = string|b
     error?: string|Error;
 }
 
-export interface MessageCommandFlagParseOptionValueOptions<V extends string|boolean = string|boolean, T extends any = V> extends Omit<MessageCommandFlagBuilderResolveValueOptions<V, T>, 'values'> {
-    values?: V[]|null;
+export interface MessageCommandFlagParseOptionValueOptions<T extends any = string|boolean> extends Omit<MessageCommandFlagBuilderResolveValueOptions<T>, 'values'> {
+    values?: T[]|null;
 }
 
-export interface MessageCommandFlagValueOptions<V extends string|boolean = string|boolean, T extends any = V> extends MessageCommandFlagValueData<V, T>, Pick<MessageCommandFlagParseOptionValueOptions<V, T>, 'parserData'|'command'> {
+export interface MessageCommandFlagValueOptions<T extends any = string|boolean> extends MessageCommandFlagValueData<T>, Pick<MessageCommandFlagParseOptionValueOptions<T>, 'parserData'|'command'> {
     client: RecipleClient<true>;
     message: Message;
 }
 
-export class MessageCommandFlagValue<V extends string|boolean = string|boolean, T extends any = V> implements MessageCommandFlagValueData<V, T> {
+export class MessageCommandFlagValue<T extends any = string|boolean> implements MessageCommandFlagValueData<T> {
     readonly name: string;
-    readonly flag: MessageCommandFlagBuilder<V, T>;
-    readonly values: V[];
+    readonly flag: MessageCommandFlagBuilder<T>;
+    readonly values: string[]|boolean[];
     readonly missing: boolean;
     readonly invalid: boolean;
     readonly message: Message;
@@ -53,7 +54,7 @@ export class MessageCommandFlagValue<V extends string|boolean = string|boolean, 
     readonly command: MessageCommandBuilder;
     readonly client: RecipleClient<true>;
 
-    constructor(options: MessageCommandFlagValueOptions<V, T>) {
+    constructor(options: MessageCommandFlagValueOptions<T>) {
         this.name = options.name;
         this.flag = options.flag;
         this.values = options.values;
@@ -85,7 +86,7 @@ export class MessageCommandFlagValue<V extends string|boolean = string|boolean, 
             : [];
     }
 
-    public toJSON(): MessageCommandFlagValueData<V, T> {
+    public toJSON(): MessageCommandFlagValueData<T> {
         return {
             name: this.name,
             flag: this.flag,
@@ -96,28 +97,35 @@ export class MessageCommandFlagValue<V extends string|boolean = string|boolean, 
         }
     }
 
-    public static async parseFlagValue<V extends string|boolean = string|boolean, T extends any = V>(options: MessageCommandFlagParseOptionValueOptions<V, T>): Promise<MessageCommandFlagValue<V, T>> {
+    public static async parseFlagValue<T extends any = string|boolean>(options: MessageCommandFlagParseOptionValueOptions<T>): Promise<MessageCommandFlagValue<T>> {
         const missing = options.values
             ? !!options.flag.required && !options.values?.length
             : options.flag.mandatory ?? false;
 
+        const invalidValues = options.values?.filter(value => typeof value !== options.flag.accept) ?? [];
         const validateData = !missing
-            ? options.flag.validate && options.values?.length
-                ? await Promise.resolve(options.flag.validate({
-                    values: options.values,
-                    flag: options.flag,
-                    parserData: options.parserData,
-                    command: options.command,
-                    message: options.message,
-                    client: options.client,
-                }))
-                : true
-            : false;
+            ? !invalidValues.length
+                ? options.flag.validate && options.values?.length
+                    ? await Promise.resolve(options.flag.validate({
+                        values: options.values as string[]|boolean[],
+                        flag: options.flag,
+                        parserData: options.parserData,
+                        command: options.command,
+                        message: options.message,
+                        client: options.client,
+                    }))
+                    : true
+                : new RecipleError(`Invalid value${invalidValues.length > 1 ? 's' : ''} for flag '${options.flag.name}'`)
+            : new RecipleError(
+                options.values
+                    ? RecipleError.createCommandRequiredFlagNotFoundErrorOptions(options.flag.name, options.values.join(', '))
+                    : RecipleError.createCommandMandatoryFlagNotFoundErrorOptions(options.flag.name, 'undefined')
+            );
 
         return new MessageCommandFlagValue({
             name: options.flag.name,
             flag: options.flag,
-            values: options.values ?? [],
+            values: (options.values ?? []) as string[]|boolean[],
             missing,
             invalid: !validateData,
             message: options.message,

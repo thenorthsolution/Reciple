@@ -4,11 +4,11 @@ import type { MessageCommandBuilder } from './MessageCommandBuilder.js';
 import type { RecipleClient } from '../structures/RecipleClient.js';
 import { MessageCommandFlagValidators } from '../validators/MessageCommandFlagValidator.js';
 
-export interface MessageCommandFlagBuilderResolveValueOptions<V extends string|boolean = string|boolean, T extends any = V> {
+export interface MessageCommandFlagBuilderResolveValueOptions<T extends any = string|boolean> {
     /**
      * The values of the given flag
      */
-    values: V[];
+    values: string[]|boolean[];
     /**
      * The parser data when parsing this command.
      */
@@ -16,7 +16,7 @@ export interface MessageCommandFlagBuilderResolveValueOptions<V extends string|b
     /**
      * The flag builder used to build this option.
      */
-    flag: MessageCommandFlagBuilder<V, T>;
+    flag: MessageCommandFlagBuilder<T>;
     /**
      * The command builder used to build this command.
      */
@@ -31,38 +31,40 @@ export interface MessageCommandFlagBuilderResolveValueOptions<V extends string|b
     client: RecipleClient<true>;
 }
 
-export interface MessageCommandFlagBuilderData<V extends string|boolean = string|boolean, T extends any = V> {
+export interface MessageCommandFlagBuilderData<T extends any = string|boolean> {
     name: string;
     short?: string;
     description: string;
-    default_values?: V[];
+    default_values?: string[]|boolean[];
     required?: boolean;
     mandatory?: boolean;
     multiple?: boolean;
+    accept?: 'string'|'boolean';
     /**
      * The function that validates the option value.
      * @param options The option value and message.
      */
-    validate?: (options: MessageCommandFlagBuilderResolveValueOptions<V, T>) => Awaitable<boolean|string|Error>;
+    validate?: (options: MessageCommandFlagBuilderResolveValueOptions<T>) => Awaitable<boolean|string|Error>;
     /**
      * Resolves the option value.
      * @param options The option value and message.
      */
-    resolve_value?: (options: MessageCommandFlagBuilderResolveValueOptions<V, T>) => Awaitable<T[]>;
+    resolve_value?: (options: MessageCommandFlagBuilderResolveValueOptions<T>) => Awaitable<T[]>;
 }
 
-export class MessageCommandFlagBuilder<V extends string|boolean = string|boolean, T extends any = V> implements MessageCommandFlagBuilderData<V, T> {
+export class MessageCommandFlagBuilder<T extends any = string|boolean> implements MessageCommandFlagBuilderData<T> {
     public name: string = '';
     public short?: string;
     public description: string = '';
-    public default_values?: V[];
+    public default_values?: string[]|boolean[];
     public required: boolean = false;
     public mandatory?: boolean = false;
     public multiple?: boolean = false;
-    public validate?: (options: MessageCommandFlagBuilderResolveValueOptions<V, T>) => Awaitable<boolean|string|Error>;
-    public resolve_value?: (options: MessageCommandFlagBuilderResolveValueOptions<V, T>) => Awaitable<T[]>;
+    public accept?: 'string'|'boolean';
+    public validate?: (options: MessageCommandFlagBuilderResolveValueOptions<T>) => Awaitable<boolean|string|Error>;
+    public resolve_value?: (options: MessageCommandFlagBuilderResolveValueOptions<T>) => Awaitable<T[]>;
 
-    constructor(data?: Partial<MessageCommandFlagBuilderData<V, T>>) {
+    constructor(data?: Partial<MessageCommandFlagBuilderData<T>>) {
         if (data?.name) this.setName(data.name);
         if (data?.short) this.setShort(data.short);
         if (data?.description) this.setDescription(data.description);
@@ -92,8 +94,8 @@ export class MessageCommandFlagBuilder<V extends string|boolean = string|boolean
         return this;
     }
 
-    public setDefaultValues(...defaultValues: RestOrArray<V>): this {
-        defaultValues = normalizeArray(defaultValues);
+    public setDefaultValues(...defaultValues: RestOrArray<string|boolean>): this {
+        defaultValues = normalizeArray(defaultValues) as string[]|boolean[];
         MessageCommandFlagValidators.isValidDefaultValues(defaultValues);
         this.default_values = defaultValues;
         return this;
@@ -117,19 +119,25 @@ export class MessageCommandFlagBuilder<V extends string|boolean = string|boolean
         return this;
     }
 
-    public setValidate(validate: MessageCommandFlagBuilderData<V, T>['validate']): this {
+    public setAccept(accept: 'string'|'boolean'): this {
+        MessageCommandFlagValidators.isValidAccept(accept);
+        this.accept = accept as any;
+        return this as any;
+    }
+
+    public setValidate(validate: MessageCommandFlagBuilderData<T>['validate']): this {
         MessageCommandFlagValidators.isValidValidate(validate);
         this.validate = validate;
         return this;
     }
 
-    public setResolveValue(resolve_value: MessageCommandFlagBuilderData<V, T>['resolve_value']): this {
+    public setResolveValue(resolve_value: MessageCommandFlagBuilderData<T>['resolve_value']): this {
         MessageCommandFlagValidators.isValidResolveValue(resolve_value);
         this.resolve_value = resolve_value;
         return this;
     }
 
-    public toJSON(): MessageCommandFlagBuilderData<V, T> {
+    public toJSON(): MessageCommandFlagBuilderData<T> {
         return {
             name: this.name,
             short: this.short,
@@ -142,18 +150,13 @@ export class MessageCommandFlagBuilder<V extends string|boolean = string|boolean
         };
     }
 
-    public static getFlagValuesType(values: (string|boolean)[]): 'string'|'boolean' {
-        const type = typeof values[0];
-        return type === 'string' || type === 'boolean' ? type : 'string';
-    }
-
-    public static from<V extends string|boolean = string|boolean, T extends any = V>(data: MessageCommandFlagResolvable<V, T>): MessageCommandFlagBuilder<V, T> {
+    public static from<T extends any = string|boolean>(data: MessageCommandFlagResolvable<T>): MessageCommandFlagBuilder<T> {
         return new MessageCommandFlagBuilder(isJSONEncodable(data) ? data.toJSON() : data);
     }
 
-    public static resolve<V extends string|boolean = string|boolean, T extends any = V>(data: MessageCommandFlagResolvable<V, T>): MessageCommandFlagBuilder<V, T> {
+    public static resolve<T extends any = string|boolean>(data: MessageCommandFlagResolvable<T>): MessageCommandFlagBuilder<T> {
         return data instanceof MessageCommandFlagBuilder ? data : MessageCommandFlagBuilder.from(data);
     }
 }
 
-export type MessageCommandFlagResolvable<V extends string|boolean = string|boolean, T extends any = V> = JSONEncodable<MessageCommandFlagBuilderData<V, T>>|MessageCommandFlagBuilderData<V, T>;
+export type MessageCommandFlagResolvable<T extends any = string|boolean> = JSONEncodable<MessageCommandFlagBuilderData<T>>|MessageCommandFlagBuilderData<T>;

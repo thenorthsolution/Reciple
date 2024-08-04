@@ -3,6 +3,7 @@ import { MessageCommandBuilder } from '../builders/MessageCommandBuilder.js';
 import type { CommandData } from '../../types/structures.js';
 import { RecipleClient } from './RecipleClient.js';
 import { Message } from 'discord.js';
+import { RecipleError } from './RecipleError.js';
 
 export interface MessageCommandOptionValueData<T extends any = any> {
     /**
@@ -107,7 +108,7 @@ export class MessageCommandOptionValue<T extends any = any> implements MessageCo
                     client: options.client,
                 }))
                 : true
-            : false;
+            : new RecipleError(RecipleError.createCommandRequiredOptionNotFoundErrorOptions(options.option.name, options.value));
 
         return new MessageCommandOptionValue({
             name: options.option.name,

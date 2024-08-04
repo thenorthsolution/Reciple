@@ -42,6 +42,17 @@ export class MessageCommandFlagValidators extends BaseCommandValidators {
         .boolean({ message: 'Expected boolean for .multiple' })
         .optional();
 
+    public static accept = MessageCommandFlagValidators.s
+        .union([
+            MessageCommandFlagValidators.s
+                .literal('string', { equalsOptions: { message: 'Expected "string" for .accept' } })
+                .optional(),
+            MessageCommandFlagValidators.s
+                .literal('boolean', { equalsOptions: { message: 'Expected "boolean" for .accept' } })
+                .optional(),
+        ])
+        .optional();
+
     public static validate = MessageCommandFlagValidators.s
         .instance(Function, { message: 'Expected a function for .validate' })
         .optional();
@@ -91,6 +102,10 @@ export class MessageCommandFlagValidators extends BaseCommandValidators {
         MessageCommandFlagValidators.multiple.setValidationEnabled(MessageCommandFlagValidators.isValidationEnabled).parse(multiple);
     }
 
+    public static isValidAccept(accept: unknown): asserts accept is MessageCommandFlagBuilderData['accept'] {
+        MessageCommandFlagValidators.accept.setValidationEnabled(MessageCommandFlagValidators.isValidationEnabled).parse(accept);
+    }
+
     public static isValidValidate(validate: unknown): asserts validate is MessageCommandFlagBuilderData['validate'] {
         MessageCommandFlagValidators.validate.setValidationEnabled(MessageCommandFlagValidators.isValidationEnabled).parse(validate);
     }
@@ -109,6 +124,7 @@ export class MessageCommandFlagValidators extends BaseCommandValidators {
         MessageCommandFlagValidators.isValidRequired(opt.required);
         MessageCommandFlagValidators.isValidMandatory(opt.mandatory);
         MessageCommandFlagValidators.isValidMultiple(opt.multiple);
+        MessageCommandFlagValidators.isValidAccept(opt.accept);
         MessageCommandFlagValidators.isValidValidate(opt.validate);
         MessageCommandFlagValidators.isValidResolveValue(opt.resolve_value);
     }
