@@ -5,7 +5,7 @@ import type { MessageCommandFlagBuilder, MessageCommandFlagBuilderResolveValueOp
 import type { RecipleClient } from './RecipleClient.js';
 import { RecipleError } from './RecipleError.js';
 
-export interface MessageCommandFlagValueData<T extends any = string|boolean> {
+export interface MessageCommandFlagValueData<T extends any = string|boolean, V extends 'string'|'boolean' = 'string'|'boolean'> {
     /**
      * The name of the option.
      */
@@ -17,7 +17,7 @@ export interface MessageCommandFlagValueData<T extends any = string|boolean> {
     /**
      * The raw value of the option.
      */
-    values: string[]|boolean[];
+    values: V extends 'boolean' ? boolean[] : V extends 'string' ? string[] : string[]|boolean[];
     /**
      * Whether the option is missing.
      */
@@ -36,15 +36,15 @@ export interface MessageCommandFlagParseOptionValueOptions<T extends any = strin
     values?: T[]|null;
 }
 
-export interface MessageCommandFlagValueOptions<T extends any = string|boolean> extends MessageCommandFlagValueData<T>, Pick<MessageCommandFlagParseOptionValueOptions<T>, 'parserData'|'command'> {
+export interface MessageCommandFlagValueOptions<T extends any = string|boolean, V extends 'string'|'boolean' = 'string'|'boolean'> extends MessageCommandFlagValueData<T, V>, Pick<MessageCommandFlagParseOptionValueOptions<T>, 'parserData'|'command'> {
     client: RecipleClient<true>;
     message: Message;
 }
 
-export class MessageCommandFlagValue<T extends any = string|boolean> implements MessageCommandFlagValueData<T> {
+export class MessageCommandFlagValue<T extends any = string|boolean, V extends 'string'|'boolean' = 'string'|'boolean'> implements MessageCommandFlagValueData<T> {
     readonly name: string;
     readonly flag: MessageCommandFlagBuilder<T>;
-    readonly values: string[]|boolean[];
+    readonly values: V extends 'boolean' ? boolean[] : V extends 'string' ? string[] : string[]|boolean[];
     readonly missing: boolean;
     readonly invalid: boolean;
     readonly message: Message;
@@ -54,7 +54,7 @@ export class MessageCommandFlagValue<T extends any = string|boolean> implements 
     readonly command: MessageCommandBuilder;
     readonly client: RecipleClient<true>;
 
-    constructor(options: MessageCommandFlagValueOptions<T>) {
+    constructor(options: MessageCommandFlagValueOptions<T, V>) {
         this.name = options.name;
         this.flag = options.flag;
         this.values = options.values;
@@ -98,7 +98,7 @@ export class MessageCommandFlagValue<T extends any = string|boolean> implements 
     }
 
     public static async parseFlagValue<T extends any = string|boolean>(options: MessageCommandFlagParseOptionValueOptions<T>): Promise<MessageCommandFlagValue<T>> {
-        const filteredValues = options.values?.filter(value => typeof value == options.flag.accept);
+        const filteredValues = options.values?.filter(value => typeof value == options.flag.value_type);
         const missing = filteredValues
             ? !!options.flag.required && !filteredValues?.length
             : options.flag.mandatory ?? false;

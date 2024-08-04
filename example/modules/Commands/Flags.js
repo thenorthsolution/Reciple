@@ -1,4 +1,6 @@
+// @ts-check
 import { MessageCommandBuilder } from "reciple";
+import { createMessageCommandUsage } from '@reciple/message-command-utils';
 
 export class Message {
     commands = [
@@ -8,16 +10,18 @@ export class Message {
             .addFlag(flag => flag
                 .setName('flag')
                 .setDescription('A flag')
-                .setAccept('string')
+                .setValueType('string')
                 .setRequired(true)
                 .setMandatory(true)
             )
             .setExecute(async ({ message, flags }) => {
-                await message.reply(flags.getFlagValues('flag')[0]);
+                await message.reply(flags.getFlagValues('flag', { required: true, type: 'string' })[0]);
             })
     ];
 
     onStart() {
+        logger.log(this.commands[0])
+        logger.log(createMessageCommandUsage(this.commands[0]))
         return true;
     }
 }

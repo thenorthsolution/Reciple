@@ -43,7 +43,7 @@ export function createMessageCommandUsage(data: MessageCommandResolvable, option
 
         let value = `${options?.flags?.useShort ? '-' + flag.short : '--' + flag.name}`;
 
-        if (options?.flags?.showValueType) value += `=${brackets[0]}${flag.accept === 'string' ? 'string' : 'boolean'}${flag.multiple ? '...' : ''}${brackets[1]}`;
+        if (options?.flags?.showValueType) value += `=${brackets[0]}${flag.value_type === 'string' ? 'string' : 'boolean'}${flag.multiple ? '...' : ''}${brackets[1]}`;
     }
 
     return usage;

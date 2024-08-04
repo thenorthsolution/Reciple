@@ -39,7 +39,7 @@ export interface MessageCommandFlagBuilderData<T extends any = string|boolean> {
     required?: boolean;
     mandatory?: boolean;
     multiple?: boolean;
-    accept?: 'string'|'boolean';
+    value_type?: 'string'|'boolean';
     /**
      * The function that validates the option value.
      * @param options The option value and message.
@@ -60,7 +60,7 @@ export class MessageCommandFlagBuilder<T extends any = string|boolean> implement
     public required: boolean = false;
     public mandatory?: boolean = false;
     public multiple?: boolean = false;
-    public accept?: 'string'|'boolean';
+    public value_type?: 'string'|'boolean' = 'string';
     public validate?: (options: MessageCommandFlagBuilderResolveValueOptions<T>) => Awaitable<boolean|string|Error>;
     public resolve_value?: (options: MessageCommandFlagBuilderResolveValueOptions<T>) => Awaitable<T[]>;
 
@@ -72,6 +72,7 @@ export class MessageCommandFlagBuilder<T extends any = string|boolean> implement
         if (data?.required) this.setRequired(data.required);
         if (data?.mandatory) this.setMandatory(data.mandatory);
         if (data?.multiple) this.setMultiple(data.multiple);
+        if (data?.value_type) this.setValueType(data.value_type);
         if (data?.validate) this.setValidate(data.validate);
         if (data?.resolve_value) this.setResolveValue(data.resolve_value);
     }
@@ -119,9 +120,9 @@ export class MessageCommandFlagBuilder<T extends any = string|boolean> implement
         return this;
     }
 
-    public setAccept(accept: 'string'|'boolean'): this {
-        MessageCommandFlagValidators.isValidAccept(accept);
-        this.accept = accept as any;
+    public setValueType(valueType: 'string'|'boolean'): this {
+        MessageCommandFlagValidators.isValidValueType(valueType);
+        this.value_type = valueType as any;
         return this as any;
     }
 

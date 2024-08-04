@@ -42,13 +42,13 @@ export class MessageCommandFlagValidators extends BaseCommandValidators {
         .boolean({ message: 'Expected boolean for .multiple' })
         .optional();
 
-    public static accept = MessageCommandFlagValidators.s
+    public static value_type = MessageCommandFlagValidators.s
         .union([
             MessageCommandFlagValidators.s
-                .literal('string', { equalsOptions: { message: 'Expected "string" for .accept' } })
+                .literal('string', { equalsOptions: { message: 'Expected "string" for .value_type' } })
                 .optional(),
             MessageCommandFlagValidators.s
-                .literal('boolean', { equalsOptions: { message: 'Expected "boolean" for .accept' } })
+                .literal('boolean', { equalsOptions: { message: 'Expected "boolean" for .value_type' } })
                 .optional(),
         ])
         .optional();
@@ -102,8 +102,8 @@ export class MessageCommandFlagValidators extends BaseCommandValidators {
         MessageCommandFlagValidators.multiple.setValidationEnabled(MessageCommandFlagValidators.isValidationEnabled).parse(multiple);
     }
 
-    public static isValidAccept(accept: unknown): asserts accept is MessageCommandFlagBuilderData['accept'] {
-        MessageCommandFlagValidators.accept.setValidationEnabled(MessageCommandFlagValidators.isValidationEnabled).parse(accept);
+    public static isValidValueType(valueType: unknown): asserts valueType is MessageCommandFlagBuilderData['value_type'] {
+        MessageCommandFlagValidators.value_type.setValidationEnabled(MessageCommandFlagValidators.isValidationEnabled).parse(valueType);
     }
 
     public static isValidValidate(validate: unknown): asserts validate is MessageCommandFlagBuilderData['validate'] {
@@ -124,7 +124,7 @@ export class MessageCommandFlagValidators extends BaseCommandValidators {
         MessageCommandFlagValidators.isValidRequired(opt.required);
         MessageCommandFlagValidators.isValidMandatory(opt.mandatory);
         MessageCommandFlagValidators.isValidMultiple(opt.multiple);
-        MessageCommandFlagValidators.isValidAccept(opt.accept);
+        MessageCommandFlagValidators.isValidValueType(opt.value_type);
         MessageCommandFlagValidators.isValidValidate(opt.validate);
         MessageCommandFlagValidators.isValidResolveValue(opt.resolve_value);
     }

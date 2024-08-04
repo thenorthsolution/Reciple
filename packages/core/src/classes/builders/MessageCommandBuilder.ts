@@ -297,7 +297,7 @@ export class MessageCommandBuilder extends BaseCommandBuilder implements Message
                         o.name,
                         Object.fromEntries(
                             Object.entries({
-                                type: o.accept ?? 'string',
+                                type: o.value_type ?? 'string',
                                 multiple: o.multiple,
                                 short: o.short,
                                 default: o.multiple ? o.default_values : o.default_values?.[0],

@@ -1,5 +1,4 @@
 // @ts-check
-
 import { SlashCommandBuilder } from 'reciple';
 
 /**
