@@ -34,10 +34,6 @@ export class MessageCommandFlagValidators extends BaseCommandValidators {
         .boolean({ message: 'Expected boolean for .required' })
         .optional();
 
-    public static mandatory = MessageCommandFlagValidators.s
-        .boolean({ message: 'Expected boolean for .mandatory' })
-        .optional();
-
     public static multiple = MessageCommandFlagValidators.s
         .boolean({ message: 'Expected boolean for .multiple' })
         .optional();
@@ -94,10 +90,6 @@ export class MessageCommandFlagValidators extends BaseCommandValidators {
         MessageCommandFlagValidators.required.setValidationEnabled(MessageCommandFlagValidators.isValidationEnabled).parse(required);
     }
 
-    public static isValidMandatory(mandatory: unknown): asserts mandatory is MessageCommandFlagBuilderData['mandatory'] {
-        MessageCommandFlagValidators.mandatory.setValidationEnabled(MessageCommandFlagValidators.isValidationEnabled).parse(mandatory);
-    }
-
     public static isValidMultiple(multiple: unknown): asserts multiple is MessageCommandFlagBuilderData['multiple'] {
         MessageCommandFlagValidators.multiple.setValidationEnabled(MessageCommandFlagValidators.isValidationEnabled).parse(multiple);
     }
@@ -122,7 +114,6 @@ export class MessageCommandFlagValidators extends BaseCommandValidators {
         MessageCommandFlagValidators.isValidDescription(opt.description);
         MessageCommandFlagValidators.isValidDefaultValues(opt.default_values);
         MessageCommandFlagValidators.isValidRequired(opt.required);
-        MessageCommandFlagValidators.isValidMandatory(opt.mandatory);
         MessageCommandFlagValidators.isValidMultiple(opt.multiple);
         MessageCommandFlagValidators.isValidValueType(opt.value_type);
         MessageCommandFlagValidators.isValidValidate(opt.validate);

@@ -9,7 +9,6 @@ export interface CreateMessageCommandUsageOptions {
         showValueType?: boolean;
         flagBrackets?: {
             required?: [string, string];
-            mandatory?: [string, string];
             optional?: [string, string];
         }
     };
@@ -38,13 +37,12 @@ export function createMessageCommandUsage(data: MessageCommandResolvable, option
         const brackets = flag.required
             ? options?.flags?.flagBrackets?.required ?? ['<', '>']
             : options?.flags?.flagBrackets?.optional ?? ['[', ']'];
-        const mandatory = options?.flags?.flagBrackets?.mandatory ?? ['', '']
 
         let value = `${options?.flags?.useShort ? '-' + flag.short : '--' + flag.name}`;
 
         if (options?.flags?.showValueType) value += `=${brackets[0]}${flag.value_type === 'string' ? 'string' : 'boolean'}${flag.multiple ? '...' : ''}${brackets[1]}`;
 
-        usage += ` ${mandatory[0]}${value}${mandatory[1]}`;
+        usage += ` ${value}`;
     }
 
     return usage;

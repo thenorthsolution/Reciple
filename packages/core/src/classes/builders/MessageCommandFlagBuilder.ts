@@ -37,7 +37,6 @@ export interface MessageCommandFlagBuilderData<T extends any = string|boolean> {
     description: string;
     default_values?: string[]|boolean[];
     required?: boolean;
-    mandatory?: boolean;
     multiple?: boolean;
     value_type?: 'string'|'boolean';
     /**
@@ -58,7 +57,6 @@ export class MessageCommandFlagBuilder<T extends any = string|boolean> implement
     public description: string = '';
     public default_values?: string[]|boolean[];
     public required: boolean = false;
-    public mandatory?: boolean = false;
     public multiple?: boolean = false;
     public value_type?: 'string'|'boolean' = 'string';
     public validate?: (options: MessageCommandFlagBuilderResolveValueOptions<T>) => Awaitable<boolean|string|Error>;
@@ -70,7 +68,6 @@ export class MessageCommandFlagBuilder<T extends any = string|boolean> implement
         if (data?.description) this.setDescription(data.description);
         if (data?.default_values) this.setDefaultValues(data.default_values);
         if (data?.required) this.setRequired(data.required);
-        if (data?.mandatory) this.setMandatory(data.mandatory);
         if (data?.multiple) this.setMultiple(data.multiple);
         if (data?.value_type) this.setValueType(data.value_type);
         if (data?.validate) this.setValidate(data.validate);
@@ -108,12 +105,6 @@ export class MessageCommandFlagBuilder<T extends any = string|boolean> implement
         return this;
     }
 
-    public setMandatory(mandatory: boolean): this {
-        MessageCommandFlagValidators.isValidMandatory(mandatory);
-        this.mandatory = mandatory;
-        return this;
-    }
-
     public setMultiple(multiple: boolean): this {
         MessageCommandFlagValidators.isValidMultiple(multiple);
         this.multiple = multiple;
@@ -147,7 +138,8 @@ export class MessageCommandFlagBuilder<T extends any = string|boolean> implement
             required: this.required,
             multiple: this.multiple,
             validate: this.validate,
-            resolve_value: this.resolve_value
+            resolve_value: this.resolve_value,
+            value_type: this.value_type,
         };
     }
 

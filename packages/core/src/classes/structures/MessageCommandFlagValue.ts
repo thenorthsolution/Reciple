@@ -99,9 +99,7 @@ export class MessageCommandFlagValue<T extends any = string|boolean, V extends '
 
     public static async parseFlagValue<T extends any = string|boolean>(options: MessageCommandFlagParseOptionValueOptions<T>): Promise<MessageCommandFlagValue<T>> {
         const filteredValues = options.values?.filter(value => typeof value == options.flag.value_type);
-        const missing = filteredValues
-            ? !!options.flag.required && !filteredValues?.length
-            : options.flag.mandatory ?? false;
+        const missing = !!options.flag.required && !filteredValues?.length;
 
         const validateData = !missing
             ? options.flag.validate && filteredValues?.length
@@ -114,11 +112,7 @@ export class MessageCommandFlagValue<T extends any = string|boolean, V extends '
                     client: options.client,
                 }))
                 : true
-            : new RecipleError(
-                filteredValues
-                    ? RecipleError.createCommandRequiredFlagNotFoundErrorOptions(options.flag.name, filteredValues.join(', '))
-                    : RecipleError.createCommandMandatoryFlagNotFoundErrorOptions(options.flag.name, 'undefined')
-            );
+            : new RecipleError(RecipleError.createCommandRequiredFlagNotFoundErrorOptions(options.flag.name, filteredValues?.join(', ') ?? 'undefined'));
 
         return new MessageCommandFlagValue({
             name: options.flag.name,

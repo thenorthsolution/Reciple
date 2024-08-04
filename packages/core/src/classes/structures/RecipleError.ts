@@ -74,14 +74,6 @@ export class RecipleError extends Error {
         };
     }
 
-    public static createCommandMandatoryFlagNotFoundErrorOptions(flagName: string, value: unknown): RecipleErrorOptions {
-        return {
-            message: `No value given for mandatory flag ${kleur.cyan("'" + flagName + "'")}`,
-            cause: { value },
-            name: 'MandatoryFlagNotFound'
-        };
-    }
-
     public static createStartModuleErrorOptions(moduleName: string, cause: unknown): RecipleErrorOptions {
         return {
             message: `Failed to start module ${kleur.red("'" + moduleName + "'")}`,
