@@ -213,7 +213,7 @@ export class SlashCommandBuilder extends Mixin(DiscordJsSlashCommandBuilder, Bas
     }
 
     public static resolve(data: SlashCommandResolvable): AnySlashCommandBuilder {
-        return data instanceof SlashCommandBuilder ? data : this.from(data);
+        return data instanceof SlashCommandBuilder ? data : SlashCommandBuilder.from(data);
     }
 
     public static async execute({ client, interaction, command }: SlashCommandExecuteOptions): Promise<SlashCommandExecuteData|null> {

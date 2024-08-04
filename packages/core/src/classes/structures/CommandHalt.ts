@@ -126,7 +126,7 @@ export class CommandHalt implements CommandHaltData {
     }
 
     public static resolve(data: CommandHaltResolvable): CommandHalt {
-        return data instanceof CommandHalt ? data : this.from(data);
+        return data instanceof CommandHalt ? data : CommandHalt.from(data);
     }
 }
 

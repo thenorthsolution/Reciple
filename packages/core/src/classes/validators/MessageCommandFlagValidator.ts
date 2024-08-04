@@ -21,10 +21,13 @@ export class MessageCommandFlagValidators extends BaseCommandValidators {
 
     public static default_values = MessageCommandFlagValidators.s
         .union([
-            MessageCommandFlagValidators.s.string({ message: 'Expected string as message command flag default value' }),
-            MessageCommandFlagValidators.s.boolean({ message: 'Expected boolean as message command flag default value' }),
+            MessageCommandFlagValidators.s
+                .string({ message: 'Expected string as message command flag default value' })
+                .array({ message: 'Expected array as message command flag default values' }),
+            MessageCommandFlagValidators.s
+                .boolean({ message: 'Expected boolean as message command flag default value' })
+                .array({ message: 'Expected array as message command flag default values' }),
         ])
-        .array({ message: 'Expected array as message command flag default values' })
         .optional();
 
     public static required = MessageCommandFlagValidators.s

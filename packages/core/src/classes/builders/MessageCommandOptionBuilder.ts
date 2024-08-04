@@ -137,7 +137,7 @@ export class MessageCommandOptionBuilder<T extends any = any> implements Message
     }
 
     public static resolve<T extends any = any>(data: MessageCommandOptionResolvable<T>): MessageCommandOptionBuilder<T> {
-        return data instanceof MessageCommandOptionBuilder ? data : this.from(data);
+        return data instanceof MessageCommandOptionBuilder ? data : MessageCommandOptionBuilder.from(data);
     }
 }
 

@@ -111,7 +111,7 @@ export class CommandPrecondition implements CommandPreconditionData {
     }
 
     public static resolve(data: CommandPreconditionResolvable): CommandPrecondition {
-        return data instanceof CommandPrecondition ? data : this.from(data);
+        return data instanceof CommandPrecondition ? data : CommandPrecondition.from(data);
     }
 }
 

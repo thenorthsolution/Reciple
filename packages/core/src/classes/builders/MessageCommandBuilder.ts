@@ -12,6 +12,8 @@ import { RecipleError } from '../structures/RecipleError.js';
 import type { CooldownData } from '../structures/Cooldown.js';
 import { getCommand } from 'fallout-utility/commands';
 import { parseArgs } from 'util';
+import { MessageCommandFlagBuilder, type MessageCommandFlagResolvable } from './MessageCommandFlagBuilder.js';
+import { MessageCommandFlagValidators } from '../validators/MessageCommandFlagValidator.js';
 
 export interface MessageCommandExecuteData {
     type: CommandType.MessageCommand;
@@ -62,6 +64,10 @@ export interface MessageCommandBuilderData extends BaseCommandBuilderData {
      * The options of the command.
      */
     options?: MessageCommandOptionResolvable[];
+    /**
+     * The flags of the command.
+     */
+    flags?: MessageCommandFlagResolvable[];
 }
 
 export interface MessageCommandBuilder extends BaseCommandBuilder {
@@ -81,6 +87,7 @@ export class MessageCommandBuilder extends BaseCommandBuilder implements Message
     public dm_permission: boolean = false;
     public allow_bot: boolean = false;
     public options: MessageCommandOptionBuilder[] = [];
+    public flags: MessageCommandFlagBuilder[] = [];
 
     constructor(data?: Omit<Partial<MessageCommandBuilderData>, 'command_type'>) {
         super(data);
@@ -171,7 +178,7 @@ export class MessageCommandBuilder extends BaseCommandBuilder implements Message
      * @param option Option data or builder.
      */
     public addOption(option: MessageCommandOptionResolvable|((builder: MessageCommandOptionBuilder) => MessageCommandOptionBuilder)): this {
-        const opt = typeof option === 'function' ? option(new MessageCommandOptionBuilder()) : MessageCommandOptionBuilder.from(option);
+        const opt = typeof option === 'function' ? option(new MessageCommandOptionBuilder()) : MessageCommandOptionBuilder.resolve(option);
         MessageCommandOptionValidators.isValidMessageCommandOptionResolvable(opt);
 
         if (this.options.find(o => o.name === opt.name)) throw new RecipleError('An option with name "' + opt.name + '" already exists.');
@@ -197,6 +204,16 @@ export class MessageCommandBuilder extends BaseCommandBuilder implements Message
         return this;
     }
 
+    public addFlag(option: MessageCommandFlagResolvable|((builder: MessageCommandFlagBuilder) => MessageCommandFlagBuilder)): this {
+        const opt = typeof option === 'function' ? option(new MessageCommandFlagBuilder()) : MessageCommandFlagBuilder.resolve(option);
+        MessageCommandFlagValidators.isValidMessageCommandFlagResolvable(opt);
+
+        if (this.flags.find(o => o.name === opt.name)) throw new RecipleError('A flag with name "' + opt.name + '" already exists.');
+
+        this.flags.push(MessageCommandFlagBuilder.resolve(opt));
+        return this;
+    }
+
     public toJSON(): MessageCommandBuilderData {
         return {
             name: this.name,
@@ -215,7 +232,7 @@ export class MessageCommandBuilder extends BaseCommandBuilder implements Message
     }
 
     public static resolve(data: MessageCommandResolvable): MessageCommandBuilder {
-        return data instanceof MessageCommandBuilder ? data : this.from(data);
+        return data instanceof MessageCommandBuilder ? data : MessageCommandBuilder.from(data);
     }
 
     public static async execute({ client, message, command }: MessageCommandExecuteOptions): Promise<MessageCommandExecuteData|null> {
@@ -229,7 +246,7 @@ export class MessageCommandBuilder extends BaseCommandBuilder implements Message
         const { positionals: args, values: flags } = parseArgs({
             args: commandData.args,
             allowPositionals: true,
-            strict: false
+            strict: false,
         });
 
         const parserData = {
@@ -240,7 +257,7 @@ export class MessageCommandBuilder extends BaseCommandBuilder implements Message
                 .filter(([key, value]) => value !== undefined)
                 .map(([key, value]) => ({
                     name: key,
-                    value: Array.isArray(value) ? value : [value] as (string|boolean)[]
+                    value: Array.isArray(value) ? value : [value] as (string|boolean)[],
                 }))
         };
 

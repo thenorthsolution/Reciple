@@ -93,7 +93,7 @@ export class ContextMenuCommandBuilder extends Mixin(DiscordJsContextMenuCommand
     }
 
     public static resolve(data: ContextMenuCommandResolvable): ContextMenuCommandBuilder {
-        return data instanceof ContextMenuCommandBuilder ? data : this.from(data);
+        return data instanceof ContextMenuCommandBuilder ? data : ContextMenuCommandBuilder.from(data);
     }
 
     public static async execute({ client, interaction, command }: ContextMenuCommandExecuteOptions): Promise<ContextMenuCommandExecuteData|null> {
