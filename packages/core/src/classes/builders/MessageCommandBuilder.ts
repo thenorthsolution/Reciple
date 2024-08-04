@@ -53,6 +53,11 @@ export interface MessageCommandBuilderData extends BaseCommandBuilderData {
      */
     validate_options?: boolean;
     /**
+     * Whether to validate flags or not.
+     * @default true
+     */
+    validate_flags?: boolean;
+    /**
      * Allows commands to be executed in DMs.
      * @default false
      */
@@ -86,6 +91,7 @@ export class MessageCommandBuilder extends BaseCommandBuilder implements Message
     public description: string = '';
     public aliases: string[] = [];
     public validate_options: boolean = true;
+    public validate_flags: boolean = true;
     public dm_permission: boolean = false;
     public allow_bot: boolean = false;
     public options: MessageCommandOptionBuilder[] = [];
@@ -98,9 +104,11 @@ export class MessageCommandBuilder extends BaseCommandBuilder implements Message
         if (data?.description) this.setDescription(data.description);
         if (data?.aliases) this.setAliases(data.aliases);
         if (data?.validate_options) this.setValidateOptions(data.validate_options);
+        if (data?.validate_flags) this.setValidateFlags(data.validate_flags);
         if (data?.dm_permission) this.setDMPermission(data.dm_permission);
         if (data?.allow_bot) this.setAllowBot(data.allow_bot);
         if (data?.options) this.setOptions(data.options);
+        if (data?.flags) this.setFlags(data.flags);
     }
 
     /**
@@ -156,6 +164,16 @@ export class MessageCommandBuilder extends BaseCommandBuilder implements Message
     }
 
     /**
+     * Set whether to validate flags or not.
+     * @param enabled Enable flag validation.
+     */
+    public setValidateFlags(enabled: boolean): this {
+        MessageCommandValidators.isValidValidateFlags(enabled);
+        this.validate_flags = enabled;
+        return this;
+    }
+
+    /**
      * Sets whether the command is available in DMs or not.
      * @param DMPermission Enable command in Dms.
      */
@@ -206,6 +224,10 @@ export class MessageCommandBuilder extends BaseCommandBuilder implements Message
         return this;
     }
 
+    /**
+     * Adds new flag to the command.
+     * @param option Flag data or builder.
+     */
     public addFlag(option: MessageCommandFlagResolvable|((builder: MessageCommandFlagBuilder) => MessageCommandFlagBuilder)): this {
         const opt = typeof option === 'function' ? option(new MessageCommandFlagBuilder()) : MessageCommandFlagBuilder.resolve(option);
         MessageCommandFlagValidators.isValidMessageCommandFlagResolvable(opt);
@@ -213,6 +235,22 @@ export class MessageCommandBuilder extends BaseCommandBuilder implements Message
         if (this.flags.find(o => o.name === opt.name)) throw new RecipleError('A flag with name "' + opt.name + '" already exists.');
 
         this.flags.push(MessageCommandFlagBuilder.resolve(opt));
+        return this;
+    }
+
+    /**
+     * Sets the flags of the command.
+     * @param flags Flags data or builders.
+     */
+    public setFlags(...flags: RestOrArray<MessageCommandFlagResolvable|((builder: MessageCommandFlagBuilder) => MessageCommandFlagBuilder)>): this {
+        flags = normalizeArray(flags);
+        MessageCommandValidators.isValidFlags(flags);
+        this.flags = [];
+
+        for (const flag of flags) {
+            this.addFlag(flag);
+        }
+
         return this;
     }
 
