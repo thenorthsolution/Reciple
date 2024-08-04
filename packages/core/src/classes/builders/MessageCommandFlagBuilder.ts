@@ -16,7 +16,7 @@ export interface MessageCommandFlagBuilderResolveValueOptions<V extends string|b
     /**
      * The flag builder used to build this option.
      */
-    option: MessageCommandFlagBuilder<V, T>;
+    flag: MessageCommandFlagBuilder<V, T>;
     /**
      * The command builder used to build this command.
      */
@@ -37,6 +37,7 @@ export interface MessageCommandFlagBuilderData<V extends string|boolean = string
     description: string;
     default_values?: V[];
     required?: boolean;
+    mandatory?: boolean;
     multiple?: boolean;
     /**
      * The function that validates the option value.
@@ -56,6 +57,7 @@ export class MessageCommandFlagBuilder<V extends string|boolean = string|boolean
     public description: string = '';
     public default_values?: V[];
     public required: boolean = false;
+    public mandatory?: boolean = false;
     public multiple?: boolean = false;
     public validate?: (options: MessageCommandFlagBuilderResolveValueOptions<V, T>) => Awaitable<boolean|string|Error>;
     public resolve_value?: (options: MessageCommandFlagBuilderResolveValueOptions<V, T>) => Awaitable<T[]>;
@@ -66,6 +68,7 @@ export class MessageCommandFlagBuilder<V extends string|boolean = string|boolean
         if (data?.description) this.setDescription(data.description);
         if (data?.default_values) this.setDefaultValues(data.default_values);
         if (data?.required) this.setRequired(data.required);
+        if (data?.mandatory) this.setMandatory(data.mandatory);
         if (data?.multiple) this.setMultiple(data.multiple);
         if (data?.validate) this.setValidate(data.validate);
         if (data?.resolve_value) this.setResolveValue(data.resolve_value);
@@ -99,6 +102,12 @@ export class MessageCommandFlagBuilder<V extends string|boolean = string|boolean
     public setRequired(required: boolean): this {
         MessageCommandFlagValidators.isValidRequired(required);
         this.required = required;
+        return this;
+    }
+
+    public setMandatory(mandatory: boolean): this {
+        MessageCommandFlagValidators.isValidMandatory(mandatory);
+        this.mandatory = mandatory;
         return this;
     }
 

@@ -243,10 +243,25 @@ export class MessageCommandBuilder extends BaseCommandBuilder implements Message
         const commandData = getCommand(message.content, prefix, separator);
         if (!commandData || !commandData.name) return null;
 
+        const builder = command ? this.resolve(command) : client.commands.get(commandData.name, CommandType.MessageCommand);
+        if (!builder) return null;
+
         const { positionals: args, values: flags } = parseArgs({
             args: commandData.args,
             allowPositionals: true,
             strict: false,
+            options: Object.fromEntries(
+                builder.flags
+                    .map((o) => [
+                        o.name,
+                        {
+                            type: MessageCommandFlagBuilder.getFlagValuesType(o.default_values ?? []),
+                            multiple: o.multiple,
+                            short: o.short,
+                            default: o.multiple ? o.default_values as string[] : o.default_values?.[0],
+                        }
+                    ])
+            ),
         });
 
         const parserData = {
@@ -260,9 +275,6 @@ export class MessageCommandBuilder extends BaseCommandBuilder implements Message
                     value: Array.isArray(value) ? value : [value] as (string|boolean)[],
                 }))
         };
-
-        const builder = command ? this.resolve(command) : client.commands.get(parserData.name, CommandType.MessageCommand);
-        if (!builder) return null;
 
         const executeData: MessageCommandExecuteData = {
             type: builder.command_type,

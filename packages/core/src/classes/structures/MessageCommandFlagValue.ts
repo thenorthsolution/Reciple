@@ -12,7 +12,7 @@ export interface MessageCommandFlagValueData<V extends string|boolean = string|b
     /**
      * The builder that is used to create the option.
      */
-    option: MessageCommandFlagBuilder<V, T>;
+    flag: MessageCommandFlagBuilder<V, T>;
     /**
      * The raw value of the option.
      */
@@ -42,7 +42,7 @@ export interface MessageCommandFlagValueOptions<V extends string|boolean = strin
 
 export class MessageCommandFlagValue<V extends string|boolean = string|boolean, T extends any = V> implements MessageCommandFlagValueData<V, T> {
     readonly name: string;
-    readonly option: MessageCommandFlagBuilder<V, T>;
+    readonly flag: MessageCommandFlagBuilder<V, T>;
     readonly values: V[];
     readonly missing: boolean;
     readonly invalid: boolean;
@@ -55,7 +55,7 @@ export class MessageCommandFlagValue<V extends string|boolean = string|boolean, 
 
     constructor(options: MessageCommandFlagValueOptions<V, T>) {
         this.name = options.name;
-        this.option = options.option;
+        this.flag = options.flag;
         this.values = options.values;
         this.missing = options.missing;
         this.invalid = options.invalid;
@@ -73,10 +73,10 @@ export class MessageCommandFlagValue<V extends string|boolean = string|boolean, 
     public async resolveValues(): Promise<T[]> {
         if (this.values.length) return [];
 
-        return this.option.resolve_value
-            ? Promise.resolve(this.option.resolve_value({
+        return this.flag.resolve_value
+            ? Promise.resolve(this.flag.resolve_value({
                 values: this.values,
-                option: this.option,
+                flag: this.flag,
                 parserData: this.parserData,
                 command: this.command,
                 message: this.message,
@@ -88,7 +88,7 @@ export class MessageCommandFlagValue<V extends string|boolean = string|boolean, 
     public toJSON(): MessageCommandFlagValueData<V, T> {
         return {
             name: this.name,
-            option: this.option,
+            flag: this.flag,
             values: this.values,
             missing: this.missing,
             invalid: this.invalid,
@@ -97,12 +97,15 @@ export class MessageCommandFlagValue<V extends string|boolean = string|boolean, 
     }
 
     public static async parseFlagValue<V extends string|boolean = string|boolean, T extends any = V>(options: MessageCommandFlagParseOptionValueOptions<V, T>): Promise<MessageCommandFlagValue<V, T>> {
-        const missing = !!options.option.required && !options.values?.length;
+        const missing = options.values
+            ? !!options.flag.required && !options.values?.length
+            : options.flag.mandatory ?? false;
+
         const validateData = !missing
-            ? options.option.validate && options.values?.length
-                ? await Promise.resolve(options.option.validate({
+            ? options.flag.validate && options.values?.length
+                ? await Promise.resolve(options.flag.validate({
                     values: options.values,
-                    option: options.option,
+                    flag: options.flag,
                     parserData: options.parserData,
                     command: options.command,
                     message: options.message,
@@ -112,8 +115,8 @@ export class MessageCommandFlagValue<V extends string|boolean = string|boolean, 
             : false;
 
         return new MessageCommandFlagValue({
-            name: options.option.name,
-            option: options.option,
+            name: options.flag.name,
+            flag: options.flag,
             values: options.values ?? [],
             missing,
             invalid: !validateData,
