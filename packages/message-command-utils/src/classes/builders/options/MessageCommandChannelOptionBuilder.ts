@@ -1,5 +1,5 @@
 import type { MessageCommandOptionBuilderData, MessageCommandOptionBuilderResolveValueOptions, MessageCommandOptionManager } from '@reciple/core';
-import { BaseMessageCommandOptionBuilder } from '../structures/BaseMessageCommandOptionBuilder.js';
+import { BaseMessageCommandOptionBuilder } from '../../structures/BaseMessageCommandOptionBuilder.js';
 import { normalizeArray, type Channel, type ChannelType, type RestOrArray } from 'discord.js';
 import { Mentions } from '@reciple/utils';
 

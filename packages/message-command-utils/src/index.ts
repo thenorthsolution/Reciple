@@ -1,10 +1,10 @@
-export * from './classes/builders/MessageCommandBooleanOptionBuilder.js';
-export * from './classes/builders/MessageCommandChannelOptionBuilder.js';
-export * from './classes/builders/MessageCommandIntegerOptionBuilder.js';
-export * from './classes/builders/MessageCommandMessageOptionBuilder.js';
-export * from './classes/builders/MessageCommandNumberOptionBuilder.js';
-export * from './classes/builders/MessageCommandRoleOptionBuilder.js';
-export * from './classes/builders/MessageCommandUserOptionBuilder.js';
+export * from './classes/builders/options/MessageCommandBooleanOptionBuilder.js';
+export * from './classes/builders/options/MessageCommandChannelOptionBuilder.js';
+export * from './classes/builders/options/MessageCommandIntegerOptionBuilder.js';
+export * from './classes/builders/options/MessageCommandMessageOptionBuilder.js';
+export * from './classes/builders/options/MessageCommandNumberOptionBuilder.js';
+export * from './classes/builders/options/MessageCommandRoleOptionBuilder.js';
+export * from './classes/builders/options/MessageCommandUserOptionBuilder.js';
 export * from './classes/structures/BaseMessageCommandOptionBuilder.js';
 
 export * from './helpers/createMessageCommandUsage.js';

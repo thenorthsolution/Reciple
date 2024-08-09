@@ -1,5 +1,5 @@
 import type { MessageCommandOptionBuilderData, MessageCommandOptionBuilderResolveValueOptions, MessageCommandOptionManager } from '@reciple/core';
-import { BaseMessageCommandOptionBuilder } from '../structures/BaseMessageCommandOptionBuilder.js';
+import { BaseMessageCommandOptionBuilder } from '../../structures/BaseMessageCommandOptionBuilder.js';
 import { isValidSnowflake, MessageURLData } from '@reciple/utils';
 import { Message } from 'discord.js';
 

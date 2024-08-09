@@ -1,16 +1,16 @@
 import type { MessageCommandOptionBuilderData, MessageCommandOptionBuilderResolveValueOptions, MessageCommandOptionManager } from '@reciple/core';
-import { BaseMessageCommandOptionBuilder } from '../structures/BaseMessageCommandOptionBuilder.js';
+import { BaseMessageCommandOptionBuilder } from '../../structures/BaseMessageCommandOptionBuilder.js';
 
-export interface MessageCommandIntegerOptionBuilderData extends MessageCommandOptionBuilderData<number> {
+export interface MessageCommandNumberOptionBuilderData extends MessageCommandOptionBuilderData<number> {
     max_value?: number;
     min_value?: number;
 }
 
-export class MessageCommandIntegerOptionBuilder extends BaseMessageCommandOptionBuilder<number> implements MessageCommandIntegerOptionBuilderData {
+export class MessageCommandNumberOptionBuilder extends BaseMessageCommandOptionBuilder<number> implements MessageCommandNumberOptionBuilderData {
     public max_value?: number;
     public min_value?: number;
 
-    constructor(data?: MessageCommandIntegerOptionBuilderData) {
+    constructor(data?: MessageCommandNumberOptionBuilderData) {
         super(data);
 
         if (typeof data?.max_value === 'number') this.setMaxValue(data.max_value);
@@ -45,7 +45,7 @@ export class MessageCommandIntegerOptionBuilder extends BaseMessageCommandOption
 
     public readonly validate = (options: MessageCommandOptionBuilderResolveValueOptions): boolean|Error => {
         const value = Number(options.value);
-        if (!value || !Number.isFinite(value) || !Number.isInteger(value)) return new Error(`Value for option ${options.option.name} is not an integer`);
+        if (!value || !Number.isFinite(value)) return new Error(`Value for option ${options.option.name} is not a number`);
         if (this.max_value && value > this.max_value) return new Error(`Value for option ${options.option.name} is greater than the maximum value of ${this.max_value}`);
         if (this.min_value && value < this.min_value) return new Error(`Value for option ${options.option.name} is less than the minimum value of ${this.min_value}`);
 
@@ -56,12 +56,12 @@ export class MessageCommandIntegerOptionBuilder extends BaseMessageCommandOption
     public static async resolveOption(name: string, options: MessageCommandOptionManager, required?: true): Promise<number>
     public static async resolveOption(name: string, options: MessageCommandOptionManager, required?: boolean): Promise<number|null>;
     /**
-     * Asynchronously resolves an integer option from the given option manager.
+     * Asynchronously resolves a number option from the given manager.
      *
      * @param {string} name - The name of the option to resolve.
      * @param {MessageCommandOptionManager} options - The option manager to resolve from.
-     * @param {boolean} [required] - Whether the option is required or not.
-     * @return {Promise<number|null>} - A promise that resolves to the resolved integer value, or null if the option is not present or not valid.
+     * @param {boolean} [required=false] - Whether the option is required or not.
+     * @return {Promise<number|null>} - A promise that resolves to the resolved number value, or null if the option is not present and not required.
      */
     public static async resolveOption(name: string, options: MessageCommandOptionManager, required?: boolean): Promise<number|null> {
         return super.resolveOption(name, options, required);
