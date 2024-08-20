@@ -25,11 +25,11 @@ export class CLI implements CLIOptions {
     public static commandsDir = path.join(CLI.root, './dist/commands');
 
     static get shardMode() {
-        return !!CLI.shardEnv.SHARDS && !!CLI.shardEnv.SHARD_COUNT;
+        return 'SHARDS' in CLI.shardEnv && 'SHARD_COUNT' in CLI.shardEnv;
     }
 
     static get shardLogsFolder() {
-        return CLI.shardMode ? CLI.shardEnv.SHARDS_LOGS_FOLDER : null;
+        return CLI.shardMode ? CLI.shardEnv.SHARDS_LOGS_FOLDER ?? null : null;
     }
 
     static get shardDeployCommands() {
