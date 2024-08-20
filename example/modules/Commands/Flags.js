@@ -1,6 +1,5 @@
 // @ts-check
 import { MessageCommandBuilder } from "reciple";
-import { createMessageCommandUsage } from '@reciple/message-command-utils';
 import { codeBlock } from "discord.js";
 
 export class Message {
@@ -35,8 +34,6 @@ export class Message {
     ];
 
     onStart() {
-        logger.log(this.commands[0])
-        logger.log(createMessageCommandUsage(this.commands[0]))
         return true;
     }
 }
