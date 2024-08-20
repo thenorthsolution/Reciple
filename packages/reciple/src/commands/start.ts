@@ -1,15 +1,15 @@
-import type { Command } from 'commander';
-import { CLI } from '../classes/CLI.js';
-import { Config } from '../classes/Config.js';
-import { Logger } from 'prtyprnt';
-import { resolveEnvProtocol } from '@reciple/utils';
-import semver from 'semver';
 import { cliBuildVersion, cliVersion } from '../types/constants.js';
-import { RecipleClient } from '../index.js';
-import { buildVersion } from '@reciple/core';
 import { EventHandlers } from '../classes/EventHandlers.js';
 import { ModuleLoader } from '../classes/ModuleLoader.js';
+import { resolveEnvProtocol } from '@reciple/utils';
+import { Config } from '../classes/Config.js';
+import { buildVersion } from '@reciple/core';
+import { RecipleClient } from '../index.js';
+import type { Command } from 'commander';
 import { kleur } from 'fallout-utility';
+import { CLI } from '../classes/CLI.js';
+import { Logger } from 'prtyprnt';
+import semver from 'semver';
 
 export interface CLIStartFlags {
     token?: string;

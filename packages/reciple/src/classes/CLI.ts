@@ -6,7 +6,7 @@ import { mkdir, readdir, stat } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import type { CLIDefaultFlags, ProcessInformation } from '../types/structures.js';
-import { isMainThread, parentPort, threadId } from 'node:worker_threads';
+import { isMainThread, parentPort, threadId, workerData } from 'node:worker_threads';
 import { cli } from '../types/constants.js';
 import { config as loadEnv } from 'dotenv';
 import { execSync, type ExecSyncOptions } from 'node:child_process';
@@ -25,19 +25,23 @@ export class CLI implements CLIOptions {
     public static commandsDir = path.join(CLI.root, './dist/commands');
 
     static get shardMode() {
-        return !!process.env.SHARDS && !!process.env.SHARD_COUNT;
+        return !!CLI.shardEnv.SHARDS && !!CLI.shardEnv.SHARD_COUNT;
     }
 
     static get shardLogsFolder() {
-        return CLI.shardMode ? process.env.SHARDS_LOGS_FOLDER : null;
+        return CLI.shardMode ? CLI.shardEnv.SHARDS_LOGS_FOLDER : null;
     }
 
     static get shardDeployCommands() {
-        return CLI.shardMode ? !!process.env.SHARDS_DEPLOY_COMMANDS : null;
+        return CLI.shardMode ? !!CLI.shardEnv.SHARDS_DEPLOY_COMMANDS : null;
     }
 
     static get threadId() {
         return (!isMainThread && parentPort !== undefined ? threadId : undefined) ?? null;
+    }
+
+    static get shardEnv(): NodeJS.Dict<string> & NodeJS.ProcessEnv {
+        return !isMainThread && 'SHARDING_MANAGER' in workerData ? workerData : process.env;
     }
 
     public packageJSON: PackageJson;

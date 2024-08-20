@@ -1,14 +1,14 @@
-import type { Command } from 'commander';
-import { CLI } from '../classes/CLI.js';
-import { Config } from '../classes/Config.js';
 import { FileWriteStreamMode, Logger } from 'prtyprnt';
-import type { CLIStartFlags } from './start.js';
-import path from 'path';
-import { ShardingManager } from 'discord.js';
 import { resolveEnvProtocol } from '@reciple/utils';
+import type { CLIStartFlags } from './start.js';
+import { Config } from '../classes/Config.js';
+import { ShardingManager } from 'discord.js';
 import { EventHandlers } from '../index.js';
-import { createReadStream } from 'fs';
+import { createReadStream, type ReadStream } from 'node:fs';
+import type { Command } from 'commander';
 import { kleur } from 'fallout-utility';
+import { CLI } from '../classes/CLI.js';
+import path from 'node:path';
 
 export interface CLIShardFlags extends CLIStartFlags {}
 
@@ -44,6 +44,7 @@ export default (command: Command, cli: CLI) => command
         let logsFolder: string|null = null;
 
         process.env.SHARDS_DEPLOY_COMMANDS = '1';
+        process.env.SHARDING_MANAGER = '1';
 
         if (!(config.logger instanceof Logger) && config.logger?.logToFile.enabled) {
             logsFolder = path.resolve(path.join(config.logger?.logToFile?.logsFolder, 'sharder', process.pid.toString()));
@@ -78,7 +79,7 @@ export default (command: Command, cli: CLI) => command
 
         manager.on('shardCreate', shard => {
             let logs: string;
-            let readStream: NodeJS.ReadableStream;
+            let readStream: ReadStream;
 
             logger?.log(`Creating shard ${shard.id}...`);
 
