@@ -22,7 +22,6 @@ export class MessageCommandChannelOptionBuilder extends BaseMessageCommandOption
      * Sets the channel types for the MessageCommandChannelOptionBuilder.
      *
      * @param {...RestOrArray<ChannelType>} channel_types - The channel types to set.
-     * @return {this} - The updated MessageCommandChannelOptionBuilder instance.
      */
     public setChannelTypes(...channel_types: RestOrArray<ChannelType>): this {
         this.channel_types = normalizeArray(channel_types);

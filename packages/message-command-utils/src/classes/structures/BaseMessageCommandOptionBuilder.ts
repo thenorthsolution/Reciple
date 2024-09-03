@@ -1,4 +1,5 @@
 import { MessageCommandOptionBuilder, MessageCommandOptionValidators, type MessageCommandOptionBuilderData, type MessageCommandOptionBuilderResolveValueOptions, type MessageCommandOptionManager } from '@reciple/core';
+import type { Awaitable } from 'discord.js';
 
 export abstract class BaseMessageCommandOptionBuilder<T extends any = any> extends (MessageCommandOptionBuilder as (new <T extends any>(options?: MessageCommandOptionBuilderData<T>) => Omit<MessageCommandOptionBuilder<T>, 'setName'|'setDescription'|'setRequired'|'setResolveValue'|'setValidate'>))<T> {
     /**
@@ -40,8 +41,8 @@ export abstract class BaseMessageCommandOptionBuilder<T extends any = any> exten
         return this;
     }
 
-    public abstract readonly resolve_value?: ((options: MessageCommandOptionBuilderResolveValueOptions<T>) => any) | undefined;
-    public abstract readonly validate?: ((options: MessageCommandOptionBuilderResolveValueOptions<T>) => any) | undefined;
+    public abstract readonly resolve_value?: ((options: MessageCommandOptionBuilderResolveValueOptions<T>) => Awaitable<T>) | undefined;
+    public abstract readonly validate?: ((options: MessageCommandOptionBuilderResolveValueOptions<T>) => Awaitable<boolean|string|Error>) | undefined;
 
     public static async resolveOption(name: string, options: MessageCommandOptionManager, required?: boolean): Promise<any|null> {
         switch (required) {
