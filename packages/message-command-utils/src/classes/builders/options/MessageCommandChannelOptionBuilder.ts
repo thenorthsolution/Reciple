@@ -20,7 +20,6 @@ export class MessageCommandChannelOptionBuilder extends BaseMessageCommandOption
 
     /**
      * Sets the channel types for the MessageCommandChannelOptionBuilder.
-     *
      * @param {...RestOrArray<ChannelType>} channel_types - The channel types to set.
      */
     public setChannelTypes(...channel_types: RestOrArray<ChannelType>): this {
@@ -30,9 +29,7 @@ export class MessageCommandChannelOptionBuilder extends BaseMessageCommandOption
 
     /**
      * Adds channel types to the MessageCommandChannelOptionBuilder.
-     *
      * @param {...RestOrArray<ChannelType>} channel_types - The channel types to add.
-     * @return {this} - The updated MessageCommandChannelOptionBuilder instance.
      */
     public addChannelTypes(...channel_types: RestOrArray<ChannelType>): this {
         this.channel_types.push(...normalizeArray(channel_types));
@@ -41,9 +38,7 @@ export class MessageCommandChannelOptionBuilder extends BaseMessageCommandOption
 
     /**
      * Sets the value of allow_outside_channels to the provided boolean value.
-     *
      * @param {boolean} allow_outside_channels - The boolean value to set. If not provided, the value will be undefined.
-     * @return {this} - The updated instance of the class.
      */
     public setAllowOutsideChannels(allow_outside_channels?: boolean): this {
         this.allow_outside_channels = allow_outside_channels;
@@ -71,11 +66,6 @@ export class MessageCommandChannelOptionBuilder extends BaseMessageCommandOption
 
     /**
      * Asynchronously resolves a channel option from the given manager.
-     *
-     * @param {string} name - The name of the option to resolve.
-     * @param {MessageCommandOptionManager} options - The option manager to resolve from.
-     * @param {boolean} [required] - Whether the option is required or not.
-     * @return {Promise<Channel|null>} - A promise that resolves to the resolved channel or null.
      */
     public static async resolveOption(name: string, options: MessageCommandOptionManager, required?: boolean): Promise<Channel|null> {
         return super.resolveOption(name, options, required);

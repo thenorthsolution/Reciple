@@ -18,16 +18,28 @@ export class MessageCommandChannelFlagBuilder extends BaseMessageCommandFlagBuil
         if (typeof data?.allow_outside_channels === 'boolean') this.setAllowOutsideChannels(data.allow_outside_channels);
     }
 
+    /**
+     * Sets the channel types for the MessageCommandChannelFlagBuilder.
+     * @param {...RestOrArray<ChannelType>} channel_types - The channel types to set.
+     */
     public setChannelTypes(...channel_types: RestOrArray<ChannelType>): this {
         this.channel_types = normalizeArray(channel_types);
         return this;
     }
 
+    /**
+     * Adds channel types to the MessageCommandChannelFlagBuilder.
+     * @param {...RestOrArray<ChannelType>} channel_types - The channel types to add.
+     */
     public addChannelTypes(...channel_types: RestOrArray<ChannelType>): this {
         this.channel_types.push(...normalizeArray(channel_types));
         return this;
     }
 
+    /**
+     * Sets the value of allow_outside_channels to the provided boolean value.
+     * @param {boolean} allow_outside_channels - The boolean value to set. If not provided, the value will be undefined.
+     */
     public setAllowOutsideChannels(allow_outside_channels?: boolean): this {
         this.allow_outside_channels = allow_outside_channels;
         return this;
@@ -68,6 +80,9 @@ export class MessageCommandChannelFlagBuilder extends BaseMessageCommandFlagBuil
 
     public readonly value_type: 'string' = 'string';
 
+    /**
+     * Asynchronously resolves a channel flag from the given flag manager.
+     */
     public static async resolveFlag(name: string, options: MessageCommandFlagManager, required?: boolean): Promise<Channel[]> {
         return super.resolveFlag(name, options, required);
     }

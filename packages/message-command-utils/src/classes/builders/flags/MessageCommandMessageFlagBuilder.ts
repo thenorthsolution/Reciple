@@ -16,11 +16,19 @@ export class MessageCommandMessageFlagBuilder extends BaseMessageCommandFlagBuil
         super(data);
     }
 
+    /**
+     * Sets the value of allow_outside_messages to the provided boolean value.
+     * @param {boolean} allowOutsideMessages - The boolean value to set. If not provided, the value will be undefined.
+     */
     public setAllowOutsideMessages(allowOutsideMessages?: boolean) {
         this.allow_outside_messages = allowOutsideMessages;
         return this;
     }
 
+    /**
+     * Sets the value of allow_bot_messages to the provided boolean value.
+     * @param {boolean} allowBotMessages - The boolean value to set. If not provided, the value will be undefined.
+     */
     public setAllowBotMessages(allowBotMessages?: boolean) {
         this.allow_bot_messages = allowBotMessages;
         return this;
@@ -44,6 +52,10 @@ export class MessageCommandMessageFlagBuilder extends BaseMessageCommandFlagBuil
 
     public readonly value_type: 'string' = 'string';
 
+    /**
+     * Fetches a message from the given options.
+     * @param {MessageCommandFlagBuilderResolveValueOptions<Message>} options - The options containing the value to fetch.
+     */
     protected static async fetchMessageFromOptions(options: MessageCommandFlagBuilderResolveValueOptions<Message>): Promise<Message[]> {
         const messages: Message[] = [];
 
@@ -63,6 +75,9 @@ export class MessageCommandMessageFlagBuilder extends BaseMessageCommandFlagBuil
         return messages;
     }
 
+    /**
+     * Resolves a message flag from the given flag manager.
+     */
     public static async resolveFlag(name: string, options: MessageCommandFlagManager, required?: boolean): Promise<Message[]> {
         return super.resolveFlag(name, options, required);
     }

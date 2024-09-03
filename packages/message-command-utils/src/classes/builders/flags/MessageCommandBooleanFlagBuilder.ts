@@ -7,6 +7,7 @@ export class MessageCommandBooleanFlagBuilder extends BaseMessageCommandFlagBuil
         super(data);
     }
 
+
     public readonly resolve_value = (options: MessageCommandFlagBuilderResolveValueOptions<boolean>): boolean[] => {
         return options.values.map(v => boolean(v));
     }
@@ -18,6 +19,9 @@ export class MessageCommandBooleanFlagBuilder extends BaseMessageCommandFlagBuil
 
     public readonly value_type: 'boolean' = 'boolean';
 
+    /**
+     * Asynchronously resolves a boolean flag from the given flag manager.
+     */
     public static async resolveFlag(name: string, options: MessageCommandFlagManager, required?: boolean): Promise<boolean[]> {
         return super.resolveFlag(name, options, required);
     }

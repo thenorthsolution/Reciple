@@ -19,9 +19,7 @@ export class MessageCommandIntegerOptionBuilder extends BaseMessageCommandOption
 
     /**
      * Sets the maximum value for this option.
-     *
      * @param {number} [maxValue] - The maximum value to set. If not provided, the maximum value will be unset.
-     * @return {this} - Returns the current object for method chaining.
      */
     public setMaxValue(maxValue?: number): this {
         this.max_value = maxValue;
@@ -30,9 +28,7 @@ export class MessageCommandIntegerOptionBuilder extends BaseMessageCommandOption
 
     /**
      * Sets the minimum value for this option.
-     *
      * @param {number} [minValue] - The minimum value to set. If not provided, the minimum value will be unset.
-     * @return {this} - Returns the current object for method chaining.
      */
     public setMinValue(minValue?: number): this {
         this.min_value = minValue;
@@ -52,17 +48,12 @@ export class MessageCommandIntegerOptionBuilder extends BaseMessageCommandOption
         return true;
     }
 
+    /**
+     * Asynchronously resolves an integer option from the given option manager.
+     */
     public static async resolveOption(name: string, options: MessageCommandOptionManager, required?: false): Promise<number|null>;
     public static async resolveOption(name: string, options: MessageCommandOptionManager, required?: true): Promise<number>
     public static async resolveOption(name: string, options: MessageCommandOptionManager, required?: boolean): Promise<number|null>;
-    /**
-     * Asynchronously resolves an integer option from the given option manager.
-     *
-     * @param {string} name - The name of the option to resolve.
-     * @param {MessageCommandOptionManager} options - The option manager to resolve from.
-     * @param {boolean} [required] - Whether the option is required or not.
-     * @return {Promise<number|null>} - A promise that resolves to the resolved integer value, or null if the option is not present or not valid.
-     */
     public static async resolveOption(name: string, options: MessageCommandOptionManager, required?: boolean): Promise<number|null> {
         return super.resolveOption(name, options, required);
     }

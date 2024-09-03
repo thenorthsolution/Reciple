@@ -15,6 +15,10 @@ export class MessageCommandRoleFlagBuilder extends BaseMessageCommandFlagBuilder
         if (typeof data?.allow_everyone === 'boolean') this.setAllowEveryone(data.allow_everyone);
     }
 
+    /**
+     * Sets the value of `allow_everyone`
+     * @param {boolean} allowEveryone - The value to set `allow_everyone` to. If not provided, `allow_everyone` will be set to `undefined`.
+     */
     public setAllowEveryone(allowEveryone?: boolean): this {
         this.allow_everyone = allowEveryone;
         return this;
@@ -46,6 +50,9 @@ export class MessageCommandRoleFlagBuilder extends BaseMessageCommandFlagBuilder
 
     public readonly value_type: 'string' = 'string';
 
+    /**
+     * Asynchronously resolves a role flag from the given flag manager.
+     */
     public static async resolveFlag(name: string, options: MessageCommandFlagManager, required?: boolean): Promise<Role[]> {
         return super.resolveFlag(name, options, required);
     }

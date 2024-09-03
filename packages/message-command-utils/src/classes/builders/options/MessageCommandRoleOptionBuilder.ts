@@ -42,11 +42,6 @@ export class MessageCommandRoleOptionBuilder extends BaseMessageCommandOptionBui
 
     /**
      * Asynchronously resolves a role option from the given option manager.
-     *
-     * @param {string} name - The name of the option to resolve.
-     * @param {MessageCommandOptionManager} options - The option manager to resolve from.
-     * @param {boolean} [required=false] - Whether the option is required or not.
-     * @return {Promise<Role|null>} - A promise that resolves to the resolved role value, or null if the option is not present and not required.
      */
     public static async resolveOption(name: string, options: MessageCommandOptionManager, required?: boolean): Promise<Role|null> {
         return super.resolveOption(name, options, required);

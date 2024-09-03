@@ -17,11 +17,19 @@ export class MessageCommandIntegerFlagBuilder extends BaseMessageCommandFlagBuil
         if (typeof data?.min_value === 'number') this.setMinValue(data.min_value);
     }
 
+    /**
+     * Sets the maximum value for this flag.
+     * @param {number} [maxValue] - The maximum value to set. If not provided, the maximum value will be unset.
+     */
     public setMaxValue(maxValue?: number): this {
         this.max_value = maxValue;
         return this;
     }
 
+    /**
+     * Sets the minimum value for this flag.
+     * @param {number} [minValue] - The minimum value to set. If not provided, the minimum value will be unset.
+     */
     public setMinValue(minValue?: number): this {
         this.min_value = minValue;
         return this;
@@ -43,6 +51,9 @@ export class MessageCommandIntegerFlagBuilder extends BaseMessageCommandFlagBuil
 
     public readonly value_type: 'string' | 'boolean' = 'string';
 
+    /**
+     * Asynchronously resolves an integer flag from the given flag manager.
+     */
     public static async resolveFlag(name: string, options: MessageCommandFlagManager, required?: boolean): Promise<number[]> {
         return super.resolveFlag(name, options, required);
     }

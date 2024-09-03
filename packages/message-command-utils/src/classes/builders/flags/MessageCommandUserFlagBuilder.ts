@@ -16,6 +16,10 @@ export class MessageCommandUserFlagBuilder extends BaseMessageCommandFlagBuilder
         if (typeof data?.allow_bots === 'boolean') this.setAllowBots(data.allow_bots);
     }
 
+    /**
+     * Sets the value of `allow_bots` property.
+     * @param {boolean} [allowBots] - The new value for `allow_bots`. If not provided, it will be set to `undefined`.
+     */
     public setAllowBots(allowBots?: boolean): this {
         this.allow_bots = allowBots;
         return this;
@@ -46,6 +50,9 @@ export class MessageCommandUserFlagBuilder extends BaseMessageCommandFlagBuilder
 
     public readonly value_type: 'string' = 'string';
 
+    /**
+     * Asynchronously resolves a user flag from the given flag manager.
+     */
     public static async resolveFlag(name: string, options: MessageCommandFlagManager, required?: boolean): Promise<User[]> {
         return super.resolveFlag(name, options, required);
     }
