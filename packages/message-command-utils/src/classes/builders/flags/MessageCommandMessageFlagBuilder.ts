@@ -63,7 +63,7 @@ export class MessageCommandMessageFlagBuilder extends BaseMessageCommandFlagBuil
         return messages;
     }
 
-    public static async resolveOption(name: string, options: MessageCommandFlagManager, required?: boolean): Promise<Message[]> {
-        return super.resolveOption(name, options, required);
+    public static async resolveFlag(name: string, options: MessageCommandFlagManager, required?: boolean): Promise<Message[]> {
+        return super.resolveFlag(name, options, required);
     }
 }

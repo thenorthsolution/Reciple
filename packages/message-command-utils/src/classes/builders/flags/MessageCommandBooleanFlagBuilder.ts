@@ -18,7 +18,7 @@ export class MessageCommandBooleanFlagBuilder extends BaseMessageCommandFlagBuil
 
     public readonly value_type: 'boolean' = 'boolean';
 
-    public static async resolveOption(name: string, options: MessageCommandFlagManager, required?: boolean): Promise<boolean[]> {
-        return super.resolveOption(name, options, required);
+    public static async resolveFlag(name: string, options: MessageCommandFlagManager, required?: boolean): Promise<boolean[]> {
+        return super.resolveFlag(name, options, required);
     }
 }

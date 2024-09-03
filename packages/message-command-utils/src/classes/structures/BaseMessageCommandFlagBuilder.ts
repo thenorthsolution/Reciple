@@ -45,7 +45,7 @@ export abstract class BaseMessageCommandFlagBuilder<T extends any = any> extends
     public abstract readonly validate?: ((options: MessageCommandFlagBuilderResolveValueOptions<T>) => Awaitable<boolean|string|Error>);
     public abstract readonly value_type?: 'string' | 'boolean';
 
-    public static async resolveOption(name: string, options: MessageCommandFlagManager, required?: boolean): Promise<any[]> {
+    public static async resolveFlag(name: string, options: MessageCommandFlagManager, required?: boolean): Promise<any[]> {
         switch (required) {
             case true:
                 return options.getFlagValues(name, { resolveValue: true, required: true });

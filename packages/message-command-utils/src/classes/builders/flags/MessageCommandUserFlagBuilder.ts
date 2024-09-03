@@ -46,7 +46,7 @@ export class MessageCommandUserFlagBuilder extends BaseMessageCommandFlagBuilder
 
     public readonly value_type: 'string' = 'string';
 
-    public static async resolveOption(name: string, options: MessageCommandFlagManager, required?: boolean): Promise<User[]> {
-        return super.resolveOption(name, options, required);
+    public static async resolveFlag(name: string, options: MessageCommandFlagManager, required?: boolean): Promise<User[]> {
+        return super.resolveFlag(name, options, required);
     }
 }

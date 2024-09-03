@@ -1,6 +1,6 @@
 // @ts-check
 import { MessageCommandBuilder } from 'reciple';
-import { MessageCommandBooleanOptionBuilder, MessageCommandChannelOptionBuilder, MessageCommandIntegerOptionBuilder, MessageCommandMessageOptionBuilder, MessageCommandNumberOptionBuilder, MessageCommandRoleOptionBuilder, MessageCommandUserOptionBuilder } from '@reciple/message-command-utils';
+import { MessageCommandBooleanFlagBuilder, MessageCommandBooleanOptionBuilder, MessageCommandChannelFlagBuilder, MessageCommandChannelOptionBuilder, MessageCommandIntegerFlagBuilder, MessageCommandIntegerOptionBuilder, MessageCommandMessageFlagBuilder, MessageCommandMessageOptionBuilder, MessageCommandNumberFlagBuilder, MessageCommandNumberOptionBuilder, MessageCommandRoleFlagBuilder, MessageCommandRoleOptionBuilder, MessageCommandUserFlagBuilder, MessageCommandUserOptionBuilder } from '@reciple/message-command-utils';
 import { ChannelType } from 'discord.js';
 
 /**
@@ -15,10 +15,15 @@ export class Resolvers {
                 .setName('user')
                 .setDescription('The user to fetch')
             )
-            .setExecute(async ({ message, options }) => {
-                const user = await MessageCommandUserOptionBuilder.resolveOption('user', options);
+            .addFlag(new MessageCommandUserFlagBuilder()
+                .setName('user')
+                .setDescription('The user to fetch')
+            )
+            .setExecute(async ({ message, options, flags }) => {
+                const option = await MessageCommandUserOptionBuilder.resolveOption('user', options);
+                const flag = await MessageCommandUserFlagBuilder.resolveFlag('user', flags);
                 await message.reply({
-                    content: `Fetched ${user}`,
+                    content: `Option value: ${option}\nFlag value: ${flag.map(user => user.toString()).join(' ')}`,
                     allowedMentions: {
                         parse: []
                     }
@@ -31,10 +36,15 @@ export class Resolvers {
                 .setName('role')
                 .setDescription('The role to fetch')
             )
-            .setExecute(async ({ message, options }) => {
-                const role = await MessageCommandRoleOptionBuilder.resolveOption('role', options);
+            .addFlag(new MessageCommandRoleFlagBuilder()
+                .setName('role')
+                .setDescription('The role to fetch')
+            )
+            .setExecute(async ({ message, options, flags }) => {
+                const option = await MessageCommandRoleOptionBuilder.resolveOption('role', options);
+                const flag = await MessageCommandRoleFlagBuilder.resolveFlag('role', flags);
                 await message.reply({
-                    content: `Fetched ${role}`,
+                    content: `Option value: ${option}\nFlag value: ${flag.map(role => role.toString()).join(' ')}`,
                     allowedMentions: {
                         parse: []
                     }
@@ -48,10 +58,16 @@ export class Resolvers {
                 .setDescription('The channel to fetch')
                 .setChannelTypes([ChannelType.GuildText])
             )
-            .setExecute(async ({ message, options }) => {
-                const channel = await MessageCommandChannelOptionBuilder.resolveOption('channel', options);
+            .addFlag(new MessageCommandChannelFlagBuilder()
+                .setName('channel')
+                .setDescription('The channel to fetch')
+                .setChannelTypes([ChannelType.GuildText])
+            )
+            .setExecute(async ({ message, options, flags }) => {
+                const option = await MessageCommandChannelOptionBuilder.resolveOption('channel', options);
+                const flag = await MessageCommandChannelFlagBuilder.resolveFlag('channel', flags);
                 await message.reply({
-                    content: `Fetched ${channel}`,
+                    content: `Option value: ${option}\nFlag value: ${flag.map(channel => channel.toString()).join(' ')}`,
                     allowedMentions: {
                         parse: []
                     }
@@ -64,10 +80,15 @@ export class Resolvers {
                 .setName('boolean')
                 .setDescription('The boolean to resolve')
             )
-            .setExecute(async ({ message, options }) => {
-                const boolean = await MessageCommandBooleanOptionBuilder.resolveOption('boolean', options);
+            .addFlag(new MessageCommandBooleanFlagBuilder()
+                .setName('boolean')
+                .setDescription('The boolean to resolve')
+            )
+            .setExecute(async ({ message, options, flags }) => {
+                const option = await MessageCommandBooleanOptionBuilder.resolveOption('boolean', options);
+                const flag = await MessageCommandBooleanFlagBuilder.resolveFlag('boolean', flags);
                 await message.reply({
-                    content: `Resolved ${boolean}`,
+                    content: `Option value: ${option}\nFlag value: ${flag.join(' ')}`,
                     allowedMentions: {
                         parse: []
                     }
@@ -82,10 +103,17 @@ export class Resolvers {
                 .setMaxValue(10)
                 .setMinValue(0)
             )
-            .setExecute(async ({ message, options }) => {
-                const boolean = await MessageCommandIntegerOptionBuilder.resolveOption('int', options);
+            .addFlag(new MessageCommandIntegerFlagBuilder()
+                .setName('int')
+                .setDescription('The int to resolve')
+                .setMaxValue(10)
+                .setMinValue(0)
+            )
+            .setExecute(async ({ message, options, flags }) => {
+                const option = await MessageCommandIntegerOptionBuilder.resolveOption('int', options);
+                const flag = await MessageCommandIntegerFlagBuilder.resolveFlag('int', flags);
                 await message.reply({
-                    content: `Resolved ${boolean}`,
+                    content: `Option value: ${option}\nFlag value: ${flag}`,
                     allowedMentions: {
                         parse: []
                     }
@@ -100,10 +128,17 @@ export class Resolvers {
                 .setMaxValue(10)
                 .setMinValue(0)
             )
-            .setExecute(async ({ message, options }) => {
-                const number = await MessageCommandNumberOptionBuilder.resolveOption('number', options);
+            .addFlag(new MessageCommandNumberFlagBuilder()
+                .setName('number')
+                .setDescription('The number to resolve')
+                .setMaxValue(10)
+                .setMinValue(0)
+            )
+            .setExecute(async ({ message, options, flags }) => {
+                const option = await MessageCommandNumberOptionBuilder.resolveOption('number', options);
+                const flag = await MessageCommandNumberFlagBuilder.resolveFlag('number', flags);
                 await message.reply({
-                    content: `Resolved ${number}`,
+                    content: `Option value: ${option}\nFlag value: ${flag}`,
                     allowedMentions: {
                         parse: []
                     }
@@ -118,10 +153,17 @@ export class Resolvers {
                 .setAllowBotMessages(false)
                 .setAllowOutsideMessages(false)
             )
-            .setExecute(async ({ message, options }) => {
-                const msg = await MessageCommandMessageOptionBuilder.resolveOption('message', options);
+            .addFlag(new MessageCommandMessageFlagBuilder()
+                .setName('message')
+                .setDescription('The message to resolve')
+                .setAllowBotMessages(false)
+                .setAllowOutsideMessages(false)
+            )
+            .setExecute(async ({ message, options, flags }) => {
+                const option = await MessageCommandMessageOptionBuilder.resolveOption('message', options);
+                const flag = await MessageCommandMessageFlagBuilder.resolveFlag('message', flags);
                 await message.reply({
-                    content: `Resolved ${msg?.url}`,
+                    content: `Option value: ${option?.toString()}\nFlag value: ${flag.map(message => message.toString()).join(' ')}`,
                     allowedMentions: {
                         parse: []
                     }

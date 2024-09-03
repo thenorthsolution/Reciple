@@ -43,7 +43,7 @@ export class MessageCommandNumberFlagBuilder extends BaseMessageCommandFlagBuild
 
     public readonly value_type: 'string' | 'boolean' = 'string';
 
-    public static async resolveOption(name: string, options: MessageCommandFlagManager, required?: boolean): Promise<number[]> {
-        return super.resolveOption(name, options, required);
+    public static async resolveFlag(name: string, options: MessageCommandFlagManager, required?: boolean): Promise<number[]> {
+        return super.resolveFlag(name, options, required);
     }
 }

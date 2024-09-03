@@ -68,7 +68,7 @@ export class MessageCommandChannelFlagBuilder extends BaseMessageCommandFlagBuil
 
     public readonly value_type: 'string' = 'string';
 
-    public static async resolveOption(name: string, options: MessageCommandFlagManager, required?: boolean): Promise<Channel[]> {
-        return super.resolveOption(name, options, required);
+    public static async resolveFlag(name: string, options: MessageCommandFlagManager, required?: boolean): Promise<Channel[]> {
+        return super.resolveFlag(name, options, required);
     }
 }
