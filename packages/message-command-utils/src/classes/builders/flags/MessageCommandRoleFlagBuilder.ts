@@ -3,14 +3,14 @@ import { BaseMessageCommandFlagBuilder } from '../../structures/BaseMessageComma
 import type { MessageCommandFlagBuilderData, MessageCommandFlagBuilderResolveValueOptions, MessageCommandFlagManager } from '@reciple/core';
 import { Mentions } from '@reciple/utils';
 
-export interface MessageCommandRoleOptionBuilderData extends MessageCommandFlagBuilderData<Role> {
+export interface MessageCommandRoleFlagBuilderData extends MessageCommandFlagBuilderData<Role> {
     allow_everyone?: boolean;
 }
 
-export class MessageCommandIntegerFlagBuilder extends BaseMessageCommandFlagBuilder<Role> implements MessageCommandRoleOptionBuilderData {
+export class MessageCommandRoleFlagBuilder extends BaseMessageCommandFlagBuilder<Role> implements MessageCommandRoleFlagBuilderData {
     public allow_everyone?: boolean = false;
 
-    constructor(data?: MessageCommandRoleOptionBuilderData) {
+    constructor(data?: MessageCommandRoleFlagBuilderData) {
         super(data);
         if (typeof data?.allow_everyone === 'boolean') this.setAllowEveryone(data.allow_everyone);
     }
