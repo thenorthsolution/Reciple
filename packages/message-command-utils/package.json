@@ -42,7 +42,7 @@
     "fallout-utility": "^2.9.1"
   },
   "devDependencies": {
-    "discord.js": "^14.5.3"
+    "discord.js": "^14.16.1"
   },
   "peerDependencies": {
     "@reciple/core": "^9 || ^9.0.0-dev",

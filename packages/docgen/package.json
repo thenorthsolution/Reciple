@@ -41,7 +41,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@discordjs/collection": "^2.1.0",
+    "@discordjs/collection": "^2.1.1",
     "@reciple/utils": "^9.3.2",
     "commander": "^12.1.0",
     "typedoc": "^0.25.3",

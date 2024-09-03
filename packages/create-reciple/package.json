@@ -43,14 +43,14 @@
     "commander": "^12.1.0",
     "compressing": "^1.10.1",
     "detect-indent": "^7.0.1",
-    "discord.js": "^14.15.3",
+    "discord.js": "^14.16.1",
     "fallout-utility": "^2.9.1",
-    "ora": "^8.0.1",
+    "ora": "^8.1.0",
     "package-json": "^10.0.1",
     "reciple": "^9.5.1"
   },
   "devDependencies": {
-    "@types/node": "^22.5.0",
+    "@types/node": "^22.5.2",
     "nodemon": "^3.1.4",
     "rimraf": "^6.0.1",
     "typescript": "^5.5.4"
