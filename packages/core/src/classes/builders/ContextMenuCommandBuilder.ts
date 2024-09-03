@@ -46,6 +46,8 @@ export class ContextMenuCommandBuilder extends Mixin(DiscordJsContextMenuCommand
         if (data?.default_member_permissions) this.setDefaultMemberPermissions(data.default_member_permissions);
         if (data?.dm_permission) this.setDMPermission(data.dm_permission);
         if (data?.default_permission !== undefined) this.setDefaultPermission(data.default_permission);
+        if (data?.integration_types) this.setIntegrationTypes(data.integration_types);
+        if (data?.contexts) this.setContexts(data.contexts);
         if (data?.execute) this.setExecute(data.execute);
         if (data?.halts) this.setHalts(data.halts);
         if (data?.name) this.setName(data.name);

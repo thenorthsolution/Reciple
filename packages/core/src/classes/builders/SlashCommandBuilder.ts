@@ -81,6 +81,8 @@ export class SlashCommandBuilder extends Mixin(DiscordJsSlashCommandBuilder, Bas
         if (data?.default_member_permissions) this.setDefaultMemberPermissions(data.default_member_permissions);
         if (data?.dm_permission !== undefined) this.setDMPermission(data.dm_permission);
         if (data?.default_permission !== undefined) this.setDefaultPermission(data.default_permission);
+        if (data?.integration_types) this.setIntegrationTypes(data.integration_types);
+        if (data?.contexts) this.setContexts(data.contexts);
         if (data?.options) {
             for (const option of data.options) {
                 SlashCommandBuilder.addOption(this, SlashCommandBuilder.resolveOption<AnySlashCommandOptionBuilder>(option));
