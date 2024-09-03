@@ -56,9 +56,9 @@ export class MessageCommandFlagManager extends DataManager<MessageCommandFlagVal
      * @param {boolean} required - Whether the flag is required or not.
      * @return {MessageCommandOptionValue<V>|null} The value of the message command flag.
      */
-    public getFlag<T extends any = string|boolean>(name: string, required: true): MessageCommandFlagValue<T>;
-    public getFlag<T extends any = string|boolean>(name: string, required?: boolean): MessageCommandFlagValue<T>|null;
-    public getFlag<T extends any = string|boolean>(name: string, required: boolean = false): MessageCommandFlagValue<T>|null {
+    public getFlag<T extends any = any>(name: string, required: true): MessageCommandFlagValue<T>;
+    public getFlag<T extends any = any>(name: string, required?: boolean): MessageCommandFlagValue<T>|null;
+    public getFlag<T extends any = any>(name: string, required: boolean = false): MessageCommandFlagValue<T>|null {
         const flag = this.cache.get(name) as MessageCommandFlagValue<T>|undefined;
         if (required && !flag) throw new RecipleError(`Unable to find required message flag '${name}'`);
 
@@ -72,10 +72,10 @@ export class MessageCommandFlagManager extends DataManager<MessageCommandFlagVal
      * @param options.required Whether the flag is required or not.
      * @param options.resolveValue Whether to resolve the value or not.
      */
-    public getFlagValues<T extends any = string|boolean, V extends 'string'|'boolean' = 'string'|'boolean'>(name: string, options?: { required?: boolean; resolveValue?: false; type?: V }): V extends 'string' ? string[] : V extends 'boolean' ? boolean[] : string[]|boolean[];
-    public getFlagValues<T extends any = string|boolean>(name: string, options?: { required?: boolean; resolveValue?: true; }): Promise<T[]>;
-    public getFlagValues<T extends any = string|boolean, V extends 'string'|'boolean' = 'string'|'boolean'>(name: string, options?: { required?: boolean; resolveValue?: boolean; type?: V }): Promise<T[]>|(V extends 'string' ? string[] : V extends 'boolean' ? boolean[] : string[]|boolean[]);
-    public getFlagValues<T extends any = string|boolean>(name: string, options: { required?: boolean; resolveValue?: boolean; type?: 'string'|'boolean' } = { required: false, resolveValue: false }): Promise<T[]>|string[]|boolean[] {
+    public getFlagValues<T extends any = any, V extends 'string'|'boolean' = 'string'|'boolean'>(name: string, options?: { required?: boolean; resolveValue?: false; type?: V }): V extends 'string' ? string[] : V extends 'boolean' ? boolean[] : string[]|boolean[];
+    public getFlagValues<T extends any = any>(name: string, options?: { required?: boolean; resolveValue?: true; }): Promise<T[]>;
+    public getFlagValues<T extends any = any, V extends 'string'|'boolean' = 'string'|'boolean'>(name: string, options?: { required?: boolean; resolveValue?: boolean; type?: V }): Promise<T[]>|(V extends 'string' ? string[] : V extends 'boolean' ? boolean[] : string[]|boolean[]);
+    public getFlagValues<T extends any = any>(name: string, options: { required?: boolean; resolveValue?: boolean; type?: 'string'|'boolean' } = { required: false, resolveValue: false }): Promise<T[]>|string[]|boolean[] {
         const value = this.getFlag<T>(name, options.required);
         return options.resolveValue
             ? Promise.resolve(value?.resolveValues()).then(v => v ?? [])

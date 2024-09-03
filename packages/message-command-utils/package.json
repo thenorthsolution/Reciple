@@ -37,9 +37,7 @@
   ],
   "dependencies": {
     "@reciple/utils": "^9.3.2",
-    "@sapphire/shapeshift": "^4.0.0",
-    "boolean": "^3.2.0",
-    "fallout-utility": "^2.9.1"
+    "boolean": "^3.2.0"
   },
   "devDependencies": {
     "discord.js": "^14.16.1"

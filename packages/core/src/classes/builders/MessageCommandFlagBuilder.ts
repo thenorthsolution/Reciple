@@ -4,7 +4,7 @@ import type { MessageCommandBuilder } from './MessageCommandBuilder.js';
 import type { RecipleClient } from '../structures/RecipleClient.js';
 import type { CommandData } from '../../types/structures.js';
 
-export interface MessageCommandFlagBuilderResolveValueOptions<T extends any = string|boolean> {
+export interface MessageCommandFlagBuilderResolveValueOptions<T extends any = any> {
     /**
      * The values of the given flag
      */
@@ -31,7 +31,7 @@ export interface MessageCommandFlagBuilderResolveValueOptions<T extends any = st
     client: RecipleClient<true>;
 }
 
-export interface MessageCommandFlagBuilderData<T extends any = string|boolean> {
+export interface MessageCommandFlagBuilderData<T extends any = any> {
     /**
      * The name of the flag.
      */
@@ -74,7 +74,7 @@ export interface MessageCommandFlagBuilderData<T extends any = string|boolean> {
     resolve_value?: (options: MessageCommandFlagBuilderResolveValueOptions<T>) => Awaitable<T[]>;
 }
 
-export class MessageCommandFlagBuilder<T extends any = string|boolean> implements MessageCommandFlagBuilderData<T> {
+export class MessageCommandFlagBuilder<T extends any = any> implements MessageCommandFlagBuilderData<T> {
     public name: string = '';
     public shortcut?: string;
     public description: string = '';
@@ -166,13 +166,13 @@ export class MessageCommandFlagBuilder<T extends any = string|boolean> implement
         };
     }
 
-    public static from<T extends any = string|boolean>(data: MessageCommandFlagResolvable<T>): MessageCommandFlagBuilder<T> {
+    public static from<T extends any = any>(data: MessageCommandFlagResolvable<T>): MessageCommandFlagBuilder<T> {
         return new MessageCommandFlagBuilder(isJSONEncodable(data) ? data.toJSON() : data);
     }
 
-    public static resolve<T extends any = string|boolean>(data: MessageCommandFlagResolvable<T>): MessageCommandFlagBuilder<T> {
+    public static resolve<T extends any = any>(data: MessageCommandFlagResolvable<T>): MessageCommandFlagBuilder<T> {
         return data instanceof MessageCommandFlagBuilder ? data : MessageCommandFlagBuilder.from(data);
     }
 }
 
-export type MessageCommandFlagResolvable<T extends any = string|boolean> = JSONEncodable<MessageCommandFlagBuilderData<T>>|MessageCommandFlagBuilderData<T>;
+export type MessageCommandFlagResolvable<T extends any = any> = JSONEncodable<MessageCommandFlagBuilderData<T>>|MessageCommandFlagBuilderData<T>;

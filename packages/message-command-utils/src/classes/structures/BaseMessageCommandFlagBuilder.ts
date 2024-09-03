@@ -41,9 +41,9 @@ export abstract class BaseMessageCommandFlagBuilder<T extends any = any> extends
         return this;
     }
 
-    public abstract readonly resolve_value?: ((options: MessageCommandFlagBuilderResolveValueOptions<T>) => Awaitable<T[]>) | undefined;
-    public abstract readonly validate?: ((options: MessageCommandFlagBuilderResolveValueOptions<T>) => Awaitable<boolean|string|Error>) | undefined;
-    public abstract readonly value_type?: 'string' | 'boolean' | undefined;
+    public abstract readonly resolve_value?: ((options: MessageCommandFlagBuilderResolveValueOptions<T>) => Awaitable<T[]>);
+    public abstract readonly validate?: ((options: MessageCommandFlagBuilderResolveValueOptions<T>) => Awaitable<boolean|string|Error>);
+    public abstract readonly value_type?: 'string' | 'boolean';
 
     public static async resolveOption(name: string, options: MessageCommandFlagManager, required?: boolean): Promise<any[]> {
         switch (required) {

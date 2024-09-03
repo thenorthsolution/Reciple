@@ -41,8 +41,8 @@ export abstract class BaseMessageCommandOptionBuilder<T extends any = any> exten
         return this;
     }
 
-    public abstract readonly resolve_value?: ((options: MessageCommandOptionBuilderResolveValueOptions<T>) => Awaitable<T>) | undefined;
-    public abstract readonly validate?: ((options: MessageCommandOptionBuilderResolveValueOptions<T>) => Awaitable<boolean|string|Error>) | undefined;
+    public abstract readonly resolve_value?: ((options: MessageCommandOptionBuilderResolveValueOptions<T>) => Awaitable<T>);
+    public abstract readonly validate?: ((options: MessageCommandOptionBuilderResolveValueOptions<T>) => Awaitable<boolean|string|Error>);
 
     public static async resolveOption(name: string, options: MessageCommandOptionManager, required?: boolean): Promise<any|null> {
         switch (required) {

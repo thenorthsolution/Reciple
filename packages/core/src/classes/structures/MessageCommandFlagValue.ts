@@ -5,7 +5,7 @@ import type { RecipleClient } from './RecipleClient.js';
 import { RecipleError } from './RecipleError.js';
 import type { Message } from 'discord.js';
 
-export interface MessageCommandFlagValueData<T extends any = string|boolean, V extends 'string'|'boolean' = 'string'|'boolean'> {
+export interface MessageCommandFlagValueData<T extends any = any, V extends 'string'|'boolean' = 'string'|'boolean'> {
     /**
      * The name of the option.
      */
@@ -32,16 +32,16 @@ export interface MessageCommandFlagValueData<T extends any = string|boolean, V e
     error?: string|Error;
 }
 
-export interface MessageCommandFlagParseOptionValueOptions<T extends any = string|boolean> extends Omit<MessageCommandFlagBuilderResolveValueOptions<T>, 'values'> {
+export interface MessageCommandFlagParseOptionValueOptions<T extends any = any> extends Omit<MessageCommandFlagBuilderResolveValueOptions<T>, 'values'> {
     values?: T[]|null;
 }
 
-export interface MessageCommandFlagValueOptions<T extends any = string|boolean, V extends 'string'|'boolean' = 'string'|'boolean'> extends MessageCommandFlagValueData<T, V>, Pick<MessageCommandFlagParseOptionValueOptions<T>, 'parserData'|'command'> {
+export interface MessageCommandFlagValueOptions<T extends any = any, V extends 'string'|'boolean' = 'string'|'boolean'> extends MessageCommandFlagValueData<T, V>, Pick<MessageCommandFlagParseOptionValueOptions<T>, 'parserData'|'command'> {
     client: RecipleClient<true>;
     message: Message;
 }
 
-export class MessageCommandFlagValue<T extends any = string|boolean, V extends 'string'|'boolean' = 'string'|'boolean'> implements MessageCommandFlagValueData<T> {
+export class MessageCommandFlagValue<T extends any = any, V extends 'string'|'boolean' = 'string'|'boolean'> implements MessageCommandFlagValueData<T> {
     readonly name: string;
     readonly flag: MessageCommandFlagBuilder<T>;
     readonly values: V extends 'boolean' ? boolean[] : V extends 'string' ? string[] : string[]|boolean[];
@@ -97,7 +97,7 @@ export class MessageCommandFlagValue<T extends any = string|boolean, V extends '
         }
     }
 
-    public static async parseFlagValue<T extends any = string|boolean>(options: MessageCommandFlagParseOptionValueOptions<T>): Promise<MessageCommandFlagValue<T>> {
+    public static async parseFlagValue<T extends any = any>(options: MessageCommandFlagParseOptionValueOptions<T>): Promise<MessageCommandFlagValue<T>> {
         const filteredValues = options.values?.filter(value => typeof value == options.flag.value_type);
         const missing = !!options.flag.required && !filteredValues?.length;
 
