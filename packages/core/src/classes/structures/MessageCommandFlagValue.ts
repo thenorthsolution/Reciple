@@ -72,7 +72,7 @@ export class MessageCommandFlagValue<T extends any = any, V extends 'string'|'bo
      * @param required Whether the option is required.
      */
     public async resolveValues(): Promise<T[]> {
-        if (this.values.length) return [];
+        if (!this.values.length) return [];
 
         return this.flag.resolve_value
             ? Promise.resolve(this.flag.resolve_value({

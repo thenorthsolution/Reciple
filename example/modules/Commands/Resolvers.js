@@ -1,5 +1,5 @@
 // @ts-check
-import { MessageCommandBuilder } from 'reciple';
+import { CommandType, MessageCommandBuilder } from 'reciple';
 import { MessageCommandBooleanFlagBuilder, MessageCommandBooleanOptionBuilder, MessageCommandChannelFlagBuilder, MessageCommandChannelOptionBuilder, MessageCommandIntegerFlagBuilder, MessageCommandIntegerOptionBuilder, MessageCommandMessageFlagBuilder, MessageCommandMessageOptionBuilder, MessageCommandNumberFlagBuilder, MessageCommandNumberOptionBuilder, MessageCommandRoleFlagBuilder, MessageCommandRoleOptionBuilder, MessageCommandUserFlagBuilder, MessageCommandUserOptionBuilder } from '@reciple/message-command-utils';
 import { ChannelType } from 'discord.js';
 
@@ -171,7 +171,18 @@ export class Resolvers {
             }),
     ];
 
-    onStart() {
+    /**
+     * 
+     * @param {import('reciple').RecipleModuleStartData} param0 
+     * @returns 
+     */
+    onStart({ client }) {
+        client.on('recipleCommandExecute', async (data) => {
+            if (data.type !== CommandType.MessageCommand) return;
+
+            logger.log(data.flags.cache.values());
+        });
+
         return true;
     }
 }
