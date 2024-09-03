@@ -179,8 +179,6 @@ export class Resolvers {
     onStart({ client }) {
         client.on('recipleCommandExecute', async (data) => {
             if (data.type !== CommandType.MessageCommand) return;
-
-            logger.log(data.flags.cache.values());
         });
 
         return true;

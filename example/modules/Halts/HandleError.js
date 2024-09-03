@@ -33,7 +33,7 @@ export class ExampleHalt {
                 break;
         }
 
-        console.log(data.error);
+        logger.error(data.error);
 
         return true;
     }
