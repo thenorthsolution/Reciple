@@ -2,7 +2,7 @@
   "name": "@reciple/docgen",
   "description": "Parses typescript files and generate json output",
   "license": "GPL-3.0",
-  "version": "9.3.2",
+  "version": "9.4.0",
   "type": "module",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -42,7 +42,7 @@
   },
   "dependencies": {
     "@discordjs/collection": "^2.1.1",
-    "@reciple/utils": "^9.3.2",
+    "@reciple/utils": "^9.4.0",
     "commander": "^12.1.0",
     "typedoc": "^0.25.3",
     "typedoc-json-parser": "^9.0.1"

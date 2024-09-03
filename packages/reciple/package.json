@@ -3,7 +3,7 @@
   "description": "Reciple is a Discord.js bot framework",
   "homepage": "https://reciple.js.org/docs/reciple",
   "license": "GPL-3.0",
-  "version": "9.5.1",
+  "version": "9.6.0",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "bin": "./dist/bin.js",
@@ -42,7 +42,7 @@
     "README.md"
   ],
   "dependencies": {
-    "@reciple/utils": "^9.3.2",
+    "@reciple/utils": "^9.4.0",
     "ansi-regex": "^6.0.1",
     "chokidar": "^3.6.0",
     "commander": "^12.1.0",
@@ -56,7 +56,7 @@
     "semver": "^7.6.3"
   },
   "devDependencies": {
-    "@reciple/core": "^9.5.0",
+    "@reciple/core": "^9.6.0",
     "@types/micromatch": "^4.0.9",
     "@types/semver": "^7.5.8",
     "discord.js": "^14.16.1"
