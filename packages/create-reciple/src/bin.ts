@@ -5,7 +5,7 @@ import { getTemplates } from './utils/helpers.js';
 import type { CliOptions } from './utils/types.js';
 import { Setup } from './classes/Setup.js';
 import { kleur } from 'fallout-utility';
-import { outro } from '@clack/prompts';
+import { outro, select } from '@clack/prompts';
 import { Command } from 'commander';
 import { TemplateBuilder } from './classes/TemplateBuilder.js';
 
@@ -36,11 +36,23 @@ const setup = new Setup({
 
 await setup.prompt(options.force || false);
 
-const template = templates.find(p => p.language === (setup.isTypescript ? 'Typescript' : 'Javascript'));
-if (!template) {
+const availableTemplates = templates.filter(p => p.language === (setup.isTypescript ? 'Typescript' : 'Javascript'));
+if (!availableTemplates.length) {
     setup.cancelPrompts(`Template not found`);
     process.exit(1);
 }
+
+const templateId = availableTemplates.length === 1
+    ? availableTemplates[0].id
+    : await select({
+        message: 'Select a template',
+        options: availableTemplates.map(t => ({
+            label: t.name,
+            value: t.id
+        })),
+        maxItems: 1
+    });
+const template = templates.find(t => t.id === templateId)!;
 
 if (setup.packageManager && !packageManagers.some(p => p.value === setup.packageManager)) {
     setup.cancelPrompts(`Invalid package manager`);
