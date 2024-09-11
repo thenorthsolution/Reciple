@@ -15,4 +15,4 @@ export class ExamplePrecondition implements CommandPreconditionData {
     slashCommandExecute(execute: SlashCommandExecuteData) {
         return true;
     }
-};
+}
