@@ -51,11 +51,13 @@ export default (command: Command, cli: CLI) => command
 
         logger?.log(`Starting ${kleur.green('reciple@' + kleur.dim(cliBuildVersion) + ' @reciple/client@' + kleur.dim(buildVersion))} - ${kleur.dim(new Date().toISOString())}`);
 
-        if (!cli.shardDeployCommands) {
-            config.applicationCommandRegister = { ...config.applicationCommandRegister, enabled: false };
-        }
+        if (cli.shardMode) {
+            if (!cli.shardDeployCommands) {
+                config.applicationCommandRegister = { ...config.applicationCommandRegister, enabled: false };
+            }
 
-        if (cli.shardMode) await cli.sendProcessInfo();
+            await cli.sendProcessInfo();
+        }
 
         config.token = flags.token ? resolveEnvProtocol(flags.token) ?? '' : config.token;
 
