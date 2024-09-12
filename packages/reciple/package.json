@@ -43,7 +43,7 @@
   ],
   "dependencies": {
     "@reciple/utils": "^9.5.0",
-    "ansi-regex": "^6.0.1",
+    "ansi-regex": "^6.1.0",
     "chokidar": "^3.6.0",
     "commander": "^12.1.0",
     "dotenv": "^16.4.5",

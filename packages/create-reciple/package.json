@@ -50,10 +50,10 @@
     "reciple": "^9.7.0"
   },
   "devDependencies": {
-    "@types/node": "^22.5.2",
+    "@types/node": "^22.5.4",
     "nodemon": "^3.1.4",
     "rimraf": "^6.0.1",
-    "typescript": "^5.5.4"
+    "typescript": "^5.6.2"
   },
   "gitHead": "88c2b7a5d61ca5707db84435871c11d50259d056"
 }
