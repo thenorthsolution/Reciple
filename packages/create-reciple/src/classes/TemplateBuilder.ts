@@ -204,33 +204,42 @@ export class TemplateBuilder implements TemplateBuilderOptions {
         let packageJson = JSON.parse(packageJsonData) as PackageJson;
         let packageJsonIndentSize = detectIndent(packageJsonData).indent || '    ';
         let done: number = 0;
+        let failed: number = 0;
 
         for (const addon of addons) {
-            await addon.fetch();
-            await addon.readTarball();
+            try {
+                await addon.fetch();
+                await addon.readTarball();
 
-            const moduleContent = this.setup.isTypescript ? addon.tarballData?.initialModuleContent.ts : addon.tarballData?.initialModuleContent.js;
-            if (!moduleContent) continue;
+                const moduleContent = this.setup.isTypescript ? addon.tarballData?.initialModuleContent.ts : addon.tarballData?.initialModuleContent.js;
+                if (!moduleContent) continue;
 
-            const modulesFolder = path.join(this.dir, this.setup.isTypescript ? 'src' : 'modules', 'addons');
-            await mkdir(modulesFolder, { recursive: true });
+                const modulesFolder = path.join(this.dir, this.setup.isTypescript ? 'src' : 'modules', 'addons');
+                await mkdir(modulesFolder, { recursive: true });
 
-            const modulePath = path.join(modulesFolder, `${addon.module}.${this.setup.isTypescript ? 'ts' : 'js'}`);
-            await writeFile(modulePath, moduleContent);
+                const modulePath = path.join(modulesFolder, `${addon.module}.${this.setup.isTypescript ? 'ts' : 'js'}`);
+                await writeFile(modulePath, moduleContent);
 
-            packageJson.dependencies = {
-                ...packageJson.dependencies,
-                [addon.module]: addon.version,
-            };
+                packageJson.dependencies = {
+                    ...packageJson.dependencies,
+                    [addon.module]: addon.version,
+                };
 
-            done++;
+                done++;
 
-            this.persistSpinner({ symbol: kleur.bold().green('  +'), text: `Installed addon ${kleur.cyan(addon.module + '@' + (addon.version ?? 'latest'))}` });
+                this.persistSpinner({ symbol: kleur.bold().green('  +'), text: `Installed addon ${kleur.cyan(addon.module + '@' + (addon.version ?? 'latest'))}` });
+            } catch (err) {
+                failed++;
+                const message = err instanceof Error ? err.message : String(err);
+
+                this.persistSpinner({ symbol: kleur.bold().red('    ×'), text: `${kleur.gray(addon.module + '@' + (addon.version ?? 'latest'))} ${kleur.red(message)}` });
+            }
+
             this.setSpinnerText(`Installing ${kleur.cyan(addons.length + ' addons')} ${kleur.gray('('+ done +'/'+ addons.length +')')}...`);
         }
 
         await writeFile(this.packageJsonPath, JSON.stringify(packageJson, null, packageJsonIndentSize), 'utf-8');
-        this.persistSpinner({ symbol: kleur.bold().green('✔'), text: `${kleur.green('Addons installed.')}` });
+        this.persistSpinner({ symbol: kleur.bold().green('✔'), text: `${kleur.green('Addons installed.')}` + (failed ? kleur.red(` Failed (${failed}/${addons.length})`) : '') });
     }
 
     /**
