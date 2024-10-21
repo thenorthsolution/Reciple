@@ -10,10 +10,10 @@
   "dependencies": {
     "@reciple/core": "file:../packages/core",
     "@reciple/message-command-utils": "file:../packages/message-command-utils",
-    "discord.js": "^14.16.1",
+    "discord.js": "^14.16.3",
     "reciple": "file:../packages/reciple"
   },
   "devDependencies": {
-    "@types/node": "^22.5.4"
+    "@types/node": "^22.7.7"
   }
 }

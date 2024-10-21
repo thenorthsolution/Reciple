@@ -37,7 +37,7 @@
   ],
   "devDependencies": {
     "@reciple/core": "^9.7.1",
-    "discord.js": "^14.16.1"
+    "discord.js": "^14.16.3"
   },
   "peerDependencies": {
     "@reciple/core": "^9 || ^9.0.0-dev",
