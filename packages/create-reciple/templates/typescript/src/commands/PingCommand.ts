@@ -1,11 +1,10 @@
-import { ApplicationCommandType } from 'discord-api-types/v10';
 import { AnyCommandExecuteData, CommandType, ContextMenuCommandBuilder, MessageCommandBuilder, RecipleModuleData, SlashCommandBuilder, type AnyCommandResolvable } from "reciple";
 
 export class PingCommand implements RecipleModuleData {
     public commands: AnyCommandResolvable[] = [
         new ContextMenuCommandBuilder()
             .setName('ping')
-            .setType(ApplicationCommandType.Message)
+            .setType('Message')
             .setExecute(data => this.handleCommandExecute(data)),
         new MessageCommandBuilder()
             .setName('ping')

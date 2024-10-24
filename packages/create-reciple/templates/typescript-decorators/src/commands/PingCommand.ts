@@ -1,5 +1,4 @@
 import { setContextMenuCommand, setMessageCommand, setRecipleModule, setRecipleModuleLoad, setRecipleModuleStart, setRecipleModuleUnload, setSlashCommand } from '@reciple/decorators';
-import { ApplicationCommandType } from 'discord-api-types/v10';
 import { AnyCommandExecuteData, CommandType, RecipleModuleData } from "reciple";
 
 @setRecipleModule()
@@ -27,7 +26,7 @@ export class PingCommand implements RecipleModuleData {
     /**
      * Sets the commands
      */
-    @setContextMenuCommand({ name: 'ping', type: ApplicationCommandType.Message })
+    @setContextMenuCommand({ name: 'ping', type: 'Message' })
     @setMessageCommand({ name: 'ping', description: 'Replies with pong!' })
     @setSlashCommand({ name: 'ping', description: 'Replies with pong!' })
     async handleCommandExecute(data: AnyCommandExecuteData): Promise<void> {
