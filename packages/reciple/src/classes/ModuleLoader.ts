@@ -1,6 +1,5 @@
 import { type Awaitable, kleur } from 'fallout-utility';
 import type { RecipleConfig } from '../types/structures.js';
-import micromatch from 'micromatch';
 import path from 'node:path';
 import { existsAsync } from '@reciple/utils';
 import { lstat, mkdir, readdir } from 'node:fs/promises';
@@ -37,12 +36,9 @@ export class ModuleLoader {
                 let dirs = await globby(folder, {
                         cwd: process.cwd(),
                         onlyDirectories: true,
-                        absolute: true
+                        absolute: true,
+                        ignore: options.config.exclude
                     });
-
-                if (options.config?.exclude?.length) {
-                    dirs = dirs.filter(f => !micromatch.isMatch(path.basename(f), options.config.exclude!));
-                }
 
                 paths.push(...await ModuleLoader.getModulePaths({
                     ...options,
@@ -61,9 +57,7 @@ export class ModuleLoader {
             const files = (await readdir(folderPath))
                 .map(file => path
                     .join(folderPath, file))
-                    .filter(f => !options.config?.exclude?.length || !micromatch.isMatch(path.basename(f), options.config.exclude)
-                )
-                .filter(file => (options.filter ? options.filter(file) : ModuleLoader.defaultModulePathsFilter(file)));
+                    .filter(file => (options.filter ? options.filter(file) : ModuleLoader.defaultModulePathsFilter(file)));
 
             await Promise.all(files.map(async f => {
                 if (options.config.filter) {
