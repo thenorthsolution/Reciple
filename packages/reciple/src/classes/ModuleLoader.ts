@@ -33,7 +33,7 @@ export class ModuleLoader {
             const folderPath = path.isAbsolute(folder) ? folder : path.join(cwd, folder);
 
             if (isDynamicPattern(folder, { cwd })) {
-                let dirs = await globby(folder, {
+                const dirs = await globby(folder, {
                         cwd: process.cwd(),
                         onlyDirectories: true,
                         absolute: true,
