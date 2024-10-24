@@ -1,5 +1,5 @@
 import { setContextMenuCommand, setMessageCommand, setRecipleModule, setRecipleModuleLoad, setRecipleModuleStart, setRecipleModuleUnload, setSlashCommand } from '@reciple/decorators';
-import { ApplicationCommandType } from 'discord.js';
+import { ApplicationCommandType } from 'discord-api-types/v10';
 import { AnyCommandExecuteData, CommandType, RecipleModuleData } from "reciple";
 
 @setRecipleModule()

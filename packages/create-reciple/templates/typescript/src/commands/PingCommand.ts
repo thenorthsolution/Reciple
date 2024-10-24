@@ -1,4 +1,4 @@
-import { ApplicationCommandType } from 'discord.js';
+import { ApplicationCommandType } from 'discord-api-types/v10';
 import { AnyCommandExecuteData, CommandType, ContextMenuCommandBuilder, MessageCommandBuilder, RecipleModuleData, SlashCommandBuilder, type AnyCommandResolvable } from "reciple";
 
 export class PingCommand implements RecipleModuleData {
