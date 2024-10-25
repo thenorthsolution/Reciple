@@ -62,7 +62,7 @@ export const config = {
     },
     modules: {
         dirs: ['./modules', './modules/*', './modules/*/*'],
-        exclude: ['halts', 'preconditions', '_*'],
+        exclude: ['./modules/halts', './modules/preconditions', './modules/_*'],
         filter: file => true,
         disableModuleVersionCheck: false
     },
