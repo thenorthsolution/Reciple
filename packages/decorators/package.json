@@ -3,7 +3,7 @@
   "description": "Typescript decorators for Reciple",
   "homepage": "https://reciple.js.org/docs/decorators",
   "license": "GPL-3.0",
-  "version": "9.3.1",
+  "version": "9.4.0",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "type": "module",
@@ -36,7 +36,7 @@
     "README.md"
   ],
   "devDependencies": {
-    "@reciple/core": "^9.7.1",
+    "@reciple/core": "^9.8.0",
     "discord.js": "^14.17.2"
   },
   "peerDependencies": {
