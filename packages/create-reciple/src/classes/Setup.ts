@@ -108,7 +108,7 @@ export class Setup implements SetupOptions {
     public async promptAddons(addons?: string[]): Promise<string[]> {
         if (addons) return this.addons = addons;
 
-        const newAddons = await multiselect<{ label?: string; hint?: string; value: string; }[], string>({
+        const newAddons = await multiselect({
             message: `Select a addons from Reciple ${kleur.gray('(Press space to select, and enter to submit)')}`,
             options: Object.keys(Addon.DEFAULT_ADDON_VERSIONS).map(a => ({
                 label: a,
@@ -127,7 +127,7 @@ export class Setup implements SetupOptions {
         let firstPackageManagerIndex = packageManagers.findIndex(p => resolvedPackageManager && resolvedPackageManager === p.value);
             firstPackageManagerIndex = firstPackageManagerIndex === -1 ? packageManagers.length - 1 : firstPackageManagerIndex;
 
-        const newPackageManager = await select<{ label?: string; hint?: string; value: PackageManager|'none'; }[], PackageManager|'none'>({
+        const newPackageManager = await select({
             message: 'Select your preferred package manager',
             options: [
                 packageManagers[firstPackageManagerIndex],
