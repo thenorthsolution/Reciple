@@ -65,11 +65,11 @@ export const config = {
     modules: {
         dirs: [
             './modules/*',
-            './modules/*/*'
+            './modules/**'
         ],
         exclude: [
-            'Preconditions',
-            'Halts'
+            './modules/Preconditions',
+            './modules/Halts'
         ],
         disableModuleVersionCheck: false
     },

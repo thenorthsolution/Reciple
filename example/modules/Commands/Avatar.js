@@ -1,4 +1,5 @@
 // @ts-check
+import { ApplicationCommandType } from "discord.js";
 import { ContextMenuCommandBuilder } from "reciple";
 
 /**
@@ -8,7 +9,7 @@ export class Avatar {
     commands = [
         new ContextMenuCommandBuilder()
             .setName('Avatar')
-            .setType('User')
+            .setType(ApplicationCommandType.User)
             .setExecute(async ({ interaction }) => {
                 if (!interaction.isUserContextMenuCommand()) return;
 

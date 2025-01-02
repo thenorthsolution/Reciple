@@ -24,6 +24,11 @@ export class Say {
 
                 const channel = await client.channels.fetch(interaction.channelId).then(c => c?.isTextBased() ? c : null);
 
+                if (!channel?.isSendable()) {
+                    await interaction.editReply('I cannot send messages in this channel!');
+                    return;
+                }
+
                 await channel?.send(message);
                 await interaction.editReply('Message sent!');
             })
