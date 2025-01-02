@@ -36,24 +36,24 @@
     "README.md"
   ],
   "dependencies": {
-    "@clack/prompts": "^0.7.0",
+    "@clack/prompts": "^0.9.0",
     "@reciple/core": "^9.7.1",
     "@reciple/decorators": "^9.3.1",
     "@reciple/utils": "^9.6.0",
-    "commander": "^12.1.0",
+    "commander": "^13.0.0",
     "compressing": "^1.10.1",
     "detect-indent": "^7.0.1",
-    "discord.js": "^14.16.3",
+    "discord.js": "^14.17.2",
     "fallout-utility": "^2.9.1",
-    "ora": "^8.1.0",
+    "ora": "^8.1.1",
     "package-json": "^10.0.1",
     "reciple": "^9.7.1"
   },
   "devDependencies": {
-    "@types/node": "^22.7.7",
-    "nodemon": "^3.1.7",
+    "@types/node": "^22.10.3",
+    "nodemon": "^3.1.9",
     "rimraf": "^6.0.1",
-    "typescript": "^5.6.3"
+    "typescript": "^5.7.2"
   },
   "gitHead": "88c2b7a5d61ca5707db84435871c11d50259d056"
 }
