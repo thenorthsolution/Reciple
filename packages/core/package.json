@@ -41,13 +41,13 @@
     "fallout-utility": "^2.9.1",
     "lodash.defaultsdeep": "^4.6.1",
     "prtyprnt": "^1.1.0",
-    "semver": "^7.6.3",
+    "semver": "^7.7.1",
     "ts-mixer": "^6.0.4"
   },
   "devDependencies": {
     "@types/lodash.defaultsdeep": "^4.6.9",
     "@types/semver": "^7.5.8",
-    "discord.js": "^14.17.2"
+    "discord.js": "^14.18.0"
   },
   "peerDependencies": {
     "discord.js": "^14.15.0"

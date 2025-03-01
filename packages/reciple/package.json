@@ -44,19 +44,19 @@
   "dependencies": {
     "@reciple/utils": "^9.7.0",
     "ansi-regex": "^6.1.0",
-    "commander": "^13.0.0",
+    "commander": "^13.1.0",
     "dotenv": "^16.4.7",
     "fallout-utility": "^2.9.1",
-    "globby": "^14.0.2",
+    "globby": "^14.1.0",
     "prompts": "^2.4.2",
     "prtyprnt": "^1.1.0",
-    "semver": "^7.6.3"
+    "semver": "^7.7.1"
   },
   "devDependencies": {
     "@reciple/core": "^9.8.0",
     "@types/micromatch": "^4.0.9",
     "@types/semver": "^7.5.8",
-    "discord.js": "^14.17.2"
+    "discord.js": "^14.18.0"
   },
   "peerDependencies": {
     "@reciple/core": "^9 || ^9.0.0-dev",

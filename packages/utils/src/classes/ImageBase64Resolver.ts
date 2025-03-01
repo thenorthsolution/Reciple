@@ -1,5 +1,10 @@
-import type { Base64Resolvable, BufferResolvable, ResolvedFile } from 'discord.js';
+import type { Base64Resolvable, BufferResolvable } from 'discord.js';
 import { resolveFileData } from '../helpers/fileSystem.js';
+
+export interface ResolvedFile {
+    data: Buffer;
+    contentType?: string;
+}
 
 /**
  * @deprecated Use `Base64Resolvabler`

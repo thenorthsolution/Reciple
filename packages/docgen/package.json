@@ -43,7 +43,7 @@
   "dependencies": {
     "@discordjs/collection": "^2.1.1",
     "@reciple/utils": "^9.7.0",
-    "commander": "^13.0.0",
+    "commander": "^13.1.0",
     "typedoc": "^0.25.3",
     "typedoc-json-parser": "^9.0.1"
   },

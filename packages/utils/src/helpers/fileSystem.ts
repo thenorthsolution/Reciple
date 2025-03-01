@@ -1,8 +1,9 @@
 import { lstat, readFile, stat } from 'node:fs/promises';
 import type { PathLike } from 'node:fs';
-import type { BufferResolvable, ResolvedFile } from 'discord.js';
+import type { BufferResolvable } from 'discord.js';
 import path from 'node:path';
 import { fileTypeFromBuffer } from 'file-type';
+import type { ResolvedFile } from '../classes/ImageBase64Resolver.js';
 
 /**
  * 
